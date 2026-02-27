@@ -359,9 +359,6 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             .collect();
 
     let mut entity_kind_consts = TokenStream::new();
-    let mut entity_kind_from_str_arms = TokenStream::new();
-    let mut entity_kind_to_str_arms = TokenStream::new();
-    let mut entity_kind_to_ident_arms = TokenStream::new();
     let mut entity_kind_fmt_args = TokenStream::new();
     let mut translation_key_arms = TokenStream::new();
     let mut modules = TokenStream::new();
@@ -393,20 +390,6 @@ fn build_entities() -> anyhow::Result<TokenStream> {
         // Is this a concrete entity type?
         if let Some(entity_type) = entity.typ {
             let entity_type_id = entity_types[&entity_type];
-
-            entity_kind_from_str_arms.extend([quote! {
-                #stripped_snake_entity_name => Some(Self::#stripped_shouty_entity_name_ident),
-            }]);
-
-            entity_kind_to_str_arms.extend([quote! {
-                Self::#stripped_shouty_entity_name_ident => Some(#stripped_snake_entity_name),
-            }]);
-
-            let namespaced_name = format!("minecraft:{}", stripped_snake_entity_name);
-
-            entity_kind_to_ident_arms.extend([quote! {
-                Self::#stripped_shouty_entity_name_ident => Some(ident!(#namespaced_name)),
-            }]);
 
             entity_kind_consts.extend([quote! {
                 pub const #stripped_shouty_entity_name_ident: EntityKind = EntityKind(#entity_type_id);
@@ -752,8 +735,6 @@ fn build_entities() -> anyhow::Result<TokenStream> {
 
     Ok(quote! {
         use valence_generated::attributes::EntityAttribute;
-        use valence_ident::{ident, Ident};
-        use std::borrow::Cow;
 
         #modules
 
@@ -771,44 +752,6 @@ fn build_entities() -> anyhow::Result<TokenStream> {
 
             pub const fn get(self) -> i32 {
                 self.0
-            }
-
-            /// Construct an entity kind from its `snake_case` name.
-            ///
-            /// Returns `None` if the name is invalid.
-            #[allow(clippy::should_implement_trait)]
-            pub fn from_str(name: &str) -> Option<Self> {
-                match name {
-                    #entity_kind_from_str_arms
-                    _ => None,
-                }
-            }
-
-            /// Gets the `snake_case` name of this entity kind.
-            ///
-            /// Returns `None` if the entity kind is invalid (e.g. a custom ID).
-            pub fn to_str(self) -> Option<&'static str> {
-                match self {
-                    #entity_kind_to_str_arms
-                    _ => None,
-                }
-            }
-
-            /// Construct an entity kind from its `snake_case` name in an ident.
-            ///
-            /// Returns `None` if the name is invalid.
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                Self::from_str(ident.into().as_str().trim_start_matches("minecraft:"))
-            }
-
-            /// Get the `snake_case` name of this entity kind as an ident.
-            ///
-            /// Returns `None` if the entity kind is invalid.
-            pub fn ident(self) -> Option<Ident<&'static str>> {
-                match self {
-                    #entity_kind_to_ident_arms
-                    _ => None,
-                }
             }
 
             pub const fn translation_key(self) -> Option<&'static str> {

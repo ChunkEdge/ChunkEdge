@@ -33,11 +33,13 @@ use anyhow::Context;
 pub use biome_pos::BiomePos;
 pub use bit_storage::BitStorage;
 pub use block::{BlockKind, BlockState};
+pub use valence_binary::block_pos::BlockPos;
 pub use chunk_pos::ChunkPos;
 pub use chunk_section_pos::ChunkSectionPos;
 pub use decode::PacketDecoder;
 use derive_more::{From, Into};
 pub use difficulty::Difficulty;
+pub use valence_binary::direction::Direction;
 pub use encode::{PacketEncoder, WritePacket};
 pub use game_mode::GameMode;
 pub use global_pos::GlobalPos;
@@ -49,13 +51,12 @@ pub use sound::Sound;
 pub use text::{JsonText, Text};
 pub use valence_binary::array::FixedArray;
 pub use valence_binary::bit_set::FixedBitSet;
-pub use valence_binary::block_pos::BlockPos;
 pub use valence_binary::byte_angle::ByteAngle;
-pub use valence_binary::direction::Direction;
 use valence_binary::Encode;
 pub use valence_binary::{
     IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
 };
+pub use valence_generated::registry_id::RegistryId;
 pub use valence_generated::{block, packet_id, status_effects};
 pub use valence_ident::Ident;
 pub use valence_item::{ItemKind, ItemStack};
@@ -156,12 +157,12 @@ mod tests {
     use valence_protocol_macros::Packet;
 
     use super::*;
+    use valence_binary::block_pos::BlockPos;
     use crate::decode::PacketDecoder;
     use crate::encode::PacketEncoder;
     use crate::hand::Hand;
     use crate::text::{IntoText, Text};
     use crate::Ident;
-    use valence_binary::block_pos::BlockPos;
 
     #[derive(Encode, Decode, Packet, Debug)]
     #[packet(id = 1, side = PacketSide::Clientbound)]

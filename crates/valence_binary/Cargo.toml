@@ -10,11 +10,11 @@ license.workspace = true
 anyhow.workspace = true
 byteorder.workspace = true
 derive_more = { workspace = true, features = [
-  "as_ref",
-  "deref",
-  "deref_mut",
-  "from",
-  "into",
+    "as_ref",
+    "deref",
+    "deref_mut",
+    "from",
+    "into",
 ] }
 indexmap.workspace = true
 rand.workspace = true

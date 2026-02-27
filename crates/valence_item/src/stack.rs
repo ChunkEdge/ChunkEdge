@@ -1,8 +1,6 @@
 use std::fmt::Debug;
 use std::io::Write;
 
-use serde::Deserialize;
-use valence_binary::registry_id::{RegistryId, StaticRegistry};
 use valence_binary::{Encode, VarInt};
 use valence_generated::item::ItemKind;
 
@@ -11,36 +9,11 @@ use crate::vanilla_components::ItemKindExt;
 use crate::NUM_ITEM_COMPONENTS;
 
 /// A stack of items in an inventory.
-#[derive(Clone, PartialEq, Deserialize)]
-#[serde(try_from = "NBTItemStack")]
+#[derive(Clone, PartialEq)]
 pub struct ItemStack {
     pub item: ItemKind,
     pub count: i8,
     pub(crate) components: [Patchable<Box<ItemComponent>>; NUM_ITEM_COMPONENTS],
-}
-
-#[derive(Clone, PartialEq, Deserialize)]
-pub struct NBTItemStack {
-    pub item: RegistryId<ItemKind>,
-    pub count: i8,
-    pub components: Option<Vec<ItemComponent>>,
-}
-
-impl TryFrom<NBTItemStack> for ItemStack {
-    type Error = String;
-
-    fn try_from(nbt: NBTItemStack) -> Result<Self, Self::Error> {
-        let mut stack = ItemStack::new(
-            ItemKind::from_registry_id(nbt.item).ok_or(format!("Bad reg id {:?}", nbt.item))?,
-            nbt.count,
-        );
-        if let Some(components) = nbt.components {
-            for component in components {
-                stack.insert_component(component);
-            }
-        }
-        Ok(stack)
-    }
 }
 
 impl Default for ItemStack {

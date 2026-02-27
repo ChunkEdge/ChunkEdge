@@ -136,7 +136,7 @@ impl<'de, T: StaticRegistry> Deserialize<'de> for IDSet<T> {
     }
 }
 
-impl<T: RegistryItem> Encode for IDSet<T> {
+impl<T: RegistryItem + Encode> Encode for IDSet<T> {
     fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
         match self {
             IDSet::NamedSet(tag_name) => {
@@ -154,7 +154,7 @@ impl<T: RegistryItem> Encode for IDSet<T> {
     }
 }
 
-impl<'a, T: RegistryItem> Decode<'a> for IDSet<T> {
+impl<'a, T: RegistryItem + Decode<'a>> Decode<'a> for IDSet<T> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let type_id = VarInt::decode(r)?.0;
         if type_id == 0 {

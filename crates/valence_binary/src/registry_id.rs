@@ -5,9 +5,6 @@ use std::{any::type_name, io::Write, marker::PhantomData};
 
 use serde::de::{self, Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use valence_generated::attributes::EntityAttribute;
-use valence_generated::sound::Sound;
-use valence_generated::status_effects::StatusEffect;
 use valence_generated::{
     block::{BlockEntityKind, BlockKind},
     item::ItemKind,
@@ -45,9 +42,8 @@ impl<T: RegistryItem> fmt::Debug for RegistryId<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_tuple(
             format!(
-                "RegistryId<{}> at {}",
-                type_name::<T>().split("::").last().unwrap_or("?"),
-                T::KEY
+                "RegistryId<{}>",
+                type_name::<T>().split("::").last().unwrap_or("?")
             )
             .as_str(),
         )
@@ -136,26 +132,20 @@ impl<T: RegistryItem> Encode for RegistryId<T> {
 impl<'a, T: RegistryItem> Decode<'a> for RegistryId<T> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let val = VarInt::decode(r)?.0;
+        // Trusted source: The protocol (network) provides this ID.
         Ok(Self::new(val))
     }
 }
 
 // Static registry implementors can be encoded and decoded statelessly.
 pub trait StaticRegistry: RegistryItem {
-    /// Gets the variant corresponding to the given registry ID, if it exists.
     fn from_registry_id(id: RegistryId<Self>) -> Option<Self>
     where
         Self: Sized;
-
-    /// Gets the registry ID corresponding to this variant.
     fn to_registry_id(self) -> RegistryId<Self>;
-
-    /// Gets the variant corresponding to the given registry key, if it exists.
     fn from_reg_key<'a>(name: impl Into<Ident<Cow<'a, str>>>) -> Option<Self>
     where
         Self: Sized;
-
-    /// Gets the registry key corresponding to this variant.
     fn to_reg_key(self) -> Ident<&'static str>;
 }
 
@@ -223,143 +213,6 @@ impl StaticRegistry for ItemKind {
     fn to_reg_key(self) -> Ident<&'static str> {
         self.ident()
     }
-}
-
-impl RegistryItem for Sound {
-    const KEY: Ident<&'static str> = ident!("minecraft:sound_event");
-}
-
-impl StaticRegistry for Sound {
-    fn from_registry_id(id: RegistryId<Self>) -> Option<Self> {
-        Sound::from_raw(id.get() as u16)
-    }
-
-    fn to_registry_id(self) -> RegistryId<Self> {
-        RegistryId::new(self.to_raw() as i32)
-    }
-
-    fn from_reg_key<'a>(name: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-        Sound::from_ident(name)
-    }
-
-    fn to_reg_key(self) -> Ident<&'static str> {
-        self.to_ident()
-    }
-}
-
-impl RegistryItem for StatusEffect {
-    const KEY: Ident<&'static str> = ident!("minecraft:status_effect");
-}
-
-impl StaticRegistry for StatusEffect {
-    fn from_registry_id(id: RegistryId<Self>) -> Option<Self> {
-        StatusEffect::from_raw(id.get() as u16)
-    }
-
-    fn to_registry_id(self) -> RegistryId<Self> {
-        RegistryId::new(self.to_raw() as i32)
-    }
-
-    fn from_reg_key<'a>(name: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-        StatusEffect::from_ident(name)
-    }
-
-    fn to_reg_key(self) -> Ident<&'static str> {
-        self.to_ident()
-    }
-}
-
-impl RegistryItem for EntityAttribute {
-    const KEY: Ident<&'static str> = ident!("minecraft:attribute");
-}
-
-impl StaticRegistry for EntityAttribute {
-    fn from_registry_id(id: RegistryId<Self>) -> Option<Self> {
-        EntityAttribute::from_id(id.get() as u8)
-    }
-
-    fn to_registry_id(self) -> RegistryId<Self> {
-        RegistryId::new(self.get_id() as i32)
-    }
-
-    fn from_reg_key<'a>(name: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-        EntityAttribute::from_ident(name)
-    }
-
-    fn to_reg_key(self) -> Ident<&'static str> {
-        self.ident()
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Encode, Decode)]
-pub struct PlaceholderDynamicRegistryItem(i32); // For things I dont want to do right now FIXME
-                                                // Generally for dynamic registries. but ive used it a few times for things annoying to import.
-
-impl RegistryItem for PlaceholderDynamicRegistryItem {
-    const KEY: Ident<&'static str> = ident!("valence:placeholder");
-}
-
-impl StaticRegistry for PlaceholderDynamicRegistryItem {
-    fn from_registry_id(id: RegistryId<Self>) -> Option<Self> {
-        Some(PlaceholderDynamicRegistryItem(id.get()))
-    }
-
-    fn to_registry_id(self) -> RegistryId<Self> {
-        RegistryId::new(self.0)
-    }
-
-    fn from_reg_key<'a>(name: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-        Some(PlaceholderDynamicRegistryItem(0)) // Placeholder implementation
-    }
-
-    fn to_reg_key(self) -> Ident<&'static str> {
-        ident!("valence:placeholder")
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-pub struct DamageType {
-    pub message_id: String,
-    pub scaling: DamageScaling,
-    pub exhaustion: f32,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub effects: Option<DamageEffects>,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub death_message_type: Option<DamageDeathMessageType>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum DamageScaling {
-    Never,
-    Always,
-    WhenCausedByLivingNonPlayer,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum DamageEffects {
-    Hurt,
-    Thorns,
-    Drowning,
-    Burning,
-    Poking,
-    Freezing,
-}
-
-#[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum DamageDeathMessageType {
-    #[default]
-    Default,
-    FallVariants,
-    IntentionalGameDesign,
-}
-
-impl RegistryItem for DamageType {
-    const KEY: Ident<&'static str> = ident!("damage_type");
 }
 
 // TODO: add every static registry here

@@ -11,7 +11,6 @@ mod flags;
 pub mod hitbox;
 pub mod manager;
 pub mod query;
-pub mod registry;
 pub mod tracked_data;
 
 use bevy_app::prelude::*;

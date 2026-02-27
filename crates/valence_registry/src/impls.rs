@@ -254,6 +254,51 @@ impl RegistryItem for CowVariant {
     const KEY: Ident<&'static str> = ident!("cow_variant");
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct DamageType {
+    pub message_id: String,
+    pub scaling: DamageScaling,
+    pub exhaustion: f32,
+    #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub effects: Option<DamageEffects>,
+    #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub death_message_type: Option<DamageDeathMessageType>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum DamageScaling {
+    Never,
+    Always,
+    WhenCausedByLivingNonPlayer,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum DamageEffects {
+    Hurt,
+    Thorns,
+    Drowning,
+    Burning,
+    Poking,
+    Freezing,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum DamageDeathMessageType {
+    #[default]
+    Default,
+    FallVariants,
+    IntentionalGameDesign,
+}
+
+impl RegistryItem for DamageType {
+    const KEY: Ident<&'static str> = ident!("damage_type");
+}
+
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct DimensionType {

@@ -1,18 +1,12 @@
-use std::collections::HashMap;
-use std::fmt::Debug;
 use std::io::Write;
-use std::marker::PhantomData;
-use std::ops::Deref;
 
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use valence_binary::registry_id::{DamageType, PlaceholderDynamicRegistryItem, RegistryId};
+use valence_binary::registry_id::RegistryId;
 use valence_binary::{Decode, Encode, IDSet, IdOr, TextComponent, VarInt};
-use valence_generated::attributes::{EntityAttribute, EntityAttributeOperation};
+use valence_generated::attributes::EntityAttributeOperation;
 use valence_generated::block::BlockKind;
 use valence_generated::item::ItemKind;
-use valence_generated::sound::Sound;
-use valence_generated::status_effects::StatusEffect;
 use valence_ident::Ident;
 use valence_nbt::Compound;
 use valence_text::Text;
@@ -43,7 +37,7 @@ pub struct EnchantmentCost {
 }
 
 #[derive(Clone, Copy, PartialEq, Debug, Encode, Decode, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[rename_all = "snake_case"]
 pub enum EquipmentSlot {
     MainHand = 0,
     OffHand = 1,
@@ -124,7 +118,7 @@ impl<T> Patchable<T> {
 
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
-pub enum DynamicRegistryPlaceholder {
+enum DynamicRegistryPlaceholder {
     // FIXME: We can only handle static registries for now
     String(String),
     Id(VarInt),
@@ -149,96 +143,30 @@ impl<'a> Decode<'a> for DynamicRegistryPlaceholder {
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
-pub enum OneOrMany<T> {
+enum OneOrMany<T> {
     Many(Vec<T>),
     One(T),
 }
 
-impl<T, U: Into<T>> From<OneOrMany<U>> for Vec<T> {
-    fn from(item: OneOrMany<U>) -> Self {
+impl<T> From<OneOrMany<T>> for Vec<T> {
+    fn from(item: OneOrMany<T>) -> Self {
         match item {
-            OneOrMany::Many(vec) => vec.into_iter().map(|v| v.into()).collect(),
-            OneOrMany::One(val) => vec![val.into()],
+            OneOrMany::Many(vec) => vec,
+            OneOrMany::One(val) => vec![val],
         }
     }
 }
 
-/// Encodes/Decodes as `Real` and deserializes as `Nbt`. `Nbt` is converted to `Real` on deserialization.
-pub struct NbtDifference<Real, Nbt>(pub Real, PhantomData<Nbt>);
-
-impl<A: Clone, B> Clone for NbtDifference<A, B> {
-    fn clone(&self) -> Self {
-        NbtDifference(self.0.clone(), PhantomData)
-    }
-}
-
-impl<A: PartialEq, B> PartialEq for NbtDifference<A, B> {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
-    }
-}
-
-impl<A: Debug, B> Debug for NbtDifference<A, B> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("NbtDifference").field(&self.0).finish()
-    }
-}
-
-impl<'de, A, B> Deserialize<'de> for NbtDifference<A, B>
+fn deserialize_one_or_many<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
 where
-    B: Deserialize<'de>,
-    B: Into<A>,
+    D: serde::Deserializer<'de>,
+    T: Deserialize<'de>,
 {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let b = B::deserialize(deserializer)?;
-        let a: A = b.into();
-        Ok(NbtDifference(a, PhantomData))
-    }
+    let helper = OneOrMany::<T>::deserialize(deserializer)?;
+    Ok(helper.into())
 }
 
-impl<'de, A: Decode<'de>, B> Decode<'de> for NbtDifference<A, B>
-where
-    B: Into<A>,
-{
-    fn decode(r: &mut &'de [u8]) -> anyhow::Result<Self> {
-        let a = A::decode(r)?;
-        Ok(NbtDifference(a, PhantomData))
-    }
-}
-
-impl<A: Encode, B> Encode for NbtDifference<A, B>
-where
-    B: Into<A>,
-{
-    fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
-        self.0.encode(&mut w)
-    }
-}
-
-impl<A, B: Into<A>> NbtDifference<A, B> {
-    pub fn into_inner(self) -> A {
-        self.0
-    }
-}
-
-impl<A, B: Into<A>> From<A> for NbtDifference<A, B> {
-    fn from(value: A) -> Self {
-        NbtDifference(value, PhantomData)
-    }
-}
-
-impl<A, B> Deref for NbtDifference<A, B> {
-    type Target = A;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-#[derive(Clone, PartialEq, Debug, Deserialize)] // TODO: Serialize?
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 pub enum ItemComponent {
     /// Arbitrary NBT data that does not fit into other structured components.
     /// Used primarily by data-driven systems and server-side plugins to store
@@ -298,12 +226,13 @@ pub enum ItemComponent {
     /// In Adventure mode, this restricts which blocks a player can place
     /// this specific block on.
     #[serde(rename = "minecraft:can_place_on")]
-    CanPlaceOn(NbtDifference<Vec<BlockPredicate>, OneOrMany<NbtBlockPredicate>>),
+    #[serde(deserialize_with = "deserialize_one_or_many")]
+    CanPlaceOn(Vec<BlockPredicate>),
 
     /// In Adventure mode, this restricts which blocks the player can break
     /// while holding this item.
     #[serde(rename = "minecraft:can_break")]
-    CanBreak(NbtDifference<Vec<BlockPredicate>, OneOrMany<NbtBlockPredicate>>),
+    CanBreak(Vec<BlockPredicate>),
 
     /// Modifies the player's base attributes (like Attack Damage, Movement
     /// Speed, or Max Health) when this item is held or equipped.
@@ -373,7 +302,7 @@ pub enum ItemComponent {
         /// The visual pose the player takes (Eat, Drink, Block, etc.).
         animation: ConsumableAnimation,
         /// The sound played during and after consumption.
-        sound: IdOr<Sound, SoundEventDefinition>,
+        sound: IdOr<SoundEventDefinition>,
         /// Whether to spawn particle effects (like food crumbs) while using.
         has_consume_particles: bool,
         /// Status effects (like Poison or Speed) applied when consumption
@@ -435,16 +364,14 @@ pub enum ItemComponent {
         /// Which body slot this item fits into (Head, Chest, etc.).
         slot: EquipSlot,
         /// Sound played when the item is equipped.
-        equip_sound: NbtDifference<IdOr<Sound, SoundEventDefinition>, RegistryId<Sound>>,
+        equip_sound: IdOr<SoundEventDefinition>,
         /// Reference to an equipment-specific model (like 3D armor).
         model: Option<String>,
         /// Texture used when the player's camera is "inside" the item (like a
         /// Pumpkin).
         camera_overlay: Option<String>,
         /// Which entity types are allowed to wear this item.
-        allowed_entities: Option<IDSet<PlaceholderDynamicRegistryItem>>, // FIXME: It is annoying to get
-        // entity stuff from here. since it is just a i32 anyway for protocol this is only a lil
-        // annoying but we wont be able to deserlise anything good for this
+        allowed_entities: Option<IDSet>,
         /// Whether a Dispenser can equip this onto an entity.
         dispensable: bool,
         /// Whether right-clicking allows swapping this with currently equipped
@@ -456,7 +383,7 @@ pub enum ItemComponent {
 
     /// Items that can be used in an anvil to repair this item.
     #[serde(rename = "minecraft:repairable")]
-    Repairable(IDSet<ItemKind>),
+    Repairable(IDSet),
 
     /// Enables Elytra-style flight physics when equipped.
     #[serde(rename = "minecraft:glider")]
@@ -488,15 +415,15 @@ pub enum ItemComponent {
         /// Damage type tag that pierces this shield's blocking logic.
         bypassed_by: Option<String>,
         /// Sound played when a hit is successfully blocked.
-        block_sound: Option<IdOr<Sound, SoundEventDefinition>>,
+        block_sound: Option<IdOr<SoundEventDefinition>>,
         /// Sound played when the shield is disabled (e.g., by an Axe).
-        disable_sound: Option<IdOr<Sound, SoundEventDefinition>>,
+        disable_sound: Option<IdOr<SoundEventDefinition>>,
     },
 
     /// Enchantments contained within an Enchanted Book.
     #[serde(rename = "minecraft:stored_enchantments")]
     StoredEnchantments {
-        enchantments: Vec<(DynamicRegistryPlaceholder, VarInt)>,
+        enchantments: Vec<(RegistryId, VarInt)>,
         show_in_tooltip: bool,
     },
 
@@ -536,8 +463,8 @@ pub enum ItemComponent {
     /// Data for Potion items, including their base type and custom effects.
     #[serde(rename = "minecraft:potion_contents")]
     PotionContents {
-        /// The base potion type
-        potion_id: Option<RegistryId<StatusEffect>>,
+        /// The base potion type (e.g., "Invisibility").
+        potion_id: Option<RegistryId>,
         /// Custom color for the liquid, overrides the potion's default.
         custom_color: Option<i32>,
         /// Additional status effects not included in the base potion type.
@@ -552,7 +479,7 @@ pub enum ItemComponent {
 
     /// Effects granted by eating Suspicious Stew.
     #[serde(rename = "minecraft:suspicious_stew_effects")]
-    SuspiciousStewEffects(Vec<(RegistryId<StatusEffect>, VarInt)>),
+    SuspiciousStewEffects(Vec<(RegistryId, VarInt)>),
 
     /// Pages and filtering information for a Book and Quill.
     #[serde(rename = "minecraft:writable_book_content")]
@@ -578,9 +505,8 @@ pub enum ItemComponent {
     /// Visual armor customization (Pattern and Material).
     #[serde(rename = "minecraft:trim")]
     Trim {
-        material: IdOr<PlaceholderDynamicRegistryItem, TrimMaterial>, // FIXME: IdOr cant really handle
-        // dynamic registries here but it is just a i32 for protocol so we can decode encode
-        pattern: IdOr<PlaceholderDynamicRegistryItem, TrimPattern>,
+        material: IdOr<TrimMaterial>,
+        pattern: IdOr<TrimPattern>,
         /// Whether the "Armor Trim" lines show in the tooltip.
         show_in_tooltip: bool,
     },
@@ -592,11 +518,8 @@ pub enum ItemComponent {
     /// NBT data used to modify an entity when it is spawned from an item (Spawn
     /// Eggs).
     #[serde(rename = "minecraft:entity_data")]
-    EntityData {
-        id: RegistryId<PlaceholderDynamicRegistryItem>,
-        data: Compound,
-    }, // FIXME: We cant get
-    // entiry data here quite yet
+    EntityData { id: RegistryId, data: Compound },
+
     /// NBT data for entities inside a Bucket (like Fish or Axolotls).
     #[serde(rename = "minecraft:bucket_entity_data")]
     BucketEntityData(Compound),
@@ -604,18 +527,15 @@ pub enum ItemComponent {
     /// NBT data for the Block Entity created when this item is placed (Chests,
     /// Signs).
     #[serde(rename = "minecraft:block_entity_data")]
-    BlockEntityData {
-        id: RegistryId<PlaceholderDynamicRegistryItem>,
-        data: Compound,
-    }, // FIXME: EntityId
+    BlockEntityData { id: RegistryId, data: Compound },
 
     /// The specific sound and duration associated with a Goat Horn.
     #[serde(rename = "minecraft:instrument")]
-    Instrument(IdOr<Sound, InstrumentDefinition>),
+    Instrument(IdOr<InstrumentDefinition>),
 
     /// Marks an item as a valid material for the Armor Trim system.
     #[serde(rename = "minecraft:provides_trim_material")]
-    ProvidesTrimMaterial(ModePair<String, IdOr<PlaceholderDynamicRegistryItem, TrimMaterial>>),
+    ProvidesTrimMaterial(ModePair<String, IdOr<TrimMaterial>>),
 
     /// The level of Bad Omen granted by an Ominous Bottle (0-4).
     #[serde(rename = "minecraft:ominous_bottle_amplifier")]
@@ -625,7 +545,7 @@ pub enum ItemComponent {
     #[serde(rename = "minecraft:jukebox_playable")]
     JukeboxPlayable {
         /// Reference to a Jukebox Song.
-        song: ModePair<String, IdOr<PlaceholderDynamicRegistryItem, JukeboxSong>>,
+        song: ModePair<String, IdOr<JukeboxSong>>,
         show_in_tooltip: bool,
     },
 
@@ -678,7 +598,7 @@ pub enum ItemComponent {
 
     /// The four item IDs used as patterns on a Decorated Pot.
     #[serde(rename = "minecraft:pot_decorations")]
-    PotDecorations(Vec<RegistryId<ItemKind>>),
+    PotDecorations(Vec<RegistryId>),
 
     /// The inventory contents of a block (like a Chest or Shulker Box).
     #[serde(rename = "minecraft:container")]
@@ -702,19 +622,19 @@ pub enum ItemComponent {
 
     /// Overrides the default sound played when this specific item breaks.
     #[serde(rename = "minecraft:break_sound")]
-    BreakSound(IdOr<Sound, SoundEventDefinition>),
+    BreakSound(IdOr<SoundEventDefinition>),
 
     /// Biome-specific variant of a Villager (e.g., Desert, Plains).
     #[serde(rename = "minecraft:villager_variant")]
-    VillagerVariant(DynamicRegistryPlaceholder),
+    VillagerVariant(RegistryId),
 
     /// Skin variant for a Wolf.
     #[serde(rename = "minecraft:wolf_variant")]
-    WolfVariant(DynamicRegistryPlaceholder),
+    WolfVariant(RegistryId),
 
     /// Determines the bark/growl sounds for a Wolf.
     #[serde(rename = "minecraft:wolf_sound_variant")]
-    WolfSoundVariant(DynamicRegistryPlaceholder),
+    WolfSoundVariant(RegistryId),
 
     /// Dye color of a Wolf's collar.
     #[serde(rename = "minecraft:wolf_collar")]
@@ -754,19 +674,19 @@ pub enum ItemComponent {
 
     /// Skin variant for a Pig.
     #[serde(rename = "minecraft:pig_variant")]
-    PigVariant(DynamicRegistryPlaceholder),
+    PigVariant(RegistryId),
 
     /// Skin variant for a Cow.
     #[serde(rename = "minecraft:cow_variant")]
-    CowVariant(DynamicRegistryPlaceholder),
+    CowVariant(RegistryId),
 
     /// Skin variant for a Chicken.
     #[serde(rename = "minecraft:chicken_variant")]
-    ChickenVariant(ModePair<String, RegistryId<PlaceholderDynamicRegistryItem>>),
+    ChickenVariant(ModePair<String, RegistryId>),
 
     /// Biome variant for a Frog.
     #[serde(rename = "minecraft:frog_variant")]
-    FrogVariant(DynamicRegistryPlaceholder),
+    FrogVariant(RegistryId),
 
     /// Color and marking variant for a Horse.
     #[serde(rename = "minecraft:horse_variant")]
@@ -774,7 +694,7 @@ pub enum ItemComponent {
 
     /// The specific painting texture and dimensions.
     #[serde(rename = "minecraft:painting_variant")]
-    PaintingVariant(IdOr<PlaceholderDynamicRegistryItem, PaintingVariantDefinition>),
+    PaintingVariant(IdOr<PaintingVariantDefinition>),
 
     /// Color variant for a Llama.
     #[serde(rename = "minecraft:llama_variant")]
@@ -786,7 +706,7 @@ pub enum ItemComponent {
 
     /// Breed variant for a Cat.
     #[serde(rename = "minecraft:cat_variant")]
-    CatVariant(DynamicRegistryPlaceholder),
+    CatVariant(RegistryId),
 
     /// Dye color of a Cat's collar.
     #[serde(rename = "minecraft:cat_collar")]
@@ -911,13 +831,11 @@ impl ItemComponent {
 
 /// A helper struct for protocol fields that start with a "Mode" byte.
 ///
-/// This is ser/de as A
-///
 /// In 1.21, several components (like Jukebox Songs or Trim Materials) are
 /// encoded as:
 /// - Byte `0`: Followed by Type A (usually a String Identifier).
 /// - Byte `1`: Followed by Type B (usually an ID or Inline Definition).
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum ModePair<A, B> {
     /// Mode 0: Usually references a registry key by name.
     Mode0(A),
@@ -950,85 +868,6 @@ impl<'a, A: Decode<'a>, B: Decode<'a>> Decode<'a> for ModePair<A, B> {
     }
 }
 
-impl<A: Serialize, B: Serialize> Serialize for ModePair<A, B> {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        match self {
-            ModePair::Mode0(a) => a.serialize(serializer),
-            ModePair::Mode1(b) => b.serialize(serializer),
-        }
-    }
-}
-
-impl<'de, A: Deserialize<'de>, B> Deserialize<'de> for ModePair<A, B> {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        // only attempt to deserialize as A
-        A::deserialize(deserializer).map(ModePair::Mode0)
-    }
-}
-
-/// Represents the JSON/NBT format for `can_place_on` / `can_break` rules.
-#[derive(Debug, Clone, Deserialize)]
-pub struct NbtBlockPredicate {
-    #[serde(default)]
-    pub blocks: Option<IDSet<BlockKind>>,
-
-    /// NBT uses a Map for properties, e.g.:
-    /// `state: { "lit": "true", "level": { "min": "1", "max": "5" } }`
-    #[serde(default)]
-    pub state: Option<HashMap<String, NbtPropertyValue>>,
-
-    /// Matches Block Entity NBT.
-    #[serde(default)]
-    pub nbt: Option<Compound>,
-}
-
-/// Helper enum to handle property values being either an Exact string
-/// or a Min/Max object range.
-#[derive(Debug, Clone, Deserialize)]
-#[serde(untagged)]
-pub enum NbtPropertyValue {
-    Exact(String),
-    Range {
-        #[serde(default)]
-        min: Option<String>,
-        #[serde(default)]
-        max: Option<String>,
-    },
-}
-
-impl From<NbtBlockPredicate> for BlockPredicate {
-    fn from(nbt: NbtBlockPredicate) -> Self {
-        let properties = nbt.state.map(|map| {
-            map.into_iter()
-                .map(|(name, val)| Property {
-                    name,
-                    value: match val {
-                        NbtPropertyValue::Exact(v) => PropertyValue::Exact(v),
-                        NbtPropertyValue::Range { min, max } => PropertyValue::MinMax {
-                            min: min.unwrap_or_default(),
-                            max: max.unwrap_or_default(),
-                        },
-                    },
-                })
-                .collect()
-        });
-
-        BlockPredicate {
-            blocks: nbt.blocks,
-            properties,
-            nbt: nbt.nbt,
-            exact_components: vec![],
-            partial_components: vec![],
-        }
-    }
-}
-
 /// Defines a rule for matching a block in the world.
 /// Used by `CanPlaceOn` and `CanBreak` in Adventure Mode.
 #[derive(Clone, PartialEq, Debug, Encode)]
@@ -1042,11 +881,11 @@ pub struct BlockPredicate {
     /// Matches the Block Entity's NBT data.
     pub nbt: Option<Compound>,
 
-    /// Matches if the block drops an item containing these EXACT
+    /// (1.21+) Matches if the block drops an item containing these EXACT
     /// components. This is a strict equality check.
     pub exact_components: Vec<ExactComponentMatcher>,
 
-    /// Matches if the block drops an item containing specific NBT
+    /// (1.21+) Matches if the block drops an item containing specific NBT
     /// structures within specific components.
     pub partial_components: Vec<PartialComponentMatcher>,
 }
@@ -1122,7 +961,7 @@ pub struct PartialComponentMatcher {
 #[serde(rename_all = "snake_case")]
 pub struct AttributeModifier {
     /// The ID of the attribute to modify in the registry.
-    pub attribute_id: RegistryId<EntityAttribute>,
+    pub attribute_id: RegistryId,
 
     /// A unique identifier for this modifier instance.
     /// Used to prevent stacking the same modifier multiple times from different
@@ -1147,7 +986,7 @@ pub struct AttributeModifier {
 #[serde(rename_all = "snake_case")]
 pub struct ToolRule {
     /// The blocks this rule applies to.
-    pub blocks: IDSet<BlockKind>,
+    pub blocks: IDSet,
 
     /// If present, overrides the mining speed for these blocks.
     pub speed: Option<f32>,
@@ -1174,7 +1013,7 @@ pub struct LodestoneTarget {
 pub struct SoundEventDefinition {
     /// The identifier of the sound (e.g., "minecraft:entity.pig.ambient").
     /// In 1.21, this can be a direct String or a Registry ID.
-    pub sound: ModePair<String, RegistryId<Sound>>,
+    pub sound: ModePair<String, RegistryId>,
 
     /// A fixed range (in blocks) for the sound. If None, uses the default.
     pub range: Option<f32>,
@@ -1210,7 +1049,7 @@ pub struct TrimPattern {
     pub asset_id: String,
 
     /// The Smithing Template item required to apply this pattern.
-    pub template_item: RegistryId<ItemKind>,
+    pub template_item: RegistryId,
 
     /// The text displayed in the tooltip (e.g., "Vex Armor Trim").
     pub description: TextComponent,
@@ -1220,11 +1059,11 @@ pub struct TrimPattern {
 }
 
 /// Defines a Goat Horn instrument.
-#[derive(Clone, PartialEq, Debug, Encode, Decode, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Encode, Decode, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct InstrumentDefinition {
     /// The sound played when the horn is used.
-    pub sound_event: IdOr<Sound, SoundEventDefinition>,
+    pub sound_event: IdOr<SoundEventDefinition>,
 
     /// How long the horn plays (in seconds).
     pub use_duration: f32,
@@ -1237,11 +1076,11 @@ pub struct InstrumentDefinition {
 }
 
 /// Defines a Music Disc song.
-#[derive(Clone, PartialEq, Debug, Encode, Decode, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Encode, Decode, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct JukeboxSong {
     /// The sound event to play.
-    pub sound_event: IdOr<Sound, SoundEventDefinition>,
+    pub sound_event: IdOr<SoundEventDefinition>,
 
     /// The song title shown in the "Now Playing" action bar.
     pub description: Text,
@@ -1289,11 +1128,11 @@ pub struct FireworkExplosionData {
 }
 
 /// Defines a layer on a Banner.
-#[derive(Clone, PartialEq, Debug, Encode, Decode, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Encode, Decode, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct BannerLayer {
     /// The pattern type (Flower, Skull, Stripe, etc.).
-    pub pattern: IdOr<Sound, BannerPattern>,
+    pub pattern: IdOr<BannerPattern>,
 
     /// The dye color ID (0-15) for this layer.
     pub color: DyeColor,
@@ -1372,15 +1211,16 @@ pub struct BeeData {
 }
 
 /// A wrapper for the various effects caused by consuming an item.
-#[derive(Clone, PartialEq, Debug, Encode, Decode, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Encode, Decode, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct ConsumeEffect {
     pub data: ConsumeEffectData,
 }
 
-#[derive(Clone, PartialEq, Debug, Encode, Decode, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
 // This is a "registry" but im not making a
 // RegistryId impl for it cuase this is its only use
+// #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ConsumeEffectData {
     /// Type 0: Apply Effects
@@ -1391,7 +1231,7 @@ pub enum ConsumeEffectData {
         probability: f32,
     },
     /// Type 1: Remove Effects
-    RemoveEffects(IDSet<StatusEffect>), // Set of effect IDs to cure/remove.
+    RemoveEffects(IDSet), // Set of Potion IDs to cure/remove.
     /// Type 2: Clear All Effects
     ClearAllEffects,
     /// Type 3: Teleport Randomly (Chorus Fruit behavior)
@@ -1400,7 +1240,7 @@ pub enum ConsumeEffectData {
         diameter: f32,
     },
     /// Type 4: Play Sound
-    PlaySound(IdOr<Sound, SoundEventDefinition>),
+    PlaySound(IdOr<SoundEventDefinition>),
 }
 
 /// A standard Potion Effect.
@@ -1408,7 +1248,7 @@ pub enum ConsumeEffectData {
 #[serde(rename_all = "snake_case")]
 pub struct PotionEffect {
     /// The ID of the effect (Speed, Jump Boost, etc.).
-    pub id: RegistryId<StatusEffect>,
+    pub id: RegistryId, // TODO
 
     /// The level of the effect (0 = Level 1, 1 = Level 2).
     pub amplifier: VarInt,
@@ -1433,9 +1273,8 @@ pub struct DamageReduction {
     /// The angle (in degrees) in front of the player that is blocked.
     pub horizontal_blocking_angle: f32,
 
-    /// Specific damage types this reduction applies to. None = All. TODO: needs dynamic  registry
-    #[serde(skip)]
-    pub damage_type: Option<IDSet<DamageType>>,
+    /// Specific damage types this reduction applies to. None = All.
+    pub damage_type: Option<IDSet>,
 
     /// Flat amount of damage removed.
     pub base: f32,

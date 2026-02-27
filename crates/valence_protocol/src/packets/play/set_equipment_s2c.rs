@@ -2,7 +2,7 @@ use std::io::Write;
 
 use serde::{Deserialize, Serialize};
 use valence_binary::{Decode, Encode, VarInt};
-use valence_item::{components::EquipmentSlot, ItemStack};
+use valence_item::ItemStack;
 
 use crate::Packet;
 

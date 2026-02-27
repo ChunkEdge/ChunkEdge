@@ -197,7 +197,6 @@ valence_command = { path = "crates/valence_command", version = "0.2.0-alpha.1" }
 valence_command_macros = { path = "crates/valence_command_macros", version = "0.2.0-alpha.1" }
 valence_binary = { path = "crates/valence_binary", version = "0.2.0-alpha.1" }
 valence_entity = { path = "crates/valence_entity", version = "0.2.0-alpha.1" }
-valence_entity_generated = { path = "crates/valence_entity_generated", version = "0.2.0-alpha.1" }
 valence_generated = { path = "crates/valence_generated", version = "0.2.0-alpha.1" }
 valence_item = { path = "crates/valence_item", version = "0.2.0-alpha.1" }
 valence_ident = { path = "crates/valence_ident", version = "0.2.0-alpha.1" }

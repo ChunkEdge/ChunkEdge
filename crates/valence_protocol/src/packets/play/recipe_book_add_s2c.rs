@@ -1,6 +1,5 @@
-use valence_binary::registry_id::{PlaceholderDynamicRegistryItem, RegistryId};
 use valence_binary::{Decode, Encode, IDSet, VarInt};
-use valence_item::ItemKind;
+use valence_generated::registry_id::RegistryId;
 
 use crate::packets::play::update_recipes_s2c::SlotDisplay;
 use crate::Packet;
@@ -15,9 +14,9 @@ pub struct RecipeBookAddS2c<'a> {
 pub struct RecipeEntry<'a> {
     pub id: VarInt,
     pub display: RecipeDisplay<'a>,
-    pub group: RegistryId<PlaceholderDynamicRegistryItem>,
-    pub category: RegistryId<PlaceholderDynamicRegistryItem>,
-    pub ingredients: Option<Vec<IDSet<ItemKind>>>,
+    pub group: RegistryId,
+    pub category: RegistryId,
+    pub ingredients: Option<Vec<IDSet>>,
     // 0x01: show notification; 0x02: highlight as new
     pub flags: u8,
 }

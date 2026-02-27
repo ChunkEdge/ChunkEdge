@@ -26,8 +26,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     let mut entity_attribute_get_id = TokenStream::new();
     let mut entity_attribute_from_id = TokenStream::new();
     let mut entity_attribute_name = TokenStream::new();
-    let mut name_to_entity_attribute = TokenStream::new();
-    let mut entity_attribute_ident = TokenStream::new();
     let mut entity_attribute_default_value = TokenStream::new();
     let mut entity_attribute_translation_key = TokenStream::new();
     let mut entity_attribute_tracked = TokenStream::new();
@@ -59,14 +57,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             EntityAttribute::#key => #name,
         }]);
 
-        name_to_entity_attribute.extend([quote! {
-             #name => Some(EntityAttribute::#key),
-        }]);
-
-        entity_attribute_ident.extend([quote! {
-            EntityAttribute::#key => ident!(#name),
-        }]);
-
         entity_attribute_default_value.extend([quote! {
             EntityAttribute::#key => #default_value,
         }]);
@@ -89,13 +79,8 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     }
 
     Ok(quote!(
-        use valence_ident::{ident, Ident};
-        use std::borrow::Cow;
-        use serde::{Deserialize, Serialize};
-
         /// An attribute modifier operation.
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
-        #[serde(rename_all = "snake_case")]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
         pub enum EntityAttributeOperation {
             #[doc = "Adds the modifier to the base value."]
             Add,
@@ -148,27 +133,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             pub fn name(self) -> &'static str {
                 match self {
                     #entity_attribute_name
-                }
-            }
-
-            pub fn from_str(name: &str) -> Option<Self> {
-                match name {
-                    #name_to_entity_attribute
-                    _ => None,
-                }
-            }
-
-            /// Construct a attribute from its `snake_case` name in an ident.
-            ///
-            /// Returns `None` if the name is invalid.
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                Self::from_str(ident.into().as_str().trim_start_matches("minecraft:"))
-            }
-
-            /// Get the `snake_case` name of this attribute as an ident.
-            pub fn ident(self) -> Ident<&'static str> {
-                match self {
-                    #entity_attribute_ident
                 }
             }
 

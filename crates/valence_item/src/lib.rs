@@ -1,4 +1,4 @@
-pub mod components;
+mod components;
 mod impls;
 mod stack;
 mod vanilla_components;
@@ -16,20 +16,17 @@ pub use crate::stack::{HashedItemStack, ItemStack};
 
 #[cfg(test)]
 mod tests {
-    use valence_binary::{
-        registry_id::{PlaceholderDynamicRegistryItem, RegistryId},
-        Decode, Encode, VarInt,
-    };
+    use valence_binary::{Decode, Encode, VarInt};
     use valence_generated::attributes::EntityAttributeOperation;
     use valence_generated::item::ItemKind;
+    use valence_generated::registry_id::RegistryId;
     use valence_ident::ident;
     use valence_nbt::Compound;
     use valence_text::Text;
 
     use super::*;
     use crate::components::{
-        AttributeModifier, AttributeSlot, DyeColor, DynamicRegistryPlaceholder, ModePair,
-        Patchable, PropertyValue, Rarity,
+        AttributeModifier, AttributeSlot, DyeColor, ModePair, Patchable, PropertyValue, Rarity,
     };
 
     // --- Helpers ---
@@ -117,7 +114,7 @@ mod tests {
 
         // Test vec-based components (Enchantments)
         stack.insert_component(ItemComponent::Enchantments(vec![(
-            DynamicRegistryPlaceholder::Id(VarInt(0)),
+            RegistryId::new(1),
             VarInt(5),
         )]));
 
@@ -136,12 +133,8 @@ mod tests {
 
     #[test]
     fn test_mode_pair_serialization() {
-        let m0 = ModePair::<String, RegistryId<PlaceholderDynamicRegistryItem>>::Mode0(
-            "minecraft:standard".to_owned(),
-        );
-        let m1 = ModePair::<String, RegistryId<PlaceholderDynamicRegistryItem>>::Mode1(
-            RegistryId::new(1),
-        );
+        let m0 = ModePair::<String, RegistryId>::Mode0("minecraft:standard".to_owned());
+        let m1 = ModePair::<String, RegistryId>::Mode1(RegistryId::new(1));
 
         roundtrip(&m0);
         roundtrip(&m1);

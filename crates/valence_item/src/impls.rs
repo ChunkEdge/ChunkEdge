@@ -383,7 +383,7 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             for _ in 0..count {
                 items.push(decode_block_predicate(r, depth)?);
             }
-            items.into()
+            items
         }),
         12 => ItemComponent::CanBreak({
             let count = VarInt::decode(r)?.0;
@@ -391,7 +391,7 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             for _ in 0..count {
                 items.push(decode_block_predicate(r, depth)?);
             }
-            items.into()
+            items
         }),
         13 => ItemComponent::AttributeModifiers {
             modifiers: Decode::decode(r)?,

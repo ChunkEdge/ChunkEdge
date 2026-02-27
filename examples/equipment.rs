@@ -7,6 +7,7 @@ use valence::entity::armor_stand::ArmorStandEntityBundle;
 use valence::entity::zombie::ZombieEntityBundle;
 use valence::equipment::{EquipmentInteractionBroadcast, EquipmentInventorySync};
 use valence::prelude::*;
+use valence::protocol::packets::play::set_equipment_s2c::EquipmentSlot;
 
 pub fn main() {
     App::new()

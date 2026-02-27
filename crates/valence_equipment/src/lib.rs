@@ -9,6 +9,7 @@ pub use inventory_sync::EquipmentInventorySync;
 use valence_server::client::{Client, FlushPacketsSet, LoadEntityForClientEvent};
 use valence_server::entity::living::LivingEntity;
 use valence_server::entity::{EntityId, EntityLayerId, Position};
+use valence_server::protocol::packets::play::set_equipment_s2c::{EquipmentEntry, EquipmentSlot};
 use valence_server::protocol::packets::play::SetEquipmentS2c;
 use valence_server::protocol::WritePacket;
 use valence_server::{EntityLayer, ItemStack, Layer};
@@ -56,7 +57,7 @@ pub struct Equipment {
 
 #[allow(clippy::large_stack_arrays)] // About 10kb but I think its worth it.
 impl Equipment {
-    pub const SLOT_COUNT: usize = EquipmentSlot::number_of_members(); // I imagine a better way of doing this exists
+    pub const SLOT_COUNT: usize = EquipmentSlot::number_of_members();
 
     #[allow(clippy::too_many_arguments)]
     pub fn new(

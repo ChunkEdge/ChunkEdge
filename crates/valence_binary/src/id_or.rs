@@ -1,19 +1,19 @@
 use std::fmt::Debug;
 use std::io::Write;
 
-use crate::registry_id::{RegistryId, RegistryItem};
 use anyhow::Error;
+use valence_generated::registry_id::RegistryId;
 
 use crate::{Decode, Encode, VarInt};
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum IdOr<T: RegistryItem> {
-    Id(RegistryId<T>),
+pub enum IdOr<T: Encode + Clone + Debug + PartialEq> {
+    Id(RegistryId),
     Inline(T),
 }
 
-impl<T: RegistryItem> IdOr<T> {
-    pub fn id<I: Into<RegistryId<T>>>(id: I) -> Self {
+impl<T: Encode + Clone + Debug + PartialEq> IdOr<T> {
+    pub fn id<I: Into<RegistryId>>(id: I) -> Self {
         Self::Id(id.into())
     }
 
@@ -22,10 +22,10 @@ impl<T: RegistryItem> IdOr<T> {
     }
 }
 
-impl<T: Encode + RegistryItem> Encode for IdOr<T> {
+impl<T: Encode + Clone + Debug + PartialEq> Encode for IdOr<T> {
     fn encode(&self, mut buf: impl Write) -> anyhow::Result<()> {
         match self {
-            Self::Id(id) => (id.get() + 1).encode(buf),
+            Self::Id(id) => (id.id() + 1).encode(buf),
             Self::Inline(value) => {
                 VarInt(0).encode(&mut buf).unwrap();
                 value.encode(&mut buf)
@@ -34,7 +34,7 @@ impl<T: Encode + RegistryItem> Encode for IdOr<T> {
     }
 }
 
-impl<'a, T: Decode<'a> + RegistryItem> Decode<'a> for IdOr<T> {
+impl<'a, T: Decode<'a> + Encode + Clone + Debug + PartialEq> Decode<'a> for IdOr<T> {
     fn decode(buf: &mut &'a [u8]) -> Result<Self, Error> {
         let id = VarInt::decode(buf)?;
         if id == VarInt(0) {

@@ -1,7 +1,7 @@
 use valence_binary::{Decode, Encode};
 use valence_math::DVec3;
 
-use valence_binary::block_pos::BlockPos;
+use crate::block_pos::BlockPos;
 use crate::chunk_section_pos::ChunkSectionPos;
 use crate::BiomePos;
 

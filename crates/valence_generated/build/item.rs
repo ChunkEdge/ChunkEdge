@@ -81,17 +81,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
         })
         .collect::<TokenStream>();
 
-    let item_kind_to_ident_arms = items
-        .iter()
-        .map(|item| {
-            let name = ident(item.name.to_pascal_case());
-            let str_name = format!("minecraft:{}", item.name);
-            quote! {
-                Self::#name => ident!(#str_name),
-            }
-        })
-        .collect::<TokenStream>();
-
     let item_kind_to_translation_key_arms = items
         .iter()
         .map(|item| {
@@ -186,8 +175,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
         .collect::<TokenStream>();
 
     Ok(quote! {
-        use valence_ident::{ident, Ident};
-        use std::borrow::Cow;
+        use crate::registry_id::RegistryId;
 
         /// Represents an item from the game
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
@@ -242,20 +230,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             pub const fn to_str(self) -> &'static str {
                 match self {
                     #item_kind_to_str_arms
-                }
-            }
-
-            /// Construct a item kind from its `snake_case` name in an ident.
-            ///
-            /// Returns `None` if the name is invalid.
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                Self::from_str(ident.into().as_str().trim_start_matches("minecraft:"))
-            }
-
-            /// Get the `snake_case` name of this item kind as an ident.
-            pub fn ident(self) -> Ident<&'static str> {
-                match self {
-                    #item_kind_to_ident_arms
                 }
             }
 
@@ -331,5 +305,10 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             pub const ALL: [Self; #item_kind_count] = [#(Self::#item_kind_variants,)*];
         }
 
+        impl From<ItemKind> for RegistryId {
+            fn from(item: ItemKind) -> Self {
+                RegistryId::new(i32::from(item.to_raw()))
+            }
+        }
     })
 }

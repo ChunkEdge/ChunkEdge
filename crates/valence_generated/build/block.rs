@@ -201,7 +201,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             let arms = b
                 .properties
                 .iter()
-                 .map(|p| {
+                .map(|p| {
                     let prop_name = ident(p.name.to_pascal_case());
                     let min_state_id = b.min_state_id();
                     let product: u16 = b
@@ -371,17 +371,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             let name_ident = ident(name.to_pascal_case());
             quote! {
                 BlockKind::#name_ident => #name,
-            }
-        })
-        .collect::<TokenStream>();
-
-    let block_kind_to_ident_arms = blocks
-        .iter()
-        .map(|b| {
-            let name_ident = ident(b.name.to_pascal_case());
-            let name = format!("minecraft:{}", b.name.clone());
-            quote! {
-                BlockKind::#name_ident => ident!(#name),
             }
         })
         .collect::<TokenStream>();
@@ -590,7 +579,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
 
     Ok(quote! {
         use valence_math::{Aabb, DVec3};
-        use std::borrow::Cow;
+        use crate::registry_id::RegistryId;
 
         #[doc = "Represents the state of a block. This does not include block entity data such as"]
         #[doc = "the text on a sign, the design on a banner, or the content of a spawner."]
@@ -763,22 +752,6 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
                 }
             }
 
-            /// Construct a block kind from its `snake_case` name in an ident.
-            ///
-            /// Returns `None` if the name is invalid.
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                Self::from_str(ident.into().as_str().trim_start_matches("minecraft:"))
-            }
-
-            /// Get the `snake_case` name of this block kind as an ident.
-            pub fn ident(self) -> Ident<&'static str> {
-                match self {
-                    #block_kind_to_ident_arms
-                }
-            }
-
-
-
             #[doc = "Returns the default block state for a given block kind."]
             pub const fn to_state(self) -> BlockState {
                 BlockState::from_kind(self)
@@ -846,6 +819,12 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
 
             #[doc = "An array of all block kinds."]
             pub const ALL: [Self; #block_kind_count] = [#(Self::#block_kind_variants,)*];
+        }
+
+        impl From<BlockKind> for RegistryId {
+            fn from(kind: BlockKind) -> Self {
+                RegistryId::new(i32::from(kind.to_raw()))
+            }
         }
 
         /// The default block kind is `air`.
@@ -980,8 +959,8 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
                 }
             }
 
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                match ident.into().as_str() {
+            pub fn from_ident(ident: Ident<&str>) -> Option<Self> {
+                match ident.as_str() {
                     #block_entity_kind_from_ident_arms
                     _ => None
                 }

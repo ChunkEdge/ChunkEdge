@@ -28,8 +28,6 @@ valence_math.workspace = true
 valence_nbt = { workspace = true, features = ["binary"] }
 valence_protocol_macros.workspace = true
 valence_text.workspace = true
-bevy_ecs.workspace = true # TODO: make this optional
-bitfield-struct.workspace = true
 
 [lints]
 workspace = true

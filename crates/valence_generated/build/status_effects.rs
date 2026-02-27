@@ -169,7 +169,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     Ok(quote! {
         use valence_ident::{Ident, ident};
         use super::attributes::{EntityAttribute, EntityAttributeOperation};
-        use std::borrow::Cow;
+        use crate::registry_id::RegistryId;
 
         /// Represents an attribute modifier.
         #[derive(Debug, Clone, Copy, PartialEq)]
@@ -217,8 +217,8 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             /// Construct a effect from its `snake_case` name.
             ///
             /// Returns `None` if the name is invalid.
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                match ident.into().as_str() {
+            pub fn from_ident(id: Ident<&str>) -> Option<Self> {
+                match id.as_str() {
                     #effect_from_ident_arms
                     _ => None
                 }
@@ -277,6 +277,12 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
 
             /// An array of all effects.
             pub const ALL: [Self; #effect_count] = [#(Self::#effect_variants,)*];
+        }
+
+        impl From<StatusEffect> for RegistryId {
+            fn from(effect: StatusEffect) -> Self {
+                RegistryId::new(i32::from(effect.to_raw()))
+            }
         }
     })
 }

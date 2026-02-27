@@ -6,10 +6,10 @@ use anyhow::bail;
 use bitfield_struct::bitfield;
 use derive_more::From;
 use thiserror::Error;
+use valence_binary::{Decode, Encode};
 use valence_math::{DVec3, IVec3};
 
 use crate::direction::Direction;
-use crate::{Decode, Encode};
 
 /// Represents an absolute block position in world space.
 #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]

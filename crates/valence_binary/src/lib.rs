@@ -2,15 +2,12 @@ use std::io::Write;
 
 pub mod array;
 pub mod bit_set;
-pub mod block_pos;
 mod bounded;
 pub mod byte_angle;
-pub mod direction;
-pub mod id_or;
-pub mod id_set;
+mod id_or;
+mod id_set;
 mod impls;
 mod raw;
-pub mod registry_id;
 mod text_component;
 mod var_int;
 mod var_long;
@@ -30,9 +27,6 @@ pub mod __private {
 
     pub use crate::{Decode, Encode, VarInt};
 }
-
-// This allows us to use our own proc macros internally.
-extern crate self as valence_binary;
 
 pub use valence_protocol_macros::{Decode, Encode};
 

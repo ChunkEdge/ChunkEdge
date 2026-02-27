@@ -73,7 +73,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
 
     Ok(quote! {
         use valence_ident::{Ident, ident};
-        use std::borrow::Cow;
+        use crate::registry_id::RegistryId;
 
         #[doc = "Represents a sound from the game"]
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
@@ -102,8 +102,8 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             /// Construct a sound from its `snake_case` name.
             ///
             /// Returns `None` if the name is invalid.
-            pub fn from_ident<'a>(ident: impl Into<Ident<Cow<'a, str>>>) -> Option<Self> {
-                match ident.into().as_str() {
+            pub fn from_ident(id: Ident<&str>) -> Option<Self> {
+                match id.as_str() {
                     #sound_from_ident_arms
                     _ => None
                 }
@@ -118,6 +118,13 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
 
             #[doc = "An array of all sounds."]
             pub const ALL: [Self; #sound_count] = [#(Self::#sound_variants,)*];
+        }
+
+
+        impl From<Sound> for RegistryId {
+            fn from(sound: Sound) -> Self {
+                RegistryId::new(i32::from(sound.to_raw()))
+            }
         }
     })
 }

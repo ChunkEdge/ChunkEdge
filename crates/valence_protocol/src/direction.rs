@@ -1,5 +1,5 @@
 use bevy_ecs::prelude::*;
-use valence_protocol_macros::{Decode, Encode};
+use valence_binary::{Decode, Encode};
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode, Component)]
 pub enum Direction {

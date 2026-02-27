@@ -79,6 +79,8 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     }
 
     Ok(quote!(
+        use crate::registry_id::RegistryId;
+
         /// An attribute modifier operation.
         #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
         pub enum EntityAttributeOperation {
@@ -164,6 +166,12 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
                 match self {
                     #entity_attribute_max_value
                 }
+            }
+        }
+
+        impl From<EntityAttribute> for RegistryId {
+            fn from(attribute: EntityAttribute) -> Self {
+                RegistryId::new(i32::from(attribute.get_id()))
             }
         }
     ))

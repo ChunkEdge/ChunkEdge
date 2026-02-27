@@ -2,6 +2,7 @@
 #![allow(clippy::needless_raw_strings)]
 
 pub mod block;
+pub mod registry_id;
 
 pub mod attributes {
     include!(concat!(env!("OUT_DIR"), "/attributes.rs"));

@@ -36,12 +36,16 @@ impl RegistryCodec {
         &self.cached_codec
     }
 
-    pub fn registry(&self, registry_key: Ident<&str>) -> Option<&Vec<RegistryValue>> {
-        self.registries.get(registry_key.as_str())
+    pub fn registry(&self, registry_key: Ident<&str>) -> &Vec<RegistryValue> {
+        self.registries
+            .get(registry_key.as_str())
+            .unwrap_or_else(|| panic!("missing registry for {registry_key}"))
     }
 
-    pub fn registry_mut(&mut self, registry_key: Ident<&str>) -> Option<&mut Vec<RegistryValue>> {
-        self.registries.get_mut(registry_key.as_str())
+    pub fn registry_mut(&mut self, registry_key: Ident<&str>) -> &mut Vec<RegistryValue> {
+        self.registries
+            .get_mut(registry_key.as_str())
+            .unwrap_or_else(|| panic!("missing registry for {registry_key}"))
     }
 }
 

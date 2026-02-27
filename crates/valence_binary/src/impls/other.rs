@@ -7,12 +7,12 @@ use uuid::Uuid;
 use valence_generated::attributes::{EntityAttribute, EntityAttributeOperation};
 use valence_generated::block::{BlockEntityKind, BlockKind, BlockState};
 use valence_generated::item::ItemKind;
+use valence_generated::registry_id::RegistryId;
 use valence_ident::{Ident, IdentError};
 use valence_nbt::compound::NetworkCompound;
 use valence_nbt::Compound;
 use valence_text::color::RgbColor;
 
-use crate::registry_id::RegistryId;
 use crate::{Decode, Encode, VarInt};
 
 impl<T: Encode> Encode for Option<T> {
@@ -154,6 +154,19 @@ impl Decode<'_> for ItemKind {
         let errmsg = "invalid item ID";
 
         ItemKind::from_raw(id.try_into().context(errmsg)?).context(errmsg)
+    }
+}
+
+impl Encode for RegistryId {
+    fn encode(&self, w: impl Write) -> anyhow::Result<()> {
+        VarInt(self.id()).encode(w)
+    }
+}
+
+impl<'a> Decode<'a> for RegistryId {
+    fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        let id = VarInt::decode(r)?;
+        Ok(RegistryId::new(id.0))
     }
 }
 

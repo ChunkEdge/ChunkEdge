@@ -1,10 +1,12 @@
 use std::io;
 use std::io::ErrorKind;
+use std::sync::Arc;
 
 use anyhow::ensure;
 use bytes::{BufMut, BytesMut};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
+use tokio::sync::RwLock;
 use valence_binary::Encode;
 use valence_protocol::decode::{PacketDecoder, PacketFrame};
 use valence_protocol::encode::PacketEncoder;
@@ -13,12 +15,15 @@ use valence_protocol::{CompressionThreshold, VarInt, MAX_PACKET_SIZE};
 pub(crate) struct PacketIoReader {
     reader: tokio::io::ReadHalf<tokio::net::TcpStream>,
     dec: PacketDecoder,
-    threshold: CompressionThreshold,
+    threshold: Arc<RwLock<CompressionThreshold>>,
 }
 
 impl PacketIoReader {
     pub(crate) async fn recv_packet_raw(&mut self) -> anyhow::Result<PacketFrame> {
         loop {
+            let threshold = *self.threshold.read().await;
+            self.dec.set_compression(threshold);
+
             if let Some(frame) = self.dec.try_next_packet()? {
                 // self.logger
                 //     .log("Unknown".to_string(), self.direction.clone(), frame.clone());
@@ -39,17 +44,15 @@ impl PacketIoReader {
         }
     }
 
-    #[allow(dead_code)]
-    pub(crate) fn set_compression(&mut self, threshold: CompressionThreshold) {
+    pub(crate) fn set_threshold_lock(&mut self, threshold: Arc<RwLock<CompressionThreshold>>) {
         self.threshold = threshold;
-        self.dec.set_compression(threshold);
     }
 }
 
 pub(crate) struct PacketIoWriter {
     writer: tokio::io::WriteHalf<tokio::net::TcpStream>,
     enc: PacketEncoder,
-    threshold: CompressionThreshold,
+    threshold: Arc<RwLock<CompressionThreshold>>,
 }
 
 impl PacketIoWriter {
@@ -60,6 +63,9 @@ impl PacketIoWriter {
       Yes | Data          |  Byte Array | zlib compressed packet data (see the sections below)
     */
     pub(crate) async fn send_packet_raw(&mut self, frame: &PacketFrame) -> anyhow::Result<()> {
+        let threshold = *self.threshold.read().await;
+        self.enc.set_compression(threshold);
+
         let id_varint = VarInt(frame.id);
         let id_buf = varint_to_bytes(id_varint);
 
@@ -69,8 +75,8 @@ impl PacketIoWriter {
         let uncompressed_packet_length = uncompressed_packet.len();
         let uncompressed_packet_length_varint = VarInt(uncompressed_packet_length as i32);
 
-        if self.threshold.0 >= 0 {
-            if uncompressed_packet_length > self.threshold.0 as usize {
+        if threshold.0 >= 0 {
+            if uncompressed_packet_length > threshold.0 as usize {
                 use std::io::Read;
 
                 use flate2::bufread::ZlibEncoder;
@@ -137,9 +143,8 @@ impl PacketIoWriter {
     }
 
     #[allow(dead_code)]
-    pub(crate) fn set_compression(&mut self, threshold: CompressionThreshold) {
+    pub(crate) fn set_threshold_lock(&mut self, threshold: Arc<RwLock<CompressionThreshold>>) {
         self.threshold = threshold;
-        self.enc.set_compression(threshold);
     }
 
     pub(crate) async fn shutdown(&mut self) -> std::io::Result<()> {
@@ -167,28 +172,24 @@ impl PacketIo {
         }
     }
 
-    pub(crate) fn split(self) -> (PacketIoReader, PacketIoWriter) {
+    pub(crate) fn split(
+        self,
+        threshold: Arc<RwLock<CompressionThreshold>>,
+    ) -> (PacketIoReader, PacketIoWriter) {
         let (reader, writer) = tokio::io::split(self.stream);
 
         (
             PacketIoReader {
                 reader,
                 dec: self.dec,
-                threshold: self.threshold,
+                threshold: threshold.clone(),
             },
             PacketIoWriter {
                 writer,
                 enc: self.enc,
-                threshold: self.threshold,
+                threshold,
             },
         )
-    }
-
-    #[allow(dead_code)]
-    pub(crate) async fn set_compression(&mut self, threshold: CompressionThreshold) {
-        self.threshold = threshold;
-        self.enc.set_compression(threshold);
-        self.dec.set_compression(threshold);
     }
 }
 

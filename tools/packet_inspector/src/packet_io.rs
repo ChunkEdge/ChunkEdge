@@ -43,10 +43,6 @@ impl PacketIoReader {
             self.dec.queue_bytes(buf);
         }
     }
-
-    pub(crate) fn set_threshold_lock(&mut self, threshold: Arc<RwLock<CompressionThreshold>>) {
-        self.threshold = threshold;
-    }
 }
 
 pub(crate) struct PacketIoWriter {
@@ -157,7 +153,6 @@ pub(crate) struct PacketIo {
     stream: TcpStream,
     enc: PacketEncoder,
     dec: PacketDecoder,
-    threshold: CompressionThreshold,
 }
 
 const READ_BUF_SIZE: usize = 1024;
@@ -168,7 +163,6 @@ impl PacketIo {
             stream,
             enc: PacketEncoder::new(),
             dec: PacketDecoder::new(),
-            threshold: CompressionThreshold::DEFAULT,
         }
     }
 

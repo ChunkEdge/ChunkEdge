@@ -55,23 +55,13 @@ pub struct LoadedChunk {
     cached_init_packets: Mutex<Vec<u8>>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Section {
     block_states: BlockStateContainer,
     biomes: BiomeContainer,
     /// Contains modifications for the update section packet. (Or the regular
     /// block update packet if len == 1).
     updates: Vec<ChunkDeltaUpdateEntry>,
-}
-
-impl Default for Section {
-    fn default() -> Self {
-        Self {
-            block_states: BlockStateContainer::default(),
-            biomes: BiomeContainer::default(),
-            updates: Vec::new(),
-        }
-    }
 }
 
 impl Section {
@@ -110,17 +100,12 @@ impl Section {
 /// This is because, for sky light, [`LightSection::NotSet`] could mean the
 /// section is either fully lit or fully dark, and the client should deduce
 /// that from the sky light data that is included.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub enum LightSection {
+    #[default]
     NotSet,
     Single(u8),
     FullData(Box<[u8; 2048]>),
-}
-
-impl Default for LightSection {
-    fn default() -> Self {
-        Self::NotSet
-    }
 }
 
 impl LightSection {
@@ -378,8 +363,8 @@ impl LoadedChunk {
     fn build_heightmap(&self, mut is_occupied: impl FnMut(BlockState) -> bool) -> [u32; 16 * 16] {
         let mut heightmap = [0; 16 * 16];
 
-        for z in 0u32..16 {
-            for x in 0u32..16 {
+        for z in 0_u32..16 {
+            for x in 0_u32..16 {
                 for y in (0..self.height()).rev() {
                     if is_occupied(self.block_state(x, y, z)) {
                         // Heightmap values are 1-indexed local Y coordinates, where 0
@@ -420,20 +405,20 @@ impl LoadedChunk {
 
     /// Encodes a given heightmap into the packed long-array format used in
     /// `LevelChunkWithLightS2c`.
-    fn encode_heightmap(heightmap: [u32; 16 * 16], world_height: u32) -> Vec<i64> {
+    fn encode_heightmap(heightmap: &[u32; 16 * 16], world_height: u32) -> Vec<i64> {
         let bits_per_entry = (u32::BITS - world_height.leading_zeros()).max(1);
         let entries_per_long = i64::BITS / bits_per_entry;
         let longs_per_packet =
-            (16 * 16) / entries_per_long + ((16 * 16) % entries_per_long != 0) as u32;
+            (16 * 16) / entries_per_long + u32::from((16 * 16) % entries_per_long != 0);
 
         let mut data: Vec<i64> = vec![0; longs_per_packet as usize];
 
-        for (idx, y) in heightmap.into_iter().enumerate() {
-            debug_assert!(y <= world_height);
+        for (idx, y) in heightmap.iter().enumerate() {
+            debug_assert!(*y <= world_height);
 
             let long_idx = idx / entries_per_long as usize;
             let bit_offset = (idx % entries_per_long as usize) as u32 * bits_per_entry;
-            data[long_idx] |= i64::from(y) << bit_offset;
+            data[long_idx] |= i64::from(*y) << bit_offset;
         }
 
         data
@@ -488,15 +473,15 @@ impl LoadedChunk {
             let heightmaps = vec![
                 HeightMap {
                     kind: HeightMapKind::WorldSurface,
-                    data: LoadedChunk::encode_heightmap(world_surface, world_height),
+                    data: LoadedChunk::encode_heightmap(&world_surface, world_height),
                 },
                 HeightMap {
                     kind: HeightMapKind::MotionBlocking,
-                    data: LoadedChunk::encode_heightmap(motion_blocking, world_height),
+                    data: LoadedChunk::encode_heightmap(&motion_blocking, world_height),
                 },
                 HeightMap {
                     kind: HeightMapKind::MotionBlockingNoLeaves,
-                    data: LoadedChunk::encode_heightmap(motion_blocking_no_leaves, world_height),
+                    data: LoadedChunk::encode_heightmap(&motion_blocking_no_leaves, world_height),
                 },
             ];
 
@@ -534,7 +519,7 @@ impl LoadedChunk {
                 );
             }
 
-            for sect in self.sections.iter() {
+            for sect in &self.sections {
                 sect.count_non_air_blocks()
                     .encode(&mut blocks_and_biomes)
                     .unwrap();
@@ -854,7 +839,7 @@ mod tests {
 
     fn decode_heightmap(data: &[i64], bits_per_entry: u32) -> [u32; 16 * 16] {
         let entries_per_long = i64::BITS / bits_per_entry;
-        let mask = (1u64 << bits_per_entry) - 1;
+        let mask = (1_u64 << bits_per_entry) - 1;
         let mut decoded = [0; 16 * 16];
 
         for (idx, value) in decoded.iter_mut().enumerate() {
@@ -986,7 +971,7 @@ mod tests {
         let motion_blocking = chunk.motion_blocking();
         assert_eq!(motion_blocking[heightmap_idx(0, 0)], 512);
 
-        let encoded = LoadedChunk::encode_heightmap(motion_blocking, chunk.height());
+        let encoded = LoadedChunk::encode_heightmap(&motion_blocking, chunk.height());
         // 512 world height => ceil(log2(512 + 1)) = 10 bits, so 64/10 = 6 entries per
         // long.
         assert_eq!(encoded.len(), 43);

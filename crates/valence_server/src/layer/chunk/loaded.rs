@@ -143,9 +143,13 @@ impl LoadedChunk {
         Self {
             viewer_count: AtomicU32::new(0),
             sections: vec![Section::default(); section_count].into(),
-            // HACK: We don't have a full lighting engine implemented. To avoid shrouding the
-            // world in darkness, give all chunks the max amount of sky light light.
-            sky_light_sections: vec![LightSection::with_full_light(); light_section_count].into(),
+            // We don't have a full lighting engine implemented so we set all sky light to be default (NotSet)
+            // so that no light data is sent to the client and we rely on a hack that sets ambient light to full
+            // brightness for all dimensions to make the chunks appear fully lit. We don't send
+            // LightSection::with_full_light() here instead of the ambient light hack because this is extremely
+            // unoptimized in terms of memory consumption and crashes the many_players_spread_out benchmark/test.
+            sky_light_sections: vec![LightSection::default(); light_section_count].into(),
+            // We don't have a full lighting engine implemented so we set all block light to be fully dark.
             block_light_sections: vec![LightSection::with_zeroed_light(); light_section_count]
                 .into(),
             block_entities: BTreeMap::new(),

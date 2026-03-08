@@ -35,6 +35,10 @@ pub struct LoadedChunk {
     viewer_count: AtomicU32,
     /// Block and biome data for the chunk.
     sections: Box<[Section]>,
+    /// Sky light data for the chunk. Light sections have one extra section at the top and bottom to account for skylight changes above and below the chunk.
+    sky_light_sections: Box<[LightSection]>,
+    /// Block light data for the chunk. Light sections have one extra section at the top and bottom to account for light changes above and below the chunk.
+    block_light_sections: Box<[LightSection]>,
     /// The block entities in this chunk.
     block_entities: BTreeMap<u32, Compound>,
     /// The set of block entities that have been modified this tick.
@@ -48,11 +52,9 @@ pub struct LoadedChunk {
 }
 
 #[derive(Clone, Debug)]
-struct Section {
+pub struct Section {
     block_states: BlockStateContainer,
     biomes: BiomeContainer,
-    block_light: [u8; 2048],
-    sky_light: [u8; 2048],
     /// Contains modifications for the update section packet. (Or the regular
     /// block update packet if len == 1).
     updates: Vec<ChunkDeltaUpdateEntry>,
@@ -61,8 +63,6 @@ struct Section {
 impl Default for Section {
     fn default() -> Self {
         Self {
-            block_light: [0x00; 2048],
-            sky_light: [0x00; 2048],
             block_states: BlockStateContainer::default(),
             biomes: BiomeContainer::default(),
             updates: Vec::new(),
@@ -71,23 +71,6 @@ impl Default for Section {
 }
 
 impl Section {
-    /// Create a new section fully lit by sky light.
-    pub(crate) fn with_sky_light() -> Self {
-        Self {
-            sky_light: [0xff; 2048],
-            ..Default::default()
-        }
-    }
-
-    /// Create a fully lit section
-    pub(crate) fn _with_full_light() -> Self {
-        Self {
-            sky_light: [0xff; 2048],
-            block_light: [0xff; 2048],
-            ..Default::default()
-        }
-    }
-
     fn count_non_air_blocks(&self) -> u16 {
         let mut count = 0;
 
@@ -116,11 +99,42 @@ impl Section {
     }
 }
 
+#[derive(Clone, Debug)]
+pub struct LightSection {
+    light_data: Option<Box<[u8; 2048]>>,
+}
+
+impl Default for LightSection {
+    fn default() -> Self {
+        Self { light_data: None }
+    }
+}
+
+impl LightSection {
+    /// Create a new fully lit section of light data.
+    pub fn with_full_light() -> Self {
+        Self {
+            light_data: Some(Box::new([0xff; 2048])),
+        }
+    }
+
+    /// Create a new fully dark (zeroed) section of light data.
+    pub fn with_zeroed_light() -> Self {
+        Self {
+            light_data: Some(Box::new([0x00; 2048])),
+        }
+    }
+}
+
 impl LoadedChunk {
     pub(crate) fn new(height: u32) -> Self {
+        let section_count = height as usize / 16;
+        let light_section_count = section_count + 2;
         Self {
             viewer_count: AtomicU32::new(0),
-            sections: vec![Section::with_sky_light(); height as usize / 16].into(),
+            sections: vec![Section::default(); section_count].into(),
+            sky_light_sections: vec![LightSection::default(); light_section_count].into(),
+            block_light_sections: vec![LightSection::default(); light_section_count].into(),
             block_entities: BTreeMap::new(),
             changed_block_entities: BTreeSet::new(),
             changed_biomes: false,
@@ -439,7 +453,21 @@ impl LoadedChunk {
             let mut sky_light_arrays = Vec::with_capacity(self.sections.len());
             let mut block_light_arrays = Vec::with_capacity(self.sections.len());
 
-            for (i, sect) in self.sections.iter().enumerate() {
+            for (i, sky_light) in self.sky_light_sections.iter().enumerate() {
+                if let Some(data) = &sky_light.light_data {
+                    sky_light_arrays.push(FixedArray(**data));
+                    sky_light_mask.set(i, 1);
+                }
+            }
+
+            for (i, block_light) in self.block_light_sections.iter().enumerate() {
+                if let Some(data) = &block_light.light_data {
+                    block_light_arrays.push(FixedArray(**data));
+                    block_light_mask.set(i, 1);
+                }
+            }
+
+            for sect in self.sections.iter() {
                 sect.count_non_air_blocks()
                     .encode(&mut blocks_and_biomes)
                     .unwrap();
@@ -463,14 +491,6 @@ impl LoadedChunk {
                         bit_width(info.biome_registry_len - 1),
                     )
                     .expect("paletted container encode should always succeed");
-
-                let sky_light = FixedArray(sect.sky_light);
-                sky_light_arrays.push(sky_light);
-                sky_light_mask.set(i + 1, 1);
-
-                let block_light = FixedArray(sect.block_light);
-                block_light_arrays.push(block_light);
-                block_light_mask.set(i + 1, 1);
             }
 
             let block_entities: Vec<_> = self

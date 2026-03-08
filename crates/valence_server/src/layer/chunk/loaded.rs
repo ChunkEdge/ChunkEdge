@@ -35,9 +35,13 @@ pub struct LoadedChunk {
     viewer_count: AtomicU32,
     /// Block and biome data for the chunk.
     sections: Box<[Section]>,
-    /// Sky light data for the chunk. Light sections have one extra section at the top and bottom to account for skylight changes above and below the chunk.
+    /// Sky light data for the chunk. Light sections have one extra section at
+    /// the top and bottom to account for skylight changes above and below the
+    /// chunk.
     sky_light_sections: Box<[LightSection]>,
-    /// Block light data for the chunk. Light sections have one extra section at the top and bottom to account for light changes above and below the chunk.
+    /// Block light data for the chunk. Light sections have one extra section at
+    /// the top and bottom to account for light changes above and below the
+    /// chunk.
     block_light_sections: Box<[LightSection]>,
     /// The block entities in this chunk.
     block_entities: BTreeMap<u32, Compound>,
@@ -143,13 +147,16 @@ impl LoadedChunk {
         Self {
             viewer_count: AtomicU32::new(0),
             sections: vec![Section::default(); section_count].into(),
-            // We don't have a full lighting engine implemented so we set all sky light to be default (NotSet)
-            // so that no light data is sent to the client and we rely on a hack that sets ambient light to full
-            // brightness for all dimensions to make the chunks appear fully lit. We don't send
-            // LightSection::with_full_light() here instead of the ambient light hack because this is extremely
-            // unoptimized in terms of memory consumption and crashes the many_players_spread_out benchmark/test.
+            // We don't have a full lighting engine implemented so we set all sky light to be
+            // default (NotSet) so that no light data is sent to the client and we rely
+            // on a hack that sets ambient light to full brightness for all dimensions
+            // to make the chunks appear fully lit. We don't send
+            // LightSection::with_full_light() here instead of the ambient light hack because this
+            // is extremely unoptimized in terms of memory consumption and crashes the
+            // many_players_spread_out benchmark/test.
             sky_light_sections: vec![LightSection::default(); light_section_count].into(),
-            // We don't have a full lighting engine implemented so we set all block light to be fully dark.
+            // We don't have a full lighting engine implemented so we set all block light to be
+            // fully dark.
             block_light_sections: vec![LightSection::with_zeroed_light(); light_section_count]
                 .into(),
             block_entities: BTreeMap::new(),
@@ -411,7 +418,8 @@ impl LoadedChunk {
         state.to_kind().to_str().ends_with("_leaves")
     }
 
-    /// Encodes a given heightmap into the packed long-array format used in `LevelChunkWithLightS2c`.
+    /// Encodes a given heightmap into the packed long-array format used in
+    /// `LevelChunkWithLightS2c`.
     fn encode_heightmap(heightmap: [u32; 16 * 16], world_height: u32) -> Vec<i64> {
         let bits_per_entry = (u32::BITS - world_height.leading_zeros()).max(1);
         let entries_per_long = i64::BITS / bits_per_entry;
@@ -442,7 +450,8 @@ impl LoadedChunk {
         match light {
             LightSection::NotSet => {
                 // For sky light, the client will deduce this section to be either fully lit or
-                // fully dark based on the presence of light data in other light sections in the chunk.
+                // fully dark based on the presence of light data in other light sections in the
+                // chunk.
                 if is_block_light {
                     empty_light_mask.set(i, 1);
                 }
@@ -978,7 +987,8 @@ mod tests {
         assert_eq!(motion_blocking[heightmap_idx(0, 0)], 512);
 
         let encoded = LoadedChunk::encode_heightmap(motion_blocking, chunk.height());
-        // 512 world height => ceil(log2(512 + 1)) = 10 bits, so 64/10 = 6 entries per long.
+        // 512 world height => ceil(log2(512 + 1)) = 10 bits, so 64/10 = 6 entries per
+        // long.
         assert_eq!(encoded.len(), 43);
 
         let decoded = decode_heightmap(&encoded, 10);

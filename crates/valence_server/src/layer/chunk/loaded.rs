@@ -5,7 +5,7 @@ use std::sync::atomic::{AtomicU32, Ordering};
 
 use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
 use valence_binary::Encode;
-use valence_generated::block::{PropName, PropValue};
+use valence_generated::block::{BlockKind, PropName, PropValue};
 use valence_nbt::Compound;
 use valence_protocol::encode::{PacketWriter, WritePacket};
 use valence_protocol::packets::play::level_chunk_with_light_s2c::{
@@ -339,36 +339,28 @@ impl LoadedChunk {
         self.assert_no_changes();
     }
 
-    /// Generates the `MOTION_BLOCKING` heightmap for this chunk, which stores
-    /// the height of the highest non motion-blocking block in each column.
-    ///
-    /// The lowest value of the heightmap is 0, which means that there are no
-    /// motion-blocking blocks in the column. In this case, rain will fall
-    /// through the void and there will be no rain particles.
-    ///
-    /// A value of 1 means that rain particles will appear at the lowest
-    /// possible height given by [`DimensionType::min_y`]. Note that
-    /// blocks cannot be placed at `min_y - 1`.
-    ///
-    /// We take these two special cases into account by adding a value of 2 to
-    /// our heightmap if we find a motion-blocking block, since
-    /// `self.block_state(x, 0, z)` corresponds to the block at `(x, min_y, z)`
-    /// ingame.
-    ///
-    /// [`DimensionType::min_y`]: valence_registry::dimension_type::DimensionType::min_y
-    #[allow(clippy::needless_range_loop)]
-    fn motion_blocking(&self) -> Vec<Vec<u32>> {
-        let mut heightmap: Vec<Vec<u32>> = vec![vec![0; 16]; 16];
+    fn motion_blocking(&self) -> [u32; 16 * 16] {
+        self.build_heightmap(Self::is_motion_blocking_occupied)
+    }
 
-        for z in 0..16 {
-            for x in 0..16 {
+    fn motion_blocking_no_leaves(&self) -> [u32; 16 * 16] {
+        self.build_heightmap(Self::is_motion_blocking_no_leaves_occupied)
+    }
+
+    fn world_surface(&self) -> [u32; 16 * 16] {
+        self.build_heightmap(|state| !state.is_air())
+    }
+
+    fn build_heightmap(&self, mut is_occupied: impl FnMut(BlockState) -> bool) -> [u32; 16 * 16] {
+        let mut heightmap = [0; 16 * 16];
+
+        for z in 0u32..16 {
+            for x in 0u32..16 {
                 for y in (0..self.height()).rev() {
-                    let state = self.block_state(x as u32, y, z as u32);
-                    if state.blocks_motion()
-                        || state.is_liquid()
-                        || state.get(PropName::Waterlogged) == Some(PropValue::True)
-                    {
-                        heightmap[z][x] = y + 2;
+                    if is_occupied(self.block_state(x, y, z)) {
+                        // Heightmap values are 1-indexed local Y coordinates, where 0
+                        // means "no occupied block in this column".
+                        heightmap[(z as usize) * 16 + (x as usize)] = y + 1;
                         break;
                     }
                 }
@@ -378,43 +370,45 @@ impl LoadedChunk {
         heightmap
     }
 
-    /// Encodes a given heightmap into the correct format of the
-    /// `ChunkDataS2c` packet.
-    ///
-    /// The heightmap values are stored in a long array. Each value is encoded
-    /// as a 9-bit unsigned integer, so every long with 64 bits can hold at
-    /// most seven values. The long is padded at the left side with a single
-    /// zero. Since there are 256 values for 256 columns in a chunk, there
-    /// will be 36 fully filled longs and one half-filled long with four
-    /// values. The remaining three values in the last long are left unused.
-    ///
-    /// For example, the `MOTION_BLOCKING` heightmap in an empty superflat
-    /// world is always 4. The first 36 long values will then be
-    ///
-    /// 0 000000100 000000100 000000100 000000100 000000100 000000100 000000100,
-    ///
-    /// and the last long will be
-    ///
-    /// 0 000000000 000000000 000000000 000000100 000000100 000000100 000000100.
-    fn encode_heightmap(heightmap: Vec<Vec<u32>>) -> Vec<i64> {
-        const BITS_PER_ENTRY: u32 = 9;
-        const ENTRIES_PER_LONG: u32 = i64::BITS / BITS_PER_ENTRY;
+    fn is_motion_blocking_occupied(state: BlockState) -> bool {
+        let kind = state.to_kind();
 
-        // Unless `ENTRIES_PER_LONG` is a power of 2 and therefore evenly divides 16*16,
-        // we need to add one extra long to fit all values in the packet.
-        const LONGS_PER_PACKET: u32 =
-            16 * 16 / ENTRIES_PER_LONG + (16 * 16 % ENTRIES_PER_LONG != 0) as u32;
+        if matches!(kind, BlockKind::BambooSapling | BlockKind::Cactus) {
+            return false;
+        }
 
-        let mut data: Vec<i64> = vec![0; LONGS_PER_PACKET as usize];
-        let mut iter = heightmap.into_iter().flatten();
+        state.blocks_motion()
+            || state.is_liquid()
+            || state.get(PropName::Waterlogged) == Some(PropValue::True)
+    }
 
-        for long in &mut data {
-            for j in 0..ENTRIES_PER_LONG {
-                match iter.next() {
-                    None => break,
-                    Some(y) => *long += i64::from(y) << (BITS_PER_ENTRY * j),
-                }
-            }
+    fn is_motion_blocking_no_leaves_occupied(state: BlockState) -> bool {
+        if Self::is_leaf_block(state) {
+            return false;
+        }
+
+        Self::is_motion_blocking_occupied(state)
+    }
+
+    fn is_leaf_block(state: BlockState) -> bool {
+        state.to_kind().to_str().ends_with("_leaves")
+    }
+
+    /// Encodes a given heightmap into the packed long-array format used in `LevelChunkWithLightS2c`.
+    fn encode_heightmap(heightmap: [u32; 16 * 16], world_height: u32) -> Vec<i64> {
+        let bits_per_entry = (u32::BITS - world_height.leading_zeros()).max(1);
+        let entries_per_long = i64::BITS / bits_per_entry;
+        let longs_per_packet =
+            (16 * 16) / entries_per_long + ((16 * 16) % entries_per_long != 0) as u32;
+
+        let mut data: Vec<i64> = vec![0; longs_per_packet as usize];
+
+        for (idx, y) in heightmap.into_iter().enumerate() {
+            debug_assert!(y <= world_height);
+
+            let long_idx = idx / entries_per_long as usize;
+            let bit_offset = (idx % entries_per_long as usize) as u32 * bits_per_entry;
+            data[long_idx] |= i64::from(y) << bit_offset;
         }
 
         data
@@ -430,19 +424,24 @@ impl LoadedChunk {
         let mut init_packets = self.cached_init_packets.lock();
 
         if init_packets.is_empty() {
+            let world_surface = self.world_surface();
+            let motion_blocking = self.motion_blocking();
+            let motion_blocking_no_leaves = self.motion_blocking_no_leaves();
+            let world_height = self.height();
+
             let heightmaps = vec![
                 HeightMap {
-                    kind: HeightMapKind::MotionBlocking,
-                    data: LoadedChunk::encode_heightmap(self.motion_blocking()),
+                    kind: HeightMapKind::WorldSurface,
+                    data: LoadedChunk::encode_heightmap(world_surface, world_height),
                 },
-                // HeightMap {
-                //     kind: HeightMapKind::WorldSurface,
-                //     data: vec![],
-                // },
-                // HeightMap {
-                //     kind: HeightMapKind::MotionBlockingNoLeaves,
-                //     data: vec![],
-                // },
+                HeightMap {
+                    kind: HeightMapKind::MotionBlocking,
+                    data: LoadedChunk::encode_heightmap(motion_blocking, world_height),
+                },
+                HeightMap {
+                    kind: HeightMapKind::MotionBlockingNoLeaves,
+                    data: LoadedChunk::encode_heightmap(motion_blocking_no_leaves, world_height),
+                },
             ];
 
             let mut blocks_and_biomes: Vec<u8> = vec![];
@@ -781,6 +780,24 @@ mod tests {
 
     use super::*;
 
+    fn heightmap_idx(x: usize, z: usize) -> usize {
+        z * 16 + x
+    }
+
+    fn decode_heightmap(data: &[i64], bits_per_entry: u32) -> [u32; 16 * 16] {
+        let entries_per_long = i64::BITS / bits_per_entry;
+        let mask = (1u64 << bits_per_entry) - 1;
+        let mut decoded = [0; 16 * 16];
+
+        for (idx, value) in decoded.iter_mut().enumerate() {
+            let long_idx = idx / entries_per_long as usize;
+            let bit_offset = (idx % entries_per_long as usize) as u32 * bits_per_entry;
+            *value = ((data[long_idx] as u64 >> bit_offset) & mask) as u32;
+        }
+
+        decoded
+    }
+
     #[test]
     fn loaded_chunk_unviewed_no_changes() {
         let mut chunk = LoadedChunk::new(512);
@@ -852,5 +869,61 @@ mod tests {
         );
 
         assert!(!chunk.cached_init_packets.get_mut().is_empty());
+    }
+
+    #[test]
+    fn heightmap_occupancy_rules() {
+        // Based on: https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure
+        let mut chunk = LoadedChunk::new(32);
+
+        chunk.set_block_state(0, 0, 0, BlockState::STONE);
+        chunk.set_block_state(1, 5, 0, BlockState::OAK_LEAVES);
+        chunk.set_block_state(2, 6, 0, BlockState::CACTUS);
+        chunk.set_block_state(3, 7, 0, BlockState::WATER);
+        chunk.set_block_state(
+            4,
+            8,
+            0,
+            BlockState::OAK_LEAVES.set(PropName::Waterlogged, PropValue::True),
+        );
+
+        let world_surface = chunk.world_surface();
+        let motion_blocking = chunk.motion_blocking();
+        let motion_blocking_no_leaves = chunk.motion_blocking_no_leaves();
+
+        assert_eq!(world_surface[heightmap_idx(0, 0)], 1);
+        assert_eq!(world_surface[heightmap_idx(1, 0)], 6);
+        assert_eq!(world_surface[heightmap_idx(2, 0)], 7);
+        assert_eq!(world_surface[heightmap_idx(3, 0)], 8);
+        assert_eq!(world_surface[heightmap_idx(4, 0)], 9);
+
+        assert_eq!(motion_blocking[heightmap_idx(0, 0)], 1);
+        assert_eq!(motion_blocking[heightmap_idx(1, 0)], 6);
+        assert_eq!(motion_blocking[heightmap_idx(2, 0)], 0);
+        assert_eq!(motion_blocking[heightmap_idx(3, 0)], 8);
+        assert_eq!(motion_blocking[heightmap_idx(4, 0)], 9);
+
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(0, 0)], 1);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(1, 0)], 0);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(2, 0)], 0);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(3, 0)], 8);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(4, 0)], 0);
+    }
+
+    #[test]
+    fn encode_heightmap_uses_dynamic_bit_width() {
+        let mut chunk = LoadedChunk::new(512);
+        chunk.set_block_state(0, 511, 0, BlockState::STONE);
+
+        let motion_blocking = chunk.motion_blocking();
+        assert_eq!(motion_blocking[heightmap_idx(0, 0)], 512);
+
+        let encoded = LoadedChunk::encode_heightmap(motion_blocking, chunk.height());
+        // 512 world height => ceil(log2(512 + 1)) = 10 bits, so 64/10 = 6 entries per long.
+        assert_eq!(encoded.len(), 43);
+
+        let decoded = decode_heightmap(&encoded, 10);
+        assert_eq!(decoded[heightmap_idx(0, 0)], 512);
+        assert_eq!(decoded[heightmap_idx(1, 0)], 0);
     }
 }

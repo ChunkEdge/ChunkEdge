@@ -17,7 +17,6 @@ derive_more = { workspace = true, features = [
     "into",
 ] }
 indexmap.workspace = true
-rand.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
@@ -28,6 +27,10 @@ valence_math.workspace = true
 valence_nbt = { workspace = true, features = ["binary"] }
 valence_protocol_macros.workspace = true
 valence_text.workspace = true
+
+[dev-dependencies]
+# rand is only used in tests
+rand.workspace = true
 
 [lints]
 workspace = true

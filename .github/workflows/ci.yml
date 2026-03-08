@@ -185,7 +185,7 @@ jobs:
 
           <details>
             <summary>depgraph.svg (Don't forget the trailing newline)</summary>
-            
+
           \`\`\`html
           $(cat assets/depgraph.svg)
 
@@ -225,4 +225,4 @@ jobs:
           crate: cargo-udeps
 
       - name: Check for unused dependencies
-        run: cargo udeps --all --all-features
+        run: cargo udeps --workspace --all-features

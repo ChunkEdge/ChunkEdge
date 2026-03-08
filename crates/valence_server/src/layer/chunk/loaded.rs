@@ -449,8 +449,8 @@ impl LoadedChunk {
             let mut sky_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
             let mut block_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
 
-            let mut sky_light_arrays = Vec::with_capacity(self.sections.len());
-            let mut block_light_arrays = Vec::with_capacity(self.sections.len());
+            let mut sky_light_arrays = Vec::with_capacity(self.sections.len() + 2);
+            let mut block_light_arrays = Vec::with_capacity(self.sections.len() + 2);
 
             for (i, sky_light) in self.sky_light_sections.iter().enumerate() {
                 if let Some(data) = &sky_light.light_data {

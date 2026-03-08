@@ -99,30 +99,40 @@ impl Section {
     }
 }
 
+/// Enum describing the light contents of a data section.
+///
+/// We need to differentiate between [`LightSection::NotSet`] and
+/// [`LightSection::Single`].
+/// This is because, for sky light, [`LightSection::NotSet`] could mean the
+/// section is either fully lit or fully dark, and the client should deduce
+/// that from the sky light data that is included.
 #[derive(Clone, Debug)]
-pub struct LightSection {
-    light_data: Option<Box<[u8; 2048]>>,
+pub enum LightSection {
+    NotSet,
+    Single(u8),
+    FullData(Box<[u8; 2048]>),
 }
 
 impl Default for LightSection {
     fn default() -> Self {
-        Self { light_data: None }
+        Self::NotSet
     }
 }
 
 impl LightSection {
     /// Create a new fully lit section of light data.
     pub fn with_full_light() -> Self {
-        Self {
-            light_data: Some(Box::new([0xff; 2048])),
-        }
+        Self::Single(0xff)
     }
 
     /// Create a new fully dark (zeroed) section of light data.
     pub fn with_zeroed_light() -> Self {
-        Self {
-            light_data: Some(Box::new([0x00; 2048])),
-        }
+        Self::Single(0x00)
+    }
+
+    /// Create a new section of light data with the given raw byte array
+    pub fn from_data(data: [u8; 2048]) -> Self {
+        Self::FullData(Box::new(data))
     }
 }
 
@@ -136,7 +146,8 @@ impl LoadedChunk {
             // HACK: We don't have a full lighting engine implemented. To avoid shrouding the
             // world in darkness, give all chunks the max amount of sky light light.
             sky_light_sections: vec![LightSection::with_full_light(); light_section_count].into(),
-            block_light_sections: vec![LightSection::default(); light_section_count].into(),
+            block_light_sections: vec![LightSection::with_zeroed_light(); light_section_count]
+                .into(),
             block_entities: BTreeMap::new(),
             changed_block_entities: BTreeSet::new(),
             changed_biomes: false,
@@ -416,6 +427,36 @@ impl LoadedChunk {
         data
     }
 
+    fn fill_light_data(
+        light: &LightSection,
+        light_arrays: &mut Vec<FixedArray<u8, 2048>>,
+        light_mask: &mut BitStorage,
+        empty_light_mask: &mut BitStorage,
+        i: usize,
+        is_block_light: bool,
+    ) {
+        match light {
+            LightSection::NotSet => {
+                // For sky light, the client will deduce this section to be either fully lit or
+                // fully dark based on the presence of light data in other light sections in the chunk.
+                if is_block_light {
+                    empty_light_mask.set(i, 1);
+                }
+            }
+            LightSection::Single(0x00) => {
+                empty_light_mask.set(i, 1);
+            }
+            LightSection::Single(b) => {
+                light_arrays.push(FixedArray([*b; 2048]));
+                light_mask.set(i, 1);
+            }
+            LightSection::FullData(data) => {
+                light_arrays.push(FixedArray(**data));
+                light_mask.set(i, 1);
+            }
+        }
+    }
+
     /// Writes the packet data needed to initialize this chunk.
     pub(crate) fn write_init_packets(
         &self,
@@ -448,28 +489,36 @@ impl LoadedChunk {
 
             let mut blocks_and_biomes: Vec<u8> = vec![];
 
-            let mut sky_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
-            let mut block_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
-            let mut empty_block_light_mask =
-                BitStorage::new(1, self.sections.len() + 2, None).unwrap();
+            let light_section_count = self.sections.len() + 2;
 
-            let mut sky_light_arrays = Vec::with_capacity(self.sections.len() + 2);
-            let mut block_light_arrays = Vec::with_capacity(self.sections.len() + 2);
+            let mut sky_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut empty_sky_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut block_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut empty_block_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+
+            let mut sky_light_arrays = Vec::with_capacity(light_section_count);
+            let mut block_light_arrays = Vec::with_capacity(light_section_count);
 
             for (i, sky_light) in self.sky_light_sections.iter().enumerate() {
-                if let Some(data) = &sky_light.light_data {
-                    sky_light_arrays.push(FixedArray(**data));
-                    sky_light_mask.set(i, 1);
-                }
+                LoadedChunk::fill_light_data(
+                    sky_light,
+                    &mut sky_light_arrays,
+                    &mut sky_light_mask,
+                    &mut empty_sky_light_mask,
+                    i,
+                    false,
+                );
             }
 
             for (i, block_light) in self.block_light_sections.iter().enumerate() {
-                if let Some(data) = &block_light.light_data {
-                    block_light_arrays.push(FixedArray(**data));
-                    block_light_mask.set(i, 1);
-                } else {
-                    empty_block_light_mask.set(i, 1);
-                }
+                LoadedChunk::fill_light_data(
+                    block_light,
+                    &mut block_light_arrays,
+                    &mut block_light_mask,
+                    &mut empty_block_light_mask,
+                    i,
+                    true,
+                );
             }
 
             for sect in self.sections.iter() {

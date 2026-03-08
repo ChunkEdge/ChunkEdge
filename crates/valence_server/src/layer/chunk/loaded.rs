@@ -96,29 +96,19 @@ impl Section {
 /// Enum describing the light contents of a data section.
 ///
 /// We need to differentiate between [`LightSection::NotSet`] and
-/// [`LightSection::Single`].
-/// This is because, for sky light, [`LightSection::NotSet`] could mean the
-/// section is either fully lit or fully dark, and the client should deduce
-/// that from the sky light data that is included.
+/// [`LightSection::FullyDark`]. This is because, for sky light,
+/// [`LightSection::NotSet`] could mean the section is either fully lit or fully
+/// dark, and the client should deduce that from the sky light data that is
+/// included.
 #[derive(Clone, Debug, Default)]
 pub enum LightSection {
     #[default]
     NotSet,
-    Single(u8),
+    FullyDark,
     FullData(Box<[u8; 2048]>),
 }
 
 impl LightSection {
-    /// Create a new fully lit section of light data.
-    pub fn with_full_light() -> Self {
-        Self::Single(0xff)
-    }
-
-    /// Create a new fully dark (zeroed) section of light data.
-    pub fn with_zeroed_light() -> Self {
-        Self::Single(0x00)
-    }
-
     /// Create a new section of light data with the given raw byte array
     pub fn from_data(data: [u8; 2048]) -> Self {
         Self::FullData(Box::new(data))
@@ -135,15 +125,14 @@ impl LoadedChunk {
             // We don't have a full lighting engine implemented so we set all sky light to be
             // default (NotSet) so that no light data is sent to the client and we rely
             // on a hack that sets ambient light to full brightness for all dimensions
-            // to make the chunks appear fully lit. We don't send
-            // LightSection::with_full_light() here instead of the ambient light hack because this
-            // is extremely unoptimized in terms of memory consumption and crashes the
-            // many_players_spread_out benchmark/test.
+            // to make the chunks appear fully lit. We don't send a full light section filled with
+            // 0xFF here, instead of the ambient light hack, because this is extremely unoptimized
+            // in terms of memory consumption and crashes the many_players_spread_out
+            // benchmark/test.
             sky_light_sections: vec![LightSection::default(); light_section_count].into(),
             // We don't have a full lighting engine implemented so we set all block light to be
             // fully dark.
-            block_light_sections: vec![LightSection::with_zeroed_light(); light_section_count]
-                .into(),
+            block_light_sections: vec![LightSection::FullyDark; light_section_count].into(),
             block_entities: BTreeMap::new(),
             changed_block_entities: BTreeSet::new(),
             changed_biomes: false,
@@ -441,12 +430,8 @@ impl LoadedChunk {
                     empty_light_mask.set(i, 1);
                 }
             }
-            LightSection::Single(0x00) => {
+            LightSection::FullyDark => {
                 empty_light_mask.set(i, 1);
-            }
-            LightSection::Single(b) => {
-                light_arrays.push(FixedArray([*b; 2048]));
-                light_mask.set(i, 1);
             }
             LightSection::FullData(data) => {
                 light_arrays.push(FixedArray(**data));

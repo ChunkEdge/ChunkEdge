@@ -133,7 +133,9 @@ impl LoadedChunk {
         Self {
             viewer_count: AtomicU32::new(0),
             sections: vec![Section::default(); section_count].into(),
-            sky_light_sections: vec![LightSection::default(); light_section_count].into(),
+            // HACK: We don't have a full lighting engine implemented. To avoid shrouding the
+            // world in darkness, give all chunks the max amount of sky light light.
+            sky_light_sections: vec![LightSection::with_full_light(); light_section_count].into(),
             block_light_sections: vec![LightSection::default(); light_section_count].into(),
             block_entities: BTreeMap::new(),
             changed_block_entities: BTreeSet::new(),
@@ -448,6 +450,8 @@ impl LoadedChunk {
 
             let mut sky_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
             let mut block_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
+            let mut empty_block_light_mask =
+                BitStorage::new(1, self.sections.len() + 2, None).unwrap();
 
             let mut sky_light_arrays = Vec::with_capacity(self.sections.len() + 2);
             let mut block_light_arrays = Vec::with_capacity(self.sections.len() + 2);
@@ -463,6 +467,8 @@ impl LoadedChunk {
                 if let Some(data) = &block_light.light_data {
                     block_light_arrays.push(FixedArray(**data));
                     block_light_mask.set(i, 1);
+                } else {
+                    empty_block_light_mask.set(i, 1);
                 }
             }
 
@@ -523,7 +529,7 @@ impl LoadedChunk {
                     sky_light_mask: Cow::Borrowed(&sky_light_mask.into_data()),
                     block_light_mask: Cow::Borrowed(&block_light_mask.into_data()),
                     empty_sky_light_mask: Cow::Borrowed(&[]),
-                    empty_block_light_mask: Cow::Borrowed(&[]),
+                    empty_block_light_mask: Cow::Borrowed(&empty_block_light_mask.into_data()),
                     sky_light_arrays: Cow::Borrowed(&sky_light_arrays),
                     block_light_arrays: Cow::Borrowed(&block_light_arrays),
                 },

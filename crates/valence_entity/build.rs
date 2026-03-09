@@ -332,6 +332,16 @@ impl Value {
         match self {
             Value::Integer(_) => quote!(VarInt(#self_lvalue)),
             Value::OptionalInt(_) => quote!(OptionalInt(#self_lvalue)),
+            Value::TextComponent(_) => {
+                quote!(valence_binary::TextComponent::from(#self_lvalue.clone()))
+            }
+            Value::OptionalTextComponent(_) => {
+                quote!(
+                    #self_lvalue
+                        .clone()
+                        .map(valence_binary::TextComponent::from)
+                )
+            }
             _ => quote!(&#self_lvalue),
         }
     }

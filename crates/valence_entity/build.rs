@@ -79,6 +79,7 @@ enum Value {
     PigVariant(String),
     ChickenVariant(String),
     OptionalGlobalPos(Option<()>), // TODO
+    /// TODO: The wiki mentions that [PaintingVariant] can be and identifier or a full inline definition but we currently only support the identifier form.
     PaintingVariant(String),
     SnifferState(String),
     ArmadilloState(String),
@@ -160,7 +161,7 @@ impl Value {
             Value::Facing(_) => quote!(valence_protocol::Direction),
             Value::LazyEntityReference(_) => quote!(()), // TODO
             Value::BlockState(_) => quote!(valence_protocol::BlockState),
-            Value::OptionalBlockState(_) => quote!(valence_protocol::BlockState),
+            Value::OptionalBlockState(_) => quote!(Option<valence_protocol::BlockState>),
             Value::NbtCompound(_) => quote!(valence_nbt::Compound),
             Value::Particle(_) => {
                 quote!(valence_protocol::packets::play::level_particles_s2c::Particle)
@@ -232,7 +233,7 @@ impl Value {
             }
             Value::OptionalBlockState(bs) => {
                 assert!(bs.is_none());
-                quote!(valence_protocol::BlockState::default())
+                quote!(None)
             }
             Value::NbtCompound(s) => {
                 assert_eq!(s, "{}");
@@ -308,7 +309,10 @@ impl Value {
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::ChickenKind::#variant)
             }
-            Value::OptionalGlobalPos(_) => quote!(()),
+            Value::OptionalGlobalPos(gp) => {
+                assert!(gp.is_none());
+                quote!(None)
+            }
             Value::PaintingVariant(p) => {
                 let variant = ident(p.to_pascal_case());
                 quote!(crate::PaintingKind::#variant)
@@ -330,8 +334,10 @@ impl Value {
 
     fn encodable_expr(&self, self_lvalue: TokenStream) -> TokenStream {
         match self {
+            Value::Long(_) => quote!(valence_protocol::VarLong(#self_lvalue)),
             Value::Integer(_) => quote!(VarInt(#self_lvalue)),
             Value::OptionalInt(_) => quote!(OptionalInt(#self_lvalue)),
+            Value::OptionalBlockState(_) => quote!(OptionalBlockState(#self_lvalue)),
             Value::TextComponent(_) => {
                 quote!(valence_binary::TextComponent::from(#self_lvalue.clone()))
             }

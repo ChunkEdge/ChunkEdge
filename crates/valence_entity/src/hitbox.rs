@@ -453,36 +453,52 @@ fn update_painting_hitbox(
 ) {
     for (mut hitbox, painting_variant, look) in &mut query {
         let bounds: UVec3 = match painting_variant.0 {
-            PaintingKind::Kebab => [1, 1, 1],
-            PaintingKind::Aztec => [1, 1, 1],
-            PaintingKind::Alban => [1, 1, 1],
-            PaintingKind::Aztec2 => [1, 1, 1],
-            PaintingKind::Bomb => [1, 1, 1],
-            PaintingKind::Plant => [1, 1, 1],
-            PaintingKind::Wasteland => [1, 1, 1],
-            PaintingKind::Pool => [2, 1, 2],
-            PaintingKind::Courbet => [2, 1, 2],
-            PaintingKind::Sea => [2, 1, 2],
-            PaintingKind::Sunset => [2, 1, 2],
-            PaintingKind::Creebet => [2, 1, 2],
-            PaintingKind::Wanderer => [1, 2, 1],
-            PaintingKind::Graham => [1, 2, 1],
-            PaintingKind::Match => [2, 2, 2],
-            PaintingKind::Bust => [2, 2, 2],
-            PaintingKind::Stage => [2, 2, 2],
-            PaintingKind::Void => [2, 2, 2],
-            PaintingKind::SkullAndRoses => [2, 2, 2],
-            PaintingKind::Wither => [2, 2, 2],
-            PaintingKind::Fighters => [4, 2, 4],
-            PaintingKind::Pointer => [4, 4, 4],
-            PaintingKind::Pigscene => [4, 4, 4],
-            PaintingKind::BurningSkull => [4, 4, 4],
-            PaintingKind::Skeleton => [4, 3, 4],
-            PaintingKind::Earth => [2, 2, 2],
-            PaintingKind::Wind => [2, 2, 2],
-            PaintingKind::Water => [2, 2, 2],
-            PaintingKind::Fire => [2, 2, 2],
-            PaintingKind::DonkeyKong => [4, 3, 4],
+            PaintingKind::Alban
+            | PaintingKind::Aztec
+            | PaintingKind::Aztec2
+            | PaintingKind::Bomb
+            | PaintingKind::Kebab
+            | PaintingKind::Meditative
+            | PaintingKind::Plant
+            | PaintingKind::Wasteland => [1, 1, 1],
+            PaintingKind::Graham | PaintingKind::PrairieRide | PaintingKind::Wanderer => [1, 2, 1],
+            PaintingKind::Courbet
+            | PaintingKind::Creebet
+            | PaintingKind::Pool
+            | PaintingKind::Sea
+            | PaintingKind::Sunset => [2, 1, 2],
+            PaintingKind::Baroque
+            | PaintingKind::Bust
+            | PaintingKind::Earth
+            | PaintingKind::Fire
+            | PaintingKind::Humble
+            | PaintingKind::Match
+            | PaintingKind::SkullAndRoses
+            | PaintingKind::Stage
+            | PaintingKind::Void
+            | PaintingKind::Water
+            | PaintingKind::Wind
+            | PaintingKind::Wither => [2, 2, 2],
+            PaintingKind::Bouquet
+            | PaintingKind::Cavebird
+            | PaintingKind::Cotan
+            | PaintingKind::Endboss
+            | PaintingKind::Fern
+            | PaintingKind::Owlemons
+            | PaintingKind::Sunflowers
+            | PaintingKind::Tides => [3, 3, 3],
+            PaintingKind::Backyard | PaintingKind::Pond => [3, 4, 3],
+            PaintingKind::Changing
+            | PaintingKind::Fighters
+            | PaintingKind::Finding
+            | PaintingKind::Lowmist
+            | PaintingKind::Passage => [4, 2, 4],
+            PaintingKind::DonkeyKong | PaintingKind::Skeleton => [4, 3, 4],
+            PaintingKind::BurningSkull
+            | PaintingKind::Orb
+            | PaintingKind::Pigscene
+            | PaintingKind::Pointer
+            | PaintingKind::Unpacked => [4, 4, 4],
         }
         .into();
 

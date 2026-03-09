@@ -496,18 +496,18 @@ pub enum BoatKind {
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum CatKind {
-    Tabby,
+    AllBlack,
     #[default]
     Black,
-    Red,
-    Siamese,
     BritishShorthair,
     Calico,
+    Jellie,
     Persian,
     Ragdoll,
+    Red,
+    Siamese,
+    Tabby,
     White,
-    Jellie,
-    AllBlack,
 }
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum CowKind {
@@ -551,58 +551,78 @@ pub enum ArmadilloState {
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum FrogKind {
+    Cold,
     #[default]
     Temperate,
     Warm,
-    Cold,
 }
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum PigKind {
+    Cold,
     #[default]
     Temperate,
     Warm,
-    Cold,
 }
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum ChickenKind {
+    Cold,
     #[default]
     Temperate,
     Warm,
-    Cold,
 }
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum PaintingKind {
     #[default]
-    Kebab,
-    Aztec,
     Alban,
+    Aztec,
     Aztec2,
+    Backyard,
+    Baroque,
     Bomb,
-    Plant,
-    Wasteland,
-    Pool,
-    Courbet,
-    Sea,
-    Sunset,
-    Creebet,
-    Wanderer,
-    Graham,
-    Match,
+    Bouquet,
+    BurningSkull,
     Bust,
-    Stage,
-    Void,
-    SkullAndRoses,
-    Wither,
+    Cavebird,
+    Changing,
+    Cotan,
+    Courbet,
+    Creebet,
+    DonkeyKong,
+    Earth,
+    Endboss,
+    Fern,
     Fighters,
+    Finding,
+    Fire,
+    Graham,
+    Humble,
+    Kebab,
+    Lowmist,
+    Match,
+    Meditative,
+    Orb,
+    Owlemons,
+    Passage,
     Pointer,
     Pigscene,
-    BurningSkull,
+    Plant,
+    Pond,
+    Pool,
+    PrairieRide,
+    Sea,
     Skeleton,
-    Earth,
-    Wind,
+    SkullAndRoses,
+    Stage,
+    Sunflowers,
+    Sunset,
+    Tides,
+    Unpacked,
+    Void,
+    Wanderer,
+    Wasteland,
     Water,
-    Fire,
-    DonkeyKong,
+    Wind,
+    Wither,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
@@ -647,5 +667,42 @@ impl Decode<'_> for OptionalInt {
         } else {
             Some(n.wrapping_sub(1))
         }))
+    }
+}
+
+#[derive(Clone, Copy)]
+struct OptionalBlockState(Option<valence_protocol::BlockState>);
+
+impl Encode for OptionalBlockState {
+    fn encode(&self, w: impl std::io::Write) -> anyhow::Result<()> {
+        match self.0 {
+            None => VarInt(0).encode(w),
+            Some(state) => {
+                let id = i32::from(state.to_raw());
+
+                if id == 0 {
+                    anyhow::bail!("air cannot be encoded as optional block state");
+                }
+
+                VarInt(id).encode(w)
+            }
+        }
+    }
+}
+
+impl Decode<'_> for OptionalBlockState {
+    fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
+        let id = VarInt::decode(r)?.0;
+
+        if id == 0 {
+            return Ok(Self(None));
+        }
+
+        let id =
+            u16::try_from(id).map_err(|_| anyhow::anyhow!("invalid optional block state ID"))?;
+        let state = valence_protocol::BlockState::from_raw(id)
+            .ok_or_else(|| anyhow::anyhow!("invalid optional block state ID"))?;
+
+        Ok(Self(Some(state)))
     }
 }

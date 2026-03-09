@@ -8,7 +8,7 @@ use valence::entity::painting::{self, PaintingEntityBundle};
 use valence::entity::player::PlayerEntityBundle;
 use valence::entity::warden::WardenEntityBundle;
 use valence::entity::zombie::ZombieEntityBundle;
-use valence::entity::{entity, CatKind, EntityLayerId, OnGround, PaintingKind, Pose};
+use valence::entity::{entity, CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, Pose};
 use valence::nbt::{compound, List};
 use valence::player_list::{Listed, PlayerListEntryBundle};
 use valence::prelude::*;
@@ -309,35 +309,37 @@ fn spawn_metadata_examples(commands: &mut Commands, layer: EntityLayerId, max_z:
         ..Default::default()
     });
 
-    // commands.spawn(PaintingEntityBundle {
-    //     layer,
-    //     position: Position::new((
-    //         f64::from(x_at(2)) + 0.5,
-    //         painting_y,
-    //         f64::from(showcase_z) + 0.5,
-    //     )),
-    //     look: Look::new(DEMO_ENTITY_YAW, 0.0),
-    //     head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-    //     painting_variant: painting::Variant(PaintingKind::Alban),
-    //     entity_custom_name: entity::CustomName(Some("Painting: Alban (1x1)".into())),
-    //     entity_name_visible: entity::NameVisible(true),
-    //     ..Default::default()
-    // });
+    commands.spawn(PaintingEntityBundle {
+        layer,
+        position: Position::new((
+            f64::from(x_at(2)) + 0.5,
+            painting_y,
+            f64::from(showcase_z) + 0.5,
+        )),
+        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+        object_data: ObjectData(2),
+        painting_variant: painting::Variant(PaintingKind::Alban),
+        entity_custom_name: entity::CustomName(Some("Painting: Alban (1x1)".into())),
+        entity_name_visible: entity::NameVisible(true),
+        ..Default::default()
+    });
 
-    // commands.spawn(PaintingEntityBundle {
-    //     layer,
-    //     position: Position::new((
-    //         f64::from(x_at(3)) + 0.5,
-    //         painting_y,
-    //         f64::from(showcase_z) + 0.5,
-    //     )),
-    //     look: Look::new(DEMO_ENTITY_YAW, 0.0),
-    //     head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-    //     painting_variant: painting::Variant(PaintingKind::BurningSkull),
-    //     entity_custom_name: entity::CustomName(Some("Painting: BurningSkull (4x4)".into())),
-    //     entity_name_visible: entity::NameVisible(true),
-    //     ..Default::default()
-    // });
+    commands.spawn(PaintingEntityBundle {
+        layer,
+        position: Position::new((
+            f64::from(x_at(3)) + 0.5,
+            painting_y,
+            f64::from(showcase_z) + 0.5,
+        )),
+        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+        object_data: ObjectData(2),
+        painting_variant: painting::Variant(PaintingKind::BurningSkull),
+        entity_custom_name: entity::CustomName(Some("Painting: BurningSkull (4x4)".into())),
+        entity_name_visible: entity::NameVisible(true),
+        ..Default::default()
+    });
 
     commands.spawn(EndermanEntityBundle {
         layer,

@@ -706,3 +706,12 @@ impl Decode<'_> for OptionalBlockState {
         Ok(Self(Some(state)))
     }
 }
+
+#[derive(Clone, Copy)]
+struct PaintingVariant(PaintingKind);
+
+impl Encode for PaintingVariant {
+    fn encode(&self, w: impl std::io::Write) -> anyhow::Result<()> {
+        VarInt(self.0 as i32 + 1).encode(w)
+    }
+}

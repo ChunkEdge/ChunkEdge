@@ -17,6 +17,7 @@ const CELL_DEPTH: i32 = 7;
 const GRID_ORIGIN_X: i32 = -9;
 const GRID_ORIGIN_Z: i32 = -16;
 const GRID_MARGIN: i32 = 2;
+const DEMO_ENTITY_YAW: f32 = 180.0;
 
 /// Should have one for each pose in the [Pose] enum
 const POSE_CASES: &[MetadataCase] = &[
@@ -72,39 +73,26 @@ impl MobDemo {
         layer: EntityLayerId,
         pose: Pose,
     ) -> Entity {
+        macro_rules! spawn_bundle {
+            ($bundle:ident) => {
+                commands
+                    .spawn($bundle {
+                        position,
+                        layer,
+                        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+                        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+                        entity_pose: entity::Pose(pose),
+                        ..Default::default()
+                    })
+                    .id()
+            };
+        }
+
         match self {
-            Self::Breeze => commands
-                .spawn(BreezeEntityBundle {
-                    position,
-                    layer,
-                    entity_pose: entity::Pose(pose),
-                    ..Default::default()
-                })
-                .id(),
-            Self::Frog => commands
-                .spawn(FrogEntityBundle {
-                    position,
-                    layer,
-                    entity_pose: entity::Pose(pose),
-                    ..Default::default()
-                })
-                .id(),
-            Self::Warden => commands
-                .spawn(WardenEntityBundle {
-                    position,
-                    layer,
-                    entity_pose: entity::Pose(pose),
-                    ..Default::default()
-                })
-                .id(),
-            Self::Zombie => commands
-                .spawn(ZombieEntityBundle {
-                    position,
-                    layer,
-                    entity_pose: entity::Pose(pose),
-                    ..Default::default()
-                })
-                .id(),
+            Self::Breeze => spawn_bundle!(BreezeEntityBundle),
+            Self::Frog => spawn_bundle!(FrogEntityBundle),
+            Self::Warden => spawn_bundle!(WardenEntityBundle),
+            Self::Zombie => spawn_bundle!(ZombieEntityBundle),
         }
     }
 }
@@ -401,8 +389,8 @@ fn spawn_player_npc(
             uuid: npc.uuid,
             layer,
             position: station.spawn_pos,
-            look: Look::new(180.0, 0.0),
-            head_yaw: HeadYaw(180.0),
+            look: Look::new(DEMO_ENTITY_YAW, 0.0),
+            head_yaw: HeadYaw(DEMO_ENTITY_YAW),
             entity_pose: entity::Pose(station.case.pose),
             ..Default::default()
         })

@@ -1,11 +1,14 @@
 use std::collections::HashMap;
 
 use valence::entity::breeze::BreezeEntityBundle;
+use valence::entity::cat::{self, CatEntityBundle};
+use valence::entity::enderman::{self, EndermanEntityBundle};
 use valence::entity::frog::FrogEntityBundle;
+use valence::entity::painting::{self, PaintingEntityBundle};
 use valence::entity::player::PlayerEntityBundle;
 use valence::entity::warden::WardenEntityBundle;
 use valence::entity::zombie::ZombieEntityBundle;
-use valence::entity::{entity, EntityLayerId, OnGround, Pose};
+use valence::entity::{entity, CatKind, EntityLayerId, OnGround, PaintingKind, Pose};
 use valence::nbt::{compound, List};
 use valence::player_list::{Listed, PlayerListEntryBundle};
 use valence::prelude::*;
@@ -265,7 +268,106 @@ fn setup(
         respawn_station_entity(&mut commands, &mut metadata_stations, station_index);
     }
 
+    spawn_metadata_examples(&mut commands, metadata_stations.layer, max_z);
+
     commands.insert_resource(metadata_stations);
+}
+
+fn spawn_metadata_examples(commands: &mut Commands, layer: EntityLayerId, max_z: i32) {
+    let showcase_z = max_z - 1;
+    let ground_y = f64::from(FLOOR_Y) + 1.0;
+    let painting_y = f64::from(FLOOR_Y) + 2.0;
+    let x_at = |index: i32| GRID_ORIGIN_X + 2 + index * CELL_WIDTH;
+
+    commands.spawn(CatEntityBundle {
+        layer,
+        position: Position::new((
+            f64::from(x_at(0)) + 0.5,
+            ground_y,
+            f64::from(showcase_z) + 0.5,
+        )),
+        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+        cat_cat_variant: cat::CatVariant(CatKind::AllBlack),
+        entity_custom_name: entity::CustomName(Some("Cat variant: AllBlack".into())),
+        entity_name_visible: entity::NameVisible(true),
+        ..Default::default()
+    });
+
+    commands.spawn(CatEntityBundle {
+        layer,
+        position: Position::new((
+            f64::from(x_at(1)) + 0.5,
+            ground_y,
+            f64::from(showcase_z) + 0.5,
+        )),
+        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+        cat_cat_variant: cat::CatVariant(CatKind::Tabby),
+        entity_custom_name: entity::CustomName(Some("Cat variant: Tabby".into())),
+        entity_name_visible: entity::NameVisible(true),
+        ..Default::default()
+    });
+
+    // commands.spawn(PaintingEntityBundle {
+    //     layer,
+    //     position: Position::new((
+    //         f64::from(x_at(2)) + 0.5,
+    //         painting_y,
+    //         f64::from(showcase_z) + 0.5,
+    //     )),
+    //     look: Look::new(DEMO_ENTITY_YAW, 0.0),
+    //     head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+    //     painting_variant: painting::Variant(PaintingKind::Alban),
+    //     entity_custom_name: entity::CustomName(Some("Painting: Alban (1x1)".into())),
+    //     entity_name_visible: entity::NameVisible(true),
+    //     ..Default::default()
+    // });
+
+    // commands.spawn(PaintingEntityBundle {
+    //     layer,
+    //     position: Position::new((
+    //         f64::from(x_at(3)) + 0.5,
+    //         painting_y,
+    //         f64::from(showcase_z) + 0.5,
+    //     )),
+    //     look: Look::new(DEMO_ENTITY_YAW, 0.0),
+    //     head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+    //     painting_variant: painting::Variant(PaintingKind::BurningSkull),
+    //     entity_custom_name: entity::CustomName(Some("Painting: BurningSkull (4x4)".into())),
+    //     entity_name_visible: entity::NameVisible(true),
+    //     ..Default::default()
+    // });
+
+    commands.spawn(EndermanEntityBundle {
+        layer,
+        position: Position::new((
+            f64::from(x_at(4)) + 0.5,
+            ground_y,
+            f64::from(showcase_z) + 0.5,
+        )),
+        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+        enderman_carried_block: enderman::CarriedBlock(Some(BlockState::STONE)),
+        entity_custom_name: entity::CustomName(Some("Enderman: carried_block = STONE".into())),
+        entity_name_visible: entity::NameVisible(true),
+        ..Default::default()
+    });
+
+    commands.spawn(EndermanEntityBundle {
+        layer,
+        position: Position::new((
+            f64::from(x_at(5)) + 0.5,
+            ground_y,
+            f64::from(showcase_z) + 0.5,
+        )),
+        look: Look::new(DEMO_ENTITY_YAW, 0.0),
+        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+        enderman_carried_block: enderman::CarriedBlock(None),
+        entity_custom_name: entity::CustomName(Some("Enderman: carried_block = None".into())),
+        entity_name_visible: entity::NameVisible(true),
+        ..Default::default()
+    });
 }
 
 fn init_clients(

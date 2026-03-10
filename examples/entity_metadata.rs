@@ -172,7 +172,7 @@ impl MetadataCase {
             ),
             other => (
                 "Metadata".into(),
-                format!("{:?}", other)
+                format!("{other:?}")
                     .split_terminator("(")
                     .next()
                     .unwrap()
@@ -182,12 +182,12 @@ impl MetadataCase {
                     MetadataCase::Painting(variant) => format!("{variant:?}"),
                     MetadataCase::Enderman(block) => {
                         if let Some(block) = block {
-                            format!("{:?}", block)
+                            format!("{block:?}")
                         } else {
                             "None".into()
                         }
                     }
-                    _ => {
+                    MetadataCase::Pose { .. } => {
                         unreachable!()
                     }
                 },
@@ -252,10 +252,10 @@ struct MetadataStations {
 struct ActivePlate(Option<usize>);
 
 struct StationLayout {
-    plate_pos: BlockPos,
-    sign_pos: [i32; 3],
-    spawn_block_pos: BlockPos,
-    spawn_pos: Position,
+    plate: BlockPos,
+    sign: [i32; 3],
+    spawn_block: BlockPos,
+    spawn: Position,
 }
 
 fn station_rows(case_count: usize) -> i32 {
@@ -279,10 +279,10 @@ fn station_layout(index: i32) -> StationLayout {
     ));
 
     StationLayout {
-        plate_pos,
-        sign_pos,
-        spawn_block_pos,
-        spawn_pos,
+        plate: plate_pos,
+        sign: sign_pos,
+        spawn_block: spawn_block_pos,
+        spawn: spawn_pos,
     }
 }
 
@@ -334,7 +334,7 @@ fn setup(
         let layout = station_layout(index as i32);
 
         layer.chunk.set_block(
-            layout.sign_pos,
+            layout.sign,
             Block {
                 state: BlockState::OAK_SIGN.set(PropName::Rotation, PropValue::_8),
                 nbt: Some(compound! {
@@ -348,17 +348,17 @@ fn setup(
         if case.has_pressure_plate() {
             layer
                 .chunk
-                .set_block(layout.plate_pos, BlockState::STONE_PRESSURE_PLATE);
-            by_plate_xz.insert((layout.plate_pos.x, layout.plate_pos.z), stations.len());
+                .set_block(layout.plate, BlockState::STONE_PRESSURE_PLATE);
+            by_plate_xz.insert((layout.plate.x, layout.plate.z), stations.len());
         }
 
         layer
             .chunk
-            .set_block(layout.spawn_block_pos, BlockState::GOLD_BLOCK);
+            .set_block(layout.spawn_block, BlockState::GOLD_BLOCK);
 
         stations.push(MetadataStation {
             case,
-            spawn_pos: layout.spawn_pos,
+            spawn_pos: layout.spawn,
             spawned_entity: None,
             player_npc: None,
         });
@@ -550,7 +550,7 @@ fn spawn_player_npc(
 
         commands.spawn(PlayerListEntryBundle {
             uuid,
-            username: Username(format!("!_{pose:?}_!").into()),
+            username: Username(format!("!_{pose:?}_!")),
             listed: Listed(false),
             ..Default::default()
         });

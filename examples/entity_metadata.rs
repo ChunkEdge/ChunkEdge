@@ -486,7 +486,10 @@ fn init_clients(
         );
 
         client.send_chat_message(
-            "Dying, Sitting and SpinAttack are known to not display correctly in this demo due to additional required metadata that is not set. This is expected.".color(Color::RED).bold(),
+            "Dying, Sitting and SpinAttack are known to not display correctly in this demo due to \
+             additional required metadata that is not set. This is expected."
+                .color(Color::RED)
+                .bold(),
         );
 
         commands

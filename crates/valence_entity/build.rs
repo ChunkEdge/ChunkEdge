@@ -79,7 +79,9 @@ enum Value {
     PigVariant(String),
     ChickenVariant(String),
     OptionalGlobalPos(Option<()>), // TODO
-    /// TODO: The wiki mentions that [PaintingVariant] can be and identifier or a full inline definition but we currently only support the identifier form.
+    /// TODO: The wiki mentions that [PaintingVariant] can be and identifier or
+    /// a full inline definition but we currently only support the identifier
+    /// form.
     PaintingVariant(String),
     SnifferState(String),
     ArmadilloState(String),

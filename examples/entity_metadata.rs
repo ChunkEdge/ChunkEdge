@@ -25,24 +25,33 @@ const DEMO_ENTITY_YAW: f32 = 180.0;
 /// Should have one for each pose in the [Pose] enum
 const POSE_CASES: &[MetadataCase] = &[
     // All poses that do not play an animation have had their pressure plate disabled
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Zombie), Pose::Standing, false),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Zombie), Pose::FallFlying, true),
-    MetadataCase::new(EntityDemo::PlayerNpc, Pose::Sleeping, false),
-    MetadataCase::new(EntityDemo::PlayerNpc, Pose::Swimming, true),
-    MetadataCase::new(EntityDemo::PlayerNpc, Pose::Sneaking, false),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Breeze), Pose::LongJumping, true),
-    MetadataCase::new(EntityDemo::PlayerNpc, Pose::Dying, false),
-    MetadataCase::new(EntityDemo::PlayerNpc, Pose::Sitting, false),
-    MetadataCase::new(EntityDemo::PlayerNpc, Pose::SpinAttack, false),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Frog), Pose::Croaking, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Frog), Pose::UsingTongue, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Warden), Pose::Roaring, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Warden), Pose::Sniffing, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Warden), Pose::Emerging, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Warden), Pose::Digging, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Breeze), Pose::Sliding, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Breeze), Pose::Shooting, true),
-    MetadataCase::new(EntityDemo::Mob(MobDemo::Breeze), Pose::Inhaling, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Zombie), Pose::Standing, false),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Zombie), Pose::FallFlying, true),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Sleeping, false),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Swimming, true),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Sneaking, false),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::LongJumping, true),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Dying, false),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Sitting, false),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::SpinAttack, false),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Frog), Pose::Croaking, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Frog), Pose::UsingTongue, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Warden), Pose::Roaring, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Warden), Pose::Sniffing, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Warden), Pose::Emerging, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Warden), Pose::Digging, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::Sliding, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::Shooting, true),
+    MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::Inhaling, true),
+];
+
+const OTHER_CASES: &[MetadataCase] = &[
+    MetadataCase::Cat(CatKind::AllBlack),
+    MetadataCase::Cat(CatKind::Tabby),
+    MetadataCase::Painting(PaintingKind::Alban),
+    MetadataCase::Painting(PaintingKind::Bouquet),
+    MetadataCase::Enderman(Some(BlockState::DIAMOND_BLOCK)),
+    MetadataCase::Enderman(None),
 ];
 
 pub fn main() {
@@ -100,34 +109,122 @@ impl MobDemo {
     }
 }
 
-#[derive(Clone, Copy)]
-enum EntityDemo {
+#[derive(Clone, Copy, Debug)]
+enum PoseEntity {
     Mob(MobDemo),
     PlayerNpc,
 }
 
-impl EntityDemo {
+impl PoseEntity {
     fn label(self) -> String {
         match self {
-            Self::Mob(mob) => format!("{:?}", mob),
+            Self::Mob(mob) => format!("{mob:?}"),
             Self::PlayerNpc => "Player".into(),
         }
     }
 }
 
-#[derive(Clone, Copy)]
-struct MetadataCase {
-    entity: EntityDemo,
-    pose: Pose,
-    has_pressure_plate: bool,
+#[derive(Clone, Copy, Debug)]
+enum MetadataCase {
+    Pose {
+        entity: PoseEntity,
+        pose: Pose,
+        has_pressure_plate: bool,
+    },
+    Cat(CatKind),
+    Painting(PaintingKind),
+    Enderman(Option<BlockState>),
 }
 
 impl MetadataCase {
-    const fn new(entity: EntityDemo, pose: Pose, has_pressure_plate: bool) -> Self {
-        Self {
+    const fn pose(entity: PoseEntity, pose: Pose, has_pressure_plate: bool) -> Self {
+        Self::Pose {
             entity,
             pose,
             has_pressure_plate,
+        }
+    }
+
+    fn has_pressure_plate(self) -> bool {
+        match self {
+            Self::Pose {
+                has_pressure_plate, ..
+            } => has_pressure_plate,
+            _ => false,
+        }
+    }
+
+    fn sign_description(self) -> (String, String, String, String) {
+        match self {
+            Self::Pose {
+                entity,
+                pose,
+                has_pressure_plate,
+            } => (
+                "Pose".into(),
+                entity.label(),
+                format!("{pose:?}"),
+                if has_pressure_plate {
+                    "Step to reset".into()
+                } else {
+                    "Static".into()
+                },
+            ),
+            other => (
+                "Metadata".into(),
+                format!("{:?}", other)
+                    .split_terminator("(")
+                    .next()
+                    .unwrap()
+                    .into(),
+                match other {
+                    MetadataCase::Cat(variant) => format!("{variant:?}"),
+                    MetadataCase::Painting(variant) => format!("{variant:?}"),
+                    MetadataCase::Enderman(block) => {
+                        if let Some(block) = block {
+                            format!("{:?}", block)
+                        } else {
+                            "None".into()
+                        }
+                    }
+                    _ => {
+                        unreachable!()
+                    }
+                },
+                "Static sample".into(),
+            ),
+        }
+    }
+
+    fn sign_lines(self) -> [Compound<String>; 4] {
+        let (line_1, line_2, line_3, line_4) = self.sign_description();
+
+        [
+            line_1.color(Color::DARK_GREEN).bold().into(),
+            line_2.color(Color::BLUE).bold().into(),
+            line_3.into_text().into(),
+            line_4.into_text().into(),
+        ]
+    }
+
+    fn spawn(
+        self,
+        commands: &mut Commands,
+        station: &mut MetadataStation,
+        layer: EntityLayerId,
+    ) -> Entity {
+        match self {
+            Self::Pose { entity, pose, .. } => match entity {
+                PoseEntity::Mob(mob) => mob.spawn(commands, station.spawn_pos, layer, pose),
+                PoseEntity::PlayerNpc => spawn_player_npc(commands, station, layer, pose),
+            },
+            Self::Cat(variant) => spawn_cat_variant(commands, station.spawn_pos, layer, variant),
+            Self::Painting(variant) => {
+                spawn_painting_variant(commands, station.spawn_pos, layer, variant)
+            }
+            Self::Enderman(has_carried_block) => {
+                spawn_enderman(commands, station.spawn_pos, layer, has_carried_block)
+            }
         }
     }
 }
@@ -154,14 +251,55 @@ struct MetadataStations {
 #[derive(Component, Default)]
 struct ActivePlate(Option<usize>);
 
+struct StationLayout {
+    plate_pos: BlockPos,
+    sign_pos: [i32; 3],
+    spawn_block_pos: BlockPos,
+    spawn_pos: Position,
+}
+
+fn station_rows(case_count: usize) -> i32 {
+    (case_count as i32 + GRID_COLUMNS - 1) / GRID_COLUMNS
+}
+
+fn station_layout(index: i32) -> StationLayout {
+    let col = index % GRID_COLUMNS;
+    let row = index / GRID_COLUMNS;
+
+    let cell_x = GRID_ORIGIN_X + col * CELL_WIDTH;
+    let cell_z = GRID_ORIGIN_Z + row * CELL_DEPTH;
+
+    let plate_pos = BlockPos::new(cell_x + (CELL_WIDTH / 2), FLOOR_Y + 1, cell_z + 1);
+    let sign_pos = [plate_pos.x, FLOOR_Y + 1, plate_pos.z + 1];
+    let spawn_block_pos = BlockPos::new(plate_pos.x, FLOOR_Y, plate_pos.z + 4);
+    let spawn_pos = Position::new((
+        f64::from(spawn_block_pos.x) + 0.5,
+        f64::from(FLOOR_Y) + 1.0,
+        f64::from(spawn_block_pos.z) + 0.5,
+    ));
+
+    StationLayout {
+        plate_pos,
+        sign_pos,
+        spawn_block_pos,
+        spawn_pos,
+    }
+}
+
 fn setup(
     mut commands: Commands,
     server: Res<Server>,
     dimensions: Res<DimensionTypeRegistry>,
     biomes: Res<BiomeRegistry>,
 ) {
+    let station_cases: Vec<_> = POSE_CASES
+        .iter()
+        .chain(OTHER_CASES.iter())
+        .copied()
+        .collect();
+
     let mut layer = LayerBundle::new(ident!("overworld"), &dimensions, &biomes, &server);
-    let rows = (POSE_CASES.len() as i32 + GRID_COLUMNS - 1) / GRID_COLUMNS;
+    let rows = station_rows(station_cases.len());
 
     let min_x = GRID_ORIGIN_X - GRID_MARGIN;
     let min_z = GRID_ORIGIN_Z - GRID_MARGIN;
@@ -190,67 +328,37 @@ fn setup(
     }
 
     let mut by_plate_xz = HashMap::new();
-    let mut stations = Vec::with_capacity(POSE_CASES.len());
+    let mut stations = Vec::with_capacity(station_cases.len());
 
-    for (index, case) in POSE_CASES.iter().copied().enumerate() {
-        let index = index as i32;
-        let col = index % GRID_COLUMNS;
-        let row = index / GRID_COLUMNS;
-
-        let cell_x = GRID_ORIGIN_X + col * CELL_WIDTH;
-        let cell_z = GRID_ORIGIN_Z + row * CELL_DEPTH;
-
-        let plate_pos = BlockPos::new(cell_x + (CELL_WIDTH / 2), FLOOR_Y + 1, cell_z + 1);
-        let sign_pos = [plate_pos.x, FLOOR_Y + 1, plate_pos.z + 1];
-        let spawn_block_pos = BlockPos::new(plate_pos.x, FLOOR_Y, plate_pos.z + 4);
-        let spawn_pos = Position::new((
-            f64::from(spawn_block_pos.x) + 0.5,
-            f64::from(FLOOR_Y) + 1.0,
-            f64::from(spawn_block_pos.z) + 0.5,
-        ));
+    for (index, case) in station_cases.into_iter().enumerate() {
+        let layout = station_layout(index as i32);
 
         layer.chunk.set_block(
-            sign_pos,
+            layout.sign_pos,
             Block {
                 state: BlockState::OAK_SIGN.set(PropName::Rotation, PropValue::_8),
                 nbt: Some(compound! {
                     "front_text" => compound! {
-                        "messages" => List::Compound(vec![
-                            case.entity.label().color(Color::DARK_GREEN).into(),
-                            format!("{:?}", case.pose).color(Color::BLUE).into(),
-                            match case.has_pressure_plate {
-                                true => "Step to reset".color(Color::RED).bold().into(),
-                                false => "NO START".color(Color::RED).bold().into(),
-                            },
-                            match case.has_pressure_plate {
-                                true => "".into_text().into(),
-                                false => "ANIMATION".color(Color::RED).bold().into(),
-                            },
-                        ])
+                        "messages" => List::Compound(case.sign_lines().to_vec())
                     }
                 }),
             },
         );
 
-        if case.has_pressure_plate {
+        if case.has_pressure_plate() {
             layer
                 .chunk
-                .set_block(plate_pos, BlockState::STONE_PRESSURE_PLATE);
+                .set_block(layout.plate_pos, BlockState::STONE_PRESSURE_PLATE);
+            by_plate_xz.insert((layout.plate_pos.x, layout.plate_pos.z), stations.len());
         }
-        layer
-            .chunk
-            .set_block([plate_pos.x, FLOOR_Y + 1, plate_pos.z + 2], BlockState::AIR);
-        layer
-            .chunk
-            .set_block([plate_pos.x, FLOOR_Y + 1, plate_pos.z + 3], BlockState::AIR);
-        layer
-            .chunk
-            .set_block(spawn_block_pos, BlockState::GOLD_BLOCK);
 
-        by_plate_xz.insert((plate_pos.x, plate_pos.z), stations.len());
+        layer
+            .chunk
+            .set_block(layout.spawn_block_pos, BlockState::GOLD_BLOCK);
+
         stations.push(MetadataStation {
             case,
-            spawn_pos,
+            spawn_pos: layout.spawn_pos,
             spawned_entity: None,
             player_npc: None,
         });
@@ -268,108 +376,67 @@ fn setup(
         respawn_station_entity(&mut commands, &mut metadata_stations, station_index);
     }
 
-    spawn_metadata_examples(&mut commands, metadata_stations.layer, max_z);
-
     commands.insert_resource(metadata_stations);
 }
 
-fn spawn_metadata_examples(commands: &mut Commands, layer: EntityLayerId, max_z: i32) {
-    let showcase_z = max_z - 1;
-    let ground_y = f64::from(FLOOR_Y) + 1.0;
-    let painting_y = f64::from(FLOOR_Y) + 2.0;
-    let x_at = |index: i32| GRID_ORIGIN_X + 2 + index * CELL_WIDTH;
+fn spawn_cat_variant(
+    commands: &mut Commands,
+    position: Position,
+    layer: EntityLayerId,
+    variant: CatKind,
+) -> Entity {
+    commands
+        .spawn(CatEntityBundle {
+            layer,
+            position,
+            look: Look::new(DEMO_ENTITY_YAW, 0.0),
+            head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+            cat_cat_variant: cat::CatVariant(variant),
+            ..Default::default()
+        })
+        .id()
+}
 
-    commands.spawn(CatEntityBundle {
-        layer,
-        position: Position::new((
-            f64::from(x_at(0)) + 0.5,
-            ground_y,
-            f64::from(showcase_z) + 0.5,
-        )),
-        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-        cat_cat_variant: cat::CatVariant(CatKind::AllBlack),
-        entity_custom_name: entity::CustomName(Some("Cat variant: AllBlack".into())),
-        entity_name_visible: entity::NameVisible(true),
-        ..Default::default()
-    });
+fn spawn_painting_variant(
+    commands: &mut Commands,
+    position: Position,
+    layer: EntityLayerId,
+    variant: PaintingKind,
+) -> Entity {
+    commands
+        .spawn(PaintingEntityBundle {
+            layer,
+            position: Position::new((position.0.x, position.0.y + 1.0, position.0.z)),
+            object_data: ObjectData(2),
+            painting_variant: painting::Variant(variant),
+            ..Default::default()
+        })
+        .id()
+}
 
-    commands.spawn(CatEntityBundle {
-        layer,
-        position: Position::new((
-            f64::from(x_at(1)) + 0.5,
-            ground_y,
-            f64::from(showcase_z) + 0.5,
-        )),
-        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-        cat_cat_variant: cat::CatVariant(CatKind::Tabby),
-        entity_custom_name: entity::CustomName(Some("Cat variant: Tabby".into())),
-        entity_name_visible: entity::NameVisible(true),
-        ..Default::default()
-    });
+fn spawn_enderman(
+    commands: &mut Commands,
+    position: Position,
+    layer: EntityLayerId,
+    block: Option<BlockState>,
+) -> Entity {
+    let carried_block;
+    if let Some(block) = block {
+        carried_block = Some(block);
+    } else {
+        carried_block = None;
+    }
 
-    commands.spawn(PaintingEntityBundle {
-        layer,
-        position: Position::new((
-            f64::from(x_at(2)) + 0.5,
-            painting_y,
-            f64::from(showcase_z) + 0.5,
-        )),
-        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-        object_data: ObjectData(2),
-        painting_variant: painting::Variant(PaintingKind::Alban),
-        entity_custom_name: entity::CustomName(Some("Painting: Alban (1x1)".into())),
-        entity_name_visible: entity::NameVisible(true),
-        ..Default::default()
-    });
-
-    commands.spawn(PaintingEntityBundle {
-        layer,
-        position: Position::new((
-            f64::from(x_at(3)) + 0.5,
-            painting_y,
-            f64::from(showcase_z) + 0.5,
-        )),
-        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-        object_data: ObjectData(2),
-        painting_variant: painting::Variant(PaintingKind::BurningSkull),
-        entity_custom_name: entity::CustomName(Some("Painting: BurningSkull (4x4)".into())),
-        entity_name_visible: entity::NameVisible(true),
-        ..Default::default()
-    });
-
-    commands.spawn(EndermanEntityBundle {
-        layer,
-        position: Position::new((
-            f64::from(x_at(4)) + 0.5,
-            ground_y,
-            f64::from(showcase_z) + 0.5,
-        )),
-        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-        enderman_carried_block: enderman::CarriedBlock(Some(BlockState::STONE)),
-        entity_custom_name: entity::CustomName(Some("Enderman: carried_block = STONE".into())),
-        entity_name_visible: entity::NameVisible(true),
-        ..Default::default()
-    });
-
-    commands.spawn(EndermanEntityBundle {
-        layer,
-        position: Position::new((
-            f64::from(x_at(5)) + 0.5,
-            ground_y,
-            f64::from(showcase_z) + 0.5,
-        )),
-        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-        enderman_carried_block: enderman::CarriedBlock(None),
-        entity_custom_name: entity::CustomName(Some("Enderman: carried_block = None".into())),
-        entity_name_visible: entity::NameVisible(true),
-        ..Default::default()
-    });
+    commands
+        .spawn(EndermanEntityBundle {
+            layer,
+            position,
+            look: Look::new(DEMO_ENTITY_YAW, 0.0),
+            head_yaw: HeadYaw(DEMO_ENTITY_YAW),
+            enderman_carried_block: enderman::CarriedBlock(carried_block),
+            ..Default::default()
+        })
+        .id()
 }
 
 fn init_clients(
@@ -410,12 +477,16 @@ fn init_clients(
         ]);
         *game_mode = GameMode::Creative;
 
+        client.send_chat_message("Entity metadata demo:");
+
+        client.send_chat_message("Stations with pressure plates respawn the entity.");
+
         client.send_chat_message(
-            "Entity metadata demo: entities are pre-spawned. Step on any pressure plate to reset that station's entity.",
+            "Stations with no pressure plates would display nothing extra when respawned.",
         );
 
         client.send_chat_message(
-            "Dying, Sitting and SpinAttack are known to not display correctly in this demo due to additional required metadata that is not set. So it is expected behavior that you don't see these displayed correctly.".color(Color::RED).bold(),
+            "Dying, Sitting and SpinAttack are known to not display correctly in this demo due to additional required metadata that is not set. This is expected.".color(Color::RED).bold(),
         );
 
         commands
@@ -460,10 +531,7 @@ fn respawn_station_entity(
         commands.entity(entity).insert(Despawned);
     }
 
-    let spawned_entity = match station.case.entity {
-        EntityDemo::Mob(mob) => mob.spawn(commands, station.spawn_pos, layer, station.case.pose),
-        EntityDemo::PlayerNpc => spawn_player_npc(commands, station, layer),
-    };
+    let spawned_entity = station.case.spawn(commands, station, layer);
 
     station.spawned_entity = Some(spawned_entity);
 }
@@ -472,13 +540,14 @@ fn spawn_player_npc(
     commands: &mut Commands,
     station: &mut MetadataStation,
     layer: EntityLayerId,
+    pose: Pose,
 ) -> Entity {
     if station.player_npc.is_none() {
         let uuid = UniqueId::default();
 
         commands.spawn(PlayerListEntryBundle {
             uuid,
-            username: Username(format!("!_{:?}_!", station.case.pose).into()),
+            username: Username(format!("!_{pose:?}_!").into()),
             listed: Listed(false),
             ..Default::default()
         });
@@ -495,7 +564,7 @@ fn spawn_player_npc(
             position: station.spawn_pos,
             look: Look::new(DEMO_ENTITY_YAW, 0.0),
             head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-            entity_pose: entity::Pose(station.case.pose),
+            entity_pose: entity::Pose(pose),
             ..Default::default()
         })
         .id()

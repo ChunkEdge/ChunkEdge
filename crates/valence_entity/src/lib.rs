@@ -20,7 +20,7 @@ pub use manager::EntityManager;
 use paste::paste;
 use tracing::warn;
 use tracked_data::TrackedData;
-use valence_binary::{Decode, Encode, VarInt};
+use valence_binary::{Decode, Encode, IdOr, TextComponent, VarInt};
 use valence_math::{DVec3, Vec3};
 use valence_server_common::{Despawned, UniqueId};
 
@@ -625,6 +625,92 @@ pub enum PaintingKind {
     Wither,
 }
 
+impl PaintingKind {
+    pub const ALL: [Self; 50] = [
+        Self::Alban,
+        Self::Aztec,
+        Self::Aztec2,
+        Self::Backyard,
+        Self::Baroque,
+        Self::Bomb,
+        Self::Bouquet,
+        Self::BurningSkull,
+        Self::Bust,
+        Self::Cavebird,
+        Self::Changing,
+        Self::Cotan,
+        Self::Courbet,
+        Self::Creebet,
+        Self::DonkeyKong,
+        Self::Earth,
+        Self::Endboss,
+        Self::Fern,
+        Self::Fighters,
+        Self::Finding,
+        Self::Fire,
+        Self::Graham,
+        Self::Humble,
+        Self::Kebab,
+        Self::Lowmist,
+        Self::Match,
+        Self::Meditative,
+        Self::Orb,
+        Self::Owlemons,
+        Self::Passage,
+        Self::Pointer,
+        Self::Pigscene,
+        Self::Plant,
+        Self::Pond,
+        Self::Pool,
+        Self::PrairieRide,
+        Self::Sea,
+        Self::Skeleton,
+        Self::SkullAndRoses,
+        Self::Stage,
+        Self::Sunflowers,
+        Self::Sunset,
+        Self::Tides,
+        Self::Unpacked,
+        Self::Void,
+        Self::Wanderer,
+        Self::Wasteland,
+        Self::Water,
+        Self::Wind,
+        Self::Wither,
+    ];
+
+    pub fn registry_id(self) -> valence_protocol::RegistryId {
+        valence_protocol::RegistryId::new(self as i32)
+    }
+
+    pub fn from_registry_id(id: valence_protocol::RegistryId) -> Option<Self> {
+        let Ok(idx) = usize::try_from(id.id()) else {
+            return None;
+        };
+
+        Self::ALL.get(idx).copied()
+    }
+}
+
+#[derive(Clone, PartialEq, Debug)]
+pub struct PaintingVariantDefinition {
+    pub width: i32,
+    pub height: i32,
+    pub asset_id: String,
+    pub title: Option<valence_protocol::Text>,
+    pub author: Option<valence_protocol::Text>,
+}
+
+impl Encode for PaintingVariantDefinition {
+    fn encode(&self, mut w: impl std::io::Write) -> anyhow::Result<()> {
+        VarInt(self.width).encode(&mut w)?;
+        VarInt(self.height).encode(&mut w)?;
+        self.asset_id.encode(&mut w)?;
+        self.title.clone().map(TextComponent::from).encode(&mut w)?;
+        self.author.clone().map(TextComponent::from).encode(w)
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
 pub enum SnifferState {
     #[default]
@@ -708,10 +794,10 @@ impl Decode<'_> for OptionalBlockState {
 }
 
 #[derive(Clone, Copy)]
-struct PaintingVariant(PaintingKind);
+struct PaintingVariant<'a>(&'a IdOr<PaintingVariantDefinition>);
 
-impl Encode for PaintingVariant {
+impl Encode for PaintingVariant<'_> {
     fn encode(&self, w: impl std::io::Write) -> anyhow::Result<()> {
-        VarInt(self.0 as i32 + 1).encode(w)
+        self.0.encode(w)
     }
 }

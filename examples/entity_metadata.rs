@@ -8,10 +8,14 @@ use valence::entity::painting::{self, PaintingEntityBundle};
 use valence::entity::player::PlayerEntityBundle;
 use valence::entity::warden::WardenEntityBundle;
 use valence::entity::zombie::ZombieEntityBundle;
-use valence::entity::{entity, CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, Pose};
+use valence::entity::{
+    entity, CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, PaintingVariantDefinition,
+    Pose,
+};
 use valence::nbt::{compound, List};
 use valence::player_list::{Listed, PlayerListEntryBundle};
 use valence::prelude::*;
+use valence::protocol::IdOr;
 
 const FLOOR_Y: i32 = 64;
 const GRID_COLUMNS: i32 = 6;
@@ -43,15 +47,6 @@ const POSE_CASES: &[MetadataCase] = &[
     MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::Sliding, true),
     MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::Shooting, true),
     MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::Inhaling, true),
-];
-
-const OTHER_CASES: &[MetadataCase] = &[
-    MetadataCase::Cat(CatKind::AllBlack),
-    MetadataCase::Cat(CatKind::Tabby),
-    MetadataCase::Painting(PaintingKind::Alban),
-    MetadataCase::Painting(PaintingKind::Bouquet),
-    MetadataCase::Enderman(Some(BlockState::DIAMOND_BLOCK)),
-    MetadataCase::Enderman(None),
 ];
 
 pub fn main() {
@@ -124,7 +119,7 @@ impl PoseEntity {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 enum MetadataCase {
     Pose {
         entity: PoseEntity,
@@ -132,7 +127,7 @@ enum MetadataCase {
         has_pressure_plate: bool,
     },
     Cat(CatKind),
-    Painting(PaintingKind),
+    Painting(IdOr<PaintingVariantDefinition>),
     Enderman(Option<BlockState>),
 }
 
@@ -145,16 +140,16 @@ impl MetadataCase {
         }
     }
 
-    fn has_pressure_plate(self) -> bool {
+    fn has_pressure_plate(&self) -> bool {
         match self {
             Self::Pose {
                 has_pressure_plate, ..
-            } => has_pressure_plate,
+            } => *has_pressure_plate,
             _ => false,
         }
     }
 
-    fn sign_description(self) -> (String, String, String, String) {
+    fn sign_description(&self) -> (String, String, String, String) {
         match self {
             Self::Pose {
                 entity,
@@ -164,7 +159,7 @@ impl MetadataCase {
                 "Pose".into(),
                 entity.label(),
                 format!("{pose:?}"),
-                if has_pressure_plate {
+                if *has_pressure_plate {
                     "Step to reset".into()
                 } else {
                     "Static".into()
@@ -179,7 +174,20 @@ impl MetadataCase {
                     .into(),
                 match other {
                     MetadataCase::Cat(variant) => format!("{variant:?}"),
-                    MetadataCase::Painting(variant) => format!("{variant:?}"),
+                    MetadataCase::Painting(variant) => match variant {
+                        IdOr::Id(id) => {
+                            format!(
+                                "{:?}",
+                                PaintingKind::from_registry_id(*id).expect("Wrong paining ID")
+                            )
+                        }
+                        IdOr::Inline(def) => def
+                            .asset_id
+                            .split(':')
+                            .next_back()
+                            .unwrap_or(&def.asset_id)
+                            .into(),
+                    },
                     MetadataCase::Enderman(block) => {
                         if let Some(block) = block {
                             format!("{block:?}")
@@ -191,12 +199,18 @@ impl MetadataCase {
                         unreachable!()
                     }
                 },
-                "Static sample".into(),
+                {
+                    if let MetadataCase::Painting(IdOr::Inline(inline)) = other {
+                        format!("inline {}x{}", inline.width, inline.height)
+                    } else {
+                        "Static sample".into()
+                    }
+                },
             ),
         }
     }
 
-    fn sign_lines(self) -> [Compound<String>; 4] {
+    fn sign_lines(&self) -> [Compound<String>; 4] {
         let (line_1, line_2, line_3, line_4) = self.sign_description();
 
         [
@@ -292,10 +306,26 @@ fn setup(
     dimensions: Res<DimensionTypeRegistry>,
     biomes: Res<BiomeRegistry>,
 ) {
+    let other_cases: &[MetadataCase] = &[
+        MetadataCase::Cat(CatKind::AllBlack),
+        MetadataCase::Cat(CatKind::Tabby),
+        MetadataCase::Painting(IdOr::id(PaintingKind::Aztec.registry_id())),
+        MetadataCase::Painting(IdOr::id(PaintingKind::Bouquet.registry_id())),
+        MetadataCase::Painting(IdOr::inline(PaintingVariantDefinition {
+            width: 1,
+            height: 2,
+            asset_id: "minecraft:fighters".to_owned(),
+            title: Some("Inline Pool".into()),
+            author: Some("Valence Example".into()),
+        })),
+        MetadataCase::Enderman(Some(BlockState::DIAMOND_BLOCK)),
+        MetadataCase::Enderman(None),
+    ];
+
     let station_cases: Vec<_> = POSE_CASES
         .iter()
-        .chain(OTHER_CASES.iter())
-        .copied()
+        .chain(other_cases.iter())
+        .cloned()
         .collect();
 
     let mut layer = LayerBundle::new(ident!("overworld"), &dimensions, &biomes, &server);
@@ -330,16 +360,16 @@ fn setup(
     let mut by_plate_xz = HashMap::new();
     let mut stations = Vec::with_capacity(station_cases.len());
 
-    for (index, case) in station_cases.into_iter().enumerate() {
+    for (index, case) in station_cases.iter().cloned().enumerate() {
         let layout = station_layout(index as i32);
-
+        let lines = case.sign_lines();
         layer.chunk.set_block(
             layout.sign,
             Block {
                 state: BlockState::OAK_SIGN.set(PropName::Rotation, PropValue::_8),
                 nbt: Some(compound! {
                     "front_text" => compound! {
-                        "messages" => List::Compound(case.sign_lines().to_vec())
+                        "messages" => List::Compound(lines.to_vec())
                     }
                 }),
             },
@@ -401,7 +431,7 @@ fn spawn_painting_variant(
     commands: &mut Commands,
     position: Position,
     layer: EntityLayerId,
-    variant: PaintingKind,
+    variant: IdOr<PaintingVariantDefinition>,
 ) -> Entity {
     commands
         .spawn(PaintingEntityBundle {
@@ -534,7 +564,7 @@ fn respawn_station_entity(
         commands.entity(entity).insert(Despawned);
     }
 
-    let spawned_entity = station.case.spawn(commands, station, layer);
+    let spawned_entity = station.case.clone().spawn(commands, station, layer);
 
     station.spawned_entity = Some(spawned_entity);
 }

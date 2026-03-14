@@ -150,6 +150,9 @@ pub(super) fn validate_click_slot_packet(
                     count_deltas == 0,
                     "invalid item delta: expected 0, got {count_deltas}"
                 );
+
+                // Margin clicks do not modify the carried stack.
+                new_cursor_stack = cursor_item.0.clone();
             } else if packet.slot_idx == -999 {
                 // Clicked outside the window, so the client is dropping an item
                 ensure!(
@@ -182,6 +185,14 @@ pub(super) fn validate_click_slot_packet(
                         count_deltas == 0,
                         "invalid item delta: expected 0, got {count_deltas}"
                     );
+
+                    ensure!(
+                        packet.carried_item.item == cursor_item.0.item
+                            && packet.carried_item.count == cursor_item.0.count,
+                        "carried item must remain unchanged for a non-modifying click"
+                    );
+
+                    new_cursor_stack = cursor_item.0.clone();
                 } else {
                     ensure!(
                         packet.slot_changes.len() == 1,

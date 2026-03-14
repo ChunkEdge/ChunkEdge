@@ -303,6 +303,60 @@ fn test_should_allow_non_modifying_inventory_clicks() {
 }
 
 #[test]
+fn test_should_keep_cursor_for_non_modifying_armor_click() {
+    let ScenarioSingleClient {
+        mut app,
+        client,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    helper.clear_received();
+
+    let stack = ItemStack::new(ItemKind::IronSword, 1).with_components(vec![
+        ItemComponent::Unbreakable,
+        ItemComponent::CustomName("Custom Item Name".into_text_component()),
+    ]);
+
+    app.world_mut().get_mut::<CursorItem>(client).unwrap().0 = stack.clone();
+
+    let state_id = app
+        .world_mut()
+        .get::<ClientInventoryState>(client)
+        .unwrap()
+        .state_id();
+
+    helper.send(&ContainerClickC2s {
+        window_id: VarInt(0),
+        button: 0,
+        mode: ClickMode::Click,
+        state_id: VarInt(state_id.0),
+        slot_idx: 6,
+        slot_changes: vec![].into(),
+        carried_item: stack.clone().into(),
+    });
+
+    app.update();
+
+    let cursor_item = app
+        .world_mut()
+        .get::<CursorItem>(client)
+        .expect("could not find client");
+    assert_eq!(cursor_item.0, stack);
+
+    let inventory = app
+        .world_mut()
+        .get::<Inventory>(client)
+        .expect("could not find inventory for client");
+    assert_eq!(inventory.slot(6), &ItemStack::EMPTY);
+
+    let sent_packets = helper.collect_received();
+    sent_packets.assert_count::<ContainerSetContentS2c>(0);
+    sent_packets.assert_count::<ContainerSetSlotS2c>(0);
+}
+
+#[test]
 fn test_should_modify_player_inventory_server_side() {
     let ScenarioSingleClient {
         mut app,
@@ -1726,6 +1780,63 @@ mod dropping_items {
                 ItemComponent::CustomName("Droppable Iron".into_text_component()),
             ])
         );
+    }
+
+    #[test]
+    fn should_keep_carried_item_on_margin_click() {
+        let ScenarioSingleClient {
+            mut app,
+            client,
+            mut helper,
+            ..
+        } = ScenarioSingleClient::new();
+
+        app.update();
+        helper.clear_received();
+
+        let stack = ItemStack::new(ItemKind::IronSword, 1).with_components(vec![
+            ItemComponent::Unbreakable,
+            ItemComponent::CustomName("Custom Item Name".into_text_component()),
+        ]);
+
+        app.world_mut().get_mut::<CursorItem>(client).unwrap().0 = stack.clone();
+
+        let state_id = app
+            .world_mut()
+            .get::<ClientInventoryState>(client)
+            .expect("could not find client")
+            .state_id()
+            .0;
+
+        helper.send(&ContainerClickC2s {
+            window_id: VarInt(0),
+            state_id: VarInt(state_id),
+            slot_idx: -1,
+            button: 0,
+            mode: ClickMode::Click,
+            slot_changes: vec![].into(),
+            carried_item: stack.clone().into(),
+        });
+
+        app.update();
+
+        let cursor_item = app
+            .world_mut()
+            .get::<CursorItem>(client)
+            .expect("could not find client");
+        assert_eq!(cursor_item.0, stack);
+
+        let events = app
+            .world_mut()
+            .get_resource::<Events<DropItemStackEvent>>()
+            .expect("expected drop item stack events")
+            .iter_current_update_events()
+            .collect::<Vec<_>>();
+        assert_eq!(events.len(), 0);
+
+        let sent_packets = helper.collect_received();
+        sent_packets.assert_count::<ContainerSetContentS2c>(0);
+        sent_packets.assert_count::<ContainerSetSlotS2c>(0);
     }
 
     #[test]

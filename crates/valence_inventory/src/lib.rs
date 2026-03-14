@@ -924,7 +924,7 @@ fn handle_click_slot(
             }
         };
 
-        if pkt.slot_idx < 0 && pkt.mode == ClickMode::Click {
+        if pkt.slot_idx == -999 && pkt.mode == ClickMode::Click {
             // The client is dropping the cursor item by clicking outside the window.
 
             let stack = std::mem::take(&mut cursor_item.0);

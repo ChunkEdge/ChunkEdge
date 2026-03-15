@@ -2,6 +2,7 @@ use std::borrow::Cow;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use valence_inventory::player_inventory::PlayerInventory;
 use valence_item::ItemComponent;
 use valence_server::protocol::IntoTextComponent;
 
@@ -287,7 +288,7 @@ fn test_should_allow_non_modifying_inventory_clicks() {
         button: 0,
         mode: ClickMode::DropKey,
         state_id: VarInt(state_id.0),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         slot_changes: vec![].into(),
         carried_item: ItemStack::new(ItemKind::Air, 0).into(),
     });
@@ -300,6 +301,60 @@ fn test_should_allow_non_modifying_inventory_clicks() {
     // The user intereacted with the inventory themselves, and should not get a
     // resync
     sent_packets.assert_count::<ContainerSetContentS2c>(0);
+}
+
+#[test]
+fn test_should_keep_cursor_for_non_modifying_armor_click() {
+    let ScenarioSingleClient {
+        mut app,
+        client,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    helper.clear_received();
+
+    let stack = ItemStack::new(ItemKind::IronSword, 1).with_components(vec![
+        ItemComponent::Unbreakable,
+        ItemComponent::CustomName("Custom Item Name".into_text_component()),
+    ]);
+
+    app.world_mut().get_mut::<CursorItem>(client).unwrap().0 = stack.clone();
+
+    let state_id = app
+        .world_mut()
+        .get::<ClientInventoryState>(client)
+        .unwrap()
+        .state_id();
+
+    helper.send(&ContainerClickC2s {
+        window_id: VarInt(0),
+        button: 0,
+        mode: ClickMode::Click,
+        state_id: VarInt(state_id.0),
+        slot_idx: 6,
+        slot_changes: vec![].into(),
+        carried_item: stack.clone().into(),
+    });
+
+    app.update();
+
+    let cursor_item = app
+        .world_mut()
+        .get::<CursorItem>(client)
+        .expect("could not find client");
+    assert_eq!(cursor_item.0, stack);
+
+    let inventory = app
+        .world_mut()
+        .get::<Inventory>(client)
+        .expect("could not find inventory for client");
+    assert_eq!(inventory.slot(6), &ItemStack::EMPTY);
+
+    let sent_packets = helper.collect_received();
+    sent_packets.assert_count::<ContainerSetContentS2c>(0);
+    sent_packets.assert_count::<ContainerSetSlotS2c>(0);
 }
 
 #[test]
@@ -1693,7 +1748,7 @@ mod dropping_items {
         helper.send(&ContainerClickC2s {
             window_id: VarInt(0),
             state_id: VarInt(state_id),
-            slot_idx: -999,
+            slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
             button: 0,
             mode: ClickMode::Click,
             slot_changes: vec![].into(),
@@ -1726,6 +1781,63 @@ mod dropping_items {
                 ItemComponent::CustomName("Droppable Iron".into_text_component()),
             ])
         );
+    }
+
+    #[test]
+    fn should_keep_carried_item_on_margin_click() {
+        let ScenarioSingleClient {
+            mut app,
+            client,
+            mut helper,
+            ..
+        } = ScenarioSingleClient::new();
+
+        app.update();
+        helper.clear_received();
+
+        let stack = ItemStack::new(ItemKind::IronSword, 1).with_components(vec![
+            ItemComponent::Unbreakable,
+            ItemComponent::CustomName("Custom Item Name".into_text_component()),
+        ]);
+
+        app.world_mut().get_mut::<CursorItem>(client).unwrap().0 = stack.clone();
+
+        let state_id = app
+            .world_mut()
+            .get::<ClientInventoryState>(client)
+            .expect("could not find client")
+            .state_id()
+            .0;
+
+        helper.send(&ContainerClickC2s {
+            window_id: VarInt(0),
+            state_id: VarInt(state_id),
+            slot_idx: -1,
+            button: 0,
+            mode: ClickMode::Click,
+            slot_changes: vec![].into(),
+            carried_item: stack.clone().into(),
+        });
+
+        app.update();
+
+        let cursor_item = app
+            .world_mut()
+            .get::<CursorItem>(client)
+            .expect("could not find client");
+        assert_eq!(cursor_item.0, stack);
+
+        let events = app
+            .world_mut()
+            .get_resource::<Events<DropItemStackEvent>>()
+            .expect("expected drop item stack events")
+            .iter_current_update_events()
+            .collect::<Vec<_>>();
+        assert_eq!(events.len(), 0);
+
+        let sent_packets = helper.collect_received();
+        sent_packets.assert_count::<ContainerSetContentS2c>(0);
+        sent_packets.assert_count::<ContainerSetSlotS2c>(0);
     }
 
     #[test]
@@ -2379,7 +2491,7 @@ fn should_drop_item_stack_player_open_inventory_with_dropkey() {
 //     let drag_packet = ContainerClickC2s {
 //         window_id,
 //         state_id: VarInt(state_id),
-//         slot_idx: -999,
+//         slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
 //         button: 2,
 //         mode: ClickMode::Drag,
 //         slot_changes: vec![
@@ -2537,7 +2649,7 @@ fn dragging_items_left_click_no_remainder() {
     let start_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 0, // start left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![].into(),
@@ -2594,7 +2706,7 @@ fn dragging_items_left_click_no_remainder() {
     let end_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 2, // end left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![
@@ -2744,7 +2856,7 @@ fn dragging_items_left_click_with_remainder() {
     let start_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 0, // start left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![].into(),
@@ -2801,7 +2913,7 @@ fn dragging_items_left_click_with_remainder() {
     let end_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 2, // end left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![

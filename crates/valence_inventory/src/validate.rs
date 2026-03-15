@@ -73,7 +73,7 @@ pub(super) fn validate_click_slot_packet(
             ensure!((0..=1).contains(&packet.button), "invalid button");
             ensure!(
                 (0..=max_slot).contains(&(packet.slot_idx as u16))
-                    || packet.slot_idx == -999
+                    || packet.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY
                     || packet.slot_idx == -1,
                 "invalid slot index"
             )
@@ -110,7 +110,8 @@ pub(super) fn validate_click_slot_packet(
                 "carried item must be empty for an item drop"
             );
             ensure!(
-                (0..=max_slot).contains(&(packet.slot_idx as u16)) || packet.slot_idx == -999,
+                (0..=max_slot).contains(&(packet.slot_idx as u16))
+                    || packet.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY,
                 "invalid slot index"
             )
         }
@@ -120,7 +121,8 @@ pub(super) fn validate_click_slot_packet(
                 "invalid button"
             );
             ensure!(
-                (0..=max_slot).contains(&(packet.slot_idx as u16)) || packet.slot_idx == -999,
+                (0..=max_slot).contains(&(packet.slot_idx as u16))
+                    || packet.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY,
                 "invalid slot index"
             )
         }
@@ -150,7 +152,10 @@ pub(super) fn validate_click_slot_packet(
                     count_deltas == 0,
                     "invalid item delta: expected 0, got {count_deltas}"
                 );
-            } else if packet.slot_idx == -999 {
+
+                // Margin clicks do not modify the carried stack.
+                new_cursor_stack = cursor_item.0.clone();
+            } else if packet.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY {
                 // Clicked outside the window, so the client is dropping an item
                 ensure!(
                     packet.slot_changes.is_empty(),
@@ -182,6 +187,14 @@ pub(super) fn validate_click_slot_packet(
                         count_deltas == 0,
                         "invalid item delta: expected 0, got {count_deltas}"
                     );
+
+                    ensure!(
+                        packet.carried_item.item == cursor_item.0.item
+                            && packet.carried_item.count == cursor_item.0.count,
+                        "carried item must remain unchanged for a non-modifying click"
+                    );
+
+                    new_cursor_stack = cursor_item.0.clone();
                 } else {
                     ensure!(
                         packet.slot_changes.len() == 1,
@@ -608,7 +621,7 @@ mod tests {
         let drag_packet = ContainerClickC2s {
             window_id: VarInt(2),
             state_id: VarInt(14),
-            slot_idx: -999,
+            slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
             button: 2,
             mode: ClickMode::Drag,
             slot_changes: vec![
@@ -648,7 +661,7 @@ mod tests {
         let drag_packet = ContainerClickC2s {
             window_id: VarInt(2),
             state_id: VarInt(14),
-            slot_idx: -999,
+            slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
             button: 2,
             mode: ClickMode::Click,
             slot_changes: vec![
@@ -1055,7 +1068,7 @@ mod tests {
         let packet = ContainerClickC2s {
             window_id: VarInt(0),
             state_id: VarInt(2),
-            slot_idx: -999, // -999 means outside inventory
+            slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
             button: 0,
             mode: ClickMode::DropKey, // when not holding an item and clicking outside the user
             // interface the client sends this kind of packet
@@ -1075,7 +1088,7 @@ mod tests {
         let packet = ContainerClickC2s {
             window_id: VarInt(0),
             state_id: VarInt(2),
-            slot_idx: -999, // -999 means outside inventory
+            slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
             button: 0,
             mode: ClickMode::Click, // when holding an item its a click
             slot_changes: vec![].into(),

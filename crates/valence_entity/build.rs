@@ -37,6 +37,22 @@ struct Attribute {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[serde(untagged)]
+enum PaintingVariantValue {
+    Identifier(String),
+    Inline(PaintingVariantInline),
+}
+
+#[derive(Deserialize, Clone, Debug)]
+struct PaintingVariantInline {
+    width: i32,
+    height: i32,
+    asset_id: String,
+    title: Option<String>,
+    author: Option<String>,
+}
+
+#[derive(Deserialize, Clone, Debug)]
 #[serde(tag = "type", content = "default_value", rename_all = "snake_case")]
 #[allow(dead_code)]
 enum Value {
@@ -79,7 +95,7 @@ enum Value {
     PigVariant(String),
     ChickenVariant(String),
     OptionalGlobalPos(Option<()>), // TODO
-    PaintingVariant(String),
+    PaintingVariant(PaintingVariantValue),
     SnifferState(String),
     ArmadilloState(String),
     Vector3f {
@@ -160,7 +176,7 @@ impl Value {
             Value::Facing(_) => quote!(valence_protocol::Direction),
             Value::LazyEntityReference(_) => quote!(()), // TODO
             Value::BlockState(_) => quote!(valence_protocol::BlockState),
-            Value::OptionalBlockState(_) => quote!(valence_protocol::BlockState),
+            Value::OptionalBlockState(_) => quote!(Option<valence_protocol::BlockState>),
             Value::NbtCompound(_) => quote!(valence_nbt::Compound),
             Value::Particle(_) => {
                 quote!(valence_protocol::packets::play::level_particles_s2c::Particle)
@@ -179,7 +195,9 @@ impl Value {
             Value::PigVariant(_) => quote!(crate::PigKind),
             Value::ChickenVariant(_) => quote!(crate::ChickenKind),
             Value::OptionalGlobalPos(_) => quote!(()), // TODO
-            Value::PaintingVariant(_) => quote!(crate::PaintingKind),
+            Value::PaintingVariant(_) => {
+                quote!(valence_binary::IdOr<crate::PaintingVariantDefinition>)
+            }
             Value::SnifferState(_) => quote!(crate::SnifferState),
             Value::ArmadilloState(_) => quote!(crate::ArmadilloState),
             Value::Vector3f { .. } => quote!(valence_math::Vec3),
@@ -232,7 +250,7 @@ impl Value {
             }
             Value::OptionalBlockState(bs) => {
                 assert!(bs.is_none());
-                quote!(valence_protocol::BlockState::default())
+                quote!(None)
             }
             Value::NbtCompound(s) => {
                 assert_eq!(s, "{}");
@@ -308,11 +326,48 @@ impl Value {
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::ChickenKind::#variant)
             }
-            Value::OptionalGlobalPos(_) => quote!(()),
-            Value::PaintingVariant(p) => {
-                let variant = ident(p.to_pascal_case());
-                quote!(crate::PaintingKind::#variant)
+            Value::OptionalGlobalPos(gp) => {
+                assert!(gp.is_none());
+                quote!(None)
             }
+            Value::PaintingVariant(p) => match p {
+                PaintingVariantValue::Identifier(painting) => {
+                    let stripped_variant = painting.trim_start_matches("minecraft:");
+                    let variant = ident(stripped_variant.to_pascal_case());
+                    quote!(valence_binary::IdOr::id(crate::PaintingKind::#variant as i32))
+                }
+                PaintingVariantValue::Inline(inline) => {
+                    let PaintingVariantInline {
+                        width,
+                        height,
+                        asset_id,
+                        title,
+                        author,
+                    } = inline;
+
+                    let title = if let Some(title) = title {
+                        quote!(Some(#title.into()))
+                    } else {
+                        quote!(None)
+                    };
+
+                    let author = if let Some(author) = author {
+                        quote!(Some(#author.into()))
+                    } else {
+                        quote!(None)
+                    };
+
+                    quote! {
+                        valence_binary::IdOr::inline(crate::PaintingVariantDefinition {
+                            width: #width,
+                            height: #height,
+                            asset_id: #asset_id.to_owned(),
+                            title: #title,
+                            author: #author,
+                        })
+                    }
+                }
+            },
             Value::SnifferState(s) => {
                 let state = ident(s.to_pascal_case());
                 quote!(crate::SnifferState::#state)
@@ -330,8 +385,21 @@ impl Value {
 
     fn encodable_expr(&self, self_lvalue: TokenStream) -> TokenStream {
         match self {
+            Value::Long(_) => quote!(valence_protocol::VarLong(#self_lvalue)),
             Value::Integer(_) => quote!(VarInt(#self_lvalue)),
             Value::OptionalInt(_) => quote!(OptionalInt(#self_lvalue)),
+            Value::OptionalBlockState(_) => quote!(OptionalBlockState(#self_lvalue)),
+            Value::PaintingVariant(_) => quote!(PaintingVariant(&#self_lvalue)),
+            Value::TextComponent(_) => {
+                quote!(valence_binary::TextComponent::from(#self_lvalue.clone()))
+            }
+            Value::OptionalTextComponent(_) => {
+                quote!(
+                    #self_lvalue
+                        .clone()
+                        .map(valence_binary::TextComponent::from)
+                )
+            }
             _ => quote!(&#self_lvalue),
         }
     }

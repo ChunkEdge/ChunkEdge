@@ -3,6 +3,7 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use derive_more::Deref;
+use valence_binary::IdOr;
 use valence_math::{Aabb, UVec3, Vec3Swizzles};
 use valence_protocol::Direction;
 
@@ -452,39 +453,11 @@ fn update_painting_hitbox(
     >,
 ) {
     for (mut hitbox, painting_variant, look) in &mut query {
-        let bounds: UVec3 = match painting_variant.0 {
-            PaintingKind::Kebab => [1, 1, 1],
-            PaintingKind::Aztec => [1, 1, 1],
-            PaintingKind::Alban => [1, 1, 1],
-            PaintingKind::Aztec2 => [1, 1, 1],
-            PaintingKind::Bomb => [1, 1, 1],
-            PaintingKind::Plant => [1, 1, 1],
-            PaintingKind::Wasteland => [1, 1, 1],
-            PaintingKind::Pool => [2, 1, 2],
-            PaintingKind::Courbet => [2, 1, 2],
-            PaintingKind::Sea => [2, 1, 2],
-            PaintingKind::Sunset => [2, 1, 2],
-            PaintingKind::Creebet => [2, 1, 2],
-            PaintingKind::Wanderer => [1, 2, 1],
-            PaintingKind::Graham => [1, 2, 1],
-            PaintingKind::Match => [2, 2, 2],
-            PaintingKind::Bust => [2, 2, 2],
-            PaintingKind::Stage => [2, 2, 2],
-            PaintingKind::Void => [2, 2, 2],
-            PaintingKind::SkullAndRoses => [2, 2, 2],
-            PaintingKind::Wither => [2, 2, 2],
-            PaintingKind::Fighters => [4, 2, 4],
-            PaintingKind::Pointer => [4, 4, 4],
-            PaintingKind::Pigscene => [4, 4, 4],
-            PaintingKind::BurningSkull => [4, 4, 4],
-            PaintingKind::Skeleton => [4, 3, 4],
-            PaintingKind::Earth => [2, 2, 2],
-            PaintingKind::Wind => [2, 2, 2],
-            PaintingKind::Water => [2, 2, 2],
-            PaintingKind::Fire => [2, 2, 2],
-            PaintingKind::DonkeyKong => [4, 3, 4],
-        }
-        .into();
+        let bounds = match &painting_variant.0 {
+            IdOr::Id(id) => PaintingKind::from_registry_id(*id)
+                .map_or_else(|| UVec3::splat(1), painting_kind_hitbox_bounds),
+            IdOr::Inline(inline) => inline_painting_hitbox_bounds(inline),
+        };
 
         let mut center_pos = DVec3::splat(0.5);
 
@@ -510,6 +483,71 @@ fn update_painting_hitbox(
 
         hitbox.0 = Aabb::new(center_pos - bounds / 2.0, center_pos + bounds / 2.0);
     }
+}
+
+fn painting_kind_hitbox_bounds(kind: PaintingKind) -> UVec3 {
+    match kind {
+        PaintingKind::Alban
+        | PaintingKind::Aztec
+        | PaintingKind::Aztec2
+        | PaintingKind::Bomb
+        | PaintingKind::Kebab
+        | PaintingKind::Meditative
+        | PaintingKind::Plant
+        | PaintingKind::Wasteland => [1, 1, 1],
+        PaintingKind::Graham | PaintingKind::PrairieRide | PaintingKind::Wanderer => [1, 2, 1],
+        PaintingKind::Courbet
+        | PaintingKind::Creebet
+        | PaintingKind::Pool
+        | PaintingKind::Sea
+        | PaintingKind::Sunset => [2, 1, 2],
+        PaintingKind::Baroque
+        | PaintingKind::Bust
+        | PaintingKind::Earth
+        | PaintingKind::Fire
+        | PaintingKind::Humble
+        | PaintingKind::Match
+        | PaintingKind::SkullAndRoses
+        | PaintingKind::Stage
+        | PaintingKind::Void
+        | PaintingKind::Water
+        | PaintingKind::Wind
+        | PaintingKind::Wither => [2, 2, 2],
+        PaintingKind::Bouquet
+        | PaintingKind::Cavebird
+        | PaintingKind::Cotan
+        | PaintingKind::Endboss
+        | PaintingKind::Fern
+        | PaintingKind::Owlemons
+        | PaintingKind::Sunflowers
+        | PaintingKind::Tides => [3, 3, 3],
+        PaintingKind::Backyard | PaintingKind::Pond => [3, 4, 3],
+        PaintingKind::Changing
+        | PaintingKind::Fighters
+        | PaintingKind::Finding
+        | PaintingKind::Lowmist
+        | PaintingKind::Passage => [4, 2, 4],
+        PaintingKind::DonkeyKong | PaintingKind::Skeleton => [4, 3, 4],
+        PaintingKind::BurningSkull
+        | PaintingKind::Orb
+        | PaintingKind::Pigscene
+        | PaintingKind::Pointer
+        | PaintingKind::Unpacked => [4, 4, 4],
+    }
+    .into()
+}
+
+fn inline_painting_hitbox_bounds(inline: &PaintingVariantDefinition) -> UVec3 {
+    let width = u32::try_from(inline.width)
+        .ok()
+        .filter(|&n| n > 0)
+        .unwrap_or(1);
+    let height = u32::try_from(inline.height)
+        .ok()
+        .filter(|&n| n > 0)
+        .unwrap_or(1);
+
+    UVec3::new(width, height, width)
 }
 
 fn update_shulker_hitbox(

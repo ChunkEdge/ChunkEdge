@@ -337,6 +337,18 @@ impl LoadedChunk {
         self.assert_no_changes();
     }
 
+    /// Generates the `MOTION_BLOCKING` heightmap for this chunk, which stores
+    /// the height of the highest non motion-blocking block in each column.
+    ///
+    /// The lowest value of the heightmap is 0, which means that there are no
+    /// motion-blocking blocks in the column. In this case, rain will fall
+    /// through the void and there will be no rain particles.
+    ///
+    /// A value of 1 means that rain particles will appear at the lowest
+    /// possible height given by [`DimensionType::min_y`]. Note that
+    /// blocks cannot be placed at `min_y - 1`.
+    ///
+    /// [`DimensionType::min_y`]: valence_registry::dimension_type::DimensionType::min_y
     fn motion_blocking(&self) -> [u32; 16 * 16] {
         self.build_heightmap(Self::is_motion_blocking_occupied)
     }

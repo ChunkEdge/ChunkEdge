@@ -924,7 +924,7 @@ fn handle_click_slot(
             }
         };
 
-        if pkt.slot_idx == -999 && pkt.mode == ClickMode::Click {
+        if pkt.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY && pkt.mode == ClickMode::Click {
             // The client is dropping the cursor item by clicking outside the window.
 
             let stack = std::mem::take(&mut cursor_item.0);
@@ -967,12 +967,12 @@ fn handle_click_slot(
 
                     continue;
                 }
-                if pkt.slot_idx == -999 {
+                if pkt.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY {
                     // The player was just clicking outside the inventories without holding an item
                     continue;
                 }
 
-                if pkt.slot_idx == -999 {
+                if pkt.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY {
                     // The player was just clicking outside the inventories without holding an item
                     continue;
                 }
@@ -1064,12 +1064,12 @@ fn handle_click_slot(
                     });
                     continue;
                 }
-                if pkt.slot_idx == -999 {
+                if pkt.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY {
                     // The player was just clicking outside the inventories without holding an item
                     continue;
                 }
 
-                if pkt.slot_idx == -999 {
+                if pkt.slot_idx == PlayerInventory::SLOT_OUTSIDE_INVENTORY {
                     // The player was just clicking outside the inventories without holding an item
                     continue;
                 }

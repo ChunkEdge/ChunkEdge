@@ -2,6 +2,7 @@ use std::borrow::Cow;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use valence_inventory::player_inventory::PlayerInventory;
 use valence_item::ItemComponent;
 use valence_server::protocol::IntoTextComponent;
 
@@ -287,7 +288,7 @@ fn test_should_allow_non_modifying_inventory_clicks() {
         button: 0,
         mode: ClickMode::DropKey,
         state_id: VarInt(state_id.0),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         slot_changes: vec![].into(),
         carried_item: ItemStack::new(ItemKind::Air, 0).into(),
     });
@@ -1747,7 +1748,7 @@ mod dropping_items {
         helper.send(&ContainerClickC2s {
             window_id: VarInt(0),
             state_id: VarInt(state_id),
-            slot_idx: -999,
+            slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
             button: 0,
             mode: ClickMode::Click,
             slot_changes: vec![].into(),
@@ -2490,7 +2491,7 @@ fn should_drop_item_stack_player_open_inventory_with_dropkey() {
 //     let drag_packet = ContainerClickC2s {
 //         window_id,
 //         state_id: VarInt(state_id),
-//         slot_idx: -999,
+//         slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
 //         button: 2,
 //         mode: ClickMode::Drag,
 //         slot_changes: vec![
@@ -2648,7 +2649,7 @@ fn dragging_items_left_click_no_remainder() {
     let start_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 0, // start left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![].into(),
@@ -2705,7 +2706,7 @@ fn dragging_items_left_click_no_remainder() {
     let end_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 2, // end left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![
@@ -2855,7 +2856,7 @@ fn dragging_items_left_click_with_remainder() {
     let start_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 0, // start left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![].into(),
@@ -2912,7 +2913,7 @@ fn dragging_items_left_click_with_remainder() {
     let end_drag_packet = ContainerClickC2s {
         window_id,
         state_id: VarInt(state_id),
-        slot_idx: -999,
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
         button: 2, // end left click drag
         mode: ClickMode::Drag,
         slot_changes: vec![

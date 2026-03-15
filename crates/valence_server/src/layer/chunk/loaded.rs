@@ -340,28 +340,55 @@ impl LoadedChunk {
     /// Generates the `MOTION_BLOCKING` heightmap for this chunk, which stores
     /// the height of the highest non motion-blocking block in each column.
     ///
-    /// The lowest value of the heightmap is 0, which means that there are no
-    /// motion-blocking blocks in the column. In this case, rain will fall
-    /// through the void and there will be no rain particles.
+    /// `MOTION_BLOCKING` considers:
     ///
-    /// A value of 1 means that rain particles will appear at the lowest
-    /// possible height given by [`DimensionType::min_y`]. Note that
-    /// blocks cannot be placed at `min_y - 1`.
+    /// "Solid" blocks, except bamboo saplings and cactuses; fluids. To
+    /// determine where to display rain and snow.
     ///
-    /// [`DimensionType::min_y`]: valence_registry::dimension_type::DimensionType::min_y
-    fn motion_blocking(&self) -> [u32; 16 * 16] {
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING
+    pub(crate) fn motion_blocking(&self) -> [u32; 16 * 16] {
         self.build_heightmap(Self::is_motion_blocking_occupied)
     }
 
-    fn motion_blocking_no_leaves(&self) -> [u32; 16 * 16] {
+    /// Generates the `MOTION_BLOCKING_NO_LEAVES` heightmap for this chunk,
+    /// which stores the height of the highest non motion-blocking and non-leaf
+    /// block in each column.
+    ///
+    /// `MOTION_BLOCKING_NO_LEAVES` is the same as `MOTION_BLOCKING`, but also
+    /// considers leaf blocks to be non-blocking.
+    ///
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING%5FNO%5FLEAVES
+    pub(crate) fn motion_blocking_no_leaves(&self) -> [u32; 16 * 16] {
         self.build_heightmap(Self::is_motion_blocking_no_leaves_occupied)
     }
 
-    fn world_surface(&self) -> [u32; 16 * 16] {
+    /// Generates the `WORLD_SURFACE` heightmap for this chunk, which stores the
+    /// height of the highest non-air block in each column.
+    ///
+    /// `WORLD_SURFACE` cosiders:
+    ///
+    /// All blocks other than air, cave air and void air. To determine if a
+    /// beacon beam is obstructed.
+    ///
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=WORLD%5FSURFACE
+    pub(crate) fn world_surface(&self) -> [u32; 16 * 16] {
         self.build_heightmap(|state| !state.is_air())
     }
 
-    fn build_heightmap(&self, mut is_occupied: impl FnMut(BlockState) -> bool) -> [u32; 16 * 16] {
+    /// Generates a heightmap for this chunk using the provided predicate.
+    ///
+    /// The lowest value of the heightmap is 0, which means that there are no
+    /// blocks matching the predicate in the column. Since 0 is reserved for
+    /// this case, the heightmap values are 1-indexed. A value of 1 means that
+    /// the heightmap has the lowest possible height given by
+    /// [`DimensionType::min_y`]. Note that blocks cannot be placed at `min_y -
+    /// 1`.
+    ///
+    /// [`DimensionType::min_y`]: valence_registry::dimension_type::DimensionType::min_y
+    pub(crate) fn build_heightmap(
+        &self,
+        mut is_occupied: impl FnMut(BlockState) -> bool,
+    ) -> [u32; 16 * 16] {
         let mut heightmap = [0; 16 * 16];
 
         for z in 0_u32..16 {

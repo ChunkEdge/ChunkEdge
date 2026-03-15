@@ -5,7 +5,7 @@ use std::sync::atomic::{AtomicU32, Ordering};
 
 use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
 use valence_binary::Encode;
-use valence_generated::block::{PropName, PropValue};
+use valence_generated::block::{BlockKind, PropName, PropValue};
 use valence_nbt::Compound;
 use valence_protocol::encode::{PacketWriter, WritePacket};
 use valence_protocol::packets::play::level_chunk_with_light_s2c::{
@@ -35,6 +35,14 @@ pub struct LoadedChunk {
     viewer_count: AtomicU32,
     /// Block and biome data for the chunk.
     sections: Box<[Section]>,
+    /// Sky light data for the chunk. Light sections have one extra section at
+    /// the top and bottom to account for skylight changes above and below the
+    /// chunk.
+    sky_light_sections: Box<[LightSection]>,
+    /// Block light data for the chunk. Light sections have one extra section at
+    /// the top and bottom to account for light changes above and below the
+    /// chunk.
+    block_light_sections: Box<[LightSection]>,
     /// The block entities in this chunk.
     block_entities: BTreeMap<u32, Compound>,
     /// The set of block entities that have been modified this tick.
@@ -47,47 +55,16 @@ pub struct LoadedChunk {
     cached_init_packets: Mutex<Vec<u8>>,
 }
 
-#[derive(Clone, Debug)]
-struct Section {
+#[derive(Clone, Debug, Default)]
+pub struct Section {
     block_states: BlockStateContainer,
     biomes: BiomeContainer,
-    block_light: [u8; 2048],
-    sky_light: [u8; 2048],
     /// Contains modifications for the update section packet. (Or the regular
     /// block update packet if len == 1).
     updates: Vec<ChunkDeltaUpdateEntry>,
 }
 
-impl Default for Section {
-    fn default() -> Self {
-        Self {
-            block_light: [0x00; 2048],
-            sky_light: [0x00; 2048],
-            block_states: BlockStateContainer::default(),
-            biomes: BiomeContainer::default(),
-            updates: Vec::new(),
-        }
-    }
-}
-
 impl Section {
-    /// Create a new section fully lit by sky light.
-    pub(crate) fn with_sky_light() -> Self {
-        Self {
-            sky_light: [0xff; 2048],
-            ..Default::default()
-        }
-    }
-
-    /// Create a fully lit section
-    pub(crate) fn _with_full_light() -> Self {
-        Self {
-            sky_light: [0xff; 2048],
-            block_light: [0xff; 2048],
-            ..Default::default()
-        }
-    }
-
     fn count_non_air_blocks(&self) -> u16 {
         let mut count = 0;
 
@@ -116,11 +93,46 @@ impl Section {
     }
 }
 
+/// Enum describing the light contents of a data section.
+///
+/// We need to differentiate between [`LightSection::NotSet`] and
+/// [`LightSection::FullyDark`]. This is because, for sky light,
+/// [`LightSection::NotSet`] could mean the section is either fully lit or fully
+/// dark, and the client should deduce that from the sky light data that is
+/// included.
+#[derive(Clone, Debug, Default)]
+pub enum LightSection {
+    #[default]
+    NotSet,
+    FullyDark,
+    FullData(Box<[u8; 2048]>),
+}
+
+impl LightSection {
+    /// Create a new section of light data with the given raw byte array
+    pub fn from_data(data: [u8; 2048]) -> Self {
+        Self::FullData(Box::new(data))
+    }
+}
+
 impl LoadedChunk {
     pub(crate) fn new(height: u32) -> Self {
+        let section_count = height as usize / 16;
+        let light_section_count = section_count + 2;
         Self {
             viewer_count: AtomicU32::new(0),
-            sections: vec![Section::with_sky_light(); height as usize / 16].into(),
+            sections: vec![Section::default(); section_count].into(),
+            // We don't have a full lighting engine implemented so we set all sky light to be
+            // NotSet so that no light data is sent to the client and we rely
+            // on a hack that sets ambient light to full brightness for all dimensions
+            // to make the chunks appear fully lit. We don't send a full light section filled with
+            // 0xFF here, instead of the ambient light hack, because this is extremely unoptimized
+            // in terms of memory consumption and crashes the many_players_spread_out
+            // benchmark/test.
+            sky_light_sections: vec![LightSection::NotSet; light_section_count].into(),
+            // We don't have a full lighting engine implemented so we set all block light to be
+            // fully dark.
+            block_light_sections: vec![LightSection::FullyDark; light_section_count].into(),
             block_entities: BTreeMap::new(),
             changed_block_entities: BTreeSet::new(),
             changed_biomes: false,
@@ -328,33 +340,64 @@ impl LoadedChunk {
     /// Generates the `MOTION_BLOCKING` heightmap for this chunk, which stores
     /// the height of the highest non motion-blocking block in each column.
     ///
+    /// `MOTION_BLOCKING` considers:
+    ///
+    /// "Solid" blocks, except bamboo saplings and cactuses; fluids. To
+    /// determine where to display rain and snow.
+    ///
+    /// [Minecraft Wiki `MOTION_BLOCKING`](https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING)
+    pub(crate) fn motion_blocking(&self) -> [u32; 16 * 16] {
+        self.build_heightmap(Self::is_motion_blocking_occupied)
+    }
+
+    /// Generates the `MOTION_BLOCKING_NO_LEAVES` heightmap for this chunk,
+    /// which stores the height of the highest non motion-blocking and non-leaf
+    /// block in each column.
+    ///
+    /// `MOTION_BLOCKING_NO_LEAVES` is the same as `MOTION_BLOCKING`, but also
+    /// considers leaf blocks to be non-blocking.
+    ///
+    /// [Minecraft Wiki `MOTION_BLOCKING_NO_LEAVES`](https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING%5FNO%5FLEAVES)
+    pub(crate) fn motion_blocking_no_leaves(&self) -> [u32; 16 * 16] {
+        self.build_heightmap(Self::is_motion_blocking_no_leaves_occupied)
+    }
+
+    /// Generates the `WORLD_SURFACE` heightmap for this chunk, which stores the
+    /// height of the highest non-air block in each column.
+    ///
+    /// `WORLD_SURFACE` cosiders:
+    ///
+    /// All blocks other than air, cave air and void air. To determine if a
+    /// beacon beam is obstructed.
+    ///
+    /// [Minecraft Wiki `WORLD_SURFACE`](https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=WORLD%5FSURFACE)
+    pub(crate) fn world_surface(&self) -> [u32; 16 * 16] {
+        self.build_heightmap(|state| !state.is_air())
+    }
+
+    /// Generates a heightmap for this chunk using the provided predicate.
+    ///
     /// The lowest value of the heightmap is 0, which means that there are no
-    /// motion-blocking blocks in the column. In this case, rain will fall
-    /// through the void and there will be no rain particles.
-    ///
-    /// A value of 1 means that rain particles will appear at the lowest
-    /// possible height given by [`DimensionType::min_y`]. Note that
-    /// blocks cannot be placed at `min_y - 1`.
-    ///
-    /// We take these two special cases into account by adding a value of 2 to
-    /// our heightmap if we find a motion-blocking block, since
-    /// `self.block_state(x, 0, z)` corresponds to the block at `(x, min_y, z)`
-    /// ingame.
+    /// blocks matching the predicate in the column. Since 0 is reserved for
+    /// this case, the heightmap values are 1-indexed. A value of 1 means that
+    /// the heightmap has the lowest possible height given by
+    /// [`DimensionType::min_y`]. Note that blocks cannot be placed at `min_y -
+    /// 1`.
     ///
     /// [`DimensionType::min_y`]: valence_registry::dimension_type::DimensionType::min_y
-    #[allow(clippy::needless_range_loop)]
-    fn motion_blocking(&self) -> Vec<Vec<u32>> {
-        let mut heightmap: Vec<Vec<u32>> = vec![vec![0; 16]; 16];
+    pub(crate) fn build_heightmap(
+        &self,
+        mut is_occupied: impl FnMut(BlockState) -> bool,
+    ) -> [u32; 16 * 16] {
+        let mut heightmap = [0; 16 * 16];
 
-        for z in 0..16 {
-            for x in 0..16 {
+        for z in 0_u32..16 {
+            for x in 0_u32..16 {
                 for y in (0..self.height()).rev() {
-                    let state = self.block_state(x as u32, y, z as u32);
-                    if state.blocks_motion()
-                        || state.is_liquid()
-                        || state.get(PropName::Waterlogged) == Some(PropValue::True)
-                    {
-                        heightmap[z][x] = y + 2;
+                    if is_occupied(self.block_state(x, y, z)) {
+                        // Heightmap values are 1-indexed local Y coordinates, where 0
+                        // means "no occupied block in this column".
+                        heightmap[(z as usize) * 16 + (x as usize)] = y + 1;
                         break;
                     }
                 }
@@ -364,46 +407,76 @@ impl LoadedChunk {
         heightmap
     }
 
-    /// Encodes a given heightmap into the correct format of the
-    /// `ChunkDataS2c` packet.
-    ///
-    /// The heightmap values are stored in a long array. Each value is encoded
-    /// as a 9-bit unsigned integer, so every long with 64 bits can hold at
-    /// most seven values. The long is padded at the left side with a single
-    /// zero. Since there are 256 values for 256 columns in a chunk, there
-    /// will be 36 fully filled longs and one half-filled long with four
-    /// values. The remaining three values in the last long are left unused.
-    ///
-    /// For example, the `MOTION_BLOCKING` heightmap in an empty superflat
-    /// world is always 4. The first 36 long values will then be
-    ///
-    /// 0 000000100 000000100 000000100 000000100 000000100 000000100 000000100,
-    ///
-    /// and the last long will be
-    ///
-    /// 0 000000000 000000000 000000000 000000100 000000100 000000100 000000100.
-    fn encode_heightmap(heightmap: Vec<Vec<u32>>) -> Vec<i64> {
-        const BITS_PER_ENTRY: u32 = 9;
-        const ENTRIES_PER_LONG: u32 = i64::BITS / BITS_PER_ENTRY;
+    fn is_motion_blocking_occupied(state: BlockState) -> bool {
+        let kind = state.to_kind();
 
-        // Unless `ENTRIES_PER_LONG` is a power of 2 and therefore evenly divides 16*16,
-        // we need to add one extra long to fit all values in the packet.
-        const LONGS_PER_PACKET: u32 =
-            16 * 16 / ENTRIES_PER_LONG + (16 * 16 % ENTRIES_PER_LONG != 0) as u32;
+        if matches!(kind, BlockKind::BambooSapling | BlockKind::Cactus) {
+            return false;
+        }
 
-        let mut data: Vec<i64> = vec![0; LONGS_PER_PACKET as usize];
-        let mut iter = heightmap.into_iter().flatten();
+        state.blocks_motion()
+            || state.is_liquid()
+            || state.get(PropName::Waterlogged) == Some(PropValue::True)
+    }
 
-        for long in &mut data {
-            for j in 0..ENTRIES_PER_LONG {
-                match iter.next() {
-                    None => break,
-                    Some(y) => *long += i64::from(y) << (BITS_PER_ENTRY * j),
-                }
-            }
+    fn is_motion_blocking_no_leaves_occupied(state: BlockState) -> bool {
+        if Self::is_leaf_block(state) {
+            return false;
+        }
+
+        Self::is_motion_blocking_occupied(state)
+    }
+
+    fn is_leaf_block(state: BlockState) -> bool {
+        state.to_kind().to_str().ends_with("_leaves")
+    }
+
+    /// Encodes a given heightmap into the packed long-array format used in
+    /// `LevelChunkWithLightS2c`.
+    fn encode_heightmap(heightmap: &[u32; 16 * 16], world_height: u32) -> Vec<i64> {
+        let bits_per_entry = (u32::BITS - world_height.leading_zeros()).max(1);
+        let entries_per_long = i64::BITS / bits_per_entry;
+        let longs_per_packet =
+            (16 * 16) / entries_per_long + u32::from((16 * 16) % entries_per_long != 0);
+
+        let mut data: Vec<i64> = vec![0; longs_per_packet as usize];
+
+        for (idx, y) in heightmap.iter().enumerate() {
+            debug_assert!(*y <= world_height);
+
+            let long_idx = idx / entries_per_long as usize;
+            let bit_offset = (idx % entries_per_long as usize) as u32 * bits_per_entry;
+            data[long_idx] |= i64::from(*y) << bit_offset;
         }
 
         data
+    }
+
+    fn fill_light_data(
+        light: &LightSection,
+        light_arrays: &mut Vec<FixedArray<u8, 2048>>,
+        light_mask: &mut BitStorage,
+        empty_light_mask: &mut BitStorage,
+        i: usize,
+        is_block_light: bool,
+    ) {
+        match light {
+            LightSection::NotSet => {
+                // For sky light, the client will deduce this section to be either fully lit or
+                // fully dark based on the presence of light data in other light sections in the
+                // chunk.
+                if is_block_light {
+                    empty_light_mask.set(i, 1);
+                }
+            }
+            LightSection::FullyDark => {
+                empty_light_mask.set(i, 1);
+            }
+            LightSection::FullData(data) => {
+                light_arrays.push(FixedArray(**data));
+                light_mask.set(i, 1);
+            }
+        }
     }
 
     /// Writes the packet data needed to initialize this chunk.
@@ -416,30 +489,61 @@ impl LoadedChunk {
         let mut init_packets = self.cached_init_packets.lock();
 
         if init_packets.is_empty() {
+            let world_surface = self.world_surface();
+            let motion_blocking = self.motion_blocking();
+            let motion_blocking_no_leaves = self.motion_blocking_no_leaves();
+            let world_height = self.height();
+
             let heightmaps = vec![
                 HeightMap {
-                    kind: HeightMapKind::MotionBlocking,
-                    data: LoadedChunk::encode_heightmap(self.motion_blocking()),
+                    kind: HeightMapKind::WorldSurface,
+                    data: LoadedChunk::encode_heightmap(&world_surface, world_height),
                 },
-                // HeightMap {
-                //     kind: HeightMapKind::WorldSurface,
-                //     data: vec![],
-                // },
-                // HeightMap {
-                //     kind: HeightMapKind::MotionBlockingNoLeaves,
-                //     data: vec![],
-                // },
+                HeightMap {
+                    kind: HeightMapKind::MotionBlocking,
+                    data: LoadedChunk::encode_heightmap(&motion_blocking, world_height),
+                },
+                HeightMap {
+                    kind: HeightMapKind::MotionBlockingNoLeaves,
+                    data: LoadedChunk::encode_heightmap(&motion_blocking_no_leaves, world_height),
+                },
             ];
 
             let mut blocks_and_biomes: Vec<u8> = vec![];
 
-            let mut sky_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
-            let mut block_light_mask = BitStorage::new(1, self.sections.len() + 2, None).unwrap();
+            let light_section_count = self.sections.len() + 2;
 
-            let mut sky_light_arrays = Vec::with_capacity(self.sections.len());
-            let mut block_light_arrays = Vec::with_capacity(self.sections.len());
+            let mut sky_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut empty_sky_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut block_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut empty_block_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
 
-            for (i, sect) in self.sections.iter().enumerate() {
+            let mut sky_light_arrays = Vec::with_capacity(light_section_count);
+            let mut block_light_arrays = Vec::with_capacity(light_section_count);
+
+            for (i, sky_light) in self.sky_light_sections.iter().enumerate() {
+                LoadedChunk::fill_light_data(
+                    sky_light,
+                    &mut sky_light_arrays,
+                    &mut sky_light_mask,
+                    &mut empty_sky_light_mask,
+                    i,
+                    false,
+                );
+            }
+
+            for (i, block_light) in self.block_light_sections.iter().enumerate() {
+                LoadedChunk::fill_light_data(
+                    block_light,
+                    &mut block_light_arrays,
+                    &mut block_light_mask,
+                    &mut empty_block_light_mask,
+                    i,
+                    true,
+                );
+            }
+
+            for sect in &self.sections {
                 sect.count_non_air_blocks()
                     .encode(&mut blocks_and_biomes)
                     .unwrap();
@@ -463,14 +567,6 @@ impl LoadedChunk {
                         bit_width(info.biome_registry_len - 1),
                     )
                     .expect("paletted container encode should always succeed");
-
-                let sky_light = FixedArray(sect.sky_light);
-                sky_light_arrays.push(sky_light);
-                sky_light_mask.set(i + 1, 1);
-
-                let block_light = FixedArray(sect.block_light);
-                block_light_arrays.push(block_light);
-                block_light_mask.set(i + 1, 1);
             }
 
             let block_entities: Vec<_> = self
@@ -504,7 +600,7 @@ impl LoadedChunk {
                     sky_light_mask: Cow::Borrowed(&sky_light_mask.into_data()),
                     block_light_mask: Cow::Borrowed(&block_light_mask.into_data()),
                     empty_sky_light_mask: Cow::Borrowed(&[]),
-                    empty_block_light_mask: Cow::Borrowed(&[]),
+                    empty_block_light_mask: Cow::Borrowed(&empty_block_light_mask.into_data()),
                     sky_light_arrays: Cow::Borrowed(&sky_light_arrays),
                     block_light_arrays: Cow::Borrowed(&block_light_arrays),
                 },
@@ -761,6 +857,24 @@ mod tests {
 
     use super::*;
 
+    fn heightmap_idx(x: usize, z: usize) -> usize {
+        z * 16 + x
+    }
+
+    fn decode_heightmap(data: &[i64], bits_per_entry: u32) -> [u32; 16 * 16] {
+        let entries_per_long = i64::BITS / bits_per_entry;
+        let mask = (1_u64 << bits_per_entry) - 1;
+        let mut decoded = [0; 16 * 16];
+
+        for (idx, value) in decoded.iter_mut().enumerate() {
+            let long_idx = idx / entries_per_long as usize;
+            let bit_offset = (idx % entries_per_long as usize) as u32 * bits_per_entry;
+            *value = ((data[long_idx] as u64 >> bit_offset) & mask) as u32;
+        }
+
+        decoded
+    }
+
     #[test]
     fn loaded_chunk_unviewed_no_changes() {
         let mut chunk = LoadedChunk::new(512);
@@ -832,5 +946,62 @@ mod tests {
         );
 
         assert!(!chunk.cached_init_packets.get_mut().is_empty());
+    }
+
+    #[test]
+    fn heightmap_occupancy_rules() {
+        // Based on: https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure
+        let mut chunk = LoadedChunk::new(32);
+
+        chunk.set_block_state(0, 0, 0, BlockState::STONE);
+        chunk.set_block_state(1, 5, 0, BlockState::OAK_LEAVES);
+        chunk.set_block_state(2, 6, 0, BlockState::CACTUS);
+        chunk.set_block_state(3, 7, 0, BlockState::WATER);
+        chunk.set_block_state(
+            4,
+            8,
+            0,
+            BlockState::OAK_LEAVES.set(PropName::Waterlogged, PropValue::True),
+        );
+
+        let world_surface = chunk.world_surface();
+        let motion_blocking = chunk.motion_blocking();
+        let motion_blocking_no_leaves = chunk.motion_blocking_no_leaves();
+
+        assert_eq!(world_surface[heightmap_idx(0, 0)], 1);
+        assert_eq!(world_surface[heightmap_idx(1, 0)], 6);
+        assert_eq!(world_surface[heightmap_idx(2, 0)], 7);
+        assert_eq!(world_surface[heightmap_idx(3, 0)], 8);
+        assert_eq!(world_surface[heightmap_idx(4, 0)], 9);
+
+        assert_eq!(motion_blocking[heightmap_idx(0, 0)], 1);
+        assert_eq!(motion_blocking[heightmap_idx(1, 0)], 6);
+        assert_eq!(motion_blocking[heightmap_idx(2, 0)], 0);
+        assert_eq!(motion_blocking[heightmap_idx(3, 0)], 8);
+        assert_eq!(motion_blocking[heightmap_idx(4, 0)], 9);
+
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(0, 0)], 1);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(1, 0)], 0);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(2, 0)], 0);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(3, 0)], 8);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(4, 0)], 0);
+    }
+
+    #[test]
+    fn encode_heightmap_uses_dynamic_bit_width() {
+        let mut chunk = LoadedChunk::new(512);
+        chunk.set_block_state(0, 511, 0, BlockState::STONE);
+
+        let motion_blocking = chunk.motion_blocking();
+        assert_eq!(motion_blocking[heightmap_idx(0, 0)], 512);
+
+        let encoded = LoadedChunk::encode_heightmap(&motion_blocking, chunk.height());
+        // 512 world height => ceil(log2(512 + 1)) = 10 bits, so 64/10 = 6 entries per
+        // long.
+        assert_eq!(encoded.len(), 43);
+
+        let decoded = decode_heightmap(&encoded, 10);
+        assert_eq!(decoded[heightmap_idx(0, 0)], 512);
+        assert_eq!(decoded[heightmap_idx(1, 0)], 0);
     }
 }

@@ -4,7 +4,6 @@ use valence_binary::array::FixedArray;
 use valence_binary::{Decode, Encode, VarInt};
 
 use crate::Packet;
-// TODO: fix this
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct LightUpdateS2c<'a> {
     pub chunk_x: VarInt,

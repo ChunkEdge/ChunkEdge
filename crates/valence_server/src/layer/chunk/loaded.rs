@@ -345,7 +345,7 @@ impl LoadedChunk {
     /// "Solid" blocks, except bamboo saplings and cactuses; fluids. To
     /// determine where to display rain and snow.
     ///
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING
+    /// [Minecraft Wiki `MOTION_BLOCKING`](https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING)
     pub(crate) fn motion_blocking(&self) -> [u32; 16 * 16] {
         self.build_heightmap(Self::is_motion_blocking_occupied)
     }
@@ -357,7 +357,7 @@ impl LoadedChunk {
     /// `MOTION_BLOCKING_NO_LEAVES` is the same as `MOTION_BLOCKING`, but also
     /// considers leaf blocks to be non-blocking.
     ///
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING%5FNO%5FLEAVES
+    /// [Minecraft Wiki `MOTION_BLOCKING_NO_LEAVES`](https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=MOTION%5FBLOCKING%5FNO%5FLEAVES)
     pub(crate) fn motion_blocking_no_leaves(&self) -> [u32; 16 * 16] {
         self.build_heightmap(Self::is_motion_blocking_no_leaves_occupied)
     }
@@ -370,7 +370,7 @@ impl LoadedChunk {
     /// All blocks other than air, cave air and void air. To determine if a
     /// beacon beam is obstructed.
     ///
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=WORLD%5FSURFACE
+    /// [Minecraft Wiki `WORLD_SURFACE`](https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure:~:text=WORLD%5FSURFACE)
     pub(crate) fn world_surface(&self) -> [u32; 16 * 16] {
         self.build_heightmap(|state| !state.is_air())
     }

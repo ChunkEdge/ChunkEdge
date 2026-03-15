@@ -47,6 +47,13 @@ pub struct InitEntitiesSet;
 #[derive(SystemSet, Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct UpdateTrackedDataSet;
 
+/// When derived entity state is copied into tracked components ahead of
+/// tracked-data serialization.
+///
+/// This set lives in [`PostUpdate`].
+#[derive(SystemSet, Copy, Clone, PartialEq, Eq, Hash, Debug)]
+pub struct UpdateDerivedEntityDataSet;
+
 /// When entities are updated and changes from the current tick are cleared.
 /// Systems that need to observe changes to entities (Such as the difference
 /// between [`Position`] and [`OldPosition`]) should run _before_ this set (and
@@ -63,9 +70,11 @@ impl Plugin for EntityPlugin {
                 PostUpdate,
                 (
                     InitEntitiesSet,
-                    UpdateTrackedDataSet,
+                    UpdateDerivedEntityDataSet.after(InitEntitiesSet),
+                    UpdateTrackedDataSet.after(UpdateDerivedEntityDataSet),
                     ClearEntityChangesSet
                         .after(InitEntitiesSet)
+                        .after(UpdateDerivedEntityDataSet)
                         .after(UpdateTrackedDataSet),
                 ),
             )

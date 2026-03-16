@@ -432,6 +432,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
     let mut modules = TokenStream::new();
     let mut systems = TokenStream::new();
     let mut system_names = vec![];
+    let mut derived_system_names = vec![];
 
     for (entity_name, entity) in entities.clone() {
         let entity_name_ident = ident(&entity_name);
@@ -764,8 +765,8 @@ fn build_entities() -> anyhow::Result<TokenStream> {
         }
     }]);
 
-    system_names.push(quote!(update_living_and_player_absorption));
-    system_names.push(quote!(update_living_attributes));
+    derived_system_names.push(quote!(update_living_and_player_absorption));
+    derived_system_names.push(quote!(update_living_attributes));
 
     #[derive(Deserialize, Debug)]
     struct MiscEntityData {
@@ -852,6 +853,10 @@ fn build_entities() -> anyhow::Result<TokenStream> {
 
         fn add_tracked_data_systems(app: &mut App) {
             #systems
+
+            #(
+                app.add_systems(PostUpdate, #derived_system_names.in_set(UpdateDerivedEntityDataSet));
+            )*
 
             #(
                 app.add_systems(

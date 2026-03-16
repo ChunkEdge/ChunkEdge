@@ -6,6 +6,7 @@ use crate::layer::ChunkLayer;
 use crate::math::DVec3;
 use crate::protocol::packets::play::{
     AcceptTeleportationC2s, MoveEntityPosS2c, MovePlayerPosRotC2s, PlayerPositionS2c,
+    SetEntityDataS2c,
 };
 use crate::testing::{create_mock_client, ScenarioSingleClient};
 use crate::{ChunkPos, GameMode};
@@ -102,4 +103,26 @@ fn client_gamemode_changed_ability() {
     assert!(!abilities.allow_flying());
     assert!(!abilities.instant_break());
     assert!(!abilities.invulnerable());
+}
+
+#[test]
+// Regression test for a scheduling race where derived player tracked data
+// could be updated after tracked-data serialization during the initial join.
+// That left a SetEntityDataS2c packet to be emitted on the next tick, which
+// made tests that expected no unrelated packets after join flaky.
+fn client_does_not_emit_delayed_tracked_data_after_initial_join() {
+    let ScenarioSingleClient {
+        mut app,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    helper.clear_received();
+
+    app.update();
+
+    helper
+        .collect_received()
+        .assert_count::<SetEntityDataS2c>(0);
 }

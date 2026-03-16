@@ -15,7 +15,7 @@ use crate::protocol::packets::play::{
     OpenScreenS2c, SetCarriedItemC2s, SetCreativeModeSlotC2s,
 };
 use crate::protocol::VarInt;
-use crate::testing::ScenarioSingleClient;
+use crate::testing::{PacketFrames, ScenarioSingleClient};
 use crate::{GameMode, ItemKind, ItemStack};
 
 #[test]
@@ -432,6 +432,15 @@ fn set_up_open_inventory(app: &mut App, client_ent: Entity) -> Entity {
         .insert(open_inventory);
 
     inventory_ent
+}
+
+fn describe_packet_ids(sent_packets: &PacketFrames) -> String {
+    sent_packets
+        .0
+        .iter()
+        .map(|frame| format!("Unknown({:?})", frame.id))
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
 #[test]
@@ -2460,121 +2469,119 @@ fn should_drop_item_stack_player_open_inventory_with_dropkey() {
     );
 }
 
-//TODO: Fix the non-deterministic test and re-enable it.
-// #[test]
-// fn dragging_items() {
-//     let ScenarioSingleClient {
-//         mut app,
-//         client,
-//         mut helper,
-//         ..
-//     } = ScenarioSingleClient::new();
-//
-//     // Process a tick to get past the "on join" logic.
-//     app.update();
-//     helper.clear_received();
-//
-//     app.world_mut().get_mut::<CursorItem>(client).unwrap().0 =
-//         ItemStack::new(ItemKind::Diamond, 64).with_components(vec![
-//             ItemComponent::CustomName("Draggable
-// Diamond".into_text_component()),             ItemComponent::Lore(vec![
-//                 "Lore Line 1.".into_text_component(),
-//                 "Lore Line 2.".into_text_component(),
-//             ]),
-//         ]);
-//
-//     let inv_state =
-// app.world_mut().get::<ClientInventoryState>(client).unwrap();
-//     let window_id = inv_state.window_id();
-//     let state_id = inv_state.state_id().0;
-//
-//     let drag_packet = ContainerClickC2s {
-//         window_id,
-//         state_id: VarInt(state_id),
-//         slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
-//         button: 2,
-//         mode: ClickMode::Drag,
-//         slot_changes: vec![
-//             SlotChange {
-//                 idx: 9,
-//                 stack: ItemStack::new(ItemKind::Diamond,
-// 21).with_components(vec![
-// ItemComponent::CustomName("Draggable Diamond".into_text_component()),
-//                     ItemComponent::Lore(vec![
-//                         "Lore Line 1.".into_text_component(),
-//                         "Lore Line 2.".into_text_component(),
-//                     ]),
-//                 ]),
-//             }
-//             .into(),
-//             SlotChange {
-//                 idx: 10,
-//                 stack: ItemStack::new(ItemKind::Diamond,
-// 21).with_components(vec![
-// ItemComponent::CustomName("Draggable Diamond".into_text_component()),
-//                     ItemComponent::Lore(vec![
-//                         "Lore Line 1.".into_text_component(),
-//                         "Lore Line 2.".into_text_component(),
-//                     ]),
-//                 ]),
-//             }
-//             .into(),
-//             SlotChange {
-//                 idx: 11,
-//                 stack: ItemStack::new(ItemKind::Diamond,
-// 21).with_components(vec![
-// ItemComponent::CustomName("Draggable Diamond".into_text_component()),
-//                     ItemComponent::Lore(vec![
-//                         "Lore Line 1.".into_text_component(),
-//                         "Lore Line 2.".into_text_component(),
-//                     ]),
-//                 ]),
-//             }
-//             .into(),
-//         ]
-//         .into(),
-//         carried_item: ItemStack::new(ItemKind::Diamond,
-// 1).with_components(vec![             ItemComponent::CustomName("Draggable
-// Diamond".into_text_component()),             ItemComponent::Lore(vec![
-//                 "Lore Line 1.".into_text_component(),
-//                 "Lore Line 2.".into_text_component(),
-//             ]),
-//         ]).into(),
-//     };
-//     helper.send(&drag_packet);
-//
-//     app.update();
-//     let sent_packets = helper.collect_received();
-//     assert_eq!(sent_packets.0.len(), 0);
-//
-//     let cursor_item = app
-//         .world_mut()
-//         .get::<CursorItem>(client)
-//         .expect("could not find client");
-//
-//     assert_eq!(cursor_item.0, ItemStack::new(ItemKind::Diamond,
-// 1).with_components(vec![         ItemComponent::CustomName("Draggable
-// Diamond".into_text_component()),         ItemComponent::Lore(vec![
-//             "Lore Line 1.".into_text_component(),
-//             "Lore Line 2.".into_text_component(),
-//         ]),
-//     ]));
-//
-//     let inventory = app
-//         .world_mut()
-//         .get::<Inventory>(client)
-//         .expect("could not find inventory");
-//
-//     for i in 9..12 {
-//         assert_eq!(inventory.slot(i), &ItemStack::new(ItemKind::Diamond,
-// 21).with_components(vec![             ItemComponent::CustomName("Draggable
-// Diamond".into_text_component()),             ItemComponent::Lore(vec![
-//                 "Lore Line 1.".into_text_component(),
-//                 "Lore Line 2.".into_text_component(),
-//             ]),
-//         ]));
-//     }
-// }
+#[test]
+fn dragging_items() {
+    let ScenarioSingleClient {
+        mut app,
+        client,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    helper.clear_received();
+
+    let draggable_stack = ItemStack::new(ItemKind::Diamond, 64).with_components(vec![
+        ItemComponent::CustomName("Draggable Diamond".into_text_component()),
+        ItemComponent::Lore(vec![
+            "Lore Line 1.".into_text_component(),
+            "Lore Line 2.".into_text_component(),
+        ]),
+    ]);
+
+    let carried_stack = ItemStack::new(ItemKind::Diamond, 1).with_components(vec![
+        ItemComponent::CustomName("Draggable Diamond".into_text_component()),
+        ItemComponent::Lore(vec![
+            "Lore Line 1.".into_text_component(),
+            "Lore Line 2.".into_text_component(),
+        ]),
+    ]);
+
+    app.world_mut().get_mut::<CursorItem>(client).unwrap().0 = draggable_stack;
+
+    let inv_state = app.world_mut().get::<ClientInventoryState>(client).unwrap();
+    let window_id = inv_state.window_id();
+    let state_id = inv_state.state_id().0;
+
+    let drag_packet = ContainerClickC2s {
+        window_id,
+        state_id: VarInt(state_id),
+        slot_idx: PlayerInventory::SLOT_OUTSIDE_INVENTORY,
+        button: 2,
+        mode: ClickMode::Drag,
+        slot_changes: vec![
+            SlotChange {
+                idx: 9,
+                stack: ItemStack::new(ItemKind::Diamond, 21).with_components(vec![
+                    ItemComponent::CustomName("Draggable Diamond".into_text_component()),
+                    ItemComponent::Lore(vec![
+                        "Lore Line 1.".into_text_component(),
+                        "Lore Line 2.".into_text_component(),
+                    ]),
+                ]),
+            }
+            .into(),
+            SlotChange {
+                idx: 10,
+                stack: ItemStack::new(ItemKind::Diamond, 21).with_components(vec![
+                    ItemComponent::CustomName("Draggable Diamond".into_text_component()),
+                    ItemComponent::Lore(vec![
+                        "Lore Line 1.".into_text_component(),
+                        "Lore Line 2.".into_text_component(),
+                    ]),
+                ]),
+            }
+            .into(),
+            SlotChange {
+                idx: 11,
+                stack: ItemStack::new(ItemKind::Diamond, 21).with_components(vec![
+                    ItemComponent::CustomName("Draggable Diamond".into_text_component()),
+                    ItemComponent::Lore(vec![
+                        "Lore Line 1.".into_text_component(),
+                        "Lore Line 2.".into_text_component(),
+                    ]),
+                ]),
+            }
+            .into(),
+        ]
+        .into(),
+        carried_item: carried_stack.clone().into(),
+    };
+    helper.send(&drag_packet);
+
+    app.update();
+    let sent_packets = helper.collect_received();
+    assert_eq!(
+        sent_packets.0.len(),
+        0,
+        "Server should not send any packets for valid drag, got: {}",
+        describe_packet_ids(&sent_packets)
+    );
+
+    let cursor_item = app
+        .world_mut()
+        .get::<CursorItem>(client)
+        .expect("could not find client");
+
+    assert_eq!(cursor_item.0, carried_stack);
+
+    let inventory = app
+        .world_mut()
+        .get::<Inventory>(client)
+        .expect("could not find inventory");
+
+    let expected_slot_stack = ItemStack::new(ItemKind::Diamond, 21).with_components(vec![
+        ItemComponent::CustomName("Draggable Diamond".into_text_component()),
+        ItemComponent::Lore(vec![
+            "Lore Line 1.".into_text_component(),
+            "Lore Line 2.".into_text_component(),
+        ]),
+    ]);
+
+    for i in 9..12 {
+        assert_eq!(inventory.slot(i), &expected_slot_stack);
+    }
+}
 
 // If you drag a item stack across multiple slots, the mc client will send
 // packets for each slot that you drag over + one final packet is sent that
@@ -2639,7 +2646,8 @@ fn dragging_items_left_click_no_remainder() {
     assert_eq!(
         sent_packets.0.len(),
         0,
-        "Server should not send any packets for valid click"
+        "Server should not send any packets for valid click, got: {}",
+        describe_packet_ids(&sent_packets)
     );
 
     // Ensure diamnods are in the cursor
@@ -2846,7 +2854,8 @@ fn dragging_items_left_click_with_remainder() {
     assert_eq!(
         sent_packets.0.len(),
         0,
-        "Server should not send any packets for valid click"
+        "Server should not send any packets for valid click, got: {}",
+        describe_packet_ids(&sent_packets)
     );
 
     // Ensure diamonds are in the cursor

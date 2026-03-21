@@ -98,6 +98,14 @@ opt-level = 3
 [profile.dev]
 opt-level = 1
 
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort" 
+strip = true    
+
+
 [workspace]
 members = ["crates/*", "tools/*"]
 exclude = []

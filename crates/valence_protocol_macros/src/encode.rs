@@ -149,6 +149,9 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
                     fn encode(&self, mut _w: impl ::std::io::Write) -> ::valence_binary::__private::Result<()> {
                         use ::valence_binary::__private::{Encode, VarInt, Context};
 
+                        // Break any recursion loop by erasing the type
+                        let mut _w: &mut dyn ::std::io::Write = &mut _w;
+
                         match self {
                             #encode_arms
                             _ => unreachable!(),

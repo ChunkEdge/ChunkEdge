@@ -23,8 +23,7 @@ pub struct PlayerListActions {
     pub update_latency: bool,
     pub update_display_name: bool,
     pub update_priority: bool,
-    #[bits(1)]
-    _pad: u8,
+    pub update_hat: bool,
 }
 
 #[derive(Clone, Default, Debug)]
@@ -38,6 +37,7 @@ pub struct PlayerListEntry<'a> {
     pub game_mode: GameMode,
     pub display_name: Option<Cow<'a, TextComponent>>,
     pub priority: i32,
+    pub hat: bool,
 }
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
@@ -87,6 +87,10 @@ impl Encode for PlayerInfoUpdateS2c<'_> {
             if self.actions.update_priority() {
                 VarInt(entry.priority).encode(&mut w)?;
             }
+
+            if self.actions.update_hat() {
+                entry.hat.encode(&mut w)?;
+            }
         }
 
         Ok(())
@@ -132,6 +136,10 @@ impl<'a> Decode<'a> for PlayerInfoUpdateS2c<'a> {
 
             if actions.update_priority() {
                 entry.priority = VarInt::decode(r)?.0;
+            }
+
+            if actions.update_hat() {
+                entry.hat = bool::decode(r)?;
             }
 
             entries.push(entry);

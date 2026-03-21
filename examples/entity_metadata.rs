@@ -312,8 +312,8 @@ fn setup(
         MetadataCase::Painting(IdOr::id(PaintingKind::Aztec.registry_id())),
         MetadataCase::Painting(IdOr::id(PaintingKind::Bouquet.registry_id())),
         MetadataCase::Painting(IdOr::inline(PaintingVariantDefinition {
-            width: 1,
-            height: 2,
+            width: 2,
+            height: 1,
             asset_id: "minecraft:fighters".to_owned(),
             title: Some("Inline Pool".into()),
             author: Some("Valence Example".into()),

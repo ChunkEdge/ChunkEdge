@@ -208,10 +208,10 @@ pub enum ItemComponent {
         /// Sound played when the item is equipped.
         equip_sound: IdOr<SoundEventDefinition>,
         /// Reference to an equipment-specific model (like 3D armor).
-        model: Option<String>,
+        model: Option<Ident<String>>,
         /// Texture used when the player's camera is "inside" the item (like a
         /// Pumpkin).
-        camera_overlay: Option<String>,
+        camera_overlay: Option<Ident<String>>,
         /// Which entity types are allowed to wear this item.
         allowed_entities: Option<IDSet>,
         /// Whether a Dispenser can equip this onto an entity.
@@ -221,6 +221,9 @@ pub enum ItemComponent {
         swappable: bool,
         /// If true, the item takes durability damage when the wearer is hurt.
         damage_on_hurt: bool,
+        /// `Some` If the item can be sheared off (like a pumpkin from a snow
+        /// golem) + The sound to play when the item is sheared.
+        shearing_sound: Option<IdOr<SoundEventDefinition>>,
     },
 
     /// Items that can be used in an anvil to repair this item.
@@ -267,8 +270,6 @@ pub enum ItemComponent {
     DyedColor {
         /// The packed RGB integer.
         color: i32,
-        /// Whether the "Dyed" text is visible in the tooltip.
-        show_in_tooltip: bool,
     },
 
     /// The color used for markings on a Map item.
@@ -784,7 +785,7 @@ pub struct LodestoneTarget {
 pub struct SoundEventDefinition {
     /// The identifier of the sound (e.g., "minecraft:entity.pig.ambient").
     /// In 1.21, this can be a direct String or a Registry ID.
-    pub sound: ModePair<String, RegistryId>,
+    pub sound: String,
 
     /// A fixed range (in blocks) for the sound. If None, uses the default.
     pub range: Option<f32>,

@@ -1,6 +1,12 @@
+use valence::entity::attributes::EntityAttributeOperation;
 use valence::prelude::*;
-use valence::protocol::IntoTextComponent;
-use valence_item::ItemComponent;
+use valence::protocol::packets::play::set_equipment_s2c::EquipmentSlot;
+use valence::protocol::{IntoTextComponent, Sound};
+use valence_binary::{IdOr, VarInt};
+use valence_item::{
+    AttributeModifier, AttributeSlot, ConsumableAnimation, EquipSlot, ItemComponent,
+    ResolvableProfile, SoundEventDefinition,
+};
 
 fn main() {
     App::new()
@@ -65,10 +71,112 @@ fn init_clients(
         *game_mode = GameMode::Survival;
 
         inventory.set_slot(
-            30,
+            36,
             ItemStack::new(ItemKind::IronSword, 1).with_components(vec![
                 ItemComponent::Unbreakable,
-                ItemComponent::CustomName("Custom Item Name".into_text_component()),
+                ItemComponent::ItemName(
+                    "This sword is unbreakable and does 100 damage".into_text_component(),
+                ),
+                ItemComponent::Lore(vec!["Very epic".into_text_component()]),
+                ItemComponent::AttributeModifiers {
+                    modifiers: vec![AttributeModifier {
+                        // `attack_damage`, You can find these IDs in `attributes.json`.
+                        // The index in this map is the ID of attribute
+                        attribute_id: RegistryId::new(2),
+                        modifier_id: ident!("my_custom_damage").into(),
+                        operation: EntityAttributeOperation::Add,
+                        value: 100.0,
+                        slot: AttributeSlot::MainHand,
+                    }],
+                },
+            ]),
+        );
+
+        inventory.set_slot(
+            37,
+            ItemStack::new(ItemKind::IronIngot, 99).with_components(vec![
+                ItemComponent::MaxStackSize(99.into()),
+                ItemComponent::ItemName("This item stacks to 99".into_text_component()),
+            ]),
+        );
+
+        inventory.set_slot(
+            38,
+            ItemStack::new(ItemKind::Glass, 1).with_components(vec![
+                ItemComponent::ItemName("You can put this on your head".into_text_component()),
+                ItemComponent::Equippable {
+                    slot: EquipSlot::Head,
+                    // The component itself does not actually play the sound,
+                    // It just acts as a data marker.
+                    equip_sound: IdOr::Inline(SoundEventDefinition {
+                        sound: "entity.arrow.hit".to_string(),
+                        range: None,
+                    }),
+                    model: None,
+                    camera_overlay: None,
+                    allowed_entities: None,
+                    dispensable: true,
+                    swappable: true,
+                    damage_on_hurt: false,
+                    shearing_sound: None,
+                },
+            ]),
+        );
+
+        inventory.set_slot(
+            39,
+            ItemStack::new(ItemKind::LeatherChestplate, 1).with_components(vec![
+                ItemComponent::ItemName(
+                    "Dyed leather chestplate with enchantments".into_text_component(),
+                ),
+                ItemComponent::DyedColor { color: 0xff0000 },
+                ItemComponent::Enchantments(vec![
+                    // Protection IV, You can find these IDs in the entry `minecraft:enchantments`
+                    // in `registry_codec.json`. The index in this map is the ID of the
+                    // enchantment.
+                    (RegistryId::new(27), VarInt(4)),
+                ]),
+            ]),
+        );
+
+        inventory.set_slot(
+            40,
+            ItemStack::new(ItemKind::Compass, 1).with_components(vec![
+                ItemComponent::ItemName("This compass spins randomly".into_text_component()),
+                ItemComponent::LodestoneTracker {
+                    target: None, /* `None` makes the compass spin, provide a position so it
+                                   * points towards it. */
+                    tracked: false, // If the component gets removed if the lodestone is broken.
+                },
+            ]),
+        );
+
+        inventory.set_slot(
+            41,
+            ItemStack::new(ItemKind::PlayerHead, 1).with_components(vec![ItemComponent::Profile(
+                ResolvableProfile {
+                    name: Some("Notch".to_string()),
+                    id: None,
+                    properties: Vec::new(),
+                },
+            )]),
+        );
+
+        inventory.set_slot(
+            42,
+            ItemStack::new(ItemKind::Anvil, 1).with_components(vec![
+                ItemComponent::ItemName("Eat me!".into_text_component()),
+                ItemComponent::Lore(vec!["Rich in iron".into_text_component()]),
+                ItemComponent::Consumable {
+                    consume_seconds: 3.0,
+                    animation: ConsumableAnimation::Eat,
+                    sound: IdOr::Inline(SoundEventDefinition {
+                        sound: "minecraft:block.anvil.use".to_string(),
+                        range: None,
+                    }),
+                    has_consume_particles: true,
+                    effects: Vec::new(),
+                },
             ]),
         );
     }

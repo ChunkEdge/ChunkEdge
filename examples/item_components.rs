@@ -108,7 +108,7 @@ fn init_clients(
                     // The component itself does not actually play the sound,
                     // It just acts as a data marker.
                     equip_sound: IdOr::Inline(SoundEventDefinition {
-                        sound: "entity.arrow.hit".to_owned(),
+                        sound: ident!("minecraft:entity.arrow.hit").into(),
                         range: None,
                     }),
                     model: None,
@@ -170,7 +170,7 @@ fn init_clients(
                     consume_seconds: 3.0,
                     animation: ConsumableAnimation::Eat,
                     sound: IdOr::Inline(SoundEventDefinition {
-                        sound: "minecraft:block.anvil.use".to_owned(),
+                        sound: ident!("minecraft:block.anvil.use").into(),
                         range: None,
                     }),
                     has_consume_particles: true,

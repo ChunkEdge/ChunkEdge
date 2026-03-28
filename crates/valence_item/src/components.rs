@@ -784,8 +784,7 @@ pub struct LodestoneTarget {
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct SoundEventDefinition {
     /// The identifier of the sound (e.g., "minecraft:entity.pig.ambient").
-    /// In 1.21, this can be a direct String or a Registry ID.
-    pub sound: String,
+    pub sound: Ident<String>,
 
     /// A fixed range (in blocks) for the sound. If None, uses the default.
     pub range: Option<f32>,

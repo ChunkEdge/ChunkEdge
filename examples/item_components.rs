@@ -1,7 +1,6 @@
 use valence::entity::attributes::EntityAttributeOperation;
 use valence::prelude::*;
-use valence::protocol::packets::play::set_equipment_s2c::EquipmentSlot;
-use valence::protocol::{IntoTextComponent, Sound};
+use valence::protocol::IntoTextComponent;
 use valence_binary::{IdOr, VarInt};
 use valence_item::{
     AttributeModifier, AttributeSlot, ConsumableAnimation, EquipSlot, ItemComponent,
@@ -109,7 +108,7 @@ fn init_clients(
                     // The component itself does not actually play the sound,
                     // It just acts as a data marker.
                     equip_sound: IdOr::Inline(SoundEventDefinition {
-                        sound: "entity.arrow.hit".to_string(),
+                        sound: "entity.arrow.hit".to_owned(),
                         range: None,
                     }),
                     model: None,
@@ -144,8 +143,8 @@ fn init_clients(
             ItemStack::new(ItemKind::Compass, 1).with_components(vec![
                 ItemComponent::ItemName("This compass spins randomly".into_text_component()),
                 ItemComponent::LodestoneTracker {
-                    target: None, /* `None` makes the compass spin, provide a position so it
-                                   * points towards it. */
+                    target: None,   /* `None` makes the compass spin, provide a position so it
+                                     * points towards it. */
                     tracked: false, // If the component gets removed if the lodestone is broken.
                 },
             ]),
@@ -155,7 +154,7 @@ fn init_clients(
             41,
             ItemStack::new(ItemKind::PlayerHead, 1).with_components(vec![ItemComponent::Profile(
                 ResolvableProfile {
-                    name: Some("Notch".to_string()),
+                    name: Some("Notch".to_owned()),
                     id: None,
                     properties: Vec::new(),
                 },
@@ -171,7 +170,7 @@ fn init_clients(
                     consume_seconds: 3.0,
                     animation: ConsumableAnimation::Eat,
                     sound: IdOr::Inline(SoundEventDefinition {
-                        sound: "minecraft:block.anvil.use".to_string(),
+                        sound: "minecraft:block.anvil.use".to_owned(),
                         range: None,
                     }),
                     has_consume_particles: true,

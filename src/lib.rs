@@ -51,7 +51,6 @@ pub use valence_command_macros as command_macros;
 pub use valence_equipment as equipment;
 #[cfg(feature = "inventory")]
 pub use valence_inventory as inventory;
-pub use valence_lang as lang;
 #[cfg(feature = "network")]
 pub use valence_network as network;
 #[cfg(feature = "player_list")]
@@ -87,6 +86,7 @@ pub use valence_server::*;
 pub use valence_weather as weather;
 #[cfg(feature = "world_border")]
 pub use valence_world_border as world_border;
+pub use {valence_item as item, valence_lang as lang};
 
 /// Contains the most frequently used items in Valence projects.
 ///

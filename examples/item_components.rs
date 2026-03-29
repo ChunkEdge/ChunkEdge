@@ -1,11 +1,11 @@
 use valence::entity::attributes::EntityAttributeOperation;
-use valence::prelude::*;
-use valence::protocol::IntoTextComponent;
-use valence_binary::{IdOr, VarInt};
-use valence_item::{
+use valence::item::{
     AttributeModifier, AttributeSlot, ConsumableAnimation, EquipSlot, ItemComponent,
     ResolvableProfile, SoundEventDefinition,
 };
+use valence::prelude::*;
+use valence::protocol::IntoTextComponent;
+use valence_binary::{IdOr, VarInt};
 
 fn main() {
     App::new()

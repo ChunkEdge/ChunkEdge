@@ -31,13 +31,11 @@ mod velocity;
 
 use std::io::Write;
 
-pub use anyhow;
 use anyhow::Context;
 pub use biome_pos::BiomePos;
 pub use bit_storage::BitStorage;
 pub use block::{BlockKind, BlockState};
 pub use block_pos::BlockPos;
-pub use bytes;
 pub use chunk_pos::ChunkPos;
 pub use chunk_section_pos::ChunkSectionPos;
 pub use decode::PacketDecoder;
@@ -53,7 +51,6 @@ pub use packets::play::level_particles_s2c::Particle;
 use serde::{Deserialize, Serialize};
 pub use sound::Sound;
 pub use text::{JsonText, Text};
-pub use uuid;
 pub use valence_binary::array::FixedArray;
 pub use valence_binary::bit_set::FixedBitSet;
 pub use valence_binary::byte_angle::ByteAngle;
@@ -63,14 +60,14 @@ pub use valence_binary::{
 };
 pub use valence_generated::registry_id::RegistryId;
 pub use valence_generated::{block, packet_id, status_effects};
-pub use valence_ident as ident;
 pub use valence_ident::Ident;
 pub use valence_item::{ItemKind, ItemStack};
-pub use valence_math as math;
-pub use valence_nbt as nbt;
 use valence_protocol_macros::Packet;
-pub use valence_text as text;
 pub use velocity::Velocity;
+pub use {
+    anyhow, bytes, uuid, valence_ident as ident, valence_math as math, valence_nbt as nbt,
+    valence_text as text,
+};
 
 /// The maximum number of bytes in a single Minecraft packet.
 pub const MAX_PACKET_SIZE: i32 = 2097152;

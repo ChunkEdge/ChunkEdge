@@ -10,7 +10,16 @@ pub(crate) const MAX_RECURSION_DEPTH: usize = 16;
 
 pub use valence_generated::item::ItemKind;
 
-pub use crate::components::ItemComponent;
+pub use crate::components::{
+    AttributeModifier, AttributeSlot, AxolotlType, BannerLayer, BannerPattern, BeeData,
+    BlockPredicate, ConsumableAnimation, ConsumeEffect, ConsumeEffectData, DamageReduction,
+    DyeColor, EquipSlot, ExactComponentMatcher, FireworkExplosionData, FoxType, HorseColor,
+    InstrumentDefinition, ItemComponent, JukeboxSong, LlamaColor, LodestoneTarget,
+    MapPostProcessingType, ModePair, MooshroomType, PaintingVariantDefinition, ParrotType,
+    PartialComponentMatcher, PotionEffect, ProfileProperty, Property, PropertyValue, RabbitType,
+    Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition, ToolRule, TrimMaterial,
+    TrimPattern, TropicalFishPattern, WritablePage, WrittenPage,
+};
 pub use crate::impls::decode_item_stack_recursive;
 pub use crate::stack::{HashedItemStack, ItemStack};
 

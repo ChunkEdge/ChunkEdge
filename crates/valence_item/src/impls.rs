@@ -114,6 +114,7 @@ impl Encode for ItemComponent {
                 dispensable,
                 swappable,
                 damage_on_hurt,
+                shearing_sound,
             } => {
                 slot.encode(&mut *w)?;
                 equip_sound.encode(&mut *w)?;
@@ -122,7 +123,8 @@ impl Encode for ItemComponent {
                 allowed_entities.encode(&mut *w)?;
                 dispensable.encode(&mut *w)?;
                 swappable.encode(&mut *w)?;
-                damage_on_hurt.encode(w)
+                damage_on_hurt.encode(&mut *w)?;
+                shearing_sound.encode(w)
             }
             ItemComponent::Repairable(v) => v.encode(w),
             ItemComponent::Glider => Ok(()),
@@ -156,13 +158,7 @@ impl Encode for ItemComponent {
                 enchantments.encode(&mut *w)?;
                 show_in_tooltip.encode(w)
             }
-            ItemComponent::DyedColor {
-                color,
-                show_in_tooltip,
-            } => {
-                color.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
-            }
+            ItemComponent::DyedColor { color } => color.encode(w),
             ItemComponent::MapColor(v) => v.encode(w),
             ItemComponent::MapId(v) => v.encode(w),
             ItemComponent::MapDecorations(v) => v.encode(w),
@@ -450,6 +446,7 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             dispensable: Decode::decode(r)?,
             swappable: Decode::decode(r)?,
             damage_on_hurt: Decode::decode(r)?,
+            shearing_sound: Decode::decode(r)?,
         },
         29 => ItemComponent::Repairable(Decode::decode(r)?),
         30 => ItemComponent::Glider,
@@ -472,7 +469,6 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
         },
         35 => ItemComponent::DyedColor {
             color: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
         },
         36 => ItemComponent::MapColor(Decode::decode(r)?),
         37 => ItemComponent::MapId(Decode::decode(r)?),

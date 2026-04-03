@@ -336,6 +336,9 @@ async fn handle_login(
     .await?;
 
     let LoginAcknowledgedC2s {} = io.recv_packet().await?;
+    if !matches!(shared.connection_mode(), ConnectionMode::Velocity { .. }) {
+        let _: CustomQueryAnswerC2s = io.recv_packet().await?;
+    }
     let client_info: ClientInformationC2s = io.recv_packet().await?;
 
     info.view_distance = client_info.view_distance;
@@ -432,7 +435,9 @@ async fn handle_login(
 
     io.send_packet(&FinishConfigurationS2c {}).await?;
 
-    let _: CustomQueryAnswerC2s = io.recv_packet().await?;
+    if matches!(shared.connection_mode(), ConnectionMode::Velocity { .. }) {
+        let _: CustomQueryAnswerC2s = io.recv_packet().await?;
+    }
     let _: FinishConfigurationC2s = io.recv_packet().await?;
 
     Ok(Some((info, cleanup)))

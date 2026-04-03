@@ -336,7 +336,6 @@ async fn handle_login(
     .await?;
 
     let LoginAcknowledgedC2s {} = io.recv_packet().await?;
-    let _: CustomQueryAnswerC2s = io.recv_packet().await?;
     let client_info: ClientInformationC2s = io.recv_packet().await?;
 
     info.view_distance = client_info.view_distance;
@@ -433,6 +432,7 @@ async fn handle_login(
 
     io.send_packet(&FinishConfigurationS2c {}).await?;
 
+    let _: CustomQueryAnswerC2s = io.recv_packet().await?;
     let _: FinishConfigurationC2s = io.recv_packet().await?;
 
     Ok(Some((info, cleanup)))
@@ -626,10 +626,10 @@ async fn login_velocity(
         plugin_response.message_id.0,
     );
 
-    let data = plugin_response
+    let data = &plugin_response
         .data
         // .context("missing plugin response data")?
-        .0;
+        .0[1..];
 
     ensure!(data.len() >= 32, "invalid plugin response data length");
     let (signature, mut data_without_signature) = data.split_at(32);

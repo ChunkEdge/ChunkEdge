@@ -411,6 +411,11 @@ async fn handle_login(
     .await?;
 
     // Send all other registries.
+    //
+    // Even if the remote end acknowledges the vanilla known pack, send the full
+    // element data. Some protocol translators forward registry entries to newer
+    // clients, and omitted entries force the client to resolve them from local
+    // resources for the server's pack version.
     for (id, entries) in RegistryCodec::default().registries {
         if id == ident!("worldgen/biome") || id == ident!("dimension_type") {
             // We already sent these registries.
@@ -421,7 +426,7 @@ async fn handle_login(
             id: id.into(),
             entries: entries
                 .into_iter()
-                .map(|value| (value.name.into(), None))
+                .map(|value| (value.name.into(), Some(value.element)))
                 .collect(),
         })
         .await?;

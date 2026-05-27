@@ -59,20 +59,8 @@ impl Encode for Mode<'_> {
                 0_i8.encode(&mut w)?;
                 team_display_name.encode(&mut w)?;
                 friendly_flags.encode(&mut w)?;
-                match name_tag_visibility {
-                    NameTagVisibility::Always => "always",
-                    NameTagVisibility::Never => "never",
-                    NameTagVisibility::HideForOtherTeams => "hideForOtherTeams",
-                    NameTagVisibility::HideForOwnTeam => "hideForOwnTeam",
-                }
-                .encode(&mut w)?;
-                match collision_rule {
-                    CollisionRule::Always => "always",
-                    CollisionRule::Never => "never",
-                    CollisionRule::PushOtherTeams => "pushOtherTeams",
-                    CollisionRule::PushOwnTeam => "pushOwnTeam",
-                }
-                .encode(&mut w)?;
+                name_tag_visibility.encode(&mut w)?;
+                collision_rule.encode(&mut w)?;
                 team_color.encode(&mut w)?;
                 team_prefix.encode(&mut w)?;
                 team_suffix.encode(&mut w)?;
@@ -91,20 +79,8 @@ impl Encode for Mode<'_> {
                 2_i8.encode(&mut w)?;
                 team_display_name.encode(&mut w)?;
                 friendly_flags.encode(&mut w)?;
-                match name_tag_visibility {
-                    NameTagVisibility::Always => "always",
-                    NameTagVisibility::Never => "never",
-                    NameTagVisibility::HideForOtherTeams => "hideForOtherTeams",
-                    NameTagVisibility::HideForOwnTeam => "hideForOwnTeam",
-                }
-                .encode(&mut w)?;
-                match collision_rule {
-                    CollisionRule::Always => "always",
-                    CollisionRule::Never => "never",
-                    CollisionRule::PushOtherTeams => "pushOtherTeams",
-                    CollisionRule::PushOwnTeam => "pushOwnTeam",
-                }
-                .encode(&mut w)?;
+                name_tag_visibility.encode(&mut w)?;
+                collision_rule.encode(&mut w)?;
                 team_color.encode(&mut w)?;
                 team_prefix.encode(&mut w)?;
                 team_suffix.encode(&mut w)?;
@@ -128,20 +104,8 @@ impl<'a> Decode<'a> for Mode<'a> {
             0 => Self::CreateTeam {
                 team_display_name: Decode::decode(r)?,
                 friendly_flags: Decode::decode(r)?,
-                name_tag_visibility: match <&str>::decode(r)? {
-                    "always" => NameTagVisibility::Always,
-                    "never" => NameTagVisibility::Never,
-                    "hideForOtherTeams" => NameTagVisibility::HideForOtherTeams,
-                    "hideForOwnTeam" => NameTagVisibility::HideForOwnTeam,
-                    other => bail!("unknown name tag visibility type \"{other}\""),
-                },
-                collision_rule: match <&str>::decode(r)? {
-                    "always" => CollisionRule::Always,
-                    "never" => CollisionRule::Never,
-                    "pushOtherTeams" => CollisionRule::PushOtherTeams,
-                    "pushOwnTeam" => CollisionRule::PushOwnTeam,
-                    other => bail!("unknown collision rule type \"{other}\""),
-                },
+                name_tag_visibility: Decode::decode(r)?,
+                collision_rule: Decode::decode(r)?,
                 team_color: Decode::decode(r)?,
                 team_prefix: Decode::decode(r)?,
                 team_suffix: Decode::decode(r)?,
@@ -151,20 +115,8 @@ impl<'a> Decode<'a> for Mode<'a> {
             2 => Self::UpdateTeamInfo {
                 team_display_name: Decode::decode(r)?,
                 friendly_flags: Decode::decode(r)?,
-                name_tag_visibility: match <&str>::decode(r)? {
-                    "always" => NameTagVisibility::Always,
-                    "never" => NameTagVisibility::Never,
-                    "hideForOtherTeams" => NameTagVisibility::HideForOtherTeams,
-                    "hideForOwnTeam" => NameTagVisibility::HideForOwnTeam,
-                    other => bail!("unknown name tag visibility type \"{other}\""),
-                },
-                collision_rule: match <&str>::decode(r)? {
-                    "always" => CollisionRule::Always,
-                    "never" => CollisionRule::Never,
-                    "pushOtherTeams" => CollisionRule::PushOtherTeams,
-                    "pushOwnTeam" => CollisionRule::PushOwnTeam,
-                    other => bail!("unknown collision rule type \"{other}\""),
-                },
+                name_tag_visibility: Decode::decode(r)?,
+                collision_rule: Decode::decode(r)?,
                 team_color: Decode::decode(r)?,
                 team_prefix: Decode::decode(r)?,
                 team_suffix: Decode::decode(r)?,
@@ -189,15 +141,15 @@ pub struct TeamFlags {
     _pad: u8,
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
 pub enum NameTagVisibility {
     Always,
     Never,
     HideForOtherTeams,
-    HideForOwnTeam,
+    HideForOwnTeams,
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
 pub enum CollisionRule {
     Always,
     Never,

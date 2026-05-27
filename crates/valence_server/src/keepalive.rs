@@ -37,7 +37,7 @@ impl Default for KeepaliveSettings {
 #[derive(Component, Debug)]
 pub struct KeepaliveState {
     got_keepalive: bool,
-    last_keepalive_id: u64,
+    last_keepalive_id: i64,
     last_send: Instant,
 }
 

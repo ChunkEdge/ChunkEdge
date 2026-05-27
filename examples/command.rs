@@ -5,7 +5,9 @@ use std::ops::DerefMut;
 use command::graph::CommandGraphBuilder;
 use command::handler::CommandResultEvent;
 use command::parsers::entity_selector::{EntitySelector, EntitySelectors};
-use command::parsers::{CommandArg, GreedyString, QuotableString};
+use command::parsers::{
+    CommandArg, CommandArgParseError, GreedyString, ParseInput, QuotableString,
+};
 use command::scopes::CommandScopes;
 use command::{parsers, AddCommand, Command, CommandScopeRegistry, ModifierValue};
 use command_macros::Command;
@@ -13,6 +15,7 @@ use parsers::{Vec2 as Vec2Parser, Vec3 as Vec3Parser};
 use rand::prelude::IteratorRandom;
 use valence::entity::living::LivingEntity;
 use valence::prelude::*;
+use valence::protocol::packets::play::commands_s2c::Parser;
 use valence::*;
 use valence_server::op_level::OpLevel;
 
@@ -59,6 +62,26 @@ enum GamemodeCommand {
 pub(crate) struct StructCommand {
     gamemode: GameMode,
     target: Option<EntitySelector>,
+}
+
+#[derive(Command, Debug, Clone)]
+#[paths("say {message}")]
+#[scopes("valence.command.say")]
+pub(crate) struct SayCommand {
+    message: SignedMessage,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+struct SignedMessage(String);
+
+impl CommandArg for SignedMessage {
+    fn parse_arg(input: &mut ParseInput) -> Result<Self, CommandArgParseError> {
+        GreedyString::parse_arg(input).map(|message| Self(message.0))
+    }
+
+    fn display() -> Parser<'static> {
+        Parser::Message
+    }
 }
 
 #[derive(Command, Debug, Clone)]
@@ -172,12 +195,20 @@ impl Command for ComplexRedirectionCommand {
 
 pub fn main() {
     App::new()
+        .insert_resource(NetworkSettings {
+            // This is required for the signed command example (/say)
+            connection_mode: ConnectionMode::Online {
+                prevent_proxy_connections: false,
+            },
+            ..Default::default()
+        })
         .add_plugins(DefaultPlugins)
         .add_command::<TestCommand>()
         .add_command::<TeleportCommand>()
         .add_command::<GamemodeCommand>()
         .add_command::<ComplexRedirectionCommand>()
         .add_command::<StructCommand>()
+        .add_command::<SayCommand>()
         .add_systems(Startup, setup)
         .add_systems(
             Update,
@@ -190,6 +221,7 @@ pub fn main() {
                 handle_complex_command,
                 handle_gamemode_command,
                 handle_struct_command,
+                handle_say_command,
             ),
         )
         .run();
@@ -447,6 +479,16 @@ fn handle_struct_command(
             "Struct command executed with data:\n {:#?}",
             &event.result
         ));
+    }
+}
+
+fn handle_say_command(
+    mut events: EventReader<CommandResultEvent<SayCommand>>,
+    mut clients: Query<&mut Client>,
+) {
+    for event in events.read() {
+        let client = &mut clients.get_mut(event.executor).unwrap();
+        client.send_chat_message(format!("Signed /say received: {}", event.result.message.0));
     }
 }
 

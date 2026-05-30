@@ -17,6 +17,7 @@ pub struct Flags {
     pub is_ambient: bool,
     pub show_particles: bool,
     pub show_icon: bool,
-    #[bits(5)]
+    pub blend: bool,
+    #[bits(4)]
     _pad: u8,
 }

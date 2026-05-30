@@ -53,6 +53,14 @@ pub enum IconType {
     RedBanner,
     BlackBanner,
     TreasureMarker,
+    DesertVillage,
+    PlainsVillage,
+    SavannaVillage,
+    SnowyVillage,
+    TaigaVillage,
+    JungleTemple,
+    SwampHut,
+    TrialChambers,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Encode)]

@@ -60,7 +60,7 @@ fn create_packet(effect: &ActiveStatusEffect) -> UpdateMobEffectS2c {
     UpdateMobEffectS2c {
         entity_id: VarInt(0), // We reserve ID 0 for clients.
         effect_id: VarInt(i32::from(effect.status_effect().to_raw())),
-        amplifier: effect.amplifier(),
+        amplifier: VarInt(effect.amplifier()),
         duration: VarInt(effect.remaining_duration().unwrap_or(-1)),
         flags: update_mob_effect_s2c::Flags::new()
             .with_is_ambient(effect.ambient())
@@ -143,41 +143,41 @@ fn set_swirl(
 
 /// Used to set the color of the swirls in the potion effect.
 ///
-/// Equivalent to net.minecraft.potion.PotionUtil#getColor
+/// Equivalent to net.minecraft.component.type.PotionContentsComponent#mixColors (Yarn mapping).
 fn _get_color(effects: &ActiveStatusEffects) -> i32 {
     if effects.no_effects() {
-        // vanilla mc seems to return 0x385dc6 if there are no effects
+        // vanilla mc seems to return 0xFF385DC6 (i32), decimal: -13083194 if there are no effects
         // dunno why
         // imma just say to return 0 to remove the swirls
         return 0;
     }
 
     let effects = effects.get_current_effects();
-    let mut f = 0.0;
-    let mut g = 0.0;
-    let mut h = 0.0;
-    let mut j = 0.0;
+    let mut r = 0;
+    let mut g = 0;
+    let mut b = 0;
+    let mut total = 0;
 
     for status_effect_instance in effects {
         if !status_effect_instance.show_particles() {
             continue;
         }
 
-        let k = status_effect_instance.status_effect().color();
-        let l = f32::from(status_effect_instance.amplifier() + 1);
-        f += (l * ((k >> 16) & 0xff) as f32) / 255.0;
-        g += (l * ((k >> 8) & 0xff) as f32) / 255.0;
-        h += (l * ((k) & 0xff) as f32) / 255.0;
-        j += l;
+        let color: u32 = status_effect_instance.status_effect().color();
+        let weight = (status_effect_instance.amplifier() + 1) as u32;
+        r += weight * ((color >> 16) & 0xff);
+        g += weight * ((color >> 8) & 0xff);
+        b += weight * ((color) & 0xff);
+        total += weight;
     }
 
-    if j == 0.0 {
+    if total == 0 {
         return 0;
     }
 
-    f = f / j * 255.0;
-    g = g / j * 255.0;
-    h = h / j * 255.0;
-
-    ((f as i32) << 16) | ((g as i32) << 8) | (h as i32)
+    let r = r / total;
+    let g = g / total;
+    let b = b / total;
+    // Alpha is always 255
+    ((0xFF_u32 << 24) | (r << 16) | (g << 8) | b) as i32
 }

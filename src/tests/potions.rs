@@ -44,7 +44,7 @@ fn test_status_effects_packets() {
         packet.effect_id,
         i32::from(StatusEffect::BadOmen.to_raw()).into()
     ); // Bad Omen
-    assert_eq!(packet.amplifier, 1);
+    assert_eq!(packet.amplifier, VarInt(1));
     assert_eq!(packet.duration, VarInt(100));
 
     // Clear the potion effect

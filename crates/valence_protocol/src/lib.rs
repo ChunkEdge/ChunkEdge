@@ -52,7 +52,7 @@ use serde::{Deserialize, Serialize};
 pub use sound::Sound;
 pub use text::{JsonText, Text};
 pub use valence_binary::array::FixedArray;
-pub use valence_binary::bit_set::FixedBitSet;
+pub use valence_binary::bit_set::{FixedBitSet, VariableBitSet};
 pub use valence_binary::byte_angle::ByteAngle;
 use valence_binary::Encode;
 pub use valence_binary::{

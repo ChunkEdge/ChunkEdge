@@ -11,6 +11,5 @@ use crate::{Packet, PacketState};
 /// [`CookieRequestS2c`](crate::packets::login::CookieRequestS2c) packet.
 pub struct CookieResponseC2s<'a> {
     pub key: Ident<Cow<'a, str>>,
-    pub has_payload: bool,
     pub payload: Option<Cow<'a, [u8]>>,
 }

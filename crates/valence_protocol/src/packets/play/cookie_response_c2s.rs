@@ -6,7 +6,8 @@ use valence_ident::Ident;
 use crate::Packet;
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
-/// Response to a cookie request from the server.
+/// Sent by the client to the server to respond to a
+/// [`CookieRequestS2c`](crate::packets::play::CookieRequestS2c) packet.
 pub struct CookieResponseC2s<'a> {
     pub key: Ident<Cow<'a, str>>,
     pub payload: Option<Cow<'a, [u8]>>,

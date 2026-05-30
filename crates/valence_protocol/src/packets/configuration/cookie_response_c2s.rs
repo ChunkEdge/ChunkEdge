@@ -7,7 +7,8 @@ use crate::{Packet, PacketState};
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 #[packet(state = PacketState::Configuration)]
-/// Response to a cookie request from the server.
+/// Sent by the client to the server to respond to a
+/// [`CookieRequestS2c`](crate::packets::configuration::CookieRequestS2c) packet.
 pub struct CookieResponseC2s<'a> {
     pub key: Ident<Cow<'a, str>>,
     pub payload: Option<Cow<'a, [u8]>>,

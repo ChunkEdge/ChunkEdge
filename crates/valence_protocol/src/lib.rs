@@ -70,7 +70,7 @@ pub use {
 };
 
 /// The maximum number of bytes in a single Minecraft packet.
-pub const MAX_PACKET_SIZE: i32 = 2097152;
+pub const MAX_PACKET_SIZE: i32 = 2_i32.pow(21) - 1; // (the maximum that can be sent in a 3-byte VarInt)
 
 /// The Minecraft protocol version this library currently targets.
 pub const PROTOCOL_VERSION: i32 = 770;

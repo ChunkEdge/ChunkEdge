@@ -8,6 +8,7 @@ use crate::Packet;
 
 #[derive(Clone, PartialEq, Debug, Packet)]
 pub struct PlayerChatS2c<'a> {
+    pub global_index: VarInt,
     pub sender: Uuid,
     pub index: VarInt,
     pub message_signature: Option<&'a [u8; 256]>,
@@ -32,6 +33,7 @@ pub enum MessageFilterType {
 
 impl Encode for PlayerChatS2c<'_> {
     fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
+        self.global_index.encode(&mut w)?;
         self.sender.encode(&mut w)?;
         self.index.encode(&mut w)?;
         self.message_signature.encode(&mut w)?;
@@ -60,6 +62,7 @@ impl Encode for PlayerChatS2c<'_> {
 
 impl<'a> Decode<'a> for PlayerChatS2c<'a> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        let global_index = VarInt::decode(r)?;
         let sender = Uuid::decode(r)?;
         let index = VarInt::decode(r)?;
         let message_signature = Option::<&'a [u8; 256]>::decode(r)?;
@@ -80,6 +83,7 @@ impl<'a> Decode<'a> for PlayerChatS2c<'a> {
         let network_target_name = Option::<Cow<'a, TextComponent>>::decode(r)?;
 
         Ok(Self {
+            global_index,
             sender,
             index,
             message_signature,

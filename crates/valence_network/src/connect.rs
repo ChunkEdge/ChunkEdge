@@ -638,7 +638,7 @@ async fn login_velocity(
 
     let data = &plugin_response
         .data
-        // .context("missing plugin response data")?
+        .context("missing plugin response data")?
         .0[1..];
 
     ensure!(data.len() >= 32, "invalid plugin response data length");

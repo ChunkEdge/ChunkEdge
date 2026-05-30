@@ -8,5 +8,5 @@ use crate::{Packet, PacketState};
 /// [`CustomQueryS2c`](crate::packets::login::CustomQueryS2c) packet.
 pub struct CustomQueryAnswerC2s<'a> {
     pub message_id: VarInt,
-    pub data: Bounded<RawBytes<'a>, 1048576>,
+    pub data: Option<Bounded<RawBytes<'a>, 1048576>>,
 }

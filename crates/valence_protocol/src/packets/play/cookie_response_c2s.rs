@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode};
+use valence_binary::{Bounded, Decode, Encode};
 use valence_ident::Ident;
 
 use crate::Packet;
@@ -10,5 +10,5 @@ use crate::Packet;
 /// [`CookieRequestS2c`](crate::packets::play::CookieRequestS2c) packet.
 pub struct CookieResponseC2s<'a> {
     pub key: Ident<Cow<'a, str>>,
-    pub payload: Option<Cow<'a, [u8]>>,
+    pub payload: Option<Bounded<&'a [u8], 5120>>,
 }

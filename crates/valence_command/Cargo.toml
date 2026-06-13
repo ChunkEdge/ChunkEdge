@@ -12,11 +12,9 @@ license.workspace = true
 workspace = true
 
 [dependencies]
-anyhow.workspace = true
 bevy_app.workspace = true
 bevy_derive.workspace = true
 bevy_ecs.workspace = true
-byteorder.workspace = true
 ordered-float.workspace = true
 petgraph.workspace = true
 thiserror.workspace = true

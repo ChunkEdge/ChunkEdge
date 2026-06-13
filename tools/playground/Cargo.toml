@@ -18,3 +18,6 @@ tracing.workspace = true
 valence.workspace = true
 valence_math.workspace = true
 valence_server_common.workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["anyhow", "tracing-subscriber", "valence_math", "valence_server_common"]

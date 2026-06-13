@@ -28,7 +28,6 @@ serde = { workspace = true, features = ["derive"] }
 syntect = { workspace = true, default-features = false, features = [
     "default-fancy",
 ] }
-thiserror.workspace = true
 time = { workspace = true, features = ["local-offset"] }
 tokio = { workspace = true, features = ["full"] }
 tracing.workspace = true
@@ -44,3 +43,6 @@ serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
 syn.workspace = true
 valence_build_utils.workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["heck", "proc-macro2", "quote", "serde_json", "syn", "valence_build_utils"]

@@ -15,7 +15,6 @@ workspace = true
 anyhow.workspace = true
 bevy_app.workspace = true
 bevy_ecs.workspace = true
-bitfield-struct.workspace = true
 derive_more = { workspace = true, features = [
     "deref",
     "deref_mut",
@@ -24,7 +23,6 @@ indexmap.workspace = true
 paste.workspace = true
 rustc-hash.workspace = true
 tracing.workspace = true
-uuid.workspace = true
 valence_binary.workspace = true
 valence_generated.workspace = true
 valence_math.workspace = true
@@ -39,6 +37,8 @@ proc-macro2.workspace = true
 quote.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-syn.workspace = true
 valence_build_utils.workspace = true
 valence_generated.workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["heck","proc-macro2","quote","serde","serde_json","valence_build_utils", "valence_nbt"]

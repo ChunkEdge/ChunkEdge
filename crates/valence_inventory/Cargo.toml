@@ -20,4 +20,3 @@ derive_more = { workspace = true, features = [
 ] }
 tracing.workspace = true
 valence_server.workspace = true
-valence_item.workspace = true

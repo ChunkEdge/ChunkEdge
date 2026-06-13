@@ -225,4 +225,4 @@ jobs:
           crate: cargo-machete
 
       - name: Check for unused dependencies
-        run: cargo udeps --workspace --all-features
+        run: cargo machete --with-metadata

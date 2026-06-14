@@ -1074,7 +1074,6 @@ fn handle_click_slot(
                     continue;
                 }
 
-                // println!("dropping from slot {}", pkt.slot_idx);
                 let stack = client_inv.slot(pkt.slot_idx as u16);
 
                 if !stack.is_empty() {

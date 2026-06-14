@@ -189,8 +189,8 @@ async fn handle_handshake(
             }
         }
         HandShakeIntent::Transfer => {
-            // TODO
-            todo!()
+            // TODO: Implement
+            bail!("transfer state is not yet implemented");
         }
     }
 }

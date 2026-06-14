@@ -16,6 +16,7 @@ flamegraph*.svg
 perf.data
 perf.data.old
 /graph.svg
+.DS_Store
 
 extractor/.classpath
 extractor/.factorypath

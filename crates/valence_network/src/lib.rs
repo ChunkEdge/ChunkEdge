@@ -31,6 +31,7 @@ use tokio::sync::Semaphore;
 use tokio::time;
 use tracing::error;
 use uuid::Uuid;
+use valence_protocol::packets::configuration::client_information_c2s::ParticleMode;
 use valence_protocol::packets::play::client_information_c2s::{
     ChatMode, DisplayedSkinParts, MainArm,
 };
@@ -234,6 +235,7 @@ pub struct NewClientInfo {
     pub main_arm: MainArm,
     pub enable_text_filtering: bool,
     pub allow_server_listings: bool,
+    pub particle_mode: ParticleMode,
     /// The client's properties from the game profile. Typically contains a
     /// `textures` property with the skin and cape of the player.
     pub properties: Properties,

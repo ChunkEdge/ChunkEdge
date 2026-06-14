@@ -349,6 +349,7 @@ async fn handle_login(
     info.main_arm = client_info.main_arm;
     info.enable_text_filtering = client_info.enable_text_filtering;
     info.allow_server_listings = client_info.allow_server_listings;
+    info.particle_mode = client_info.particle_mode;
 
     io.send_packet(&CustomPayloadS2c {
         channel: Ident::new("minecraft:brand").unwrap(),
@@ -560,6 +561,7 @@ async fn login_online(
         main_arm: Default::default(),
         enable_text_filtering: false,
         allow_server_listings: false,
+        particle_mode: Default::default(),
     })
 }
 
@@ -587,6 +589,7 @@ fn login_offline(remote_addr: SocketAddr, username: String) -> anyhow::Result<Ne
         main_arm: Default::default(),
         enable_text_filtering: false,
         allow_server_listings: false,
+        particle_mode: Default::default(),
     })
 }
 
@@ -633,6 +636,7 @@ fn login_bungeecord(
         main_arm: Default::default(),
         enable_text_filtering: false,
         allow_server_listings: false,
+        particle_mode: Default::default(),
     })
 }
 
@@ -715,6 +719,7 @@ async fn login_velocity(
         main_arm: Default::default(),
         enable_text_filtering: false,
         allow_server_listings: false,
+        particle_mode: Default::default(),
     })
 }
 

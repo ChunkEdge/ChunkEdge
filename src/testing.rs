@@ -100,6 +100,7 @@ pub fn create_mock_client<N: Into<String>>(name: N) -> (ClientBundle, MockClient
         main_arm: Default::default(),
         enable_text_filtering: false,
         allow_server_listings: false,
+        particle_mode: Default::default(),
         enc: PacketEncoder::new(),
     });
 

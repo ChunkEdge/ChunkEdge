@@ -220,6 +220,7 @@ impl PacketIo {
             main_arm: info.main_arm,
             enable_text_filtering: info.enable_text_filtering,
             allow_server_listings: info.allow_server_listings,
+            particle_mode: info.particle_mode,
             properties: info.properties.0,
             conn: Box::new(RealClientConnection {
                 send: outgoing_sender,

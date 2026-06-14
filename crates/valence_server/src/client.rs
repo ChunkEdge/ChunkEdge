@@ -24,6 +24,7 @@ use valence_entity::{
 };
 use valence_math::{DVec3, Vec3};
 use valence_protocol::encode::{PacketEncoder, WritePacket};
+use valence_protocol::packets::configuration::client_information_c2s::ParticleMode;
 use valence_protocol::packets::play::chunks_biomes_s2c::ChunkBiome;
 use valence_protocol::packets::play::client_information_c2s::{
     ChatMode, DisplayedSkinParts, MainArm,
@@ -162,6 +163,7 @@ impl ClientBundle {
                 chat_colors: args.chat_colors,
                 enable_text_filtering: args.enable_text_filtering,
                 allow_server_listings: args.allow_server_listings,
+                particle_mode: args.particle_mode,
             },
             entity_remove_buf: Default::default(),
             username: Username(args.username),
@@ -227,6 +229,7 @@ pub struct ClientBundleArgs {
     pub main_arm: MainArm,
     pub enable_text_filtering: bool,
     pub allow_server_listings: bool,
+    pub particle_mode: ParticleMode,
     /// The packet encoder to use. This should be in sync with [`Self::conn`].
     pub enc: PacketEncoder,
 }

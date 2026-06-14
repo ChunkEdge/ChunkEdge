@@ -31,6 +31,9 @@ use tokio::sync::Semaphore;
 use tokio::time;
 use tracing::error;
 use uuid::Uuid;
+use valence_protocol::packets::play::client_information_c2s::{
+    ChatMode, DisplayedSkinParts, MainArm,
+};
 use valence_protocol::text::IntoText;
 use valence_protocol::VarInt;
 use valence_server::client::{ClientBundle, ClientBundleArgs, Properties, SpawnClientsSet};
@@ -223,6 +226,14 @@ pub struct NewClientInfo {
     pub ip: IpAddr,
     /// The requested view distance of the new client.
     pub view_distance: u8,
+    /// Client locale from the configuration phase.
+    pub locale: String,
+    pub chat_mode: ChatMode,
+    pub chat_colors: bool,
+    pub displayed_skin_parts: DisplayedSkinParts,
+    pub main_arm: MainArm,
+    pub enable_text_filtering: bool,
+    pub allow_server_listings: bool,
     /// The client's properties from the game profile. Typically contains a
     /// `textures` property with the skin and cape of the player.
     pub properties: Properties,

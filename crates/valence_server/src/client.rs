@@ -25,6 +25,9 @@ use valence_entity::{
 use valence_math::{DVec3, Vec3};
 use valence_protocol::encode::{PacketEncoder, WritePacket};
 use valence_protocol::packets::play::chunks_biomes_s2c::ChunkBiome;
+use valence_protocol::packets::play::client_information_c2s::{
+    ChatMode, DisplayedSkinParts, MainArm,
+};
 use valence_protocol::packets::play::game_event_s2c::GameEventKind;
 use valence_protocol::packets::play::level_particles_s2c::Particle;
 use valence_protocol::packets::play::{
@@ -153,7 +156,13 @@ impl ClientBundle {
                 conn: args.conn,
                 enc: args.enc,
             },
-            settings: Default::default(),
+            settings: crate::client_settings::ClientSettings {
+                locale: args.locale.into_boxed_str(),
+                chat_mode: args.chat_mode,
+                chat_colors: args.chat_colors,
+                enable_text_filtering: args.enable_text_filtering,
+                allow_server_listings: args.allow_server_listings,
+            },
             entity_remove_buf: Default::default(),
             username: Username(args.username),
             ip: Ip(args.ip),
@@ -185,6 +194,11 @@ impl ClientBundle {
             player_abilities_flags: Default::default(),
             player: PlayerEntityBundle {
                 uuid: UniqueId(args.uuid),
+                player_player_model_parts: valence_entity::player::PlayerModelParts(u8::from(
+                    args.displayed_skin_parts,
+                )
+                    as i8),
+                player_main_arm: valence_entity::player::MainArm(args.main_arm as i8),
                 ..Default::default()
             },
         }
@@ -205,6 +219,14 @@ pub struct ClientBundleArgs {
     pub conn: Box<dyn ClientConnection>,
     /// The view distance of the client.
     pub view_distance: u8,
+    /// Client locale from the configuration phase.
+    pub locale: String,
+    pub chat_mode: ChatMode,
+    pub chat_colors: bool,
+    pub displayed_skin_parts: DisplayedSkinParts,
+    pub main_arm: MainArm,
+    pub enable_text_filtering: bool,
+    pub allow_server_listings: bool,
     /// The packet encoder to use. This should be in sync with [`Self::conn`].
     pub enc: PacketEncoder,
 }

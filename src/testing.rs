@@ -93,6 +93,13 @@ pub fn create_mock_client<N: Into<String>>(name: N) -> (ClientBundle, MockClient
         properties: Default::default(),
         conn: Box::new(conn.clone()),
         view_distance: 2,
+        locale: Default::default(),
+        chat_mode: Default::default(),
+        chat_colors: false,
+        displayed_skin_parts: Default::default(),
+        main_arm: Default::default(),
+        enable_text_filtering: false,
+        allow_server_listings: false,
         enc: PacketEncoder::new(),
     });
 

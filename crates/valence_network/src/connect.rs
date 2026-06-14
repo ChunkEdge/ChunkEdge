@@ -342,6 +342,13 @@ async fn handle_login(
     let client_info: ClientInformationC2s = io.recv_packet().await?;
 
     info.view_distance = client_info.view_distance;
+    info.locale = client_info.locale.0.to_owned();
+    info.chat_mode = client_info.chat_mode;
+    info.chat_colors = client_info.chat_colors;
+    info.displayed_skin_parts = client_info.displayed_skin_parts;
+    info.main_arm = client_info.main_arm;
+    info.enable_text_filtering = client_info.enable_text_filtering;
+    info.allow_server_listings = client_info.allow_server_listings;
 
     io.send_packet(&CustomPayloadS2c {
         channel: Ident::new("minecraft:brand").unwrap(),
@@ -546,6 +553,13 @@ async fn login_online(
         ip: remote_addr.ip(),
         properties: Properties(profile.properties),
         view_distance: 0, // Will be changed later.
+        locale: String::new(),
+        chat_mode: Default::default(),
+        chat_colors: false,
+        displayed_skin_parts: Default::default(),
+        main_arm: Default::default(),
+        enable_text_filtering: false,
+        allow_server_listings: false,
     })
 }
 
@@ -566,6 +580,13 @@ fn login_offline(remote_addr: SocketAddr, username: String) -> anyhow::Result<Ne
         properties: Default::default(),
         ip: remote_addr.ip(),
         view_distance: 0, // Will be changed later.
+        locale: String::new(),
+        chat_mode: Default::default(),
+        chat_colors: false,
+        displayed_skin_parts: Default::default(),
+        main_arm: Default::default(),
+        enable_text_filtering: false,
+        allow_server_listings: false,
     })
 }
 
@@ -605,6 +626,13 @@ fn login_bungeecord(
         properties: Properties(properties),
         ip,
         view_distance: 0, // Will be changed later.
+        locale: String::new(),
+        chat_mode: Default::default(),
+        chat_colors: false,
+        displayed_skin_parts: Default::default(),
+        main_arm: Default::default(),
+        enable_text_filtering: false,
+        allow_server_listings: false,
     })
 }
 
@@ -680,6 +708,13 @@ async fn login_velocity(
         properties: Properties(properties),
         ip: remote_addr,
         view_distance: 0, // Will be changed later.
+        locale: String::new(),
+        chat_mode: Default::default(),
+        chat_colors: false,
+        displayed_skin_parts: Default::default(),
+        main_arm: Default::default(),
+        enable_text_filtering: false,
+        allow_server_listings: false,
     })
 }
 

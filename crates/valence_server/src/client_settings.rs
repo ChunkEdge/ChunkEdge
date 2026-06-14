@@ -1,6 +1,7 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use valence_entity::player::{self, PlayerModelParts};
+use valence_protocol::packets::configuration::client_information_c2s::ParticleMode;
 use valence_protocol::packets::play::client_information_c2s::ChatMode;
 use valence_protocol::packets::play::ClientInformationC2s;
 
@@ -23,6 +24,7 @@ pub struct ClientSettings {
     pub chat_colors: bool,
     pub enable_text_filtering: bool,
     pub allow_server_listings: bool,
+    pub particle_mode: ParticleMode,
 }
 
 fn handle_client_settings(
@@ -47,6 +49,7 @@ fn handle_client_settings(
                 settings.chat_colors = pkt.chat_colors;
                 settings.enable_text_filtering = pkt.enable_text_filtering;
                 settings.allow_server_listings = pkt.allow_server_listings;
+                settings.particle_mode = pkt.particle_mode;
 
                 model_parts.set_if_neq(PlayerModelParts(u8::from(pkt.displayed_skin_parts) as i8));
                 main_arm.set_if_neq(player::MainArm(pkt.main_arm as i8));

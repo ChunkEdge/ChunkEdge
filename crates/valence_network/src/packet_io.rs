@@ -213,6 +213,14 @@ impl PacketIo {
             ip: info.ip,
             // TODO: limit this by the server
             view_distance: info.view_distance,
+            locale: info.locale,
+            chat_mode: info.chat_mode,
+            chat_colors: info.chat_colors,
+            displayed_skin_parts: info.displayed_skin_parts,
+            main_arm: info.main_arm,
+            enable_text_filtering: info.enable_text_filtering,
+            allow_server_listings: info.allow_server_listings,
+            particle_mode: info.particle_mode,
             properties: info.properties.0,
             conn: Box::new(RealClientConnection {
                 send: outgoing_sender,

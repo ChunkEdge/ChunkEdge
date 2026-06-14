@@ -17,8 +17,9 @@ pub struct ClientInformationC2s<'a> {
     pub particle_mode: ParticleMode,
 }
 
-#[derive(Clone, Debug, Encode, Decode)]
+#[derive(Clone, Debug, Default, Encode, Decode)]
 pub enum ParticleMode {
+    #[default]
     All,
     Decreased,
     Minimal,

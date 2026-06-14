@@ -23,9 +23,9 @@ use valence_binary::{Bounded, Decode, RawBytes};
 use valence_lang::keys;
 use valence_protocol::packets::configuration::select_known_packs_s2c::KnownPack;
 use valence_protocol::packets::configuration::{
-    ClientInformationC2s, CustomPayloadS2c, FinishConfigurationC2s, FinishConfigurationS2c,
-    RegistryDataS2c, SelectKnownPacksC2s, SelectKnownPacksS2c, UpdateEnabledFeaturesS2c,
-    UpdateTagsS2c,
+    ClientInformationC2s, CustomPayloadC2s, CustomPayloadS2c, FinishConfigurationC2s,
+    FinishConfigurationS2c, RegistryDataS2c, SelectKnownPacksC2s, SelectKnownPacksS2c,
+    UpdateEnabledFeaturesS2c, UpdateTagsS2c,
 };
 use valence_protocol::packets::login::{LoginAcknowledgedC2s, LoginFinishedS2c};
 use valence_protocol::packets::status::{
@@ -337,7 +337,7 @@ async fn handle_login(
 
     let LoginAcknowledgedC2s {} = io.recv_packet().await?;
     if !matches!(shared.connection_mode(), ConnectionMode::Velocity { .. }) {
-        let _: CustomQueryAnswerC2s = io.recv_packet().await?;
+        let _: CustomPayloadC2s = io.recv_packet().await?;
     }
     let client_info: ClientInformationC2s = io.recv_packet().await?;
 
@@ -441,7 +441,7 @@ async fn handle_login(
     io.send_packet(&FinishConfigurationS2c {}).await?;
 
     if matches!(shared.connection_mode(), ConnectionMode::Velocity { .. }) {
-        let _: CustomQueryAnswerC2s = io.recv_packet().await?;
+        let _: CustomPayloadC2s = io.recv_packet().await?;
     }
     let _: FinishConfigurationC2s = io.recv_packet().await?;
 

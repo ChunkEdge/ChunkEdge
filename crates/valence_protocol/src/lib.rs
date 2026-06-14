@@ -52,7 +52,7 @@ use serde::{Deserialize, Serialize};
 pub use sound::Sound;
 pub use text::{JsonText, Text};
 pub use valence_binary::array::FixedArray;
-pub use valence_binary::bit_set::FixedBitSet;
+pub use valence_binary::bit_set::{FixedBitSet, VariableBitSet};
 pub use valence_binary::byte_angle::ByteAngle;
 use valence_binary::Encode;
 pub use valence_binary::{
@@ -70,7 +70,7 @@ pub use {
 };
 
 /// The maximum number of bytes in a single Minecraft packet.
-pub const MAX_PACKET_SIZE: i32 = 2097152;
+pub const MAX_PACKET_SIZE: i32 = 2_i32.pow(21) - 1; // (the maximum that can be sent in a 3-byte VarInt)
 
 /// The Minecraft protocol version this library currently targets.
 pub const PROTOCOL_VERSION: i32 = 770;

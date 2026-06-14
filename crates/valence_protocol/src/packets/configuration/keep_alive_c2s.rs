@@ -9,4 +9,4 @@ use crate::{Packet, PacketState};
 /// The id is the same as the one sent by the server. if a client does not
 /// respond to a `KeepAliveS2c` packet within 15 seconds, the server should
 /// disconnect the client.
-pub struct KeepAliveC2s(pub i32);
+pub struct KeepAliveC2s(pub i64);

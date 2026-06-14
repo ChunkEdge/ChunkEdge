@@ -56,6 +56,7 @@ pub struct Flags {
     pub ignore_entities: bool,
     pub show_air: bool,
     pub show_bounding_box: bool,
-    #[bits(5)]
+    pub strict_placement: bool,
+    #[bits(4)]
     _pad: u8,
 }

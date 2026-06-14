@@ -4,5 +4,5 @@ use crate::Packet;
 
 #[derive(Copy, Clone, Debug, Encode, Decode, Packet)]
 pub struct KeepAliveS2c {
-    pub id: u64,
+    pub id: i64,
 }

@@ -6,7 +6,7 @@ use crate::Packet;
 pub struct UpdateMobEffectS2c {
     pub entity_id: VarInt,
     pub effect_id: VarInt, // TODO: effect ID registry.
-    pub amplifier: u8,
+    pub amplifier: VarInt,
     pub duration: VarInt,
     pub flags: Flags,
 }
@@ -17,6 +17,7 @@ pub struct Flags {
     pub is_ambient: bool,
     pub show_particles: bool,
     pub show_icon: bool,
-    #[bits(5)]
+    pub blend: bool,
+    #[bits(4)]
     _pad: u8,
 }

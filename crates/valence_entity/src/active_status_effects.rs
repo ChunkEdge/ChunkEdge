@@ -307,7 +307,7 @@ pub struct ActiveStatusEffect {
     effect: StatusEffect,
     /// # Default Value
     /// 0
-    amplifier: u8,
+    amplifier: i32,
     /// The initial duration of the effect in ticks.
     /// If `None`, the effect is infinite.
     /// (encoded as -1 if infinite)
@@ -346,7 +346,7 @@ impl ActiveStatusEffect {
     }
 
     /// Sets the amplifier of the [`ActiveStatusEffect`].
-    pub fn with_amplifier(mut self, amplifier: u8) -> Self {
+    pub fn with_amplifier(mut self, amplifier: i32) -> Self {
         self.amplifier = amplifier;
         self
     }
@@ -398,7 +398,7 @@ impl ActiveStatusEffect {
     }
 
     /// Returns the amplifier of the [`ActiveStatusEffect`].
-    pub fn amplifier(&self) -> u8 {
+    pub fn amplifier(&self) -> i32 {
         self.amplifier
     }
 

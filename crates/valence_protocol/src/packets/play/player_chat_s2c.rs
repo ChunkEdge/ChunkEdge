@@ -2,12 +2,14 @@ use std::borrow::Cow;
 use std::io::Write;
 
 use uuid::Uuid;
-use valence_binary::{Bounded, Decode, Encode, TextComponent, VarInt};
+use valence_binary::{Bounded, Decode, Encode, IdOr, TextComponent, VarInt};
+use valence_nbt::Compound;
 
-use crate::Packet;
+use crate::{Packet, VariableBitSet};
 
 #[derive(Clone, PartialEq, Debug, Packet)]
 pub struct PlayerChatS2c<'a> {
+    pub global_index: VarInt,
     pub sender: Uuid,
     pub index: VarInt,
     pub message_signature: Option<&'a [u8; 256]>,
@@ -17,10 +19,32 @@ pub struct PlayerChatS2c<'a> {
     pub previous_messages: Vec<MessageSignature<'a>>,
     pub unsigned_content: Option<Cow<'a, TextComponent>>,
     pub filter_type: MessageFilterType,
-    pub filter_type_bits: Option<u8>,
-    pub chat_type: VarInt,
+    pub filter_type_bits: Option<VariableBitSet>,
+    pub chat_type: ChatType<'a>,
     pub network_name: Cow<'a, TextComponent>,
     pub network_target_name: Option<Cow<'a, TextComponent>>,
+}
+
+pub type ChatType<'a> = IdOr<DirectChatType<'a>>;
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct DirectChatType<'a> {
+    pub chat: ChatTypeDecoration<'a>,
+    pub narration: ChatTypeDecoration<'a>,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct ChatTypeDecoration<'a> {
+    pub translation_key: Cow<'a, str>,
+    pub parameters: Vec<ChatTypeParameter>,
+    pub style: Compound,
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
+pub enum ChatTypeParameter {
+    Sender,
+    Target,
+    Content,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
@@ -32,6 +56,7 @@ pub enum MessageFilterType {
 
 impl Encode for PlayerChatS2c<'_> {
     fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
+        self.global_index.encode(&mut w)?;
         self.sender.encode(&mut w)?;
         self.index.encode(&mut w)?;
         self.message_signature.encode(&mut w)?;
@@ -43,11 +68,10 @@ impl Encode for PlayerChatS2c<'_> {
         self.filter_type.encode(&mut w)?;
 
         if self.filter_type == MessageFilterType::PartiallyFiltered {
-            match self.filter_type_bits {
-                // Filler data
-                None => 0_u8.encode(&mut w)?,
-                Some(bits) => bits.encode(&mut w)?,
-            }
+            self.filter_type_bits
+                .clone()
+                .unwrap_or_default()
+                .encode(&mut w)?;
         }
 
         self.chat_type.encode(&mut w)?;
@@ -60,6 +84,7 @@ impl Encode for PlayerChatS2c<'_> {
 
 impl<'a> Decode<'a> for PlayerChatS2c<'a> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        let global_index = VarInt::decode(r)?;
         let sender = Uuid::decode(r)?;
         let index = VarInt::decode(r)?;
         let message_signature = Option::<&'a [u8; 256]>::decode(r)?;
@@ -71,15 +96,16 @@ impl<'a> Decode<'a> for PlayerChatS2c<'a> {
         let filter_type = MessageFilterType::decode(r)?;
 
         let filter_type_bits = match filter_type {
-            MessageFilterType::PartiallyFiltered => Some(u8::decode(r)?),
+            MessageFilterType::PartiallyFiltered => Some(VariableBitSet::decode(r)?),
             _ => None,
         };
 
-        let chat_type = VarInt::decode(r)?;
+        let chat_type = ChatType::decode(r)?;
         let network_name = <Cow<'a, TextComponent>>::decode(r)?;
         let network_target_name = Option::<Cow<'a, TextComponent>>::decode(r)?;
 
         Ok(Self {
+            global_index,
             sender,
             index,
             message_signature,

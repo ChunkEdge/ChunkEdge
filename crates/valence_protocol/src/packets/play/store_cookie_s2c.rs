@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode};
+use valence_binary::{Bounded, Decode, Encode};
 use valence_ident::Ident;
 
 use crate::Packet;
@@ -9,5 +9,5 @@ use crate::Packet;
 /// Stores a cookie on the client
 pub struct StoreCookieS2c<'a> {
     pub key: Ident<Cow<'a, str>>,
-    pub payload: Cow<'a, [u8]>,
+    pub payload: Bounded<&'a [u8], 5120>,
 }

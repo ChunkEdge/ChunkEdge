@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use uuid::Uuid;
 use valence_binary::{Bounded, Decode, Encode, TextComponent};
 
@@ -9,5 +10,6 @@ pub struct ResourcePackPushS2c<'a> {
     pub uuid: Uuid,
     pub url: Bounded<&'a str, 32767>,
     pub hash: Bounded<&'a str, 40>,
-    pub prompt_message: Option<TextComponent>,
+    pub forced: bool,
+    pub prompt_message: Option<Cow<'a, TextComponent>>,
 }

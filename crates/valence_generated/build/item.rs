@@ -15,6 +15,7 @@ struct Item {
     max_durability: u16,
     enchantability: u8,
     fireproof: bool,
+    // TODO: Implement food component
     // food: Option<FoodComponent>,
 }
 

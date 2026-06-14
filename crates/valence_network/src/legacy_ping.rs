@@ -33,7 +33,7 @@ pub enum ServerListLegacyPingPayload {
 /// ```
 /// # use valence_network::ServerListLegacyPingResponse;
 /// let mut response =
-///     ServerListLegacyPingResponse::new(127, 0, 10).version("Valence 1.20.1".to_owned());
+///     ServerListLegacyPingResponse::new(127, 0, 10).version("Valence legacy".to_owned());
 ///
 /// // This will make the description just repeat "hello" until the length limit
 /// // (which depends on the other fields that we set above: protocol, version,

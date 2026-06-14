@@ -22,7 +22,6 @@ pub struct LevelChunkWithLightS2c<'a> {
 }
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
-// TODO: force every packet to always include all 3 heightmaps?
 pub struct HeightMap {
     pub kind: HeightMapKind,
     pub data: Vec<i64>,

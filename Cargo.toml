@@ -112,7 +112,7 @@ exclude = []
 resolver = "2"
 
 [workspace.package]
-version = "0.2.0-alpha.1+mc.1.20.1"
+version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/valence-rs/valence"
 documentation = "https://docs.rs/valence/"
@@ -196,38 +196,38 @@ tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 url = { version = "2.5.2", features = ["serde"] }
 uuid = { version = "1.10.0", features = ["v4"] }
-valence = { path = ".", version = "0.2.0-alpha.1" }
-valence_advancement = { path = "crates/valence_advancement", version = "0.2.0-alpha.1" }
+valence = { path = "." }
+valence_advancement = { path = "crates/valence_advancement" }
 valence_anvil = { path = "crates/valence_anvil", version = "0.1.0" }
-valence_boss_bar = { path = "crates/valence_boss_bar", version = "0.2.0-alpha.1" }
-valence_build_utils = { path = "crates/valence_build_utils", version = "0.2.0-alpha.1" }
-valence_command = { path = "crates/valence_command", version = "0.2.0-alpha.1" }
-valence_command_macros = { path = "crates/valence_command_macros", version = "0.2.0-alpha.1" }
-valence_binary = { path = "crates/valence_binary", version = "0.2.0-alpha.1" }
-valence_entity = { path = "crates/valence_entity", version = "0.2.0-alpha.1" }
-valence_generated = { path = "crates/valence_generated", version = "0.2.0-alpha.1" }
-valence_item = { path = "crates/valence_item", version = "0.2.0-alpha.1" }
-valence_ident = { path = "crates/valence_ident", version = "0.2.0-alpha.1" }
-valence_ident_macros = { path = "crates/valence_ident_macros", version = "0.2.0-alpha.1" }
-valence_equipment = { path = "crates/valence_equipment", version = "0.2.0-alpha.1" }
-valence_inventory = { path = "crates/valence_inventory", version = "0.2.0-alpha.1" }
-valence_lang = { path = "crates/valence_lang", version = "0.2.0-alpha.1" }
-valence_math = { path = "crates/valence_math", version = "0.2.0-alpha.1" }
+valence_boss_bar = { path = "crates/valence_boss_bar" }
+valence_build_utils = { path = "crates/valence_build_utils" }
+valence_command = { path = "crates/valence_command" }
+valence_command_macros = { path = "crates/valence_command_macros" }
+valence_binary = { path = "crates/valence_binary" }
+valence_entity = { path = "crates/valence_entity" }
+valence_generated = { path = "crates/valence_generated" }
+valence_item = { path = "crates/valence_item" }
+valence_ident = { path = "crates/valence_ident" }
+valence_ident_macros = { path = "crates/valence_ident_macros" }
+valence_equipment = { path = "crates/valence_equipment" }
+valence_inventory = { path = "crates/valence_inventory" }
+valence_lang = { path = "crates/valence_lang" }
+valence_math = { path = "crates/valence_math" }
 valence_nbt = { path = "crates/valence_nbt", features = [
   "uuid",
   "serde",
-], version = "0.8.0" }
-valence_network = { path = "crates/valence_network", version = "0.2.0-alpha.1" }
-valence_player_list = { path = "crates/valence_player_list", version = "0.2.0-alpha.1" }
-valence_protocol = { path = "crates/valence_protocol", version = "0.2.0-alpha.1" }
-valence_protocol_macros = { path = "crates/valence_protocol_macros", version = "0.2.0-alpha.1" }
-valence_registry = { path = "crates/valence_registry", version = "0.2.0-alpha.1" }
-valence_scoreboard = { path = "crates/valence_scoreboard", version = "0.2.0-alpha.1" }
-valence_server = { path = "crates/valence_server", version = "0.2.0-alpha.1" }
-valence_server_common = { path = "crates/valence_server_common", version = "0.2.0-alpha.1" }
-valence_text = { path = "crates/valence_text", version = "0.2.0-alpha.1" }
-valence_weather = { path = "crates/valence_weather", version = "0.2.0-alpha.1" }
-valence_world_border = { path = "crates/valence_world_border", version = "0.2.0-alpha.1" }
+] }
+valence_network = { path = "crates/valence_network" }
+valence_player_list = { path = "crates/valence_player_list" }
+valence_protocol = { path = "crates/valence_protocol" }
+valence_protocol_macros = { path = "crates/valence_protocol_macros" }
+valence_registry = { path = "crates/valence_registry" }
+valence_scoreboard = { path = "crates/valence_scoreboard" }
+valence_server = { path = "crates/valence_server" }
+valence_server_common = { path = "crates/valence_server_common" }
+valence_text = { path = "crates/valence_text" }
+valence_weather = { path = "crates/valence_weather" }
+valence_world_border = { path = "crates/valence_world_border" }
 vek = "0.17.1"
 zip = "2.2.0"
 crc32c = "0.6.8"

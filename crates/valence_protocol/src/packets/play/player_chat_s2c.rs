@@ -144,7 +144,9 @@ impl Encode for MessageSignature<'_> {
 
 impl<'a> Decode<'a> for MessageSignature<'a> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
-        let message_id = VarInt::decode(r)?.0 - 1; // TODO: this can underflow.
+        let encoded_message_id = VarInt::decode(r)?.0;
+        anyhow::ensure!(encoded_message_id != i32::MIN, "message id underflow");
+        let message_id = encoded_message_id - 1;
 
         let signature = if message_id == -1 {
             Some(<&[u8; 256]>::decode(r)?)

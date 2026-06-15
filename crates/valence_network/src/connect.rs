@@ -53,6 +53,8 @@ use crate::{
     WorldLoginState,
 };
 
+const VELOCITY_MIN_MAX_SUPPORTED_VERSION: u8 = 3;
+
 /// Accepts new connections to the server as they occur.
 pub(super) async fn do_accept_loop(shared: SharedNetworkState, world_state: WorldLoginState) {
     let listener = match TcpListener::bind(shared.0.address).await {
@@ -646,16 +648,13 @@ async fn login_velocity(
     username: String,
     velocity_secret: &str,
 ) -> anyhow::Result<NewClientInfo> {
-    const VELOCITY_MIN_SUPPORTED_VERSION: u8 = 1;
-    const VELOCITY_MODERN_FORWARDING_WITH_KEY_V2: i32 = 3;
-
     let message_id: i32 = 0; // TODO: make this random?
 
     // Send Player Info Request into the Plugin Channel
     io.send_packet(&CustomQueryS2c {
         message_id: VarInt(message_id),
         channel: ident!("velocity:player_info").into(),
-        data: RawBytes(&[VELOCITY_MIN_SUPPORTED_VERSION]).into(),
+        data: RawBytes(&[VELOCITY_MIN_MAX_SUPPORTED_VERSION]).into(),
     })
     .await?;
 
@@ -668,11 +667,19 @@ async fn login_velocity(
         plugin_response.message_id.0,
     );
 
-    let data = &plugin_response
+    let data = plugin_response
         .data
-        .context("missing plugin response data")?
-        .0[1..];
+        .context("missing plugin response data")?;
+    let payload = data.0;
 
+    parse_velocity_player_info(payload.0, username, velocity_secret)
+}
+
+fn parse_velocity_player_info(
+    data: &[u8],
+    username: String,
+    velocity_secret: &str,
+) -> anyhow::Result<NewClientInfo> {
     ensure!(data.len() >= 32, "invalid plugin response data length");
     let (signature, mut data_without_signature) = data.split_at(32);
 
@@ -685,6 +692,8 @@ async fn login_velocity(
     let version = VarInt::decode(&mut data_without_signature)
         .context("failed to decode velocity version")?
         .0;
+
+    ensure!(version != i32::from(VELOCITY_MIN_MAX_SUPPORTED_VERSION), "Client tried to connect with an unsupported Velocity version: {version}. While we only support version {VELOCITY_MIN_MAX_SUPPORTED_VERSION}.");
 
     // Get client address
     let remote_addr = String::decode(&mut data_without_signature)?.parse()?;
@@ -701,10 +710,6 @@ async fn login_velocity(
     // Read game profile properties
     let properties = Vec::<Property>::decode(&mut data_without_signature)
         .context("decoding velocity game profile properties")?;
-
-    if version >= VELOCITY_MODERN_FORWARDING_WITH_KEY_V2 {
-        // TODO
-    }
 
     Ok(NewClientInfo {
         uuid,

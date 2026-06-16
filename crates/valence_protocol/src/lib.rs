@@ -12,7 +12,6 @@ pub mod __private {
 extern crate self as valence_protocol;
 
 mod biome_pos;
-mod bit_storage;
 pub mod block_pos;
 pub mod chunk_pos;
 pub mod chunk_section_pos;
@@ -33,7 +32,6 @@ use std::io::Write;
 
 use anyhow::Context;
 pub use biome_pos::BiomePos;
-pub use bit_storage::BitStorage;
 pub use block::{BlockKind, BlockState};
 pub use block_pos::BlockPos;
 pub use chunk_pos::ChunkPos;

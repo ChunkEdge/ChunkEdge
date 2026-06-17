@@ -7,7 +7,7 @@ use valence::protocol::decode::PacketDecoder;
 use valence::protocol::encode::{PacketEncoder, PacketWriter, WritePacket};
 use valence::protocol::packets::play::level_chunk_with_light_s2c::{HeightMap, HeightMapKind};
 use valence::protocol::packets::play::{AddEntityS2c, LevelChunkWithLightS2c, TabListS2c};
-use valence::protocol::{ByteAngle, FixedArray, IntoTextComponent, VarInt};
+use valence::protocol::{ByteAngle, FixedArray, IntoTextComponent, VarInt, VariableBitSet};
 use valence::text::IntoText;
 use valence_server::protocol::Velocity;
 use valence_server::CompressionThreshold;
@@ -31,10 +31,10 @@ pub(crate) fn setup<'a>() -> (
         }]),
         blocks_and_biomes: BLOCKS_AND_BIOMES.as_slice(),
         block_entities: Cow::Borrowed(&[]),
-        sky_light_mask: Cow::Borrowed(&[]),
-        block_light_mask: Cow::Borrowed(&[]),
-        empty_sky_light_mask: Cow::Borrowed(&[]),
-        empty_block_light_mask: Cow::Borrowed(&[]),
+        sky_light_mask: Cow::Owned(VariableBitSet::default()),
+        block_light_mask: Cow::Owned(VariableBitSet::default()),
+        empty_sky_light_mask: Cow::Owned(VariableBitSet::default()),
+        empty_block_light_mask: Cow::Owned(VariableBitSet::default()),
         sky_light_arrays: Cow::Borrowed(SKY_LIGHT_ARRAYS.as_slice()),
         block_light_arrays: Cow::Borrowed(&[]),
     };

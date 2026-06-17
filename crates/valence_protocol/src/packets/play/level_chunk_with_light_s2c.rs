@@ -5,7 +5,7 @@ use valence_binary::{Decode, Encode};
 use valence_generated::block::BlockEntityKind;
 use valence_nbt::Compound;
 
-use crate::{ChunkPos, Packet};
+use crate::{ChunkPos, Packet, VariableBitSet};
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct LevelChunkWithLightS2c<'a> {
@@ -13,10 +13,10 @@ pub struct LevelChunkWithLightS2c<'a> {
     pub heightmaps: Cow<'a, [HeightMap]>,
     pub blocks_and_biomes: &'a [u8],
     pub block_entities: Cow<'a, [ChunkDataBlockEntity<'a>]>,
-    pub sky_light_mask: Cow<'a, [u64]>,
-    pub block_light_mask: Cow<'a, [u64]>,
-    pub empty_sky_light_mask: Cow<'a, [u64]>,
-    pub empty_block_light_mask: Cow<'a, [u64]>,
+    pub sky_light_mask: Cow<'a, VariableBitSet>,
+    pub block_light_mask: Cow<'a, VariableBitSet>,
+    pub empty_sky_light_mask: Cow<'a, VariableBitSet>,
+    pub empty_block_light_mask: Cow<'a, VariableBitSet>,
     pub sky_light_arrays: Cow<'a, [FixedArray<u8, 2048>]>,
     pub block_light_arrays: Cow<'a, [FixedArray<u8, 2048>]>,
 }

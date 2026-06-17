@@ -15,7 +15,9 @@ use valence_protocol::packets::play::section_blocks_update_s2c::ChunkDeltaUpdate
 use valence_protocol::packets::play::{
     BlockEntityDataS2c, BlockUpdateS2c, LevelChunkWithLightS2c, SectionBlocksUpdateS2c,
 };
-use valence_protocol::{BitStorage, BlockPos, BlockState, ChunkPos, ChunkSectionPos, FixedArray};
+use valence_protocol::{
+    BlockPos, BlockState, ChunkPos, ChunkSectionPos, FixedArray, VariableBitSet,
+};
 use valence_registry::biome::BiomeId;
 use valence_registry::RegistryIdx;
 
@@ -455,8 +457,8 @@ impl LoadedChunk {
     fn fill_light_data(
         light: &LightSection,
         light_arrays: &mut Vec<FixedArray<u8, 2048>>,
-        light_mask: &mut BitStorage,
-        empty_light_mask: &mut BitStorage,
+        light_mask: &mut VariableBitSet,
+        empty_light_mask: &mut VariableBitSet,
         i: usize,
         is_block_light: bool,
     ) {
@@ -466,15 +468,15 @@ impl LoadedChunk {
                 // fully dark based on the presence of light data in other light sections in the
                 // chunk.
                 if is_block_light {
-                    empty_light_mask.set(i, 1);
+                    empty_light_mask.set(i);
                 }
             }
             LightSection::FullyDark => {
-                empty_light_mask.set(i, 1);
+                empty_light_mask.set(i);
             }
             LightSection::FullData(data) => {
                 light_arrays.push(FixedArray(**data));
-                light_mask.set(i, 1);
+                light_mask.set(i);
             }
         }
     }
@@ -513,10 +515,10 @@ impl LoadedChunk {
 
             let light_section_count = self.sections.len() + 2;
 
-            let mut sky_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
-            let mut empty_sky_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
-            let mut block_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
-            let mut empty_block_light_mask = BitStorage::new(1, light_section_count, None).unwrap();
+            let mut sky_light_mask = VariableBitSet::default();
+            let mut empty_sky_light_mask = VariableBitSet::default();
+            let mut block_light_mask = VariableBitSet::default();
+            let mut empty_block_light_mask = VariableBitSet::default();
 
             let mut sky_light_arrays = Vec::with_capacity(light_section_count);
             let mut block_light_arrays = Vec::with_capacity(light_section_count);
@@ -597,10 +599,10 @@ impl LoadedChunk {
                     heightmaps: Cow::Owned(heightmaps),
                     blocks_and_biomes: &blocks_and_biomes,
                     block_entities: Cow::Owned(block_entities),
-                    sky_light_mask: Cow::Borrowed(&sky_light_mask.into_data()),
-                    block_light_mask: Cow::Borrowed(&block_light_mask.into_data()),
-                    empty_sky_light_mask: Cow::Borrowed(&[]),
-                    empty_block_light_mask: Cow::Borrowed(&empty_block_light_mask.into_data()),
+                    sky_light_mask: Cow::Borrowed(&sky_light_mask),
+                    block_light_mask: Cow::Borrowed(&block_light_mask),
+                    empty_sky_light_mask: Cow::Borrowed(&empty_sky_light_mask),
+                    empty_block_light_mask: Cow::Borrowed(&empty_block_light_mask),
                     sky_light_arrays: Cow::Borrowed(&sky_light_arrays),
                     block_light_arrays: Cow::Borrowed(&block_light_arrays),
                 },

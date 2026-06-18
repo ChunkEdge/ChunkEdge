@@ -1,7 +1,9 @@
 <div align="center">
+
 # ChunkEdge
 
 <img src="https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/rebrand/assets/logo-full.svg" width="650" align="center">
+
 </div>
 
 <!-- TODO: replace rebrand with main -->

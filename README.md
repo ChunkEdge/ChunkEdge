@@ -88,7 +88,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/Chunk
 
 ## License
 
-The source code in this repository is licensed under the [MIT](https://opensource.org/licenses/MIT) License, except where otherwise noted.
+The source code in this repository is licensed under the [MIT License](https://opensource.org/licenses/MIT), except where otherwise noted.
 
 The project name, logo, icons, and other branding assets are not licensed under the MIT License. They are reserved by the repository owner [Job Paardekooper](https://github.com/jobpaardekooper) and may not be used in a way that suggests endorsement, affiliation, or official status without prior written permission.
 

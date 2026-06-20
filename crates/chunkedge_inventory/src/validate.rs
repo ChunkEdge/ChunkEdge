@@ -1,8 +1,8 @@
-use valence_server::protocol::anyhow::{self, ensure};
-use valence_server::protocol::packets::play::container_click_c2s::{ClickMode, SlotChange};
-use valence_server::protocol::packets::play::ContainerClickC2s;
-use valence_server::protocol::VarInt;
-use valence_server::ItemStack;
+use chunkedge_server::protocol::anyhow::{self, ensure};
+use chunkedge_server::protocol::packets::play::container_click_c2s::{ClickMode, SlotChange};
+use chunkedge_server::protocol::packets::play::ContainerClickC2s;
+use chunkedge_server::protocol::VarInt;
+use chunkedge_server::ItemStack;
 
 use crate::player_inventory::PlayerInventory;
 use crate::validate::anyhow::bail;
@@ -610,8 +610,8 @@ fn calculate_net_item_delta(
 // TODO: validate nbt after validation
 #[cfg(test)]
 mod tests {
-    use valence_server::protocol::VarInt;
-    use valence_server::{ItemKind, ItemStack};
+    use chunkedge_server::protocol::VarInt;
+    use chunkedge_server::{ItemKind, ItemStack};
 
     use super::*;
     use crate::InventoryKind;

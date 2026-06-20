@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
 pub enum Difficulty {

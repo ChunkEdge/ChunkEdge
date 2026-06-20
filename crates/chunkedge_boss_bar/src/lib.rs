@@ -2,20 +2,20 @@
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_server::client::{
+use chunkedge_server::client::{
     Client, OldViewDistance, OldVisibleEntityLayers, ViewDistance, VisibleEntityLayers,
 };
-use valence_server::layer::UpdateLayersPreClientSet;
-pub use valence_server::protocol::packets::play::boss_event_s2c::{
+use chunkedge_server::layer::UpdateLayersPreClientSet;
+pub use chunkedge_server::protocol::packets::play::boss_event_s2c::{
     BossBarAction, BossBarColor, BossBarDivision, BossBarFlags,
 };
-use valence_server::protocol::packets::play::BossEventS2c;
-use valence_server::protocol::{IntoTextComponent, WritePacket};
-use valence_server::{ChunkView, Despawned, EntityLayer, Layer, UniqueId};
+use chunkedge_server::protocol::packets::play::BossEventS2c;
+use chunkedge_server::protocol::{IntoTextComponent, WritePacket};
+use chunkedge_server::{ChunkView, Despawned, EntityLayer, Layer, UniqueId};
 
 mod components;
+use chunkedge_entity::{EntityLayerId, OldPosition, Position};
 pub use components::*;
-use valence_entity::{EntityLayerId, OldPosition, Position};
 
 pub struct BossBarPlugin;
 

@@ -1,5 +1,5 @@
 use bitfield_struct::bitfield;
-use valence_binary::{Bounded, Decode, Encode, VarLong};
+use chunkedge_binary::{Bounded, Decode, Encode, VarLong};
 
 use crate::{BlockPos, Packet};
 

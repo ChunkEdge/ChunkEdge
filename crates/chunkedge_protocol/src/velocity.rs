@@ -1,7 +1,7 @@
 use std::fmt;
 
+use chunkedge_binary::{Decode, Encode};
 use derive_more::{From, Into};
-use valence_binary::{Decode, Encode};
 
 /// Quantized entity velocity.
 #[derive(Copy, Clone, PartialEq, Eq, Encode, Decode, From, Into)]

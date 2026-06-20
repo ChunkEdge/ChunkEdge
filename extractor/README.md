@@ -1,4 +1,4 @@
-# Valence Extractor
+# ChunkEdge Extractor
 
 This is a Fabric mod for Minecraft that extracts data about different things in Minecraft, like blocks, packets, etc. The extracted data is stored within the Rust packages that need them.
 
@@ -25,7 +25,7 @@ Next, run `copy_extractor_output.sh`. This copies the files to the appropriate l
 The general process should go something like this:
 1. Update `gradle.properties` to the new version of Minecraft using https://fabricmc.net/develop
 2. Update `src/main/resources/fabric.mod.json` to reference new version of Minecraft
-3. Update `PROTOCOL_VERSION` and `MINECRAFT_VERSION` constants in `valence_protocol/src/lib.rs`
+3. Update `PROTOCOL_VERSION` and `MINECRAFT_VERSION` constants in `chunkedge_protocol/src/lib.rs`
 4. Attempt to run `./gradlew runServer` and fix any errors that come up
 5. Run `./copy_extractor_output.sh`
 6. In `*.toml`s, replace all strings of the old mc version with the new mc version

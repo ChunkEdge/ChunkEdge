@@ -1,5 +1,5 @@
 use bevy_ecs::prelude::Component;
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 use super::set_player_team_s2c::TeamColor;
 use crate::Packet;

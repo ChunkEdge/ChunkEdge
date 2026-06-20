@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode, TextComponent};
+use chunkedge_binary::{Decode, Encode, TextComponent};
 
 use super::player_chat_s2c::ChatType;
 use crate::Packet;

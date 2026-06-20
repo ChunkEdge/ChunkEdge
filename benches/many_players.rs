@@ -1,20 +1,20 @@
 use std::time::Duration;
 
 use bevy_app::prelude::*;
+use chunkedge::entity::Position;
+use chunkedge::keepalive::KeepaliveSettings;
+use chunkedge::layer::chunk::UnloadedChunk;
+use chunkedge::layer::LayerBundle;
+use chunkedge::math::DVec3;
+use chunkedge::network::NetworkPlugin;
+use chunkedge::protocol::movement_flags::MovementFlags;
+use chunkedge::protocol::packets::play::{MovePlayerPosRotC2s, SwingC2s};
+use chunkedge::registry::{BiomeRegistry, DimensionTypeRegistry};
+use chunkedge::testing::create_mock_client;
+use chunkedge::{ident, ChunkPos, DefaultPlugins, Hand, Server, ServerSettings};
+use chunkedge_server::CompressionThreshold;
 use divan::Bencher;
 use rand::Rng;
-use valence::entity::Position;
-use valence::keepalive::KeepaliveSettings;
-use valence::layer::chunk::UnloadedChunk;
-use valence::layer::LayerBundle;
-use valence::math::DVec3;
-use valence::network::NetworkPlugin;
-use valence::protocol::movement_flags::MovementFlags;
-use valence::protocol::packets::play::{MovePlayerPosRotC2s, SwingC2s};
-use valence::registry::{BiomeRegistry, DimensionTypeRegistry};
-use valence::testing::create_mock_client;
-use valence::{ident, ChunkPos, DefaultPlugins, Hand, Server, ServerSettings};
-use valence_server::CompressionThreshold;
 
 #[divan::bench]
 fn many_players(bencher: Bencher) {

@@ -5,20 +5,20 @@ use std::collections::BTreeSet;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-pub use components::*;
-use tracing::{debug, warn};
-use valence_server::client::{Client, OldVisibleEntityLayers, VisibleEntityLayers};
-use valence_server::entity::EntityLayerId;
-use valence_server::layer::UpdateLayersPreClientSet;
-use valence_server::protocol::packets::play::set_display_objective_s2c::ScoreboardPosition;
-use valence_server::protocol::packets::play::set_objective_s2c::{
+use chunkedge_server::client::{Client, OldVisibleEntityLayers, VisibleEntityLayers};
+use chunkedge_server::entity::EntityLayerId;
+use chunkedge_server::layer::UpdateLayersPreClientSet;
+use chunkedge_server::protocol::packets::play::set_display_objective_s2c::ScoreboardPosition;
+use chunkedge_server::protocol::packets::play::set_objective_s2c::{
     ObjectiveMode, ObjectiveRenderType,
 };
-use valence_server::protocol::packets::play::{
+use chunkedge_server::protocol::packets::play::{
     ResetScoreS2c, SetDisplayObjectiveS2c, SetObjectiveS2c, SetScoreS2c,
 };
-use valence_server::protocol::{IntoTextComponent, VarInt, WritePacket};
-use valence_server::{Despawned, EntityLayer};
+use chunkedge_server::protocol::{IntoTextComponent, VarInt, WritePacket};
+use chunkedge_server::{Despawned, EntityLayer};
+pub use components::*;
+use tracing::{debug, warn};
 
 /// Provides all necessary systems to manage scoreboards.
 pub struct ScoreboardPlugin;

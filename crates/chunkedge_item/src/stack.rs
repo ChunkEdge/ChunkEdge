@@ -1,8 +1,8 @@
 use std::fmt::Debug;
 use std::io::Write;
 
-use valence_binary::{Encode, VarInt};
-use valence_generated::item::ItemKind;
+use chunkedge_binary::{Encode, VarInt};
+use chunkedge_generated::item::ItemKind;
 
 use crate::components::{ItemComponent, Patchable};
 use crate::vanilla_components::ItemKindExt;

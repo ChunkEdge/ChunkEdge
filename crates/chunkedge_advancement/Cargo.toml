@@ -1,6 +1,6 @@
 [package]
-name = "valence_advancement"
-description = "Advancement support for Valence"
+name = "chunkedge_advancement"
+description = "Advancement support for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true
@@ -20,6 +20,6 @@ derive_more = {workspace = true, features = [
     "deref_mut",
 ] }
 rustc-hash.workspace = true
-valence_binary.workspace = true
-valence_generated.workspace = true
-valence_server.workspace = true
+chunkedge_binary.workspace = true
+chunkedge_generated.workspace = true
+chunkedge_server.workspace = true

@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode, TextComponent};
-use valence_math::DVec3;
+use chunkedge_binary::{Decode, Encode, TextComponent};
+use chunkedge_math::DVec3;
 
 use crate::Packet;
 

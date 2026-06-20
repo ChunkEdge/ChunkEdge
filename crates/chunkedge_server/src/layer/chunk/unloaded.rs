@@ -1,9 +1,9 @@
 use std::cmp::Ordering;
 use std::collections::BTreeMap;
 
-use valence_nbt::Compound;
-use valence_protocol::BlockState;
-use valence_registry::biome::BiomeId;
+use chunkedge_nbt::Compound;
+use chunkedge_protocol::BlockState;
+use chunkedge_registry::biome::BiomeId;
 
 use super::chunk::{
     check_biome_oob, check_block_oob, check_section_oob, BiomeContainer, BlockStateContainer,

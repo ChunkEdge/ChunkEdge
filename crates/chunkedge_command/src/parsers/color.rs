@@ -1,4 +1,4 @@
-use valence_text::Color;
+use chunkedge_text::Color;
 
 use super::Parser;
 use crate::parsers::{CommandArg, CommandArgParseError, ParseInput};

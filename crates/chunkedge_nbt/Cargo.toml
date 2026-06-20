@@ -1,5 +1,5 @@
 [package]
-name = "valence_nbt"
+name = "chunkedge_nbt"
 version = "0.1.0"
 description = "Minecraft's Named Binary Tag (NBT) format."
 edition.workspace = true
@@ -19,7 +19,7 @@ java_string = ["dep:java_string"]
 snbt = []
 preserve_order = ["dep:indexmap"]
 serde = ["dep:serde", "indexmap?/serde"]
-valence_ident = ["dep:valence_ident"]
+chunkedge_ident = ["dep:chunkedge_ident"]
 
 [dependencies]
 byteorder = { version = "1.5.0", optional = true }
@@ -28,7 +28,7 @@ indexmap = { version = "2.2.6", optional = true }
 java_string = { version = "0.1.2", path = "../java_string", optional = true }
 serde = { version = "1.0.200", features = ["derive"], optional = true }
 uuid = { version = "1.8.0", optional = true }
-valence_ident = { workspace = true, optional = true }
+chunkedge_ident = { workspace = true, optional = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"

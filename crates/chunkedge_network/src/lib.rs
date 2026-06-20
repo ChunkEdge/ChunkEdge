@@ -17,6 +17,19 @@ pub use async_trait::async_trait;
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use bevy_ecs::system::SystemParam;
+use chunkedge_protocol::packets::configuration::client_information_c2s::ParticleMode;
+use chunkedge_protocol::packets::play::client_information_c2s::{
+    ChatMode, DisplayedSkinParts, MainArm,
+};
+use chunkedge_protocol::text::IntoText;
+use chunkedge_protocol::VarInt;
+use chunkedge_server::client::{ClientBundle, ClientBundleArgs, Properties, SpawnClientsSet};
+use chunkedge_server::registry::biome::{Biome, BiomeId};
+use chunkedge_server::registry::dimension_type::{DimensionType, DimensionTypeId};
+use chunkedge_server::registry::{BiomeRegistry, DimensionTypeRegistry, Registry, TagsRegistry};
+use chunkedge_server::{
+    CompressionThreshold, Ident, Server, Text, MINECRAFT_VERSION, PROTOCOL_VERSION,
+};
 use connect::do_accept_loop;
 pub use connect::HandshakeData;
 use flume::{Receiver, Sender};
@@ -31,19 +44,6 @@ use tokio::sync::Semaphore;
 use tokio::time;
 use tracing::error;
 use uuid::Uuid;
-use valence_protocol::packets::configuration::client_information_c2s::ParticleMode;
-use valence_protocol::packets::play::client_information_c2s::{
-    ChatMode, DisplayedSkinParts, MainArm,
-};
-use valence_protocol::text::IntoText;
-use valence_protocol::VarInt;
-use valence_server::client::{ClientBundle, ClientBundleArgs, Properties, SpawnClientsSet};
-use valence_server::registry::biome::{Biome, BiomeId};
-use valence_server::registry::dimension_type::{DimensionType, DimensionTypeId};
-use valence_server::registry::{BiomeRegistry, DimensionTypeRegistry, Registry, TagsRegistry};
-use valence_server::{
-    CompressionThreshold, Ident, Server, Text, MINECRAFT_VERSION, PROTOCOL_VERSION,
-};
 
 pub struct NetworkPlugin;
 
@@ -375,7 +375,7 @@ pub trait NetworkCallbacks: Send + Sync + 'static {
             online_players: shared.player_count().load(Ordering::Relaxed) as i32,
             max_players: shared.max_players() as i32,
             player_sample: vec![],
-            description: "A Valence Server".into_text(),
+            description: "A ChunkEdge Server".into_text(),
             favicon_png: &[],
             version_name: MINECRAFT_VERSION.to_owned(),
             protocol: PROTOCOL_VERSION,
@@ -467,7 +467,7 @@ pub trait NetworkCallbacks: Send + Sync + 'static {
     ///
     /// TODO
     ///
-    /// [`Client`]: valence_server::client::Client
+    /// [`Client`]: chunkedge_server::client::Client
     async fn login(
         &self,
         shared: &SharedNetworkState,
@@ -612,7 +612,7 @@ pub enum ConnectionMode {
     /// [Velocity]: https://velocitypowered.com/
     Velocity {
         /// The secret key used to prevent connections from outside Velocity.
-        /// The proxy and Valence must be configured to use the same secret key.
+        /// The proxy and ChunkEdge must be configured to use the same secret key.
         secret: Arc<str>,
     },
 }
@@ -644,7 +644,7 @@ pub enum ServerListPing<'a> {
         /// different protocol.
         ///
         /// Can be formatted using `§` and format codes. Or use
-        /// [`valence_protocol::text::Text::to_legacy_lossy`].
+        /// [`chunkedge_protocol::text::Text::to_legacy_lossy`].
         version_name: String,
         /// The protocol version of the server.
         protocol: i32,

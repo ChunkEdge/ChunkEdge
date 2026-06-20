@@ -1,7 +1,7 @@
-use valence::entity::player::PlayerEntityBundle;
-use valence::player_list::{DisplayName, Listed, PlayerListEntryBundle};
-use valence::prelude::*;
-use valence::text::IntoText;
+use chunkedge::entity::player::PlayerEntityBundle;
+use chunkedge::player_list::{DisplayName, Listed, PlayerListEntryBundle};
+use chunkedge::prelude::*;
+use chunkedge::text::IntoText;
 
 const SPAWN_Y: i32 = 64;
 

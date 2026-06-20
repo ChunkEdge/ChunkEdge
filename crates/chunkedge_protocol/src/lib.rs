@@ -9,7 +9,7 @@ pub mod __private {
     pub use crate::Packet;
 }
 
-extern crate self as valence_protocol;
+extern crate self as chunkedge_protocol;
 
 mod biome_pos;
 pub mod block_pos;
@@ -36,6 +36,18 @@ pub use block::{BlockKind, BlockState};
 pub use block_pos::BlockPos;
 pub use chunk_pos::ChunkPos;
 pub use chunk_section_pos::ChunkSectionPos;
+pub use chunkedge_binary::array::FixedArray;
+pub use chunkedge_binary::bit_set::{FixedBitSet, VariableBitSet};
+pub use chunkedge_binary::byte_angle::ByteAngle;
+use chunkedge_binary::Encode;
+pub use chunkedge_binary::{
+    IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
+};
+pub use chunkedge_generated::registry_id::RegistryId;
+pub use chunkedge_generated::{block, packet_id, status_effects};
+pub use chunkedge_ident::Ident;
+pub use chunkedge_item::{ItemKind, ItemStack};
+use chunkedge_protocol_macros::Packet;
 pub use decode::PacketDecoder;
 use derive_more::{From, Into};
 pub use difficulty::Difficulty;
@@ -49,22 +61,10 @@ pub use packets::play::level_particles_s2c::Particle;
 use serde::{Deserialize, Serialize};
 pub use sound::Sound;
 pub use text::{JsonText, Text};
-pub use valence_binary::array::FixedArray;
-pub use valence_binary::bit_set::{FixedBitSet, VariableBitSet};
-pub use valence_binary::byte_angle::ByteAngle;
-use valence_binary::Encode;
-pub use valence_binary::{
-    IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
-};
-pub use valence_generated::registry_id::RegistryId;
-pub use valence_generated::{block, packet_id, status_effects};
-pub use valence_ident::Ident;
-pub use valence_item::{ItemKind, ItemStack};
-use valence_protocol_macros::Packet;
 pub use velocity::Velocity;
 pub use {
-    anyhow, bytes, uuid, valence_ident as ident, valence_math as math, valence_nbt as nbt,
-    valence_text as text,
+    anyhow, bytes, chunkedge_ident as ident, chunkedge_math as math, chunkedge_nbt as nbt,
+    chunkedge_text as text, uuid,
 };
 
 /// The maximum number of bytes in a single Minecraft packet.
@@ -101,7 +101,7 @@ impl Default for CompressionThreshold {
 ///
 /// In serialized form, a packet begins with a [`VarInt`] packet ID followed by
 /// the body of the packet. If present, the implementations of [`Encode`] and
-/// [`valence_binary::Decode`] on `Self` are expected to only encode/decode the
+/// [`chunkedge_binary::Decode`] on `Self` are expected to only encode/decode the
 /// _body_ of this packet without the leading ID.
 pub trait Packet: std::fmt::Debug {
     /// The leading `VarInt` ID of this packet.
@@ -152,9 +152,9 @@ mod tests {
 
     use bytes::BytesMut;
     // use crate::{Packet, PacketSide};
-    use valence_binary::{Decode, Encode, VarInt, VarLong};
-    use valence_item::{ItemKind, ItemStack};
-    use valence_protocol_macros::Packet;
+    use chunkedge_binary::{Decode, Encode, VarInt, VarLong};
+    use chunkedge_item::{ItemKind, ItemStack};
+    use chunkedge_protocol_macros::Packet;
 
     use super::*;
     use crate::block_pos::BlockPos;

@@ -1,5 +1,5 @@
-use valence::log::LogPlugin;
-use valence::prelude::*;
+use chunkedge::log::LogPlugin;
+use chunkedge::prelude::*;
 
 #[allow(unused_imports)]
 use crate::extras::*;

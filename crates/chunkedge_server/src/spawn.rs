@@ -5,16 +5,16 @@ use std::collections::BTreeSet;
 
 use bevy_ecs::prelude::*;
 use bevy_ecs::query::QueryData;
-use derive_more::{Deref, DerefMut};
-use valence_entity::EntityLayerId;
-use valence_protocol::packets::play::game_event_s2c::GameEventKind;
-use valence_protocol::packets::play::respawn_s2c::DataKeptFlags;
-use valence_protocol::packets::play::{
+use chunkedge_entity::EntityLayerId;
+use chunkedge_protocol::packets::play::game_event_s2c::GameEventKind;
+use chunkedge_protocol::packets::play::respawn_s2c::DataKeptFlags;
+use chunkedge_protocol::packets::play::{
     GameEventS2c, LoginS2c, RespawnS2c, SetDefaultSpawnPositionS2c,
 };
-use valence_protocol::{BlockPos, GameMode, GlobalPos, Ident, VarInt, WritePacket};
-use valence_registry::tags::TagsRegistry;
-use valence_registry::{DimensionTypeRegistry, RegistryCodec};
+use chunkedge_protocol::{BlockPos, GameMode, GlobalPos, Ident, VarInt, WritePacket};
+use chunkedge_registry::tags::TagsRegistry;
+use chunkedge_registry::{DimensionTypeRegistry, RegistryCodec};
+use derive_more::{Deref, DerefMut};
 
 use crate::client::{Client, ViewDistance, VisibleChunkLayer};
 use crate::layer::ChunkLayer;

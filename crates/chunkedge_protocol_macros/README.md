@@ -1,3 +1,3 @@
-# `valence_protocol_macros`
+# `chunkedge_protocol_macros`
 
-Procedural macros for `valence_protocol`
+Procedural macros for `chunkedge_protocol`

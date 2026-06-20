@@ -5,16 +5,16 @@ use std::{io, mem};
 
 use anyhow::bail;
 use bytes::BytesMut;
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_protocol::{CompressionThreshold, Packet};
+use chunkedge_server::client::{ClientBundleArgs, ClientConnection, ReceivedPacket};
+use chunkedge_server::protocol::decode::PacketFrame;
+use chunkedge_server::protocol::{PacketDecoder, PacketEncoder};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio::sync::Semaphore;
 use tokio::task::JoinHandle;
 use tracing::{debug, warn};
-use valence_binary::{Decode, Encode};
-use valence_protocol::{CompressionThreshold, Packet};
-use valence_server::client::{ClientBundleArgs, ClientConnection, ReceivedPacket};
-use valence_server::protocol::decode::PacketFrame;
-use valence_server::protocol::{PacketDecoder, PacketEncoder};
 
 use crate::byte_channel::{byte_channel, ByteSender, TrySendError};
 use crate::{CleanupOnDrop, NewClientInfo};

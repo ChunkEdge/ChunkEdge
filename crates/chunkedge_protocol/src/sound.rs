@@ -1,6 +1,6 @@
-use valence_binary::{Decode, Encode, IdOr};
-pub use valence_generated::sound::Sound;
-use valence_ident::Ident;
+use chunkedge_binary::{Decode, Encode, IdOr};
+pub use chunkedge_generated::sound::Sound;
+use chunkedge_ident::Ident;
 
 pub type SoundId = IdOr<SoundDirect>;
 

@@ -3,11 +3,11 @@
 use std::collections::VecDeque;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use chunkedge::prelude::*;
+use chunkedge::protocol::sound::{Sound, SoundCategory};
+use chunkedge::spawn::IsFlat;
 use rand::seq::SliceRandom;
 use rand::Rng;
-use valence::prelude::*;
-use valence::protocol::sound::{Sound, SoundCategory};
-use valence::spawn::IsFlat;
 
 const START_POS: BlockPos = BlockPos::new(0, 100, 0);
 const VIEW_DIST: u8 = 10;

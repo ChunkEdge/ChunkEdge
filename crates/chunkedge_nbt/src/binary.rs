@@ -4,7 +4,7 @@
 //! # Examples
 //!
 //! ```
-//! use valence_nbt::{compound, to_binary, Compound, List};
+//! use chunkedge_nbt::{compound, to_binary, Compound, List};
 //!
 //! let c = compound! {
 //!     "byte" => 5_i8,
@@ -24,7 +24,7 @@
 //! Decode NBT data from its binary form.
 //!
 //! ```
-//! use valence_nbt::{compound, from_binary, Compound, Value};
+//! use chunkedge_nbt::{compound, from_binary, Compound, Value};
 //!
 //! let some_bytes = [10, 0, 0, 3, 0, 3, 105, 110, 116, 0, 0, 222, 173, 0];
 //!

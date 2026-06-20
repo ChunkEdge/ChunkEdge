@@ -2,12 +2,12 @@
 
 const SPAWN_Y: i32 = 64;
 
+use chunkedge::entity::armor_stand::ArmorStandEntityBundle;
+use chunkedge::entity::zombie::ZombieEntityBundle;
+use chunkedge::equipment::{EquipmentInteractionBroadcast, EquipmentInventorySync};
+use chunkedge::prelude::*;
+use chunkedge::protocol::packets::play::set_equipment_s2c::EquipmentSlot;
 use rand::Rng;
-use valence::entity::armor_stand::ArmorStandEntityBundle;
-use valence::entity::zombie::ZombieEntityBundle;
-use valence::equipment::{EquipmentInteractionBroadcast, EquipmentInventorySync};
-use valence::prelude::*;
-use valence::protocol::packets::play::set_equipment_s2c::EquipmentSlot;
 
 pub fn main() {
     App::new()

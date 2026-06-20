@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode};
-use valence_text::JsonText;
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_text::JsonText;
 
 use crate::{Packet, PacketState};
 

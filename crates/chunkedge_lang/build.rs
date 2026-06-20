@@ -1,8 +1,8 @@
+use chunkedge_build_utils::{ident, rerun_if_changed, write_generated_file};
 use heck::ToShoutySnakeCase;
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
-use valence_build_utils::{ident, rerun_if_changed, write_generated_file};
 
 pub fn main() -> anyhow::Result<()> {
     write_generated_file(build()?, "translation_keys.rs")

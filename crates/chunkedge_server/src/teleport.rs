@@ -1,11 +1,11 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_entity::{Look, Position, Velocity};
+use chunkedge_math::DVec3;
+use chunkedge_protocol::packets::play::player_position_s2c::TeleportRelativeFlags;
+use chunkedge_protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
+use chunkedge_protocol::WritePacket;
 use tracing::warn;
-use valence_entity::{Look, Position, Velocity};
-use valence_math::DVec3;
-use valence_protocol::packets::play::player_position_s2c::TeleportRelativeFlags;
-use valence_protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
-use valence_protocol::WritePacket;
 
 use crate::client::{update_view_and_layers, Client, UpdateClientsSet};
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

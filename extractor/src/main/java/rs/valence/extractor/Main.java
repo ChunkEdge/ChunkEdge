@@ -17,7 +17,7 @@ import sun.reflect.ReflectionFactory;
 
 public class Main implements ModInitializer {
 
-    public static final String MOD_ID = "valence_extractor";
+    public static final String MOD_ID = "chunkedge_extractor";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     /**
@@ -53,7 +53,7 @@ public class Main implements ModInitializer {
         Path outputDirectory;
         try {
             outputDirectory = Files.createDirectories(
-                Paths.get("valence_extractor_output")
+                Paths.get("chunkedge_extractor_output")
             );
         } catch (IOException e) {
             LOGGER.info("Failed to create output directory.", e);

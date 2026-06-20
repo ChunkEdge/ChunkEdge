@@ -1,10 +1,10 @@
 use std::collections::BTreeSet;
 
+use chunkedge_build_utils::{ident, rerun_if_changed};
 use heck::{ToPascalCase, ToShoutySnakeCase};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use serde::Deserialize;
-use valence_build_utils::{ident, rerun_if_changed};
 
 #[derive(Deserialize, Clone, Debug)]
 struct TopLevel {
@@ -578,7 +578,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     let prop_value_count = prop_values.len();
 
     Ok(quote! {
-        use valence_math::{Aabb, DVec3};
+        use chunkedge_math::{Aabb, DVec3};
         use crate::registry_id::RegistryId;
 
         #[doc = "Represents the state of a block. This does not include block entity data such as"]

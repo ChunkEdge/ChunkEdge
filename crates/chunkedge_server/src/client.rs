@@ -10,39 +10,39 @@ use bevy_ecs::query::QueryData;
 use bevy_ecs::world::Command;
 use byteorder::{NativeEndian, ReadBytesExt};
 use bytes::{Bytes, BytesMut};
-use derive_more::{Deref, DerefMut, From, Into};
-use tracing::warn;
-use uuid::Uuid;
-use valence_binary::Encode;
-use valence_entity::attributes::{EntityAttributes, TrackedEntityAttributes};
-use valence_entity::living::Health;
-use valence_entity::player::{Food, PlayerEntityBundle, Saturation};
-use valence_entity::query::EntityInitQuery;
-use valence_entity::tracked_data::TrackedData;
-use valence_entity::{
+use chunkedge_binary::Encode;
+use chunkedge_entity::attributes::{EntityAttributes, TrackedEntityAttributes};
+use chunkedge_entity::living::Health;
+use chunkedge_entity::player::{Food, PlayerEntityBundle, Saturation};
+use chunkedge_entity::query::EntityInitQuery;
+use chunkedge_entity::tracked_data::TrackedData;
+use chunkedge_entity::{
     ClearEntityChangesSet, EntityId, EntityStatus, OldPosition, Position, Velocity,
 };
-use valence_math::{DVec3, Vec3};
-use valence_protocol::encode::{PacketEncoder, WritePacket};
-use valence_protocol::packets::configuration::client_information_c2s::ParticleMode;
-use valence_protocol::packets::play::chunks_biomes_s2c::ChunkBiome;
-use valence_protocol::packets::play::client_information_c2s::{
+use chunkedge_math::{DVec3, Vec3};
+use chunkedge_protocol::encode::{PacketEncoder, WritePacket};
+use chunkedge_protocol::packets::configuration::client_information_c2s::ParticleMode;
+use chunkedge_protocol::packets::play::chunks_biomes_s2c::ChunkBiome;
+use chunkedge_protocol::packets::play::client_information_c2s::{
     ChatMode, DisplayedSkinParts, MainArm,
 };
-use valence_protocol::packets::play::game_event_s2c::GameEventKind;
-use valence_protocol::packets::play::level_particles_s2c::Particle;
-use valence_protocol::packets::play::{
+use chunkedge_protocol::packets::play::game_event_s2c::GameEventKind;
+use chunkedge_protocol::packets::play::level_particles_s2c::Particle;
+use chunkedge_protocol::packets::play::{
     ChunksBiomesS2c, DisconnectS2c, EntityEventS2c, ForgetLevelChunkS2c, GameEventS2c,
     LevelParticlesS2c, PlayerCombatKillS2c, RemoveEntitiesS2c, SetChunkCacheCenterS2c,
     SetChunkCacheRadiusS2c, SetEntityDataS2c, SetEntityMotionS2c, SetHealthS2c, SoundS2c,
     UpdateAttributesS2c,
 };
-use valence_protocol::profile::Property;
-use valence_protocol::sound::{Sound, SoundCategory, SoundDirect, SoundId};
-use valence_protocol::text::{IntoText, Text};
-use valence_protocol::{BlockPos, ChunkPos, GameMode, IntoTextComponent, Packet, VarInt};
-use valence_registry::RegistrySet;
-use valence_server_common::{Despawned, UniqueId};
+use chunkedge_protocol::profile::Property;
+use chunkedge_protocol::sound::{Sound, SoundCategory, SoundDirect, SoundId};
+use chunkedge_protocol::text::{IntoText, Text};
+use chunkedge_protocol::{BlockPos, ChunkPos, GameMode, IntoTextComponent, Packet, VarInt};
+use chunkedge_registry::RegistrySet;
+use chunkedge_server_common::{Despawned, UniqueId};
+use derive_more::{Deref, DerefMut, From, Into};
+use tracing::warn;
+use uuid::Uuid;
 
 use crate::layer::{ChunkLayer, EntityLayer, UpdateLayersPostClientSet, UpdateLayersPreClientSet};
 use crate::ChunkView;
@@ -196,11 +196,11 @@ impl ClientBundle {
             player_abilities_flags: Default::default(),
             player: PlayerEntityBundle {
                 uuid: UniqueId(args.uuid),
-                player_player_model_parts: valence_entity::player::PlayerModelParts(u8::from(
+                player_player_model_parts: chunkedge_entity::player::PlayerModelParts(u8::from(
                     args.displayed_skin_parts,
                 )
                     as i8),
-                player_main_arm: valence_entity::player::MainArm(args.main_arm as i8),
+                player_main_arm: chunkedge_entity::player::MainArm(args.main_arm as i8),
                 ..Default::default()
             },
         }

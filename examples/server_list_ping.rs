@@ -2,13 +2,13 @@
 
 use std::net::SocketAddr;
 
-use rand::Rng;
-use valence::network::{
+use chunkedge::network::{
     async_trait, BroadcastToLan, CleanupFn, ConnectionMode, HandshakeData, PlayerSampleEntry,
     ServerListPing,
 };
-use valence::prelude::*;
-use valence::MINECRAFT_VERSION;
+use chunkedge::prelude::*;
+use chunkedge::MINECRAFT_VERSION;
+use rand::Rng;
 
 pub fn main() {
     App::new()
@@ -43,14 +43,14 @@ impl NetworkCallbacks for MyCallbacks {
             description: "Your IP address is ".into_text()
                 + remote_addr.to_string().color(Color::rgb(50, 50, 250)),
             favicon_png: include_bytes!("../assets/logo-64x64.png"),
-            version_name: ("Valence ".color(Color::GOLD) + MINECRAFT_VERSION.color(Color::RED))
+            version_name: ("ChunkEdge ".color(Color::GOLD) + MINECRAFT_VERSION.color(Color::RED))
                 .to_legacy_lossy(),
             protocol: handshake_data.protocol_version,
         }
     }
 
     async fn broadcast_to_lan(&self, _shared: &SharedNetworkState) -> BroadcastToLan {
-        BroadcastToLan::Enabled("Hello Valence!".into())
+        BroadcastToLan::Enabled("Hello ChunkEdge!".into())
     }
 
     async fn login(

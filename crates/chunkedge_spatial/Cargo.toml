@@ -1,6 +1,6 @@
 [package]
-name = "valence_spatial"
-description = "Spatial partitioning for entities in Valence"
+name = "chunkedge_spatial"
+description = "Spatial partitioning for entities in ChunkEdge"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true

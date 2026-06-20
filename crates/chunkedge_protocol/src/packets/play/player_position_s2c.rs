@@ -1,6 +1,6 @@
 use bitfield_struct::bitfield;
-use valence_binary::{Decode, Encode, VarInt};
-use valence_math::DVec3;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_math::DVec3;
 
 use crate::Packet;
 #[derive(Copy, Clone, PartialEq, Debug, Encode, Decode, Packet)]

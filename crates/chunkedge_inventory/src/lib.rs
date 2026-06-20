@@ -7,23 +7,23 @@ use std::ops::Range;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use derive_more::{Deref, DerefMut};
-use player_inventory::PlayerInventory;
-use tracing::{debug, warn};
-use valence_server::client::{Client, FlushPacketsSet, SpawnClientsSet};
-use valence_server::event_loop::{EventLoopPreUpdate, PacketEvent};
-use valence_server::interact_block::InteractBlockEvent;
-pub use valence_server::protocol::packets::play::container_click_c2s::{ClickMode, SlotChange};
-use valence_server::protocol::packets::play::open_screen_s2c::WindowType;
-pub use valence_server::protocol::packets::play::player_action_c2s::PlayerAction;
-use valence_server::protocol::packets::play::{
+use chunkedge_server::client::{Client, FlushPacketsSet, SpawnClientsSet};
+use chunkedge_server::event_loop::{EventLoopPreUpdate, PacketEvent};
+use chunkedge_server::interact_block::InteractBlockEvent;
+pub use chunkedge_server::protocol::packets::play::container_click_c2s::{ClickMode, SlotChange};
+use chunkedge_server::protocol::packets::play::open_screen_s2c::WindowType;
+pub use chunkedge_server::protocol::packets::play::player_action_c2s::PlayerAction;
+use chunkedge_server::protocol::packets::play::{
     ContainerClickC2s, ContainerCloseC2s, ContainerCloseS2c, ContainerSetContentS2c,
     ContainerSetSlotS2c, OpenScreenS2c, PlayerActionC2s, SetCarriedItemC2s, SetCreativeModeSlotC2s,
     SetHeldSlotS2c,
 };
-use valence_server::protocol::{IntoTextComponent, VarInt, WritePacket};
-use valence_server::text::IntoText;
-use valence_server::{GameMode, Hand, ItemKind, ItemStack, Text};
+use chunkedge_server::protocol::{IntoTextComponent, VarInt, WritePacket};
+use chunkedge_server::text::IntoText;
+use chunkedge_server::{GameMode, Hand, ItemKind, ItemStack, Text};
+use derive_more::{Deref, DerefMut};
+use player_inventory::PlayerInventory;
+use tracing::{debug, warn};
 
 pub mod player_inventory;
 mod validate;
@@ -109,8 +109,8 @@ impl Inventory {
     /// See also [`Inventory::replace_slot`].
     ///
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::{ItemStack, ItemKind};
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::{ItemStack, ItemKind};
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// assert_eq!(inv.slot(0).item, ItemKind::Diamond);
@@ -130,8 +130,8 @@ impl Inventory {
     /// See also [`Inventory::set_slot`].
     ///
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::{ItemStack, ItemKind};
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::{ItemStack, ItemKind};
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// let old = inv.replace_slot(0, ItemStack::new(ItemKind::IronIngot, 1));
@@ -158,8 +158,8 @@ impl Inventory {
     /// happens.
     ///
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::{ItemStack, ItemKind};
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::{ItemStack, ItemKind};
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// assert!(inv.slot(1).is_empty());
@@ -195,8 +195,8 @@ impl Inventory {
     /// clamped to this range. If the slot is empty, nothing happens.
     ///
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::{ItemStack, ItemKind};
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::{ItemStack, ItemKind};
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// inv.set_slot_amount(0, 64);
@@ -237,9 +237,9 @@ impl Inventory {
     /// The text displayed on the inventory's title bar.
     ///
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::{ItemStack, ItemKind};
-    /// # use valence_server::text::Text;
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::{ItemStack, ItemKind};
+    /// # use chunkedge_server::text::Text;
     /// let inv = Inventory::with_title(InventoryKind::Generic9x3, "Box of Holding");
     /// assert_eq!(inv.title(), &Text::from("Box of Holding"));
     /// ```
@@ -252,7 +252,7 @@ impl Inventory {
     /// To get the old title, use [`Inventory::replace_title`].
     ///
     /// ```
-    /// # use valence_inventory::*;
+    /// # use chunkedge_inventory::*;
     /// let mut inv = Inventory::new(InventoryKind::Generic9x3);
     /// inv.set_title("Box of Holding");
     /// ```
@@ -277,8 +277,8 @@ impl Inventory {
     /// no empty slots in the range.
     ///
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::*;
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::*;
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// inv.set_slot(2, ItemStack::new(ItemKind::GoldIngot, 1));
@@ -301,8 +301,8 @@ impl Inventory {
     /// Returns the first empty slot in the inventory, or `None` if there are no
     /// empty slots.
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::*;
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::*;
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// inv.set_slot(2, ItemStack::new(ItemKind::GoldIngot, 1));
@@ -317,8 +317,8 @@ impl Inventory {
     /// Returns the first slot with the given [`ItemKind`] in the inventory
     /// where `count < stack_max`, or `None` if there are no empty slots.
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::*;
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::*;
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// inv.set_slot(2, ItemStack::new(ItemKind::GoldIngot, 64));
@@ -351,8 +351,8 @@ impl Inventory {
     /// Returns the first slot with the given [`ItemKind`] in the inventory
     /// where `count < stack_max`, or `None` if there are no empty slots.
     /// ```
-    /// # use valence_inventory::*;
-    /// # use valence_server::*;
+    /// # use chunkedge_inventory::*;
+    /// # use chunkedge_server::*;
     /// let mut inv = Inventory::new(InventoryKind::Generic9x1);
     /// inv.set_slot(0, ItemStack::new(ItemKind::Diamond, 1));
     /// inv.set_slot(2, ItemStack::new(ItemKind::GoldIngot, 64));
@@ -457,8 +457,8 @@ impl OpenInventory {
 /// This is a read-only version of [`InventoryWindowMut`].
 ///
 /// ```
-/// # use valence_inventory::*;
-/// # use valence_server::*;
+/// # use chunkedge_inventory::*;
+/// # use chunkedge_server::*;
 /// let mut player_inventory = Inventory::new(InventoryKind::Player);
 /// player_inventory.set_slot(36, ItemStack::new(ItemKind::Diamond, 1));
 ///
@@ -512,8 +512,8 @@ impl<'a> InventoryWindow<'a> {
 /// This is a writable version of [`InventoryWindow`].
 ///
 /// ```
-/// # use valence_inventory::*;
-/// # use valence_server::*;
+/// # use chunkedge_inventory::*;
+/// # use chunkedge_server::*;
 /// let mut player_inventory = Inventory::new(InventoryKind::Player);
 /// let mut target_inventory = Inventory::new(InventoryKind::Generic9x3);
 /// let mut window = InventoryWindowMut::new(&mut player_inventory, Some(&mut target_inventory));

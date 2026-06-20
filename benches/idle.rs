@@ -1,5 +1,5 @@
+use chunkedge::prelude::*;
 use divan::Bencher;
-use valence::prelude::*;
 
 /// Benches the performance of a single server tick while nothing much is
 /// happening.

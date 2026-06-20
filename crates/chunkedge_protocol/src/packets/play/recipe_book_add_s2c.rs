@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode, IDSet, VarInt};
-use valence_generated::registry_id::RegistryId;
+use chunkedge_binary::{Decode, Encode, IDSet, VarInt};
+use chunkedge_generated::registry_id::RegistryId;
 
 use crate::packets::play::update_recipes_s2c::SlotDisplay;
 use crate::Packet;

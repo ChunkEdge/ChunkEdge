@@ -1,6 +1,6 @@
 [package]
-name = "valence_scoreboard"
-description = "Scoreboard support for Valence"
+name = "chunkedge_scoreboard"
+description = "Scoreboard support for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true
@@ -19,4 +19,4 @@ derive_more = { workspace = true, features = [
     "deref_mut",
 ] }
 tracing.workspace = true
-valence_server.workspace = true
+chunkedge_server.workspace = true

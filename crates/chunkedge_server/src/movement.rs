@@ -1,8 +1,8 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_entity::{HeadYaw, Look, OnGround, Position};
-use valence_math::DVec3;
-use valence_protocol::packets::play::{
+use chunkedge_entity::{HeadYaw, Look, OnGround, Position};
+use chunkedge_math::DVec3;
+use chunkedge_protocol::packets::play::{
     MovePlayerPosC2s, MovePlayerPosRotC2s, MovePlayerRotC2s, MovePlayerStatusOnlyC2s,
     MoveVehicleC2s,
 };

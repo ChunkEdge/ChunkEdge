@@ -1,7 +1,7 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_protocol::packets::play::UseItemC2s;
-use valence_protocol::Hand;
+use chunkedge_protocol::packets::play::UseItemC2s;
+use chunkedge_protocol::Hand;
 
 use crate::action::ActionSequence;
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

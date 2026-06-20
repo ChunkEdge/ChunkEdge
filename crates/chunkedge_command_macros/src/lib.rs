@@ -123,9 +123,9 @@ fn command(input: DeriveInput) -> Result<TokenStream> {
 
             Ok(TokenStream::from(quote! {
 
-                impl valence::command::Command for #input_name {
-                    fn assemble_graph(command_graph: &mut valence::command::graph::CommandGraphBuilder<Self>) {
-                        use valence::command::parsers::CommandArg;
+                impl chunkedge::command::Command for #input_name {
+                    fn assemble_graph(command_graph: &mut chunkedge::command::graph::CommandGraphBuilder<Self>) {
+                        use chunkedge::command::parsers::CommandArg;
                         #base_command_expansion
 
                         #command_alias_expansion
@@ -165,9 +165,9 @@ fn command(input: DeriveInput) -> Result<TokenStream> {
 
             Ok(TokenStream::from(quote! {
 
-                impl valence::command::Command for #input_name {
-                    fn assemble_graph(command_graph: &mut valence::command::graph::CommandGraphBuilder<Self>) {
-                        use valence::command::parsers::CommandArg;
+                impl chunkedge::command::Command for #input_name {
+                    fn assemble_graph(command_graph: &mut chunkedge::command::graph::CommandGraphBuilder<Self>) {
+                        use chunkedge::command::parsers::CommandArg;
                         #(#expanded_nodes)*
                     }
                 }

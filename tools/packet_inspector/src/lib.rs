@@ -8,22 +8,22 @@ use std::time::Duration;
 
 use anyhow::bail;
 use bytes::{BufMut, BytesMut};
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_protocol::decode::PacketFrame;
+use chunkedge_protocol::packets::handshake::intention_c2s::HandShakeIntent;
+use chunkedge_protocol::packets::handshake::IntentionC2s;
+use chunkedge_protocol::packets::login::{
+    HelloS2c, LoginAcknowledgedC2s, LoginCompressionS2c, LoginDisconnectS2c,
+};
+use chunkedge_protocol::packets::{configuration, play};
+use chunkedge_protocol::text::color::NamedColor;
+use chunkedge_protocol::text::{Color, IntoText};
+use chunkedge_protocol::{
+    CompressionThreshold, JsonText, Packet as ChunkEdgePacket, PacketSide, PacketState,
+};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::RwLock;
 use tokio::task::JoinHandle;
-use valence_binary::{Decode, Encode};
-use valence_protocol::decode::PacketFrame;
-use valence_protocol::packets::handshake::intention_c2s::HandShakeIntent;
-use valence_protocol::packets::handshake::IntentionC2s;
-use valence_protocol::packets::login::{
-    HelloS2c, LoginAcknowledgedC2s, LoginCompressionS2c, LoginDisconnectS2c,
-};
-use valence_protocol::packets::{configuration, play};
-use valence_protocol::text::color::NamedColor;
-use valence_protocol::text::{Color, IntoText};
-use valence_protocol::{
-    CompressionThreshold, JsonText, Packet as ValencePacket, PacketSide, PacketState,
-};
 
 use crate::packet_io::PacketIo;
 pub use crate::packet_registry::{Packet, PacketRegistry};
@@ -320,7 +320,7 @@ impl Proxy {
 
 fn extrapolate_packet<'a, P>(packet: &'a PacketFrame) -> Option<P>
 where
-    P: ValencePacket + Decode<'a> + Clone,
+    P: ChunkEdgePacket + Decode<'a> + Clone,
 {
     if packet.id != P::ID {
         return None;

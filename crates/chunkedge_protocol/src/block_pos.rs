@@ -4,10 +4,10 @@ use std::ops::{Add, Sub};
 
 use anyhow::bail;
 use bitfield_struct::bitfield;
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_math::{DVec3, IVec3};
 use derive_more::From;
 use thiserror::Error;
-use valence_binary::{Decode, Encode};
-use valence_math::{DVec3, IVec3};
 
 use crate::direction::Direction;
 
@@ -29,7 +29,7 @@ impl BlockPos {
     /// direction.
     ///
     /// ```
-    /// use valence_protocol::{BlockPos, Direction};
+    /// use chunkedge_protocol::{BlockPos, Direction};
     ///
     /// let pos = BlockPos::new(0, 0, 0);
     /// let adj = pos.get_in_direction(Direction::South);

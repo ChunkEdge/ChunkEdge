@@ -1,5 +1,5 @@
 use bitfield_struct::bitfield;
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 #[bitfield(u8)]
 #[derive(PartialEq, Eq, Encode, Decode)]

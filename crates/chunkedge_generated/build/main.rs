@@ -1,4 +1,4 @@
-use valence_build_utils::write_generated_file;
+use chunkedge_build_utils::write_generated_file;
 
 mod attributes;
 mod block;

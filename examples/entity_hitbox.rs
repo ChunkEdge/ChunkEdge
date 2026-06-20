@@ -4,16 +4,16 @@ use std::collections::HashMap;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge::entity::hoglin::HoglinEntityBundle;
+use chunkedge::entity::pig::PigEntityBundle;
+use chunkedge::entity::sheep::SheepEntityBundle;
+use chunkedge::entity::warden::WardenEntityBundle;
+use chunkedge::entity::zombie::ZombieEntityBundle;
+use chunkedge::entity::zombie_horse::ZombieHorseEntityBundle;
+use chunkedge::entity::{entity, Pose};
+use chunkedge::prelude::*;
+use chunkedge::rand::Rng;
 use entity::NameVisible;
-use valence::entity::hoglin::HoglinEntityBundle;
-use valence::entity::pig::PigEntityBundle;
-use valence::entity::sheep::SheepEntityBundle;
-use valence::entity::warden::WardenEntityBundle;
-use valence::entity::zombie::ZombieEntityBundle;
-use valence::entity::zombie_horse::ZombieHorseEntityBundle;
-use valence::entity::{entity, Pose};
-use valence::prelude::*;
-use valence::rand::Rng;
 
 pub fn main() {
     App::new()

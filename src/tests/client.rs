@@ -1,4 +1,4 @@
-use valence_server::protocol::movement_flags::MovementFlags;
+use chunkedge_server::protocol::movement_flags::MovementFlags;
 
 use crate::abilities::PlayerAbilitiesFlags;
 use crate::layer::chunk::UnloadedChunk;

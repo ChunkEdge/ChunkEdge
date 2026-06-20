@@ -1,11 +1,11 @@
 use std::io::Write;
 
 use anyhow::{ensure, Context};
+use chunkedge_nbt::compound::NetworkCompound;
+use chunkedge_nbt::serde::ser::CompoundSerializer;
+use chunkedge_text::{JsonText, Text};
 use serde::de::IntoDeserializer;
 use serde::{Deserialize, Serialize};
-use valence_nbt::compound::NetworkCompound;
-use valence_nbt::serde::ser::CompoundSerializer;
-use valence_text::{JsonText, Text};
 
 use crate::{Bounded, Decode, Encode, VarInt};
 
@@ -137,7 +137,7 @@ impl Decode<'_> for JsonText {
 
 #[cfg(test)]
 mod tests {
-    use valence_text::{Color, IntoText};
+    use chunkedge_text::{Color, IntoText};
 
     use super::*;
 

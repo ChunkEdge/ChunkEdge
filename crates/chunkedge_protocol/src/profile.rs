@@ -1,7 +1,7 @@
 use base64::prelude::*;
+use chunkedge_binary::{Decode, Encode};
 use serde::{Deserialize, Serialize};
 use url::Url;
-use valence_binary::{Decode, Encode};
 
 /// A property from the game profile.
 #[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize, Encode, Decode)]

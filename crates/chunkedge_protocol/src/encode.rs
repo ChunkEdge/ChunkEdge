@@ -6,8 +6,8 @@ use aes::cipher::generic_array::GenericArray;
 use aes::cipher::{BlockEncryptMut, BlockSizeUser, KeyIvInit};
 use anyhow::ensure;
 use bytes::{BufMut, BytesMut};
+use chunkedge_binary::{Encode, VarInt};
 use tracing::warn;
-use valence_binary::{Encode, VarInt};
 
 use crate::{CompressionThreshold, Packet, MAX_PACKET_SIZE};
 

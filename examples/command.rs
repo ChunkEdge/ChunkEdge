@@ -2,6 +2,10 @@
 
 use std::ops::DerefMut;
 
+use chunkedge::entity::living::LivingEntity;
+use chunkedge::prelude::*;
+use chunkedge::*;
+use chunkedge_server::op_level::OpLevel;
 use command::graph::CommandGraphBuilder;
 use command::handler::CommandResultEvent;
 use command::parsers::entity_selector::{EntitySelector, EntitySelectors};
@@ -11,16 +15,12 @@ use command::{parsers, AddCommand, Command, CommandScopeRegistry, ModifierValue}
 use command_macros::Command;
 use parsers::{Vec2 as Vec2Parser, Vec3 as Vec3Parser};
 use rand::prelude::IteratorRandom;
-use valence::entity::living::LivingEntity;
-use valence::prelude::*;
-use valence::*;
-use valence_server::op_level::OpLevel;
 
 const SPAWN_Y: i32 = 64;
 
 #[derive(Command, Debug, Clone)]
 #[paths("teleport", "tp")]
-#[scopes("valence.command.teleport")]
+#[scopes("chunkedge.command.teleport")]
 enum TeleportCommand {
     #[paths = "{location}"]
     ExecutorToLocation { location: Vec3Parser },
@@ -40,7 +40,7 @@ enum TeleportCommand {
 
 #[derive(Command, Debug, Clone)]
 #[paths("gamemode", "gm")]
-#[scopes("valence.command.gamemode")]
+#[scopes("chunkedge.command.gamemode")]
 enum GamemodeCommand {
     #[paths("survival {target?}", "{/} gms {target?}")]
     Survival { target: Option<EntitySelector> },
@@ -54,7 +54,7 @@ enum GamemodeCommand {
 
 #[derive(Command, Debug, Clone)]
 #[paths("struct {gamemode} {target?}")]
-#[scopes("valence.command.gamemode")]
+#[scopes("chunkedge.command.gamemode")]
 #[allow(dead_code)]
 pub(crate) struct StructCommand {
     gamemode: GameMode,
@@ -63,7 +63,7 @@ pub(crate) struct StructCommand {
 
 #[derive(Command, Debug, Clone)]
 #[paths("test", "t")]
-#[scopes("valence.command.test")]
+#[scopes("chunkedge.command.test")]
 #[allow(dead_code)]
 enum TestCommand {
     // 3 literals with an arg each
@@ -113,7 +113,7 @@ impl Command for ComplexRedirectionCommand {
 
         let command_root = graph
             .literal("complex")
-            .with_scopes(vec!["valence.command.complex"])
+            .with_scopes(vec!["chunkedge.command.complex"])
             .id();
         let a = graph.literal("a").id();
 
@@ -628,7 +628,7 @@ fn setup(
         }
     }
 
-    command_scopes.link("valence.admin", "valence.command");
+    command_scopes.link("chunkedge.admin", "chunkedge.command");
 
     commands.spawn(layer);
 }
@@ -668,6 +668,6 @@ fn init_clients(
         *game_mode = GameMode::Creative;
         op_level.set(4);
 
-        permissions.add("valence.admin");
+        permissions.add("chunkedge.admin");
     }
 }

@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode, VarInt};
-use valence_math::DVec3;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_math::DVec3;
 
 use crate::packets::play::player_position_s2c::TeleportRelativeFlags;
 use crate::Packet;

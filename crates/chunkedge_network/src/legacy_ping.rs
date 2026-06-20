@@ -31,9 +31,9 @@ pub enum ServerListLegacyPingPayload {
 /// # Example
 ///
 /// ```
-/// # use valence_network::ServerListLegacyPingResponse;
+/// # use chunkedge_network::ServerListLegacyPingResponse;
 /// let mut response =
-///     ServerListLegacyPingResponse::new(127, 0, 10).version("Valence legacy".to_owned());
+///     ServerListLegacyPingResponse::new(127, 0, 10).version("ChunkEdge legacy".to_owned());
 ///
 /// // This will make the description just repeat "hello" until the length limit
 /// // (which depends on the other fields that we set above: protocol, version,

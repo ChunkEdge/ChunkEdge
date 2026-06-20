@@ -26,15 +26,15 @@ pub mod teleport;
 pub mod title;
 
 pub use chunk_view::ChunkView;
-pub use event_loop::{EventLoopPostUpdate, EventLoopPreUpdate, EventLoopUpdate};
-pub use layer::{ChunkLayer, EntityLayer, Layer, LayerBundle};
-pub use valence_protocol::{
+pub use chunkedge_protocol::{
     block, ident, math, text, uuid, BiomePos, BlockPos, BlockState, ChunkPos, CompressionThreshold,
     Difficulty, Direction, GameMode, Hand, Ident, ItemKind, ItemStack, Text, MINECRAFT_VERSION,
     PROTOCOL_VERSION,
 };
-pub use valence_server_common::*;
+pub use chunkedge_server_common::*;
+pub use event_loop::{EventLoopPostUpdate, EventLoopPreUpdate, EventLoopUpdate};
+pub use layer::{ChunkLayer, EntityLayer, Layer, LayerBundle};
 pub use {
-    bevy_app as app, bevy_ecs as ecs, rand, valence_entity as entity, valence_nbt as nbt,
-    valence_protocol as protocol, valence_registry as registry,
+    bevy_app as app, bevy_ecs as ecs, chunkedge_entity as entity, chunkedge_nbt as nbt,
+    chunkedge_protocol as protocol, chunkedge_registry as registry, rand,
 };

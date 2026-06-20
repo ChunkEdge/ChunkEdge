@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use valence::advancement::bevy_hierarchy::{BuildChildren, Children, Parent};
-use valence::advancement::ForceTabUpdate;
-use valence::prelude::*;
+use chunkedge::advancement::bevy_hierarchy::{BuildChildren, Children, Parent};
+use chunkedge::advancement::ForceTabUpdate;
+use chunkedge::prelude::*;
 
 #[derive(Component)]
 struct RootCriteria;

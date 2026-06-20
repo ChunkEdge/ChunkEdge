@@ -31,8 +31,8 @@ syntect = { workspace = true, default-features = false, features = [
 time = { workspace = true, features = ["local-offset"] }
 tokio = { workspace = true, features = ["full"] }
 tracing.workspace = true
-valence_binary.workspace = true
-valence_protocol = { workspace = true, features = ["compression"] }
+chunkedge_binary.workspace = true
+chunkedge_protocol = { workspace = true, features = ["compression"] }
 
 [build-dependencies]
 anyhow.workspace = true
@@ -42,7 +42,7 @@ quote.workspace = true
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
 syn.workspace = true
-valence_build_utils.workspace = true
+chunkedge_build_utils.workspace = true
 
 [package.metadata.cargo-machete]
-ignored = ["heck", "proc-macro2", "quote", "serde_json", "syn", "valence_build_utils"]
+ignored = ["heck", "proc-macro2", "quote", "serde_json", "syn", "chunkedge_build_utils"]

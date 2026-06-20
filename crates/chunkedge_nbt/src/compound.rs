@@ -299,7 +299,7 @@ where
     /// # Example
     ///
     /// ```
-    /// use valence_nbt::compound;
+    /// use chunkedge_nbt::compound;
     ///
     /// let mut this = compound! {
     ///     "foo" => 10,

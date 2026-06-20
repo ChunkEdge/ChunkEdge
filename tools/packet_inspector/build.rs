@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
+use chunkedge_build_utils::write_generated_file;
 use heck::ToPascalCase;
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
-use valence_build_utils::write_generated_file;
 
 #[derive(Deserialize)]
 struct Packet {
@@ -61,17 +61,17 @@ fn write_packets(packets: &Vec<Packet>) -> anyhow::Result<()> {
 
         let id = packet.id;
         let side = match packet.side.as_str() {
-            "clientbound" => quote! { valence_protocol::PacketSide::Clientbound },
-            "serverbound" => quote! { valence_protocol::PacketSide::Serverbound },
+            "clientbound" => quote! { chunkedge_protocol::PacketSide::Clientbound },
+            "serverbound" => quote! { chunkedge_protocol::PacketSide::Serverbound },
             _ => unreachable!(),
         };
 
         let phase = match packet.phase.as_str() {
-            "handshake" => quote! { valence_protocol::PacketState::Handshake },
-            "configuration" => quote! { valence_protocol::PacketState::Configuration },
-            "status" => quote! { valence_protocol::PacketState::Status },
-            "login" => quote! { valence_protocol::PacketState::Login },
-            "play" => quote! { valence_protocol::PacketState::Play },
+            "handshake" => quote! { chunkedge_protocol::PacketState::Handshake },
+            "configuration" => quote! { chunkedge_protocol::PacketState::Configuration },
+            "status" => quote! { chunkedge_protocol::PacketState::Status },
+            "login" => quote! { chunkedge_protocol::PacketState::Login },
+            "play" => quote! { chunkedge_protocol::PacketState::Play },
             _ => unreachable!(),
         };
 
@@ -172,14 +172,14 @@ fn write_transformer(packets: &[Packet]) -> anyhow::Result<()> {
                 let name = syn::parse_str::<syn::Ident>(&name).unwrap();
 
                 match_arms.extend(quote! {
-                    valence_protocol::packets::#lowercase_state::#name::ID => {
-                        Ok(format!("{:#?}", valence_protocol::packets::#lowercase_state::#name::decode(&mut data)?))
+                    chunkedge_protocol::packets::#lowercase_state::#name::ID => {
+                        Ok(format!("{:#?}", chunkedge_protocol::packets::#lowercase_state::#name::decode(&mut data)?))
                     }
                 });
             }
 
             side_arms.extend(quote! {
-                valence_protocol::PacketState::#state => match packet.id {
+                chunkedge_protocol::PacketState::#state => match packet.id {
                     #match_arms
                     _ => Ok(NOT_AVAILABLE.to_owned()),
                 },
@@ -195,7 +195,7 @@ fn write_transformer(packets: &[Packet]) -> anyhow::Result<()> {
         let side = syn::parse_str::<syn::Ident>(side).unwrap();
 
         generated.extend(quote! {
-            valence_protocol::PacketSide::#side => match packet.state {
+            chunkedge_protocol::PacketSide::#side => match packet.state {
                 #side_arms
             },
         });

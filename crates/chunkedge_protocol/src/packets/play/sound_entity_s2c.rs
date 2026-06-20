@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Encode, VarInt};
 
 use crate::sound::{SoundCategory, SoundId};
 use crate::Packet;

@@ -6,7 +6,7 @@ labels: bug, triage
 assignees: ''
 ---
 
-## Valence Version
+## ChunkEdge Version
 
 The commit hash or release number of the version you're using.
 

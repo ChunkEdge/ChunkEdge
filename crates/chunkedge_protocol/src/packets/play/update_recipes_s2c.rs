@@ -1,9 +1,9 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode, IDSet, VarInt};
-use valence_generated::registry_id::RegistryId;
-use valence_ident::Ident;
-use valence_item::ItemStack;
+use chunkedge_binary::{Decode, Encode, IDSet, VarInt};
+use chunkedge_generated::registry_id::RegistryId;
+use chunkedge_ident::Ident;
+use chunkedge_item::ItemStack;
 
 use crate::Packet;
 

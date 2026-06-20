@@ -1,10 +1,10 @@
 #![allow(clippy::type_complexity)]
 
-use valence::entity::sheep::SheepEntityBundle;
-use valence::message::SendMessage;
-use valence::prelude::*;
-use valence::protocol::packets::play::resource_pack_c2s::ResourcePackStatus;
-use valence::resource_pack::ResourcePackStatusEvent;
+use chunkedge::entity::sheep::SheepEntityBundle;
+use chunkedge::message::SendMessage;
+use chunkedge::prelude::*;
+use chunkedge::protocol::packets::play::resource_pack_c2s::ResourcePackStatus;
+use chunkedge::resource_pack::ResourcePackStatusEvent;
 
 const SPAWN_Y: i32 = 64;
 
@@ -95,7 +95,7 @@ fn prompt_on_punch(mut clients: Query<&mut Client>, mut events: EventReader<Inte
         if let Ok(mut client) = clients.get_mut(event.client) {
             if event.interact == EntityInteraction::Attack {
                 client.set_resource_pack(
-                    "https://github.com/valence-rs/valence/raw/main/assets/example_pack.zip",
+                    "https://github.com/ChunkEdge/ChunkEdge/raw/main/assets/example_pack.zip",
                     "d7c6108849fb190ec2a49f2d38b7f1f897d9ce9f",
                     false,
                     None,

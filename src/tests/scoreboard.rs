@@ -1,4 +1,4 @@
-use valence_scoreboard::*;
+use chunkedge_scoreboard::*;
 
 use crate::client::VisibleEntityLayers;
 use crate::entity::EntityLayerId;

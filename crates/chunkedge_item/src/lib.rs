@@ -8,7 +8,7 @@ pub(crate) const NUM_ITEM_COMPONENTS: usize = 96;
 /// components.
 pub(crate) const MAX_RECURSION_DEPTH: usize = 16;
 
-pub use valence_generated::item::ItemKind;
+pub use chunkedge_generated::item::ItemKind;
 
 pub use crate::components::{
     AttributeModifier, AttributeSlot, AxolotlType, BannerLayer, BannerPattern, BeeData,
@@ -25,13 +25,13 @@ pub use crate::stack::{HashedItemStack, ItemStack};
 
 #[cfg(test)]
 mod tests {
-    use valence_binary::{Decode, Encode, VarInt};
-    use valence_generated::attributes::EntityAttributeOperation;
-    use valence_generated::item::ItemKind;
-    use valence_generated::registry_id::RegistryId;
-    use valence_ident::ident;
-    use valence_nbt::Compound;
-    use valence_text::Text;
+    use chunkedge_binary::{Decode, Encode, VarInt};
+    use chunkedge_generated::attributes::EntityAttributeOperation;
+    use chunkedge_generated::item::ItemKind;
+    use chunkedge_generated::registry_id::RegistryId;
+    use chunkedge_ident::ident;
+    use chunkedge_nbt::Compound;
+    use chunkedge_text::Text;
 
     use super::*;
     use crate::components::{

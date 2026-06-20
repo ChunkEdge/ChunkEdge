@@ -2,10 +2,10 @@ use std::borrow::Cow;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_protocol::encode::{PacketWriter, WritePacket};
-pub use valence_protocol::packets::play::update_tags_s2c::RegistryMap;
-use valence_protocol::packets::play::UpdateTagsS2c;
-use valence_server_common::Server;
+use chunkedge_protocol::encode::{PacketWriter, WritePacket};
+pub use chunkedge_protocol::packets::play::update_tags_s2c::RegistryMap;
+use chunkedge_protocol::packets::play::UpdateTagsS2c;
+use chunkedge_server_common::Server;
 
 use crate::RegistrySet;
 
@@ -35,12 +35,12 @@ impl TagsRegistry {
 }
 
 impl TagsRegistry {
-    pub fn default_tags() -> valence_protocol::packets::configuration::UpdateTagsS2c<'static> {
+    pub fn default_tags() -> chunkedge_protocol::packets::configuration::UpdateTagsS2c<'static> {
         let registries =
             serde_json::from_str::<RegistryMap>(include_str!("../extracted/tags.json"))
                 .expect("tags.json must have expected structure");
 
-        valence_protocol::packets::configuration::UpdateTagsS2c {
+        chunkedge_protocol::packets::configuration::UpdateTagsS2c {
             groups: Cow::Owned(registries),
         }
     }

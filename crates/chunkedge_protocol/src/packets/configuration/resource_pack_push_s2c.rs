@@ -1,6 +1,6 @@
+use chunkedge_binary::{Bounded, Decode, Encode, TextComponent};
 use std::borrow::Cow;
 use uuid::Uuid;
-use valence_binary::{Bounded, Decode, Encode, TextComponent};
 
 use crate::{Packet, PacketState};
 

@@ -1,21 +1,21 @@
 use std::collections::HashMap;
 
-use valence::entity::breeze::BreezeEntityBundle;
-use valence::entity::cat::{self, CatEntityBundle};
-use valence::entity::enderman::{self, EndermanEntityBundle};
-use valence::entity::frog::FrogEntityBundle;
-use valence::entity::painting::{self, PaintingEntityBundle};
-use valence::entity::player::PlayerEntityBundle;
-use valence::entity::warden::WardenEntityBundle;
-use valence::entity::zombie::ZombieEntityBundle;
-use valence::entity::{
+use chunkedge::entity::breeze::BreezeEntityBundle;
+use chunkedge::entity::cat::{self, CatEntityBundle};
+use chunkedge::entity::enderman::{self, EndermanEntityBundle};
+use chunkedge::entity::frog::FrogEntityBundle;
+use chunkedge::entity::painting::{self, PaintingEntityBundle};
+use chunkedge::entity::player::PlayerEntityBundle;
+use chunkedge::entity::warden::WardenEntityBundle;
+use chunkedge::entity::zombie::ZombieEntityBundle;
+use chunkedge::entity::{
     entity, CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, PaintingVariantDefinition,
     Pose,
 };
-use valence::nbt::{compound, List};
-use valence::player_list::{Listed, PlayerListEntryBundle};
-use valence::prelude::*;
-use valence::protocol::IdOr;
+use chunkedge::nbt::{compound, List};
+use chunkedge::player_list::{Listed, PlayerListEntryBundle};
+use chunkedge::prelude::*;
+use chunkedge::protocol::IdOr;
 
 const FLOOR_Y: i32 = 64;
 const GRID_COLUMNS: i32 = 6;
@@ -316,7 +316,7 @@ fn setup(
             height: 1,
             asset_id: "minecraft:fighters".to_owned(),
             title: Some("Inline Pool".into()),
-            author: Some("Valence Example".into()),
+            author: Some("ChunkEdge Example".into()),
         })),
         MetadataCase::Enderman(Some(BlockState::DIAMOND_BLOCK)),
         MetadataCase::Enderman(None),

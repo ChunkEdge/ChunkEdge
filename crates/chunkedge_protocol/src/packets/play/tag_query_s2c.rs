@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode, VarInt};
-use valence_nbt::Compound;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_nbt::Compound;
 
 use crate::Packet;
 #[derive(Clone, Debug, Encode, Decode, Packet)]

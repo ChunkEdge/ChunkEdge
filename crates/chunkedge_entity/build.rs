@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 
 use anyhow::Context;
+use chunkedge_build_utils::{ident, rerun_if_changed, write_generated_file};
 use heck::{ToPascalCase, ToShoutySnakeCase, ToSnakeCase};
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
-use valence_build_utils::{ident, rerun_if_changed, write_generated_file};
 
 #[derive(Deserialize, Clone, Debug)]
 struct Entity {
@@ -166,23 +166,23 @@ impl Value {
             Value::Long(_) => quote!(i64),
             Value::Float(_) => quote!(f32),
             Value::String(_) => quote!(String),
-            Value::TextComponent(_) => quote!(valence_protocol::Text),
-            Value::OptionalTextComponent(_) => quote!(Option<valence_protocol::Text>),
-            Value::ItemStack(_) => quote!(valence_protocol::ItemStack),
+            Value::TextComponent(_) => quote!(chunkedge_protocol::Text),
+            Value::OptionalTextComponent(_) => quote!(Option<chunkedge_protocol::Text>),
+            Value::ItemStack(_) => quote!(chunkedge_protocol::ItemStack),
             Value::Boolean(_) => quote!(bool),
             Value::Rotation { .. } => quote!(crate::EulerAngle),
-            Value::BlockPos(_) => quote!(valence_protocol::BlockPos),
-            Value::OptionalBlockPos(_) => quote!(Option<valence_protocol::BlockPos>),
-            Value::Facing(_) => quote!(valence_protocol::Direction),
+            Value::BlockPos(_) => quote!(chunkedge_protocol::BlockPos),
+            Value::OptionalBlockPos(_) => quote!(Option<chunkedge_protocol::BlockPos>),
+            Value::Facing(_) => quote!(chunkedge_protocol::Direction),
             Value::LazyEntityReference(_) => quote!(()), // TODO
-            Value::BlockState(_) => quote!(valence_protocol::BlockState),
-            Value::OptionalBlockState(_) => quote!(Option<valence_protocol::BlockState>),
-            Value::NbtCompound(_) => quote!(valence_nbt::Compound),
+            Value::BlockState(_) => quote!(chunkedge_protocol::BlockState),
+            Value::OptionalBlockState(_) => quote!(Option<chunkedge_protocol::BlockState>),
+            Value::NbtCompound(_) => quote!(chunkedge_nbt::Compound),
             Value::Particle(_) => {
-                quote!(valence_protocol::packets::play::level_particles_s2c::Particle)
+                quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle)
             }
             Value::ParticleList(_) => {
-                quote!(Vec<valence_protocol::packets::play::level_particles_s2c::Particle>)
+                quote!(Vec<chunkedge_protocol::packets::play::level_particles_s2c::Particle>)
             }
             Value::VillagerData { .. } => quote!(crate::VillagerData),
             Value::OptionalInt(_) => quote!(Option<i32>),
@@ -196,12 +196,12 @@ impl Value {
             Value::ChickenVariant(_) => quote!(crate::ChickenKind),
             Value::OptionalGlobalPos(_) => quote!(()), // TODO
             Value::PaintingVariant(_) => {
-                quote!(valence_binary::IdOr<crate::PaintingVariantDefinition>)
+                quote!(chunkedge_binary::IdOr<crate::PaintingVariantDefinition>)
             }
             Value::SnifferState(_) => quote!(crate::SnifferState),
             Value::ArmadilloState(_) => quote!(crate::ArmadilloState),
-            Value::Vector3f { .. } => quote!(valence_math::Vec3),
-            Value::Quaternionf { .. } => quote!(valence_math::Quat),
+            Value::Vector3f { .. } => quote!(chunkedge_math::Vec3),
+            Value::Quaternionf { .. } => quote!(chunkedge_math::Quat),
         }
     }
 
@@ -214,14 +214,14 @@ impl Value {
             Value::String(s) => quote!(#s.to_owned()),
             Value::TextComponent(txt) => {
                 assert!(txt.is_empty());
-                quote!(valence_protocol::Text::default())
+                quote!(chunkedge_protocol::Text::default())
             }
             Value::OptionalTextComponent(t) => {
                 assert!(t.is_none());
                 quote!(None)
             }
             Value::ItemStack(_stack) => {
-                quote!(valence_protocol::ItemStack::default())
+                quote!(chunkedge_protocol::ItemStack::default())
             }
             Value::Boolean(b) => quote!(#b),
             Value::Rotation { pitch, yaw, roll } => quote! {
@@ -232,7 +232,7 @@ impl Value {
                 }
             },
             Value::BlockPos(BlockPos { x, y, z }) => {
-                quote!(valence_protocol::BlockPos { x: #x, y: #y, z: #z })
+                quote!(chunkedge_protocol::BlockPos { x: #x, y: #y, z: #z })
             }
             Value::OptionalBlockPos(pos) => {
                 assert!(pos.is_none());
@@ -240,13 +240,13 @@ impl Value {
             }
             Value::Facing(f) => {
                 let variant = ident(f.to_pascal_case());
-                quote!(valence_protocol::Direction::#variant)
+                quote!(chunkedge_protocol::Direction::#variant)
             }
             Value::LazyEntityReference(_) => {
                 quote!(())
             }
             Value::BlockState(_) => {
-                quote!(valence_protocol::BlockState::default())
+                quote!(chunkedge_protocol::BlockState::default())
             }
             Value::OptionalBlockState(bs) => {
                 assert!(bs.is_none());
@@ -254,17 +254,17 @@ impl Value {
             }
             Value::NbtCompound(s) => {
                 assert_eq!(s, "{}");
-                quote!(valence_nbt::Compound::default())
+                quote!(chunkedge_nbt::Compound::default())
             }
             Value::Particle(p) => match p.to_pascal_case().as_str() {
                 // TODO: fix this, now an entyity has this as the default, so we need to extract
                 // the data here too somehow
                 "EntityEffect" => {
-                    quote!(valence_protocol::packets::play::level_particles_s2c::Particle::EntityEffect { color: 0 })
+                    quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle::EntityEffect { color: 0 })
                 }
                 other => {
                     let variant = ident(other);
-                    quote!(valence_protocol::packets::play::level_particles_s2c::Particle::#variant)
+                    quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle::#variant)
                 }
             },
             Value::ParticleList(_) => quote!(Vec::new()),
@@ -334,7 +334,7 @@ impl Value {
                 PaintingVariantValue::Identifier(painting) => {
                     let stripped_variant = painting.trim_start_matches("minecraft:");
                     let variant = ident(stripped_variant.to_pascal_case());
-                    quote!(valence_binary::IdOr::id(crate::PaintingKind::#variant as i32))
+                    quote!(chunkedge_binary::IdOr::id(crate::PaintingKind::#variant as i32))
                 }
                 PaintingVariantValue::Inline(inline) => {
                     let PaintingVariantInline {
@@ -358,7 +358,7 @@ impl Value {
                     };
 
                     quote! {
-                        valence_binary::IdOr::inline(crate::PaintingVariantDefinition {
+                        chunkedge_binary::IdOr::inline(crate::PaintingVariantDefinition {
                             width: #width,
                             height: #height,
                             asset_id: #asset_id.to_owned(),
@@ -376,28 +376,28 @@ impl Value {
                 let state = ident(s.to_pascal_case());
                 quote!(crate::ArmadilloState::#state)
             }
-            Value::Vector3f { x, y, z } => quote!(valence_math::Vec3::new(#x, #y, #z)),
+            Value::Vector3f { x, y, z } => quote!(chunkedge_math::Vec3::new(#x, #y, #z)),
             Value::Quaternionf { x, y, z, w } => quote! {
-                valence_math::Quat::from_xyzw(#x, #y, #z, #w)
+                chunkedge_math::Quat::from_xyzw(#x, #y, #z, #w)
             },
         }
     }
 
     fn encodable_expr(&self, self_lvalue: TokenStream) -> TokenStream {
         match self {
-            Value::Long(_) => quote!(valence_protocol::VarLong(#self_lvalue)),
+            Value::Long(_) => quote!(chunkedge_protocol::VarLong(#self_lvalue)),
             Value::Integer(_) => quote!(VarInt(#self_lvalue)),
             Value::OptionalInt(_) => quote!(OptionalInt(#self_lvalue)),
             Value::OptionalBlockState(_) => quote!(OptionalBlockState(#self_lvalue)),
             Value::PaintingVariant(_) => quote!(PaintingVariant(&#self_lvalue)),
             Value::TextComponent(_) => {
-                quote!(valence_binary::TextComponent::from(#self_lvalue.clone()))
+                quote!(chunkedge_binary::TextComponent::from(#self_lvalue.clone()))
             }
             Value::OptionalTextComponent(_) => {
                 quote!(
                     #self_lvalue
                         .clone()
-                        .map(valence_binary::TextComponent::from)
+                        .map(chunkedge_binary::TextComponent::from)
                 )
             }
             _ => quote!(&#self_lvalue),
@@ -803,7 +803,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             });
 
     Ok(quote! {
-        use valence_generated::attributes::EntityAttribute;
+        use chunkedge_generated::attributes::EntityAttribute;
 
         #modules
 

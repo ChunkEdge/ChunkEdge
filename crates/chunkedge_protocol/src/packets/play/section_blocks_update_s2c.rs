@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::io::Write;
 
 use bitfield_struct::bitfield;
-use valence_binary::{Decode, Encode, VarLong};
+use chunkedge_binary::{Decode, Encode, VarLong};
 
 use crate::chunk_section_pos::ChunkSectionPos;
 use crate::Packet;

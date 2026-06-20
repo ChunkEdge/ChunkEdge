@@ -9,8 +9,8 @@ use std::time::Duration;
 use bevy_app::prelude::*;
 use bevy_app::ScheduleRunnerPlugin;
 use bevy_ecs::prelude::*;
+use chunkedge_protocol::CompressionThreshold;
 pub use despawn::*;
-use valence_protocol::CompressionThreshold;
 
 pub use crate::uuid::*;
 

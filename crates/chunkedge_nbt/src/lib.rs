@@ -35,7 +35,7 @@ pub mod value;
 /// # Examples
 ///
 /// ```
-/// use valence_nbt::{compound, List};
+/// use chunkedge_nbt::{compound, List};
 ///
 /// let c = compound! {
 ///     "byte" => 123_i8,
@@ -63,7 +63,7 @@ pub mod value;
 /// ```
 /// # use std::borrow::Cow;
 ///
-/// use valence_nbt::compound;
+/// use chunkedge_nbt::compound;
 ///
 /// let c = compound! { <Cow<str>>
 ///     "foo" => 123_i8,

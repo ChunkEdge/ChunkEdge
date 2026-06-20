@@ -16,10 +16,10 @@
     clippy::dbg_macro
 )]
 
+use chunkedge::app::App;
+use chunkedge::log::LogPlugin;
 use clap::Parser;
 use tracing::Level;
-use valence::app::App;
-use valence::log::LogPlugin;
 
 #[allow(dead_code)]
 mod extras;

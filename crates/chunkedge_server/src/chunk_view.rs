@@ -1,5 +1,5 @@
-use valence_generated::chunk_view::{CHUNK_VIEW_LUT, EXTRA_VIEW_RADIUS, MAX_VIEW_DIST};
-use valence_protocol::ChunkPos;
+use chunkedge_generated::chunk_view::{CHUNK_VIEW_LUT, EXTRA_VIEW_RADIUS, MAX_VIEW_DIST};
+use chunkedge_protocol::ChunkPos;
 
 /// Represents the set of all chunk positions that a client can see, defined by
 /// a center chunk position `pos` and view distance `dist`.
@@ -62,7 +62,7 @@ impl ChunkView {
     /// # Examples
     ///
     /// ```
-    /// use valence_server::{ChunkPos, ChunkView};
+    /// use chunkedge_server::{ChunkPos, ChunkView};
     ///
     /// let view = ChunkView::new(ChunkPos::new(5, -4), 16);
     /// let (min, max) = view.bounding_box();

@@ -1,8 +1,8 @@
 use std::hint::black_box;
 
+use chunkedge::block::{BlockKind, BlockState, PropName, PropValue};
+use chunkedge::ItemKind;
 use divan::Bencher;
-use valence::block::{BlockKind, BlockState, PropName, PropValue};
-use valence::ItemKind;
 
 #[divan::bench]
 pub(crate) fn from_kind(bencher: Bencher) {

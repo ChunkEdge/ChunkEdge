@@ -1,5 +1,5 @@
 use bitfield_struct::bitfield;
-use valence_binary::{Bounded, Decode, Encode};
+use chunkedge_binary::{Bounded, Decode, Encode};
 
 use crate::packets::configuration::client_information_c2s::ParticleMode;
 use crate::Packet;

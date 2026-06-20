@@ -11,7 +11,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  valence-fmt:
+  chunkedge-fmt:
     name: Formatting
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +30,7 @@ jobs:
       - name: cargo fmt
         run: cargo fmt --all -- --check
 
-  valence-docs:
+  chunkedge-docs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +59,7 @@ jobs:
       - name: Check for spelling errors
         uses: crate-ci/typos@v1.16.5
 
-  valence-clippy:
+  chunkedge-clippy:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
@@ -81,7 +81,7 @@ jobs:
       - name: Clippy
         run: cargo clippy --workspace --no-deps --all-features --all-targets -- -D warnings
 
-  valence-tests:
+  chunkedge-tests:
     strategy:
       fail-fast: true
       matrix:
@@ -114,10 +114,10 @@ jobs:
       - name: Run doctests
         run: cargo test --workspace ${{ matrix.flags }} --all-features --doc
 
-      - name: Run valence_nbt tests without preserve_order feature
-        run: cargo test -p valence_nbt --all-targets
+      - name: Run chunkedge_nbt tests without preserve_order feature
+        run: cargo test -p chunkedge_nbt --all-targets
 
-  valence-miri:
+  chunkedge-miri:
     name: Miri Tests
     runs-on: ubuntu-latest
     steps:

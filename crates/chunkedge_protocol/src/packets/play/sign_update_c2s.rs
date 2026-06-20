@@ -1,4 +1,4 @@
-use valence_binary::{Bounded, Decode, Encode};
+use chunkedge_binary::{Bounded, Decode, Encode};
 
 use crate::{BlockPos, Packet};
 

@@ -1,9 +1,9 @@
 use std::borrow::Cow;
 use std::io::Write;
 
+use chunkedge_binary::{Bounded, Decode, Encode, IdOr, TextComponent, VarInt};
+use chunkedge_nbt::Compound;
 use uuid::Uuid;
-use valence_binary::{Bounded, Decode, Encode, IdOr, TextComponent, VarInt};
-use valence_nbt::Compound;
 
 use crate::{Packet, VariableBitSet};
 

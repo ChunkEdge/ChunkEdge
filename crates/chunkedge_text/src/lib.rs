@@ -5,12 +5,12 @@ use std::ops::{Deref, DerefMut};
 use std::str::FromStr;
 use std::{fmt, ops};
 
+use chunkedge_ident::Ident;
+use chunkedge_nbt::serde::ser::CompoundSerializer;
+use chunkedge_nbt::{Compound, Value};
 use serde::de::Visitor;
 use serde::{de, Deserialize, Deserializer, Serialize};
 use uuid::Uuid;
-use valence_ident::Ident;
-use valence_nbt::serde::ser::CompoundSerializer;
-use valence_nbt::{Compound, Value};
 
 pub mod color;
 mod into_text;
@@ -36,7 +36,7 @@ pub use into_text::IntoText;
 ///
 /// With [`IntoText`] in scope, you can write the following:
 /// ```
-/// use valence_text::{Color, IntoText, Text};
+/// use chunkedge_text::{Color, IntoText, Text};
 ///
 /// let txt = "The text is ".into_text()
 ///     + "Red".color(Color::RED)

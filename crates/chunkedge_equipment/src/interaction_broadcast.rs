@@ -1,9 +1,9 @@
-use valence_inventory::{HeldItem, Inventory, PlayerAction};
-use valence_server::entity::living::LivingFlags;
-use valence_server::event_loop::PacketEvent;
-use valence_server::interact_item::InteractItemEvent;
-use valence_server::protocol::packets::play::PlayerActionC2s;
-use valence_server::ItemKind;
+use chunkedge_inventory::{HeldItem, Inventory, PlayerAction};
+use chunkedge_server::entity::living::LivingFlags;
+use chunkedge_server::event_loop::PacketEvent;
+use chunkedge_server::interact_item::InteractItemEvent;
+use chunkedge_server::protocol::packets::play::PlayerActionC2s;
+use chunkedge_server::ItemKind;
 
 use super::*;
 

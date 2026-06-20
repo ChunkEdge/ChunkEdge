@@ -1,5 +1,5 @@
 [package]
-name = "valence"
+name = "chunkedge"
 version.workspace = true
 edition.workspace = true
 description = "A framework for building Minecraft servers in Rust."
@@ -30,18 +30,18 @@ default = [
   "weather",
   "world_border",
 ]
-advancement = ["dep:valence_advancement"]
-anvil = ["dep:valence_anvil"]
-boss_bar = ["dep:valence_boss_bar"]
-equipment = ["dep:valence_equipment"]
-inventory = ["dep:valence_inventory"]
+advancement = ["dep:chunkedge_advancement"]
+anvil = ["dep:chunkedge_anvil"]
+boss_bar = ["dep:chunkedge_boss_bar"]
+equipment = ["dep:chunkedge_equipment"]
+inventory = ["dep:chunkedge_inventory"]
 log = ["dep:bevy_log"]
-network = ["dep:valence_network"]
-player_list = ["dep:valence_player_list"]
-scoreboard = ["dep:valence_scoreboard"]
-world_border = ["dep:valence_world_border"]
-command = ["dep:valence_command", "dep:valence_command_macros"]
-weather = ["dep:valence_weather"]
+network = ["dep:chunkedge_network"]
+player_list = ["dep:chunkedge_player_list"]
+scoreboard = ["dep:chunkedge_scoreboard"]
+world_border = ["dep:chunkedge_world_border"]
+command = ["dep:chunkedge_command", "dep:chunkedge_command_macros"]
+weather = ["dep:chunkedge_weather"]
 testing = []
 
 [dependencies]
@@ -52,28 +52,28 @@ bevy_log = { workspace = true, optional = true }
 bytes.workspace = true
 rand.workspace = true
 uuid.workspace = true
-valence_advancement = { workspace = true, optional = true }
-valence_anvil = { workspace = true, optional = true, features = [
+chunkedge_advancement = { workspace = true, optional = true }
+chunkedge_anvil = { workspace = true, optional = true, features = [
   "bevy_plugin",
 ] }
-valence_binary.workspace = true
-valence_boss_bar = { workspace = true, optional = true }
-valence_command = { workspace = true, optional = true }
-valence_command_macros = { workspace = true, optional = true }
-valence_ident.workspace = true
-valence_equipment = { workspace = true, optional = true }
-valence_ident_macros.workspace = true
-valence_inventory = { workspace = true, optional = true }
-valence_item.workspace = true
-valence_lang.workspace = true
-valence_network = { workspace = true, optional = true }
-valence_player_list = { workspace = true, optional = true }
-valence_registry.workspace = true
-valence_scoreboard = { workspace = true, optional = true }
-valence_server.workspace = true
-valence_text.workspace = true
-valence_weather = { workspace = true, optional = true }
-valence_world_border = { workspace = true, optional = true }
+chunkedge_binary.workspace = true
+chunkedge_boss_bar = { workspace = true, optional = true }
+chunkedge_command = { workspace = true, optional = true }
+chunkedge_command_macros = { workspace = true, optional = true }
+chunkedge_ident.workspace = true
+chunkedge_equipment = { workspace = true, optional = true }
+chunkedge_ident_macros.workspace = true
+chunkedge_inventory = { workspace = true, optional = true }
+chunkedge_item.workspace = true
+chunkedge_lang.workspace = true
+chunkedge_network = { workspace = true, optional = true }
+chunkedge_player_list = { workspace = true, optional = true }
+chunkedge_registry.workspace = true
+chunkedge_scoreboard = { workspace = true, optional = true }
+chunkedge_server.workspace = true
+chunkedge_text.workspace = true
+chunkedge_weather = { workspace = true, optional = true }
+chunkedge_world_border = { workspace = true, optional = true }
 
 [dev-dependencies]
 anyhow.workspace = true
@@ -114,8 +114,8 @@ resolver = "2"
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-repository = "https://github.com/valence-rs/valence"
-documentation = "https://docs.rs/valence/"
+repository = "https://github.com/ChunkEdge/ChunkEdge"
+documentation = "https://docs.rs/chunkedge/"
 license = "MIT"
 
 [workspace.dependencies]
@@ -196,38 +196,38 @@ tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 url = { version = "2.5.2", features = ["serde"] }
 uuid = { version = "1.10.0", features = ["v4"] }
-valence = { path = "." }
-valence_advancement = { path = "crates/valence_advancement" }
-valence_anvil = { path = "crates/valence_anvil", version = "0.1.0" }
-valence_boss_bar = { path = "crates/valence_boss_bar" }
-valence_build_utils = { path = "crates/valence_build_utils" }
-valence_command = { path = "crates/valence_command" }
-valence_command_macros = { path = "crates/valence_command_macros" }
-valence_binary = { path = "crates/valence_binary" }
-valence_entity = { path = "crates/valence_entity" }
-valence_generated = { path = "crates/valence_generated" }
-valence_item = { path = "crates/valence_item" }
-valence_ident = { path = "crates/valence_ident" }
-valence_ident_macros = { path = "crates/valence_ident_macros" }
-valence_equipment = { path = "crates/valence_equipment" }
-valence_inventory = { path = "crates/valence_inventory" }
-valence_lang = { path = "crates/valence_lang" }
-valence_math = { path = "crates/valence_math" }
-valence_nbt = { path = "crates/valence_nbt", features = [
+chunkedge = { path = "." }
+chunkedge_advancement = { path = "crates/chunkedge_advancement" }
+chunkedge_anvil = { path = "crates/chunkedge_anvil", version = "0.1.0" }
+chunkedge_boss_bar = { path = "crates/chunkedge_boss_bar" }
+chunkedge_build_utils = { path = "crates/chunkedge_build_utils" }
+chunkedge_command = { path = "crates/chunkedge_command" }
+chunkedge_command_macros = { path = "crates/chunkedge_command_macros" }
+chunkedge_binary = { path = "crates/chunkedge_binary" }
+chunkedge_entity = { path = "crates/chunkedge_entity" }
+chunkedge_generated = { path = "crates/chunkedge_generated" }
+chunkedge_item = { path = "crates/chunkedge_item" }
+chunkedge_ident = { path = "crates/chunkedge_ident" }
+chunkedge_ident_macros = { path = "crates/chunkedge_ident_macros" }
+chunkedge_equipment = { path = "crates/chunkedge_equipment" }
+chunkedge_inventory = { path = "crates/chunkedge_inventory" }
+chunkedge_lang = { path = "crates/chunkedge_lang" }
+chunkedge_math = { path = "crates/chunkedge_math" }
+chunkedge_nbt = { path = "crates/chunkedge_nbt", features = [
   "uuid",
   "serde",
 ] }
-valence_network = { path = "crates/valence_network" }
-valence_player_list = { path = "crates/valence_player_list" }
-valence_protocol = { path = "crates/valence_protocol" }
-valence_protocol_macros = { path = "crates/valence_protocol_macros" }
-valence_registry = { path = "crates/valence_registry" }
-valence_scoreboard = { path = "crates/valence_scoreboard" }
-valence_server = { path = "crates/valence_server" }
-valence_server_common = { path = "crates/valence_server_common" }
-valence_text = { path = "crates/valence_text" }
-valence_weather = { path = "crates/valence_weather" }
-valence_world_border = { path = "crates/valence_world_border" }
+chunkedge_network = { path = "crates/chunkedge_network" }
+chunkedge_player_list = { path = "crates/chunkedge_player_list" }
+chunkedge_protocol = { path = "crates/chunkedge_protocol" }
+chunkedge_protocol_macros = { path = "crates/chunkedge_protocol_macros" }
+chunkedge_registry = { path = "crates/chunkedge_registry" }
+chunkedge_scoreboard = { path = "crates/chunkedge_scoreboard" }
+chunkedge_server = { path = "crates/chunkedge_server" }
+chunkedge_server_common = { path = "crates/chunkedge_server_common" }
+chunkedge_text = { path = "crates/chunkedge_text" }
+chunkedge_weather = { path = "crates/chunkedge_weather" }
+chunkedge_world_border = { path = "crates/chunkedge_world_border" }
 vek = "0.17.1"
 zip = "2.2.0"
 crc32c = "0.6.8"
@@ -339,4 +339,4 @@ zero_sized_map_values = "warn"
 unescaped_backticks = "warn"
 
 [package.metadata.cargo-machete]
-ignored = ["valence_ident_macros"]
+ignored = ["chunkedge_ident_macros"]

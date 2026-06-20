@@ -10,28 +10,28 @@ use std::fmt;
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 pub use chunk::{MAX_HEIGHT, *};
+use chunkedge_binary::Encode;
+use chunkedge_math::{DVec3, Vec3};
+use chunkedge_nbt::Compound;
+use chunkedge_protocol::encode::{PacketWriter, WritePacket};
+use chunkedge_protocol::packets::play::level_particles_s2c::Particle;
+use chunkedge_protocol::packets::play::{LevelParticlesS2c, SoundS2c};
+use chunkedge_protocol::sound::{Sound, SoundCategory, SoundDirect, SoundId};
+use chunkedge_protocol::{BiomePos, BlockPos, ChunkPos, CompressionThreshold, Ident, Packet};
+use chunkedge_registry::biome::{BiomeId, BiomeRegistry};
+use chunkedge_registry::dimension_type::DimensionTypeId;
+use chunkedge_registry::DimensionTypeRegistry;
+use chunkedge_server_common::Server;
 pub use loaded::LoadedChunk;
 use rustc_hash::FxHashMap;
 pub use unloaded::UnloadedChunk;
-use valence_binary::Encode;
-use valence_math::{DVec3, Vec3};
-use valence_nbt::Compound;
-use valence_protocol::encode::{PacketWriter, WritePacket};
-use valence_protocol::packets::play::level_particles_s2c::Particle;
-use valence_protocol::packets::play::{LevelParticlesS2c, SoundS2c};
-use valence_protocol::sound::{Sound, SoundCategory, SoundDirect, SoundId};
-use valence_protocol::{BiomePos, BlockPos, ChunkPos, CompressionThreshold, Ident, Packet};
-use valence_registry::biome::{BiomeId, BiomeRegistry};
-use valence_registry::dimension_type::DimensionTypeId;
-use valence_registry::DimensionTypeRegistry;
-use valence_server_common::Server;
 
 use super::bvh::GetChunkPos;
 use super::message::Messages;
 use super::{Layer, UpdateLayersPostClientSet, UpdateLayersPreClientSet};
 
 /// A [`Component`] containing the [chunks](LoadedChunk) and [dimension
-/// information](valence_registry::dimension_type::DimensionTypeId) of a
+/// information](chunkedge_registry::dimension_type::DimensionTypeId) of a
 /// Minecraft world.
 #[derive(Component, Debug)]
 pub struct ChunkLayer {
@@ -380,7 +380,7 @@ impl ChunkLayer {
         &self.messages
     }
 
-    // TODO: move to `valence_particle`.
+    // TODO: move to `chunkedge_particle`.
     /// Puts a particle effect at the given position in the world. The particle
     /// effect is visible to all players in the instance with the
     /// appropriate chunk in view.
@@ -411,7 +411,7 @@ impl ChunkLayer {
         });
     }
 
-    // TODO: move to `valence_sound`.
+    // TODO: move to `chunkedge_sound`.
     /// Plays a sound effect at the given position in the world. The sound
     /// effect is audible to all players in the instance with the
     /// appropriate chunk in view.

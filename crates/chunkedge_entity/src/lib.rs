@@ -15,14 +15,14 @@ pub mod tracked_data;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_binary::{Decode, Encode, IdOr, TextComponent, VarInt};
+use chunkedge_math::{DVec3, Vec3};
+use chunkedge_server_common::{Despawned, UniqueId};
 use derive_more::{Deref, DerefMut};
 pub use manager::EntityManager;
 use paste::paste;
 use tracing::warn;
 use tracked_data::TrackedData;
-use valence_binary::{Decode, Encode, IdOr, TextComponent, VarInt};
-use valence_math::{DVec3, Vec3};
-use valence_server_common::{Despawned, UniqueId};
 
 use crate::attributes::TrackedEntityAttributes;
 
@@ -338,8 +338,8 @@ pub struct HeadYaw(pub f32);
 pub struct Velocity(pub DVec3);
 
 impl Velocity {
-    pub fn to_packet_units(self) -> valence_protocol::Velocity {
-        valence_protocol::Velocity::from_ms_f64(self.0.into())
+    pub fn to_packet_units(self) -> chunkedge_protocol::Velocity {
+        chunkedge_protocol::Velocity::from_ms_f64(self.0.into())
     }
 }
 
@@ -688,11 +688,11 @@ impl PaintingKind {
         Self::Wither,
     ];
 
-    pub fn registry_id(self) -> valence_protocol::RegistryId {
-        valence_protocol::RegistryId::new(self as i32)
+    pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
+        chunkedge_protocol::RegistryId::new(self as i32)
     }
 
-    pub fn from_registry_id(id: valence_protocol::RegistryId) -> Option<Self> {
+    pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
         let Ok(idx) = usize::try_from(id.id()) else {
             return None;
         };
@@ -706,8 +706,8 @@ pub struct PaintingVariantDefinition {
     pub width: i32,
     pub height: i32,
     pub asset_id: String,
-    pub title: Option<valence_protocol::Text>,
-    pub author: Option<valence_protocol::Text>,
+    pub title: Option<chunkedge_protocol::Text>,
+    pub author: Option<chunkedge_protocol::Text>,
 }
 
 impl Encode for PaintingVariantDefinition {
@@ -766,7 +766,7 @@ impl Decode<'_> for OptionalInt {
 }
 
 #[derive(Clone, Copy)]
-struct OptionalBlockState(Option<valence_protocol::BlockState>);
+struct OptionalBlockState(Option<chunkedge_protocol::BlockState>);
 
 impl Encode for OptionalBlockState {
     fn encode(&self, w: impl std::io::Write) -> anyhow::Result<()> {
@@ -795,7 +795,7 @@ impl Decode<'_> for OptionalBlockState {
 
         let id =
             u16::try_from(id).map_err(|_| anyhow::anyhow!("invalid optional block state ID"))?;
-        let state = valence_protocol::BlockState::from_raw(id)
+        let state = chunkedge_protocol::BlockState::from_raw(id)
             .ok_or_else(|| anyhow::anyhow!("invalid optional block state ID"))?;
 
         Ok(Self(Some(state)))

@@ -5,13 +5,13 @@ use std::thread;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_server::client::{Client, OldView, View};
+use chunkedge_server::entity::{EntityLayerId, OldEntityLayerId};
+use chunkedge_server::layer::UpdateLayersPreClientSet;
+use chunkedge_server::protocol::anyhow;
+use chunkedge_server::registry::BiomeRegistry;
+use chunkedge_server::{ChunkLayer, ChunkPos};
 use flume::{Receiver, Sender};
-use valence_server::client::{Client, OldView, View};
-use valence_server::entity::{EntityLayerId, OldEntityLayerId};
-use valence_server::layer::UpdateLayersPreClientSet;
-use valence_server::protocol::anyhow;
-use valence_server::registry::BiomeRegistry;
-use valence_server::{ChunkLayer, ChunkPos};
 
 use crate::parsing::{DimensionFolder, ParsedChunk};
 
@@ -235,7 +235,7 @@ fn anvil_worker(mut state: ChunkWorkerState) {
     }
 }
 
-/// An event sent by `valence_anvil` after an attempt to load a chunk is made.
+/// An event sent by `chunkedge_anvil` after an attempt to load a chunk is made.
 #[derive(Event, Debug)]
 pub struct ChunkLoadEvent {
     /// The [`ChunkLayer`] where the chunk is located.
@@ -260,7 +260,7 @@ pub enum ChunkLoadStatus {
     Failed(anyhow::Error),
 }
 
-/// An event sent by `valence_anvil` when a chunk is unloaded from an layer.
+/// An event sent by `chunkedge_anvil` when a chunk is unloaded from an layer.
 #[derive(Event, Debug)]
 pub struct ChunkUnloadEvent {
     /// The [`ChunkLayer`] where the chunk was unloaded.

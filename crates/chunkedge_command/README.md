@@ -1,6 +1,6 @@
-# Valence Command
+# ChunkEdge Command
 
-This plugin manages the command system for a valence server. It is responsible for parsing, storing, managing and
+This plugin manages the command system for a ChunkEdge server. It is responsible for parsing, storing, managing and
 dispatching commands.
 
 #### This plugin manages the following:

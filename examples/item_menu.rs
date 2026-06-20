@@ -6,12 +6,12 @@
 
 const SPAWN_Y: i32 = 64;
 
+use chunkedge::interact_item::InteractItemEvent;
+use chunkedge::prelude::*;
+use chunkedge::protocol::sound::SoundCategory;
+use chunkedge::protocol::Sound;
+use chunkedge_inventory::HeldItem;
 use item_menu::{ItemMenu, ItemMenuPlugin, MenuItemSelectEvent};
-use valence::interact_item::InteractItemEvent;
-use valence::prelude::*;
-use valence::protocol::sound::SoundCategory;
-use valence::protocol::Sound;
-use valence_inventory::HeldItem;
 
 pub fn main() {
     App::new()
@@ -143,8 +143,8 @@ fn on_make_selection(
 }
 
 mod item_menu {
-    use valence::prelude::*;
-    use valence_inventory::ClickSlotEvent;
+    use chunkedge::prelude::*;
+    use chunkedge_inventory::ClickSlotEvent;
 
     pub(crate) struct ItemMenuPlugin;
 

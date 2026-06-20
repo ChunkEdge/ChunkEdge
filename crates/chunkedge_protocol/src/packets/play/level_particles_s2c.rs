@@ -1,7 +1,7 @@
-use valence_binary::{Decode, Encode, VarInt};
-use valence_generated::block::BlockState;
-use valence_item::ItemStack;
-use valence_math::{DVec3, Vec3};
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_generated::block::BlockState;
+use chunkedge_item::ItemStack;
+use chunkedge_math::{DVec3, Vec3};
 
 use crate::{BlockPos, Packet};
 

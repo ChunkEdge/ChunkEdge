@@ -1,6 +1,6 @@
 [package]
-name = "valence_build_utils"
-description = "Common build script utilities for Valence"
+name = "chunkedge_build_utils"
+description = "Common build script utilities for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true

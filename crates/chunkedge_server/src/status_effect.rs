@@ -2,14 +2,14 @@ use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use bevy_ecs::query::QueryData;
 use bevy_ecs::system::SystemState;
-use valence_entity::active_status_effects::{ActiveStatusEffect, ActiveStatusEffects};
-use valence_entity::entity::Flags;
-use valence_entity::living::PotionSwirlsAmbient;
-use valence_protocol::packets::play::{
+use chunkedge_entity::active_status_effects::{ActiveStatusEffect, ActiveStatusEffects};
+use chunkedge_entity::entity::Flags;
+use chunkedge_entity::living::PotionSwirlsAmbient;
+use chunkedge_protocol::packets::play::{
     update_mob_effect_s2c, RemoveMobEffectS2c, UpdateMobEffectS2c,
 };
-use valence_protocol::status_effects::StatusEffect;
-use valence_protocol::{VarInt, WritePacket};
+use chunkedge_protocol::status_effects::StatusEffect;
+use chunkedge_protocol::{VarInt, WritePacket};
 
 use crate::client::Client;
 use crate::EventLoopPostUpdate;

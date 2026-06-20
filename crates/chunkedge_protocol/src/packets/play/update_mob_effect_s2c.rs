@@ -1,5 +1,5 @@
 use bitfield_struct::bitfield;
-use valence_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Encode, VarInt};
 
 use crate::Packet;
 #[derive(Clone, Debug, Encode, Decode, Packet)]

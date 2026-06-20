@@ -1,11 +1,11 @@
 #![allow(clippy::type_complexity)]
 
 use bevy_app::App;
-use valence::client::despawn_disconnected_clients;
-use valence::inventory::HeldItem;
-use valence::message::{ChatMessageEvent, SendMessage};
-use valence::prelude::*;
-use valence::world_border::*;
+use chunkedge::client::despawn_disconnected_clients;
+use chunkedge::inventory::HeldItem;
+use chunkedge::message::{ChatMessageEvent, SendMessage};
+use chunkedge::prelude::*;
+use chunkedge::world_border::*;
 
 const SPAWN_Y: i32 = 64;
 

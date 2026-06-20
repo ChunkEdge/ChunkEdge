@@ -1,4 +1,4 @@
-use valence_binary::{Bounded, Decode, Encode};
+use chunkedge_binary::{Bounded, Decode, Encode};
 
 use crate::packets::play::client_information_c2s::{ChatMode, DisplayedSkinParts, MainArm};
 use crate::{Packet, PacketState};

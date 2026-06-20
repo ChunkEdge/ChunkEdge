@@ -1,9 +1,9 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+pub use chunkedge_protocol::packets::play::player_abilities_s2c::PlayerAbilitiesFlags;
+use chunkedge_protocol::packets::play::{PlayerAbilitiesC2s, PlayerAbilitiesS2c};
+use chunkedge_protocol::{GameMode, WritePacket};
 use derive_more::{Deref, DerefMut};
-pub use valence_protocol::packets::play::player_abilities_s2c::PlayerAbilitiesFlags;
-use valence_protocol::packets::play::{PlayerAbilitiesC2s, PlayerAbilitiesS2c};
-use valence_protocol::{GameMode, WritePacket};
 
 use crate::client::{update_game_mode, Client, UpdateClientsSet};
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

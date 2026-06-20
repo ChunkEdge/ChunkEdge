@@ -1,10 +1,10 @@
+use chunkedge_protocol::PacketSide;
 use eframe::epaint::PathShape;
 use egui::{
     Color32, Pos2, Rect, Response, Rgba, Sense, Shape, Stroke, TextStyle, TextWrapMode, Ui, Vec2,
     WidgetText,
 };
 use packet_inspector::Packet;
-use valence_protocol::PacketSide;
 
 use super::{SharedState, Tab, View};
 

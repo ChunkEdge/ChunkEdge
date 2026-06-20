@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 use super::select_known_packs_s2c::KnownPack;
 use crate::{Packet, PacketState};

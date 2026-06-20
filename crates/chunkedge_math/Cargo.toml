@@ -1,6 +1,6 @@
 [package]
-name = "valence_math"
-description = "Math for Valence"
+name = "chunkedge_math"
+description = "Math for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true

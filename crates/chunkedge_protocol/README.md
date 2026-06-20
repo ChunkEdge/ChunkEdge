@@ -1,12 +1,12 @@
-# `valence_protocol`
+# `chunkedge_protocol`
 
 A protocol library for _Minecraft: Java Edition_. Use this to build clients, servers, proxies, or something novel!
 
-`valence_protocol` is primarily concerned with defining all of Minecraft's [network packets](packets) and the process for encoding and decoding them. To encode and decode packets, use the [`PacketEncoder`] and [`PacketDecoder`] types.
+`chunkedge_protocol` is primarily concerned with defining all of Minecraft's [network packets](packets) and the process for encoding and decoding them. To encode and decode packets, use the [`PacketEncoder`] and [`PacketDecoder`] types.
 
 ```rust
-use valence_protocol::{PacketEncoder, PacketDecoder, Difficulty};
-use valence_protocol::packets::play::ChangeDifficultyS2c;
+use chunkedge_protocol::{PacketEncoder, PacketDecoder, Difficulty};
+use chunkedge_protocol::packets::play::ChangeDifficultyS2c;
 
 let mut encoder = PacketEncoder::new();
 
@@ -37,7 +37,7 @@ assert_eq!(&packet, &decoded_packet);
 
 ## Supported Minecraft Versions
 
-Currently, `valence_protocol` only intends to support the most recent stable version of Minecraft. New Minecraft versions often entail a major version bump, since breaking changes to packet definitions are frequent.
+Currently, `chunkedge_protocol` only intends to support the most recent stable version of Minecraft. New Minecraft versions often entail a major version bump, since breaking changes to packet definitions are frequent.
 
 The currently targeted Minecraft version and protocol version can be checked using the [`MINECRAFT_VERSION`] and [`PROTOCOL_VERSION`] constants.
 

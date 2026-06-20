@@ -1,8 +1,8 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_math::Vec3;
-use valence_protocol::packets::play::UseItemOnC2s;
-use valence_protocol::{BlockPos, Direction, Hand};
+use chunkedge_math::Vec3;
+use chunkedge_protocol::packets::play::UseItemOnC2s;
+use chunkedge_protocol::{BlockPos, Direction, Hand};
 
 use crate::action::ActionSequence;
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

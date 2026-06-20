@@ -1,11 +1,11 @@
 use bevy_ecs::prelude::*;
+use chunkedge_binary::Encode;
 use tracing::warn;
-use valence_binary::Encode;
 
 /// Cache for all the tracked data of an entity. Used for the
 /// [`SetEntityDataS2c`][packet] packet.
 ///
-/// [packet]: valence_protocol::packets::play::SetEntityDataS2c
+/// [packet]: chunkedge_protocol::packets::play::SetEntityDataS2c
 #[derive(Component, Default, Debug)]
 pub struct TrackedData {
     init_data: Vec<u8>,
@@ -20,7 +20,7 @@ impl TrackedData {
     /// [`SetEntityDataS2c`][packet] packet. This is used when the entity
     /// enters the view of a client.
     ///
-    /// [packet]: valence_protocol::packets::play::SetEntityDataS2c
+    /// [packet]: chunkedge_protocol::packets::play::SetEntityDataS2c
     pub fn init_data(&self) -> Option<&[u8]> {
         (self.init_data.len() > 1).then_some(&self.init_data)
     }
@@ -29,7 +29,7 @@ impl TrackedData {
     /// [`SetEntityDataS2c`][packet] packet. This is used when tracked
     /// data is changed and the client is already in view of the entity.
     ///
-    /// [packet]: valence_protocol::packets::play::SetEntityDataS2c
+    /// [packet]: chunkedge_protocol::packets::play::SetEntityDataS2c
     pub fn update_data(&self) -> Option<&[u8]> {
         (self.update_data.len() > 1).then_some(&self.update_data)
     }

@@ -1,6 +1,6 @@
-use valence_inventory::player_inventory::PlayerInventory;
-use valence_inventory::{HeldItem, Inventory, UpdateSelectedSlotEvent};
-use valence_server::entity::player::PlayerEntity;
+use chunkedge_inventory::player_inventory::PlayerInventory;
+use chunkedge_inventory::{HeldItem, Inventory, UpdateSelectedSlotEvent};
+use chunkedge_server::entity::player::PlayerEntity;
 
 use super::*;
 
@@ -33,7 +33,7 @@ pub(crate) fn equipment_inventory_sync(
             // If we change the inventory (e.g by pickung up an item)
             // then the HeldItem slot wont be changed
 
-            // This will only be called if we change the held item from valence,
+            // This will only be called if we change the held item from chunkedge,
             // the client change is handled in `equipment_held_item_sync_from_client`
             let item = inventory.slot(held_item.slot()).clone();
             equipment.set_main_hand(item);

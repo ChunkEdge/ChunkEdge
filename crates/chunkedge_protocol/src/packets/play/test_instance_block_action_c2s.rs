@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode, TextComponent, VarInt};
+use chunkedge_binary::{Decode, Encode, TextComponent, VarInt};
 
 use crate::packets::play::set_structure_block_c2s::Rotation;
 use crate::{BlockPos, Packet};

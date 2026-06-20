@@ -20,7 +20,7 @@ pub(super) fn derive_packet(item: TokenStream) -> Result<TokenStream> {
     };
     let state = packet_attr
         .state
-        .unwrap_or_else(|| parse_quote!(::valence_protocol::PacketState::Play));
+        .unwrap_or_else(|| parse_quote!(::chunkedge_protocol::PacketState::Play));
 
     // Get phase from the last part of the module path
     let phase = state
@@ -35,7 +35,7 @@ pub(super) fn derive_packet(item: TokenStream) -> Result<TokenStream> {
     let packet_id: Expr = match packet_attr.id {
         Some(expr) => expr,
         None => match syn::parse_str::<Ident>(&(suffix + &*name_str).to_shouty_snake_case()) {
-            Ok(ident) => parse_quote!(::valence_protocol::packet_id::#ident),
+            Ok(ident) => parse_quote!(::chunkedge_protocol::packet_id::#ident),
             Err(_) => {
                 return Err(Error::new(
                     packet_attr.span,
@@ -52,9 +52,9 @@ pub(super) fn derive_packet(item: TokenStream) -> Result<TokenStream> {
     let side = if let Some(side_attr) = packet_attr.side {
         side_attr
     } else if name_str.to_lowercase().ends_with("s2c") {
-        parse_quote!(::valence_protocol::PacketSide::Clientbound)
+        parse_quote!(::chunkedge_protocol::PacketSide::Clientbound)
     } else if name_str.to_lowercase().ends_with("c2s") {
-        parse_quote!(::valence_protocol::PacketSide::Serverbound)
+        parse_quote!(::chunkedge_protocol::PacketSide::Serverbound)
     } else {
         return Err(Error::new(
             packet_attr.span,
@@ -63,13 +63,13 @@ pub(super) fn derive_packet(item: TokenStream) -> Result<TokenStream> {
     };
 
     Ok(quote! {
-        impl #impl_generics ::valence_protocol::__private::Packet for #name #ty_generics
+        impl #impl_generics ::chunkedge_protocol::__private::Packet for #name #ty_generics
         #where_clause
         {
             const ID: i32 = #packet_id;
             const NAME: &'static str = #name_str;
-            const SIDE: ::valence_protocol::PacketSide = #side;
-            const STATE: ::valence_protocol::PacketState = #state;
+            const SIDE: ::chunkedge_protocol::PacketSide = #side;
+            const STATE: ::chunkedge_protocol::PacketState = #state;
         }
     })
 }

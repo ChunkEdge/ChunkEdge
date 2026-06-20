@@ -2,10 +2,10 @@ use std::time::{Duration, Instant};
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_protocol::packets::play::{KeepAliveC2s, KeepAliveS2c};
+use chunkedge_protocol::WritePacket;
 use derive_more::Deref;
 use tracing::warn;
-use valence_protocol::packets::play::{KeepAliveC2s, KeepAliveS2c};
-use valence_protocol::WritePacket;
 
 use crate::client::{Client, UpdateClientsSet};
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

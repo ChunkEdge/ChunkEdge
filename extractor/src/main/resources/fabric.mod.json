@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "valence_extractor",
+  "id": "chunkedge_extractor",
   "version": "${version}",
-  "name": "Valence Extractor",
-  "description": "Extracts Minecraft data for use in Valence",
+  "name": "ChunkEdge Extractor",
+  "description": "Extracts Minecraft data for use in ChunkEdge",
   "authors": [
-    "Valence Project Authors"
+    "ChunkEdge Project Authors"
   ],
   "contact": {
-    "homepage": "https://github.com/valence-rs/valence",
-    "sources": "https://github.com/valence-rs/valence"
+    "homepage": "https://github.com/ChunkEdge/ChunkEdge",
+    "sources": "https://github.com/ChunkEdge/ChunkEdge"
   },
   "environment": "*",
   "entrypoints": {

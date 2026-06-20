@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Encode, VarInt};
 
 use crate::Packet;
 #[derive(Copy, Clone, Debug, Encode, Decode, Packet)]

@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode, VarInt};
-use valence_math::Vec3;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_math::Vec3;
 
 use crate::{Hand, Packet};
 

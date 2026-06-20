@@ -1,10 +1,10 @@
 #![allow(clippy::type_complexity)]
 
 use bevy_ecs::query::QueryData;
+use chunkedge::entity::EntityStatuses;
+use chunkedge::math::Vec3Swizzles;
+use chunkedge::prelude::*;
 use rand::Rng;
-use valence::entity::EntityStatuses;
-use valence::math::Vec3Swizzles;
-use valence::prelude::*;
 
 const SPAWN_Y: i32 = 64;
 const ARENA_RADIUS: i32 = 32;

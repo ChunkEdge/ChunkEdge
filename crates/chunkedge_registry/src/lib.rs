@@ -13,12 +13,12 @@ use std::ops::{Index, IndexMut};
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 pub use biome::BiomeRegistry;
+use chunkedge_ident::Ident;
 pub use codec::RegistryCodec;
 pub use dimension_type::DimensionTypeRegistry;
 use indexmap::map::Entry;
 use indexmap::IndexMap;
 pub use tags::TagsRegistry;
-use valence_ident::Ident;
 
 pub struct RegistryPlugin;
 

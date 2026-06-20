@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
-use valence_binary::array::FixedArray;
-use valence_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::array::FixedArray;
+use chunkedge_binary::{Decode, Encode, VarInt};
 
 use crate::{Packet, VariableBitSet};
 #[derive(Clone, Debug, Encode, Decode, Packet)]

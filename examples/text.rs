@@ -1,7 +1,7 @@
 #![allow(clippy::type_complexity)]
 
-use valence::lang::keys;
-use valence::prelude::*;
+use chunkedge::lang::keys;
+use chunkedge::prelude::*;
 
 const SPAWN_Y: i32 = 64;
 

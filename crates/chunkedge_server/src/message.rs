@@ -1,11 +1,11 @@
-// TODO: delete this module in favor of valence_chat.
+// TODO: delete this module in favor of chunkedge_chat.
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_protocol::encode::WritePacket;
-use valence_protocol::packets::play::{ChatC2s, SystemChatS2c};
-use valence_protocol::text::IntoText;
-use valence_protocol::IntoTextComponent;
+use chunkedge_protocol::encode::WritePacket;
+use chunkedge_protocol::packets::play::{ChatC2s, SystemChatS2c};
+use chunkedge_protocol::text::IntoText;
+use chunkedge_protocol::IntoTextComponent;
 
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
 

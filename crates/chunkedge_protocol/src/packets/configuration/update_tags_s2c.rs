@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 use crate::packets::play::update_tags_s2c::RegistryMap;
 use crate::{Packet, PacketState};

@@ -2,7 +2,7 @@ use core::fmt;
 use std::convert::Infallible;
 use std::ops::Range;
 
-use valence_protocol::ChunkPos;
+use chunkedge_protocol::ChunkPos;
 
 use crate::layer::bvh::{ChunkBvh, GetChunkPos};
 use crate::ChunkView;

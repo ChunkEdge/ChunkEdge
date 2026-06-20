@@ -1,1 +1,1 @@
-crates/valence_generated/extracted/*.json -diff
+crates/chunkedge_generated/extracted/*.json -diff

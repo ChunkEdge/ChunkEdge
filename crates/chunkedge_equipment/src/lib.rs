@@ -5,14 +5,14 @@ use bevy_ecs::prelude::*;
 mod interaction_broadcast;
 pub use interaction_broadcast::EquipmentInteractionBroadcast;
 mod inventory_sync;
+use chunkedge_server::client::{Client, FlushPacketsSet, LoadEntityForClientEvent};
+use chunkedge_server::entity::living::LivingEntity;
+use chunkedge_server::entity::{EntityId, EntityLayerId, Position};
+use chunkedge_server::protocol::packets::play::set_equipment_s2c::{EquipmentEntry, EquipmentSlot};
+use chunkedge_server::protocol::packets::play::SetEquipmentS2c;
+use chunkedge_server::protocol::WritePacket;
+use chunkedge_server::{EntityLayer, ItemStack, Layer};
 pub use inventory_sync::EquipmentInventorySync;
-use valence_server::client::{Client, FlushPacketsSet, LoadEntityForClientEvent};
-use valence_server::entity::living::LivingEntity;
-use valence_server::entity::{EntityId, EntityLayerId, Position};
-use valence_server::protocol::packets::play::set_equipment_s2c::{EquipmentEntry, EquipmentSlot};
-use valence_server::protocol::packets::play::SetEquipmentS2c;
-use valence_server::protocol::WritePacket;
-use valence_server::{EntityLayer, ItemStack, Layer};
 
 pub struct EquipmentPlugin;
 
@@ -42,7 +42,7 @@ impl Plugin for EquipmentPlugin {
 
 /// Contains the visible equipment of a [`LivingEntity`], such as armor and held
 /// items. By default this is not synced with a player's
-/// [`valence_inventory::Inventory`], so the armor the player has equipped in
+/// [`chunkedge_inventory::Inventory`], so the armor the player has equipped in
 /// their inventory, will not be visible by other players. You would have to
 /// change the equipment in this component here or attach the
 /// [`EquipmentInventorySync`] component to the player entity to sync the

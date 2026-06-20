@@ -1,6 +1,6 @@
 [package]
-name = "valence_generated"
-description = "Generated code for valence and valence_protocol"
+name = "chunkedge_generated"
+description = "Generated code for chunkedge and chunkedge_protocol"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true
@@ -13,8 +13,8 @@ build = "build/main.rs"
 workspace = true
 
 [dependencies]
-valence_ident.workspace = true
-valence_math.workspace = true
+chunkedge_ident.workspace = true
+chunkedge_math.workspace = true
 
 [build-dependencies]
 anyhow.workspace = true
@@ -23,7 +23,7 @@ proc-macro2.workspace = true
 quote.workspace = true
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
-valence_build_utils.workspace = true
+chunkedge_build_utils.workspace = true
 
 [package.metadata.cargo-machete]
-ignored = ["anyhow", "heck","proc-macro2","quote","serde","serde_json","valence_build_utils","valence_math"]
+ignored = ["anyhow", "heck","proc-macro2","quote","serde","serde_json","chunkedge_build_utils","chunkedge_math"]

@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode};
-use valence_math::DVec3;
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_math::DVec3;
 
 use crate::sound::SoundId;
 use crate::{Packet, Particle};

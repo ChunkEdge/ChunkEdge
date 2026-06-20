@@ -1,38 +1,38 @@
-//! Scope graph for the Valence Command system.
+//! Scope graph for the ChunkEdge Command system.
 //!
 //! ## Breakdown
 //! Each scope is a node in a graph. A path from one node to another indicates
 //! that the first scope implies the second. A dot in the scope name indicates
 //! a sub-scope. You can use this to create a hierarchy of scopes. For example,
-//! the scope "valence.command" implies "valence.command.tp". this means that if
-//! a player has the "valence.command" scope, they can use the "tp" command.
+//! the scope "chunkedge.command" implies "chunkedge.command.tp". this means that if
+//! a player has the "chunkedge.command" scope, they can use the "tp" command.
 //!
 //! You may also link scopes together in the registry. This is useful for admin
-//! scope umbrellas. For example, if the scope "valence.admin" is linked to
-//! "valence.command", It means that if a player has the "valence.admin" scope,
+//! scope umbrellas. For example, if the scope "chunkedge.admin" is linked to
+//! "chunkedge.command", It means that if a player has the "chunkedge.admin" scope,
 //! they can use all commands under the command scope.
 //!
 //! # Example
 //! ```
-//! use valence_command::scopes::CommandScopeRegistry;
+//! use chunkedge_command::scopes::CommandScopeRegistry;
 //!
 //! let mut registry = CommandScopeRegistry::new();
 //!
 //! // add a scope to the registry
-//! registry.add_scope("valence.command.teleport");
+//! registry.add_scope("chunkedge.command.teleport");
 //!
-//! // we added 4 scopes to the registry. "valence", "valence.command", "valence.command.teleport",
+//! // we added 4 scopes to the registry. "chunkedge", "chunkedge.command", "chunkedge.command.teleport",
 //! // and the root scope.
 //! assert_eq!(registry.scope_count(), 4);
 //!
-//! registry.add_scope("valence.admin");
+//! registry.add_scope("chunkedge.admin");
 //!
 //! // add a scope to the registry with a link to another scope
-//! registry.link("valence.admin", "valence.command.teleport");
+//! registry.link("chunkedge.admin", "chunkedge.command.teleport");
 //!
-//! // the "valence.admin" scope implies the "valence.command.teleport" scope
+//! // the "chunkedge.admin" scope implies the "chunkedge.command.teleport" scope
 //! assert_eq!(
-//!     registry.grants("valence.admin", "valence.command.teleport"),
+//!     registry.grants("chunkedge.admin", "chunkedge.command.teleport"),
 //!     true
 //! );
 //! ```
@@ -134,15 +134,15 @@ impl CommandScopeRegistry {
     ///
     /// # Example
     /// ```
-    /// use valence_command::CommandScopeRegistry;
+    /// use chunkedge_command::CommandScopeRegistry;
     ///
     /// let mut registry = CommandScopeRegistry::new();
     ///
-    /// // creates two nodes. "valence" and "command" with an edge from "valence" to "command"
-    /// registry.add_scope("valence.command");
-    /// // creates one node. "valence.command.tp" with an edge from "valence.command" to
-    /// // "valence.command.tp"
-    /// registry.add_scope("valence.command.tp");
+    /// // creates two nodes. "chunkedge" and "command" with an edge from "chunkedge" to "command"
+    /// registry.add_scope("chunkedge.command");
+    /// // creates one node. "chunkedge.command.tp" with an edge from "chunkedge.command" to
+    /// // "chunkedge.command.tp"
+    /// registry.add_scope("chunkedge.command.tp");
     ///
     /// // the root node is always present
     /// assert_eq!(registry.scope_count(), 4);
@@ -173,16 +173,16 @@ impl CommandScopeRegistry {
     ///
     /// # Example
     /// ```
-    /// use valence_command::CommandScopeRegistry;
+    /// use chunkedge_command::CommandScopeRegistry;
     ///
     /// let mut registry = CommandScopeRegistry::new();
     ///
-    /// registry.add_scope("valence.command");
-    /// registry.add_scope("valence.command.tp");
+    /// registry.add_scope("chunkedge.command");
+    /// registry.add_scope("chunkedge.command.tp");
     ///
     /// assert_eq!(registry.scope_count(), 4);
     ///
-    /// registry.remove_scope("valence.command.tp");
+    /// registry.remove_scope("chunkedge.command.tp");
     ///
     /// assert_eq!(registry.scope_count(), 3);
     /// ```
@@ -196,15 +196,15 @@ impl CommandScopeRegistry {
     ///
     /// # Example
     /// ```
-    /// use valence_command::CommandScopeRegistry;
+    /// use chunkedge_command::CommandScopeRegistry;
     ///
     /// let mut registry = CommandScopeRegistry::new();
     ///
-    /// registry.add_scope("valence.command");
-    /// registry.add_scope("valence.command.tp");
+    /// registry.add_scope("chunkedge.command");
+    /// registry.add_scope("chunkedge.command.tp");
     ///
-    /// assert!(registry.grants("valence.command", "valence.command.tp")); // command implies tp
-    /// assert!(!registry.grants("valence.command.tp", "valence.command")); // tp does not imply command
+    /// assert!(registry.grants("chunkedge.command", "chunkedge.command.tp")); // command implies tp
+    /// assert!(!registry.grants("chunkedge.command.tp", "chunkedge.command")); // tp does not imply command
     /// ```
     pub fn grants(&self, scope: &str, other: &str) -> bool {
         if scope == other {
@@ -243,17 +243,17 @@ impl CommandScopeRegistry {
     ///
     /// # Example
     /// ```
-    /// use valence_command::CommandScopeRegistry;
+    /// use chunkedge_command::CommandScopeRegistry;
     ///
     /// let mut registry = CommandScopeRegistry::new();
     ///
-    /// registry.add_scope("valence.command");
-    /// registry.add_scope("valence.command.tp");
-    /// registry.add_scope("valence.admin");
+    /// registry.add_scope("chunkedge.command");
+    /// registry.add_scope("chunkedge.command.tp");
+    /// registry.add_scope("chunkedge.admin");
     ///
     /// assert!(registry.any_grants(
-    ///     &vec!["valence.admin", "valence.command"],
-    ///     "valence.command.tp"
+    ///     &vec!["chunkedge.admin", "chunkedge.command"],
+    ///     "chunkedge.command.tp"
     /// ));
     /// ```
     pub fn any_grants(&self, scopes: &Vec<&str>, other: &str) -> bool {
@@ -270,16 +270,16 @@ impl CommandScopeRegistry {
     ///
     /// # Example
     /// ```
-    /// use valence_command::CommandScopeRegistry;
+    /// use chunkedge_command::CommandScopeRegistry;
     ///
     /// let mut registry = CommandScopeRegistry::new();
     ///
-    /// registry.add_scope("valence.command.tp");
+    /// registry.add_scope("chunkedge.command.tp");
     ///
-    /// registry.link("valence.admin", "valence.command");
+    /// registry.link("chunkedge.admin", "chunkedge.command");
     ///
-    /// assert!(registry.grants("valence.admin", "valence.command"));
-    /// assert!(registry.grants("valence.admin", "valence.command.tp"));
+    /// assert!(registry.grants("chunkedge.admin", "chunkedge.command"));
+    /// assert!(registry.grants("chunkedge.admin", "chunkedge.command.tp"));
     /// ```
     pub fn link(&mut self, scope: &str, other: &str) {
         self.add_scope(scope);

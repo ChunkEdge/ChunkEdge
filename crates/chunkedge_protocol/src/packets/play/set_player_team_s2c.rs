@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
 use bitfield_struct::bitfield;
-use valence_binary::{Decode, Encode, TextComponent};
+use chunkedge_binary::{Decode, Encode, TextComponent};
 
 use crate::Packet;
 

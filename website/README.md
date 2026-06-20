@@ -1,4 +1,4 @@
-# Valence.rs
+# ChunkEdge.rs
 
 This website is built using the Static Site Generator [Zola](https://github.com/getzola/zola).
 The theme is derived from https://github.com/huhu/juice.
@@ -19,7 +19,7 @@ or any other similar http server.
 
 To test on GitHub pages:
 1. Change the source for Pages deployments in the Repository Settings > Pages to GitHub Actions.
-2. This step is only needed if you don't put a custom domain in front of Pages: Change the `base_url` in `./config.toml` to `/<your-valence-fork-name>/` as GitHub Pages deployments for repositories aren't available at `/`.
+2. This step is only needed if you don't put a custom domain in front of Pages: Change the `base_url` in `./config.toml` to `/<your-chunkedge-fork-name>/` as GitHub Pages deployments for repositories aren't available at `/`.
 3. Push to main or manually start the workflow in the Actions-tab on GitHub.
 
 ## Deployment

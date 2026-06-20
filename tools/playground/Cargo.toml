@@ -15,9 +15,9 @@ anyhow.workspace = true
 clap.workspace = true
 tracing-subscriber.workspace = true
 tracing.workspace = true
-valence.workspace = true
-valence_math.workspace = true
-valence_server_common.workspace = true
+chunkedge.workspace = true
+chunkedge_math.workspace = true
+chunkedge_server_common.workspace = true
 
 [package.metadata.cargo-machete]
-ignored = ["anyhow", "tracing-subscriber", "valence_math", "valence_server_common"]
+ignored = ["anyhow", "tracing-subscriber", "chunkedge_math", "chunkedge_server_common"]

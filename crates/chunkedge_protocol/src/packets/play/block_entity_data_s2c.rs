@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode};
-use valence_generated::block::BlockEntityKind;
-use valence_nbt::Compound;
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_generated::block::BlockEntityKind;
+use chunkedge_nbt::Compound;
 
 use crate::{BlockPos, Packet};
 

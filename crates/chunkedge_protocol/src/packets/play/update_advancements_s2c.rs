@@ -3,10 +3,10 @@
 use std::borrow::Cow;
 use std::io::Write;
 
-use valence_binary::{Decode, Encode, TextComponent, VarInt};
-use valence_generated::packet_id;
-use valence_ident::Ident;
-use valence_item::ItemStack;
+use chunkedge_binary::{Decode, Encode, TextComponent, VarInt};
+use chunkedge_generated::packet_id;
+use chunkedge_ident::Ident;
+use chunkedge_item::ItemStack;
 
 use crate::Packet;
 

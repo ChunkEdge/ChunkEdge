@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
+use chunkedge_binary::{Bounded, Decode, Encode};
 use uuid::Uuid;
-use valence_binary::{Bounded, Decode, Encode};
 
 use crate::profile::Property;
 use crate::{Packet, PacketState};

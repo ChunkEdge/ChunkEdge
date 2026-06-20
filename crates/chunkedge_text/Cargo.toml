@@ -1,5 +1,5 @@
 [package]
-name = "valence_text"
+name = "chunkedge_text"
 description = "Parsing and writing Minecraft's JSON text format"
 readme = "README.md"
 version.workspace = true
@@ -17,5 +17,5 @@ serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
 thiserror.workspace = true
 uuid = { workspace = true, features = ["serde"] }
-valence_ident.workspace = true
-valence_nbt.workspace = true
+chunkedge_ident.workspace = true
+chunkedge_nbt.workspace = true

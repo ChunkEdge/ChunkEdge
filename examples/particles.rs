@@ -2,8 +2,8 @@
 
 use std::fmt;
 
-use valence::prelude::*;
-use valence::protocol::packets::play::level_particles_s2c::VibrationSourceType;
+use chunkedge::prelude::*;
+use chunkedge::protocol::packets::play::level_particles_s2c::VibrationSourceType;
 
 const SPAWN_Y: i32 = 64;
 

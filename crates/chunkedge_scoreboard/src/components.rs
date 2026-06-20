@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
 use bevy_ecs::prelude::*;
+use chunkedge_server::entity::EntityLayerId;
+use chunkedge_server::protocol::packets::play::set_display_objective_s2c::ScoreboardPosition;
+use chunkedge_server::protocol::packets::play::set_objective_s2c::ObjectiveRenderType;
+use chunkedge_server::text::IntoText;
+use chunkedge_server::Text;
 use derive_more::{Deref, DerefMut};
-use valence_server::entity::EntityLayerId;
-use valence_server::protocol::packets::play::set_display_objective_s2c::ScoreboardPosition;
-use valence_server::protocol::packets::play::set_objective_s2c::ObjectiveRenderType;
-use valence_server::text::IntoText;
-use valence_server::Text;
 
 /// A string that identifies an objective. There is one scoreboard per
 /// objective.It's generally not safe to modify this after it's been created.

@@ -6,15 +6,15 @@ REM Run the extractor first (`./gradlew runServer`) before running this.
 
 cd /d "%~dp0"
 
-copy run\valence_extractor_output\entities.json ..\crates\valence_entity\extracted\
-copy run\valence_extractor_output\misc.json ..\crates\valence_entity\extracted\
-copy run\valence_extractor_output\attributes.json ..\crates\valence_generated\extracted\
-copy run\valence_extractor_output\blocks.json ..\crates\valence_generated\extracted\
-copy run\valence_extractor_output\effects.json ..\crates\valence_generated\extracted\
-copy run\valence_extractor_output\items.json ..\crates\valence_generated\extracted\
-copy run\valence_extractor_output\packets.json ..\crates\valence_generated\extracted\
-copy run\valence_extractor_output\sounds.json ..\crates\valence_generated\extracted\
-copy run\valence_extractor_output\translation_keys.json ..\crates\valence_lang\extracted\
-copy run\valence_extractor_output\registry_codec.json ..\crates\valence_registry\extracted\
-copy run\valence_extractor_output\tags.json ..\crates\valence_registry\extracted\
-copy run\valence_extractor_output\packets.json ..\tools\packet_inspector\extracted\
+copy run\chunkedge_extractor_output\entities.json ..\crates\chunkedge_entity\extracted\
+copy run\chunkedge_extractor_output\misc.json ..\crates\chunkedge_entity\extracted\
+copy run\chunkedge_extractor_output\attributes.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\blocks.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\effects.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\items.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\packets.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\sounds.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\translation_keys.json ..\crates\chunkedge_lang\extracted\
+copy run\chunkedge_extractor_output\registry_codec.json ..\crates\chunkedge_registry\extracted\
+copy run\chunkedge_extractor_output\tags.json ..\crates\chunkedge_registry\extracted\
+copy run\chunkedge_extractor_output\packets.json ..\tools\packet_inspector\extracted\

@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
-use valence_binary::{Decode, Encode, VarInt};
-use valence_ident::Ident;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_ident::Ident;
 
 use crate::Packet;
 #[derive(Clone, Debug, Encode, Decode, Packet)]

@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Encode, VarInt};
 
 use super::recipe_book_add_s2c::RecipeDisplay;
 use crate::Packet;

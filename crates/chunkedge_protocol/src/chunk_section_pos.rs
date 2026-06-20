@@ -2,9 +2,9 @@ use std::fmt;
 use std::io::Write;
 
 use bitfield_struct::bitfield;
+use chunkedge_binary::{Decode, Encode};
 use derive_more::From;
 use thiserror::Error;
-use valence_binary::{Decode, Encode};
 
 use crate::{BiomePos, BlockPos};
 

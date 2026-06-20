@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use valence_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Encode, VarInt};
 
 use crate::Packet;
 #[derive(Clone, PartialEq, Debug, Encode, Decode, Packet)]

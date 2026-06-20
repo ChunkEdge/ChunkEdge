@@ -1,12 +1,12 @@
 use std::io::Write;
 
+use chunkedge_binary::{Decode, Encode, IDSet, IdOr, TextComponent, VarInt};
+use chunkedge_generated::attributes::EntityAttributeOperation;
+use chunkedge_generated::registry_id::RegistryId;
+use chunkedge_ident::Ident;
+use chunkedge_nbt::Compound;
+use chunkedge_text::Text;
 use uuid::Uuid;
-use valence_binary::{Decode, Encode, IDSet, IdOr, TextComponent, VarInt};
-use valence_generated::attributes::EntityAttributeOperation;
-use valence_generated::registry_id::RegistryId;
-use valence_ident::Ident;
-use valence_nbt::Compound;
-use valence_text::Text;
 
 use crate::stack::ItemStack;
 

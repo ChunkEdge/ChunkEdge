@@ -2,13 +2,13 @@
 
 use std::f64::consts::TAU;
 
-use valence::abilities::{PlayerStartFlyingEvent, PlayerStopFlyingEvent};
-use valence::math::{DQuat, EulerRot};
-use valence::message::SendMessage;
-use valence::prelude::*;
-use valence_text::color::NamedColor;
+use chunkedge::abilities::{PlayerStartFlyingEvent, PlayerStopFlyingEvent};
+use chunkedge::math::{DQuat, EulerRot};
+use chunkedge::message::SendMessage;
+use chunkedge::prelude::*;
+use chunkedge_text::color::NamedColor;
 
-type SpherePartBundle = valence::entity::cow::CowEntityBundle;
+type SpherePartBundle = chunkedge::entity::cow::CowEntityBundle;
 
 const SPHERE_CENTER: DVec3 = DVec3::new(0.5, SPAWN_POS.y as f64 + 2.0, 0.5);
 const SPHERE_AMOUNT: usize = 200;

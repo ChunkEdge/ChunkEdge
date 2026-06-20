@@ -5,7 +5,7 @@ A Minecraft client for testing server performance under heavy load. (Incomplete)
 ## Usage
 
 ```
-# Run the example in valence
+# Run the example in chunkedge
 cargo run --example bench_players
 
 # Run the stressor tool in tools/stresser

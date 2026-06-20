@@ -1,16 +1,16 @@
-Valence has a public Discord server [here](https://discord.gg/8Fqqy9XrYb) and GitHub discussions [here](https://github.com/valence-rs/valence/discussions). Check those out if you have additional questions
+ChunkEdge has a public Discord server [here](https://discord.gg/8Fqqy9XrYb) and GitHub discussions [here](https://github.com/ChunkEdge/ChunkEdge/discussions). Check those out if you have additional questions
 or comments.
 
 # What version of Rust should I use?
 
-To _use_ Valence, only the most recent stable version of Rust is required. However, contributors should know that
+To _use_ ChunkEdge, only the most recent stable version of Rust is required. However, contributors should know that
 unstable `rustfmt` settings are enabled in the project. To run `rustfmt` with the nightly toolchain, use
 the `cargo +nightly fmt` command.
 
 # What issues should I work on?
 
 Issues
-labelled [good first issue](https://github.com/valence-rs/valence/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+labelled [good first issue](https://github.com/ChunkEdge/ChunkEdge/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 are a good place to start. This label is reserved for issues that are relatively uncontroversial and shouldn't require too much specialized domain
 knowledge to complete. New contributors are not required to start with these issues.
 

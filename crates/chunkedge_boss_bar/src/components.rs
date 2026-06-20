@@ -1,13 +1,13 @@
 use std::borrow::Cow;
 
 use bevy_ecs::prelude::{Bundle, Component};
-use derive_more::{Deref, DerefMut};
-use valence_entity::EntityLayerId;
-use valence_server::protocol::packets::play::boss_event_s2c::{
+use chunkedge_entity::EntityLayerId;
+use chunkedge_server::protocol::packets::play::boss_event_s2c::{
     BossBarAction, BossBarColor, BossBarDivision, BossBarFlags,
 };
-use valence_server::protocol::IntoTextComponent;
-use valence_server::{Text, UniqueId};
+use chunkedge_server::protocol::IntoTextComponent;
+use chunkedge_server::{Text, UniqueId};
+use derive_more::{Deref, DerefMut};
 
 /// The bundle of components that make up a boss bar.
 #[derive(Bundle, Default)]

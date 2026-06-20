@@ -62,7 +62,7 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
 
             add_trait_bounds(
                 &mut input.generics,
-                quote!(::valence_binary::__private::Decode<#lifetime>),
+                quote!(::chunkedge_binary::__private::Decode<#lifetime>),
             );
 
             let (impl_generics, ty_generics, where_clause) =
@@ -70,11 +70,11 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
 
             Ok(quote! {
                 #[allow(unused_imports)]
-                impl #impl_generics ::valence_binary::__private::Decode<#lifetime> for #input_name #ty_generics
+                impl #impl_generics ::chunkedge_binary::__private::Decode<#lifetime> for #input_name #ty_generics
                 #where_clause
                 {
-                    fn decode(_r: &mut &#lifetime [u8]) -> ::valence_binary::__private::Result<Self> {
-                        use ::valence_binary::__private::{Decode, Context, ensure};
+                    fn decode(_r: &mut &#lifetime [u8]) -> ::chunkedge_binary::__private::Result<Self> {
+                        use ::chunkedge_binary::__private::{Decode, Context, ensure};
 
                         Ok(#decode_fields)
                     }
@@ -134,7 +134,7 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
 
             add_trait_bounds(
                 &mut input.generics,
-                quote!(::valence_binary::__private::Decode<#lifetime>),
+                quote!(::chunkedge_binary::__private::Decode<#lifetime>),
             );
 
             let (impl_generics, ty_generics, where_clause) =
@@ -142,11 +142,11 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
 
             Ok(quote! {
                 #[allow(unused_imports)]
-                impl #impl_generics ::valence_binary::__private::Decode<#lifetime> for #input_name #ty_generics
+                impl #impl_generics ::chunkedge_binary::__private::Decode<#lifetime> for #input_name #ty_generics
                 #where_clause
                 {
-                    fn decode(_r: &mut &#lifetime [u8]) -> ::valence_binary::__private::Result<Self> {
-                        use ::valence_binary::__private::{Decode, Context, VarInt, bail};
+                    fn decode(_r: &mut &#lifetime [u8]) -> ::chunkedge_binary::__private::Result<Self> {
+                        use ::chunkedge_binary::__private::{Decode, Context, VarInt, bail};
 
                         let ctx = concat!("failed to decode enum discriminant in `", stringify!(#input_name), "`");
                         let disc = VarInt::decode(_r).context(ctx)?.0;

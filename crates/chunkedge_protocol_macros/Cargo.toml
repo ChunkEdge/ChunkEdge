@@ -1,6 +1,6 @@
 [package]
-name = "valence_protocol_macros"
-description = "Procedural macros for valence_protocol"
+name = "chunkedge_protocol_macros"
+description = "Procedural macros for chunkedge_protocol"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true

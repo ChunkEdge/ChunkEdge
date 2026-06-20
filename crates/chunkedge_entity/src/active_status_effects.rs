@@ -1,6 +1,6 @@
 use bevy_ecs::prelude::*;
+use chunkedge_protocol::status_effects::StatusEffect;
 use indexmap::IndexMap;
-use valence_protocol::status_effects::StatusEffect;
 
 /// Represents a change in the [`ActiveStatusEffects`] of an [`Entity`].
 #[derive(Debug)]

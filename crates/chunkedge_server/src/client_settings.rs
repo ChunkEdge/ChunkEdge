@@ -1,9 +1,9 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_entity::player::{self, PlayerModelParts};
-use valence_protocol::packets::configuration::client_information_c2s::ParticleMode;
-use valence_protocol::packets::play::client_information_c2s::ChatMode;
-use valence_protocol::packets::play::ClientInformationC2s;
+use chunkedge_entity::player::{self, PlayerModelParts};
+use chunkedge_protocol::packets::configuration::client_information_c2s::ParticleMode;
+use chunkedge_protocol::packets::play::client_information_c2s::ChatMode;
+use chunkedge_protocol::packets::play::ClientInformationC2s;
 
 use crate::client::ViewDistance;
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

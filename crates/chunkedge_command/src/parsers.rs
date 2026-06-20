@@ -20,6 +20,7 @@ pub mod vec3;
 use std::ops::Add;
 
 pub use block_pos::BlockPos;
+pub(crate) use chunkedge_server::protocol::packets::play::commands_s2c::Parser;
 pub use column_pos::ColumnPos;
 pub use entity_anchor::EntityAnchor;
 pub use entity_selector::EntitySelector;
@@ -30,7 +31,6 @@ pub use strings::{GreedyString, QuotableString};
 pub use swizzle::Swizzle;
 use thiserror::Error;
 pub use time::Time;
-pub(crate) use valence_server::protocol::packets::play::commands_s2c::Parser;
 pub use vec2::Vec2;
 pub use vec3::Vec3;
 

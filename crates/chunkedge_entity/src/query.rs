@@ -3,15 +3,15 @@ use std::mem;
 use bevy_ecs::prelude::DetectChanges;
 use bevy_ecs::query::QueryData;
 use bevy_ecs::world::Ref;
-use valence_math::DVec3;
-use valence_protocol::encode::WritePacket;
-use valence_protocol::packets::play::{
+use chunkedge_math::DVec3;
+use chunkedge_protocol::encode::WritePacket;
+use chunkedge_protocol::packets::play::{
     AddEntityS2c, AnimateS2c, EntityEventS2c, EntityPositionSyncS2c, MoveEntityPosRotS2c,
     MoveEntityPosS2c, MoveEntityRotS2c, RotateHeadS2c, SetEntityDataS2c, SetEntityMotionS2c,
     UpdateAttributesS2c,
 };
-use valence_protocol::{ByteAngle, VarInt};
-use valence_server_common::UniqueId;
+use chunkedge_protocol::{ByteAngle, VarInt};
+use chunkedge_server_common::UniqueId;
 
 use crate::attributes::TrackedEntityAttributes;
 use crate::tracked_data::TrackedData;

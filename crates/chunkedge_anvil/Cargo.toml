@@ -1,6 +1,6 @@
 [package]
-name = "valence_anvil"
-description = "Anvil file format support for Valence"
+name = "chunkedge_anvil"
+description = "Anvil file format support for ChunkEdge"
 readme = "README.md"
 keywords = ["anvil", "minecraft", "deserialization"]
 version = "0.1.0"
@@ -14,7 +14,7 @@ workspace = true
 
 [features]
 bevy_plugin = ["dep:bevy_app", "dep:bevy_ecs", "dep:flume", "parsing"]
-parsing = ["dep:valence_server"]
+parsing = ["dep:chunkedge_server"]
 
 [dependencies]
 bevy_app = { workspace = true, optional = true }
@@ -26,5 +26,5 @@ flate2.workspace = true
 flume = { workspace = true, optional = true }
 lru.workspace = true
 thiserror.workspace = true
-valence_nbt = { workspace = true, features = ["binary"] }
-valence_server = { workspace = true, optional = true }
+chunkedge_nbt = { workspace = true, features = ["binary"] }
+chunkedge_server = { workspace = true, optional = true }

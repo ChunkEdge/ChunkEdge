@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::io::Write;
 
 use anyhow::Error;
-use valence_generated::registry_id::RegistryId;
+use chunkedge_generated::registry_id::RegistryId;
 
 use crate::{Decode, Encode, VarInt};
 

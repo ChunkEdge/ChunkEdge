@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 use crate::packets::configuration::custom_report_details_s2c::CustomReportDetail;
 use crate::Packet;

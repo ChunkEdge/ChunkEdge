@@ -2,7 +2,7 @@
 language = "en"
 multilingual = false
 src = "book"
-title = "Valence Documentation"
+title = "ChunkEdge Documentation"
 
 [build]
 build-dir = "public/book"

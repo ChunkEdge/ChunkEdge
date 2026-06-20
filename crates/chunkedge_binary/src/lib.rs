@@ -28,7 +28,7 @@ pub mod __private {
     pub use crate::{Decode, Encode, VarInt};
 }
 
-pub use valence_protocol_macros::{Decode, Encode};
+pub use chunkedge_protocol_macros::{Decode, Encode};
 
 /// The `Encode` trait allows objects to be written to the Minecraft protocol.
 /// It is the inverse of [`Decode`].
@@ -47,7 +47,7 @@ pub use valence_protocol_macros::{Decode, Encode};
 /// discriminants.
 ///
 /// ```
-/// use valence_binary::Encode;
+/// use chunkedge_binary::Encode;
 ///
 /// #[derive(Encode)]
 /// struct MyStruct<'a> {
@@ -77,7 +77,7 @@ pub use valence_protocol_macros::{Decode, Encode};
 /// println!("{buf:?}");
 /// ```
 ///
-/// [macro]: valence_protocol_macros::Encode
+/// [macro]: chunkedge_protocol_macros::Encode
 /// [`VarInt`]: var_int::VarInt
 pub trait Encode {
     /// Writes this object to the provided writer.
@@ -135,7 +135,7 @@ pub trait Encode {
 /// discriminants.
 ///
 /// ```
-/// use valence_binary::Decode;
+/// use chunkedge_binary::Decode;
 ///
 /// #[derive(PartialEq, Debug, Decode)]
 /// struct MyStruct {
@@ -164,7 +164,7 @@ pub trait Encode {
 /// assert!(r.is_empty());
 /// ```
 ///
-/// [macro]: valence_protocol_macros::Decode
+/// [macro]: chunkedge_protocol_macros::Decode
 /// [`VarInt`]: var_int::VarInt
 pub trait Decode<'a>: Sized {
     /// Reads this object from the provided byte slice.

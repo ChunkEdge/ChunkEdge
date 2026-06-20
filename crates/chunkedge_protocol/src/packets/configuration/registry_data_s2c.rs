@@ -1,9 +1,9 @@
 use std::borrow::Cow;
 
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_ident::Ident;
+use chunkedge_nbt::Compound;
 use indexmap::IndexMap;
-use valence_binary::{Decode, Encode};
-use valence_ident::Ident;
-use valence_nbt::Compound;
 
 use crate::{Packet, PacketState};
 

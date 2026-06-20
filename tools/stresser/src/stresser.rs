@@ -2,20 +2,20 @@ use std::io::{self, ErrorKind};
 use std::net::SocketAddr;
 
 use anyhow::bail;
-use tokio::io::AsyncWriteExt;
-use tokio::net::TcpStream;
-use uuid::Uuid;
-use valence_protocol::movement_flags::MovementFlags;
-use valence_protocol::packets::handshake::intention_c2s::HandShakeIntent;
-use valence_protocol::packets::handshake::IntentionC2s;
-use valence_protocol::packets::login::{HelloC2s, HelloS2c, LoginCompressionS2c};
-use valence_protocol::packets::play::{
+use chunkedge_protocol::movement_flags::MovementFlags;
+use chunkedge_protocol::packets::handshake::intention_c2s::HandShakeIntent;
+use chunkedge_protocol::packets::handshake::IntentionC2s;
+use chunkedge_protocol::packets::login::{HelloC2s, HelloS2c, LoginCompressionS2c};
+use chunkedge_protocol::packets::play::{
     AcceptTeleportationC2s, KeepAliveC2s, KeepAliveS2c, LoginS2c, MovePlayerPosC2s,
     PlayerPositionS2c,
 };
-use valence_protocol::{
+use chunkedge_protocol::{
     CompressionThreshold, Packet, PacketDecoder, PacketEncoder, VarInt, PROTOCOL_VERSION,
 };
+use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
+use uuid::Uuid;
 
 pub struct SessionParams<'a> {
     pub socket_addr: SocketAddr,

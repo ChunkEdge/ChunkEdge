@@ -1,11 +1,11 @@
 #![cfg_attr(
     unstable_doc,
-    doc = "**❗ NOTE:** This documentation is sourced from the `main` branch. If you're looking for the most recent stable release, go [here](https://docs.rs/valence/latest/valence/).\n\n---\n"
+    doc = "**❗ NOTE:** This documentation is sourced from the `main` branch. If you're looking for the most recent stable release, go [here](https://docs.rs/chunkedge/latest/chunkedge/).\n\n---\n"
 )]
 #![doc = include_str!("../README.md")]
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/valence-rs/valence/main/assets/logo.svg",
-    html_favicon_url = "https://raw.githubusercontent.com/valence-rs/valence/main/assets/logo.svg"
+    html_logo_url = "https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/logo.svg",
+    html_favicon_url = "https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/logo.svg"
 )]
 #![deny(
     rustdoc::broken_intra_doc_links,
@@ -35,65 +35,65 @@ mod tests;
 
 #[cfg(feature = "log")]
 pub use bevy_log as log;
+#[cfg(feature = "advancement")]
+pub use chunkedge_advancement as advancement;
+#[cfg(feature = "anvil")]
+pub use chunkedge_anvil as anvil;
+#[cfg(feature = "boss_bar")]
+pub use chunkedge_boss_bar as boss_bar;
+#[cfg(feature = "command")]
+pub use chunkedge_command as command;
+#[cfg(feature = "command")]
+pub use chunkedge_command_macros as command_macros;
+#[cfg(feature = "equipment")]
+pub use chunkedge_equipment as equipment;
+#[cfg(feature = "inventory")]
+pub use chunkedge_inventory as inventory;
+#[cfg(feature = "network")]
+pub use chunkedge_network as network;
+#[cfg(feature = "player_list")]
+pub use chunkedge_player_list as player_list;
+use chunkedge_registry::RegistryPlugin;
+#[cfg(feature = "scoreboard")]
+pub use chunkedge_scoreboard as scoreboard;
+use chunkedge_server::abilities::AbilitiesPlugin;
+use chunkedge_server::action::ActionPlugin;
+use chunkedge_server::client::ClientPlugin;
+use chunkedge_server::client_command::ClientCommandPlugin;
+use chunkedge_server::client_settings::ClientSettingsPlugin;
+use chunkedge_server::custom_payload::CustomPayloadPlugin;
+use chunkedge_server::entity::hitbox::HitboxPlugin;
+use chunkedge_server::entity::EntityPlugin;
+use chunkedge_server::event_loop::EventLoopPlugin;
+use chunkedge_server::hand_swing::HandSwingPlugin;
+use chunkedge_server::interact_block::InteractBlockPlugin;
+use chunkedge_server::interact_entity::InteractEntityPlugin;
+use chunkedge_server::interact_item::InteractItemPlugin;
+use chunkedge_server::keepalive::KeepalivePlugin;
+use chunkedge_server::layer::LayerPlugin;
+use chunkedge_server::message::MessagePlugin;
+use chunkedge_server::movement::MovementPlugin;
+use chunkedge_server::op_level::OpLevelPlugin;
+pub use chunkedge_server::protocol::status_effects;
+use chunkedge_server::resource_pack::ResourcePackPlugin;
+use chunkedge_server::status::StatusPlugin;
+use chunkedge_server::status_effect::StatusEffectPlugin;
+use chunkedge_server::teleport::TeleportPlugin;
+pub use chunkedge_server::*;
+#[cfg(feature = "weather")]
+pub use chunkedge_weather as weather;
+#[cfg(feature = "world_border")]
+pub use chunkedge_world_border as world_border;
 use registry::biome::BiomePlugin;
 use registry::dimension_type::DimensionTypePlugin;
-#[cfg(feature = "advancement")]
-pub use valence_advancement as advancement;
-#[cfg(feature = "anvil")]
-pub use valence_anvil as anvil;
-#[cfg(feature = "boss_bar")]
-pub use valence_boss_bar as boss_bar;
-#[cfg(feature = "command")]
-pub use valence_command as command;
-#[cfg(feature = "command")]
-pub use valence_command_macros as command_macros;
-#[cfg(feature = "equipment")]
-pub use valence_equipment as equipment;
-#[cfg(feature = "inventory")]
-pub use valence_inventory as inventory;
-#[cfg(feature = "network")]
-pub use valence_network as network;
-#[cfg(feature = "player_list")]
-pub use valence_player_list as player_list;
-use valence_registry::RegistryPlugin;
-#[cfg(feature = "scoreboard")]
-pub use valence_scoreboard as scoreboard;
-use valence_server::abilities::AbilitiesPlugin;
-use valence_server::action::ActionPlugin;
-use valence_server::client::ClientPlugin;
-use valence_server::client_command::ClientCommandPlugin;
-use valence_server::client_settings::ClientSettingsPlugin;
-use valence_server::custom_payload::CustomPayloadPlugin;
-use valence_server::entity::hitbox::HitboxPlugin;
-use valence_server::entity::EntityPlugin;
-use valence_server::event_loop::EventLoopPlugin;
-use valence_server::hand_swing::HandSwingPlugin;
-use valence_server::interact_block::InteractBlockPlugin;
-use valence_server::interact_entity::InteractEntityPlugin;
-use valence_server::interact_item::InteractItemPlugin;
-use valence_server::keepalive::KeepalivePlugin;
-use valence_server::layer::LayerPlugin;
-use valence_server::message::MessagePlugin;
-use valence_server::movement::MovementPlugin;
-use valence_server::op_level::OpLevelPlugin;
-pub use valence_server::protocol::status_effects;
-use valence_server::resource_pack::ResourcePackPlugin;
-use valence_server::status::StatusPlugin;
-use valence_server::status_effect::StatusEffectPlugin;
-use valence_server::teleport::TeleportPlugin;
-pub use valence_server::*;
-#[cfg(feature = "weather")]
-pub use valence_weather as weather;
-#[cfg(feature = "world_border")]
-pub use valence_world_border as world_border;
-pub use {valence_item as item, valence_lang as lang};
+pub use {chunkedge_item as item, chunkedge_lang as lang};
 
-/// Contains the most frequently used items in Valence projects.
+/// Contains the most frequently used items in ChunkEdge projects.
 ///
 /// This is usually glob imported like so:
 ///
 /// ```no_run
-/// use valence::prelude::*; // Glob import.
+/// use chunkedge::prelude::*; // Glob import.
 ///
 /// let mut app = App::empty();
 /// app.add_systems(Update, || println!("yippee!"));
@@ -104,68 +104,70 @@ pub mod prelude {
     pub use bevy_app::prelude::*;
     pub use bevy_ecs; // Needed for bevy_ecs macros to function correctly.
     pub use bevy_ecs::prelude::*;
-    pub use uuid::Uuid;
     #[cfg(feature = "advancement")]
-    pub use valence_advancement::{
+    pub use chunkedge_advancement::{
         event::AdvancementTabChangeEvent, Advancement, AdvancementBundle, AdvancementClientUpdate,
         AdvancementCriteria, AdvancementDisplay, AdvancementFrameType, AdvancementRequirements,
     };
     #[cfg(feature = "equipment")]
-    pub use valence_equipment::Equipment;
+    pub use chunkedge_equipment::Equipment;
     #[cfg(feature = "inventory")]
-    pub use valence_inventory::{
+    pub use chunkedge_inventory::{
         CursorItem, Inventory, InventoryKind, InventoryWindow, InventoryWindowMut, OpenInventory,
     };
     #[cfg(feature = "network")]
-    pub use valence_network::{
+    pub use chunkedge_network::{
         ConnectionMode, ErasedNetworkCallbacks, NetworkCallbacks, NetworkSettings, NewClientInfo,
         SharedNetworkState,
     };
     #[cfg(feature = "player_list")]
-    pub use valence_player_list::{PlayerList, PlayerListEntry};
-    pub use valence_registry::biome::{Biome, BiomeId, BiomeRegistry};
-    pub use valence_registry::dimension_type::{DimensionType, DimensionTypeRegistry};
-    pub use valence_server::action::{DiggingEvent, DiggingState};
-    pub use valence_server::block::{BlockKind, BlockState, PropName, PropValue};
-    pub use valence_server::client::{
+    pub use chunkedge_player_list::{PlayerList, PlayerListEntry};
+    pub use chunkedge_registry::biome::{Biome, BiomeId, BiomeRegistry};
+    pub use chunkedge_registry::dimension_type::{DimensionType, DimensionTypeRegistry};
+    pub use chunkedge_server::action::{DiggingEvent, DiggingState};
+    pub use chunkedge_server::block::{BlockKind, BlockState, PropName, PropValue};
+    pub use chunkedge_server::client::{
         despawn_disconnected_clients, Client, Ip, OldView, OldViewDistance, Properties, Username,
         View, ViewDistance, VisibleChunkLayer, VisibleEntityLayers,
     };
-    pub use valence_server::client_command::{
+    pub use chunkedge_server::client_command::{
         JumpWithHorseEvent, JumpWithHorseState, LeaveBedEvent, PlayerCommand, SneakEvent,
         SneakState, SprintEvent, SprintState,
     };
-    pub use valence_server::entity::hitbox::{Hitbox, HitboxShape};
-    pub use valence_server::entity::{
+    pub use chunkedge_server::entity::hitbox::{Hitbox, HitboxShape};
+    pub use chunkedge_server::entity::{
         EntityAnimation, EntityKind, EntityLayerId, EntityManager, EntityStatus, HeadYaw, Look,
         OldEntityLayerId, OldPosition, Position,
     };
-    pub use valence_server::event_loop::{
+    pub use chunkedge_server::event_loop::{
         EventLoopPostUpdate, EventLoopPreUpdate, EventLoopUpdate,
     };
-    pub use valence_server::ident::Ident;
-    pub use valence_server::interact_entity::{EntityInteraction, InteractEntityEvent};
-    pub use valence_server::layer::chunk::{
+    pub use chunkedge_server::ident::Ident;
+    pub use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityEvent};
+    pub use chunkedge_server::layer::chunk::{
         Block, BlockRef, Chunk, ChunkLayer, LoadedChunk, UnloadedChunk,
     };
-    pub use valence_server::layer::{EntityLayer, LayerBundle};
-    pub use valence_server::math::{DVec2, DVec3, Vec2, Vec3};
-    pub use valence_server::message::SendMessage as _;
-    pub use valence_server::nbt::Compound;
-    pub use valence_server::protocol::packets::play::level_particles_s2c::Particle;
-    pub use valence_server::protocol::text::{Color, IntoText, Text};
-    pub use valence_server::protocol::RegistryId;
-    pub use valence_server::spawn::{ClientSpawnQuery, ClientSpawnQueryReadOnly, RespawnPosition};
-    pub use valence_server::title::SetTitle as _;
-    pub use valence_server::{
+    pub use chunkedge_server::layer::{EntityLayer, LayerBundle};
+    pub use chunkedge_server::math::{DVec2, DVec3, Vec2, Vec3};
+    pub use chunkedge_server::message::SendMessage as _;
+    pub use chunkedge_server::nbt::Compound;
+    pub use chunkedge_server::protocol::packets::play::level_particles_s2c::Particle;
+    pub use chunkedge_server::protocol::text::{Color, IntoText, Text};
+    pub use chunkedge_server::protocol::RegistryId;
+    pub use chunkedge_server::spawn::{
+        ClientSpawnQuery, ClientSpawnQueryReadOnly, RespawnPosition,
+    };
+    pub use chunkedge_server::title::SetTitle as _;
+    pub use chunkedge_server::{
         ident, BlockPos, ChunkPos, ChunkView, Despawned, Direction, GameMode, Hand, ItemKind,
         ItemStack, Server, UniqueId,
     };
+    pub use uuid::Uuid;
 
     pub use super::DefaultPlugins;
 }
 
-/// This plugin group will add all the default plugins for a Valence
+/// This plugin group will add all the default plugins for a ChunkEdge
 /// application.
 ///
 /// [`DefaultPlugins`] obeys Cargo feature flags. Users may exert control over
@@ -211,57 +213,57 @@ impl PluginGroup for DefaultPlugins {
 
         #[cfg(feature = "network")]
         {
-            group = group.add(valence_network::NetworkPlugin)
+            group = group.add(chunkedge_network::NetworkPlugin)
         }
 
         #[cfg(feature = "player_list")]
         {
-            group = group.add(valence_player_list::PlayerListPlugin)
+            group = group.add(chunkedge_player_list::PlayerListPlugin)
         }
 
         #[cfg(feature = "equipment")]
         {
-            group = group.add(valence_equipment::EquipmentPlugin)
+            group = group.add(chunkedge_equipment::EquipmentPlugin)
         }
 
         #[cfg(feature = "inventory")]
         {
-            group = group.add(valence_inventory::InventoryPlugin)
+            group = group.add(chunkedge_inventory::InventoryPlugin)
         }
 
         #[cfg(feature = "anvil")]
         {
-            group = group.add(valence_anvil::AnvilPlugin)
+            group = group.add(chunkedge_anvil::AnvilPlugin)
         }
 
         #[cfg(feature = "advancement")]
         {
-            group = group.add(valence_advancement::AdvancementPlugin)
+            group = group.add(chunkedge_advancement::AdvancementPlugin)
         }
 
         #[cfg(feature = "weather")]
         {
-            group = group.add(valence_weather::WeatherPlugin)
+            group = group.add(chunkedge_weather::WeatherPlugin)
         }
 
         #[cfg(feature = "world_border")]
         {
-            group = group.add(valence_world_border::WorldBorderPlugin)
+            group = group.add(chunkedge_world_border::WorldBorderPlugin)
         }
 
         #[cfg(feature = "boss_bar")]
         {
-            group = group.add(valence_boss_bar::BossBarPlugin)
+            group = group.add(chunkedge_boss_bar::BossBarPlugin)
         }
 
         #[cfg(feature = "command")]
         {
-            group = group.add(valence_command::manager::CommandPlugin)
+            group = group.add(chunkedge_command::manager::CommandPlugin)
         }
 
         #[cfg(feature = "scoreboard")]
         {
-            group = group.add(valence_scoreboard::ScoreboardPlugin)
+            group = group.add(chunkedge_scoreboard::ScoreboardPlugin)
         }
 
         group

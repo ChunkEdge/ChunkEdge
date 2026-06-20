@@ -3,8 +3,8 @@ use std::io::Write;
 
 use anyhow::bail;
 use byteorder::WriteBytesExt;
-use valence_binary::{Decode, Encode, VarInt};
-use valence_ident::Ident;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_ident::Ident;
 
 use crate::Packet;
 

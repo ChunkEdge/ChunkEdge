@@ -2,8 +2,8 @@
 
 use std::time::Instant;
 
-use valence::client::{VisibleChunkLayer, VisibleEntityLayers};
-use valence::prelude::*;
+use chunkedge::client::{VisibleChunkLayer, VisibleEntityLayers};
+use chunkedge::prelude::*;
 
 const SPAWN_Y: i32 = 64;
 

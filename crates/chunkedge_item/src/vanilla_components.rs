@@ -1,4 +1,4 @@
-use valence_generated::item::ItemKind;
+use chunkedge_generated::item::ItemKind;
 
 use crate::components::Patchable;
 use crate::{ItemComponent, NUM_ITEM_COMPONENTS};

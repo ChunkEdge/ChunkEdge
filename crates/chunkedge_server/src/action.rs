@@ -1,9 +1,9 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_protocol::packets::play::player_action_c2s::PlayerAction;
+use chunkedge_protocol::packets::play::{BlockChangedAckS2c, PlayerActionC2s};
+use chunkedge_protocol::{BlockPos, Direction, VarInt, WritePacket};
 use derive_more::Deref;
-use valence_protocol::packets::play::player_action_c2s::PlayerAction;
-use valence_protocol::packets::play::{BlockChangedAckS2c, PlayerActionC2s};
-use valence_protocol::{BlockPos, Direction, VarInt, WritePacket};
 
 use crate::client::{Client, UpdateClientsSet};
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

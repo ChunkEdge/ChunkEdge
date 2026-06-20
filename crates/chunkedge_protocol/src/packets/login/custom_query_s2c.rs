@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
-use valence_binary::{Bounded, Decode, Encode, RawBytes, VarInt};
-use valence_ident::Ident;
+use chunkedge_binary::{Bounded, Decode, Encode, RawBytes, VarInt};
+use chunkedge_ident::Ident;
 
 use crate::{Packet, PacketState};
 

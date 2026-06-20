@@ -1,9 +1,9 @@
 use anyhow::Ok;
+use chunkedge_build_utils::{ident, rerun_if_changed};
 use heck::ToPascalCase;
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
-use valence_build_utils::{ident, rerun_if_changed};
 // TODO: Update to support components (also default values for item components)
 
 #[derive(Deserialize, Clone, Debug)]

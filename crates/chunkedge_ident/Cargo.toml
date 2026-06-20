@@ -1,5 +1,5 @@
 [package]
-name = "valence_ident"
+name = "chunkedge_ident"
 description = "Parse and create Minecraft's resource identifiers"
 readme = "README.md"
 version.workspace = true
@@ -14,4 +14,4 @@ workspace = true
 [dependencies]
 serde.workspace = true
 thiserror.workspace = true
-valence_ident_macros.workspace = true
+chunkedge_ident_macros.workspace = true

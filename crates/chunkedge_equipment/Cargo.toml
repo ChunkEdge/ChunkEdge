@@ -1,6 +1,6 @@
 [package]
-name = "valence_equipment"
-description = "Equipment support for Valence"
+name = "chunkedge_equipment"
+description = "Equipment support for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true
@@ -15,5 +15,5 @@ workspace = true
 bevy_app.workspace = true
 bevy_ecs.workspace = true
 tracing.workspace = true
-valence_server.workspace = true
-valence_inventory.workspace = true
+chunkedge_server.workspace = true
+chunkedge_inventory.workspace = true

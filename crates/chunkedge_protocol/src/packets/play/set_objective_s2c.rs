@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 
 use bevy_ecs::prelude::*;
-use valence_binary::{Decode, Encode, TextComponent};
-use valence_nbt::Compound;
+use chunkedge_binary::{Decode, Encode, TextComponent};
+use chunkedge_nbt::Compound;
 
 use crate::Packet;
 

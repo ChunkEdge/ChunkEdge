@@ -1,4 +1,4 @@
-# `valence_advancement`
+# `chunkedge_advancement`
 
 Everything related to Minecraft advancements.
 

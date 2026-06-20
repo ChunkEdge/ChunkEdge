@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 use super::player_chat_s2c::MessageSignature;
 use crate::Packet;

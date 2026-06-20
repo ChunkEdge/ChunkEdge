@@ -1,7 +1,7 @@
 # The URL the site will be built for
 base_url = "/"
 
-title = "Valence - A Minecraft server framework"
+title = "ChunkEdge - A Minecraft server framework"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -21,9 +21,9 @@ highlight_themes_css = [{ theme = "one-dark", filename = "syntax-theme.css" }]
 [extra]
 juice_extra_menu = [
   { title = "Discord", link = "https://discord.gg/8Fqqy9XrYb" },
-  { title = "GitHub", link = "https://github.com/valence-rs/valence" },
+  { title = "GitHub", link = "https://github.com/ChunkEdge/ChunkEdge" },
 ]
 
-juice_logo_name = "Valence"
-juice_logo_path = "valence.svg"
-repository_url = "https://github.com/valence-rs/valence"
+juice_logo_name = "ChunkEdge"
+juice_logo_path = "chunkedge.svg"
+repository_url = "https://github.com/ChunkEdge/ChunkEdge"

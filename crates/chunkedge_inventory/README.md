@@ -1,4 +1,4 @@
-# `valence_inventory`
+# `chunkedge_inventory`
 
 The inventory system.
 
@@ -19,13 +19,13 @@ An example system that will let you access all player's inventories:
 
 ```
 # use bevy_ecs::prelude::*;
-# use valence_inventory::*;
-# use valence_server::client::Client;
+# use chunkedge_inventory::*;
+# use chunkedge_server::client::Client;
 fn system(clients: Query<(&Client, &Inventory)>) {}
 ```
 
 ### See also
 
-Examples related to inventories in the `valence/examples/` directory:
+Examples related to inventories in the `chunkedge/examples/` directory:
 - `building`
 - `chest`

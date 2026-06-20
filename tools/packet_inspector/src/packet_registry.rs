@@ -2,9 +2,9 @@ use std::hash::{Hash, Hasher};
 use std::sync::RwLock;
 
 use bytes::Bytes;
+use chunkedge_protocol::decode::PacketFrame;
+use chunkedge_protocol::{CompressionThreshold, PacketSide, PacketState};
 use time::OffsetDateTime;
-use valence_protocol::decode::PacketFrame;
-use valence_protocol::{CompressionThreshold, PacketSide, PacketState};
 
 pub struct PacketRegistry {
     packets: RwLock<Vec<Packet>>,

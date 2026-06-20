@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
 use bevy_ecs::prelude::*;
+pub use chunkedge_generated::attributes::{EntityAttribute, EntityAttributeOperation};
+use chunkedge_protocol::packets::play::update_attributes_s2c::*;
+use chunkedge_protocol::{Ident, VarInt};
 use indexmap::IndexMap;
-pub use valence_generated::attributes::{EntityAttribute, EntityAttributeOperation};
-use valence_protocol::packets::play::update_attributes_s2c::*;
-use valence_protocol::{Ident, VarInt};
 
 /// An instance of an Entity Attribute.
 #[derive(Component, Clone, PartialEq, Debug)]

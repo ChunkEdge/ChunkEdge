@@ -1,6 +1,6 @@
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_math::DVec3;
 use uuid::Uuid;
-use valence_binary::{Decode, Encode, VarInt};
-use valence_math::DVec3;
 
 use crate::{ByteAngle, Packet, Velocity};
 
@@ -11,7 +11,7 @@ use crate::{ByteAngle, Packet, Velocity};
 pub struct AddEntityS2c {
     pub entity_id: VarInt,
     pub object_uuid: Uuid,
-    pub kind: VarInt, // TODO: EntityKind in valence_generated?
+    pub kind: VarInt, // TODO: EntityKind in chunkedge_generated?
     pub position: DVec3,
     pub pitch: ByteAngle,
     pub yaw: ByteAngle,

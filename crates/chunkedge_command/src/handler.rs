@@ -5,8 +5,8 @@ use bevy_app::{App, Plugin, PostStartup};
 use bevy_ecs::change_detection::ResMut;
 use bevy_ecs::event::{Event, EventReader, EventWriter};
 use bevy_ecs::prelude::{Entity, IntoSystemConfigs, Resource};
+use chunkedge_server::EventLoopPreUpdate;
 use petgraph::prelude::NodeIndex;
-use valence_server::EventLoopPreUpdate;
 
 use crate::graph::CommandGraphBuilder;
 use crate::modifier_value::ModifierValue;

@@ -1,6 +1,6 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_protocol::packets::play::ClientCommandC2s;
+use chunkedge_protocol::packets::play::ClientCommandC2s;
 
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
 

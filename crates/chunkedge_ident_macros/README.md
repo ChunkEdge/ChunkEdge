@@ -1,3 +1,3 @@
-# `valence_ident_macros`
+# `chunkedge_ident_macros`
 
-Proc macros for `valence_ident`.
+Proc macros for `chunkedge_ident`.

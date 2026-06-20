@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 
+use chunkedge_build_utils::{ident, rerun_if_changed};
 use heck::ToPascalCase;
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
-use valence_build_utils::{ident, rerun_if_changed};
 
 #[derive(Deserialize)]
 struct EntityAttribute {

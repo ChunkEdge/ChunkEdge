@@ -73,11 +73,11 @@
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
+use chunkedge_server::protocol::packets::play::commands_s2c::{Node, NodeData, Parser, StringArg};
+use chunkedge_server::protocol::packets::play::CommandsS2c;
+use chunkedge_server::protocol::VarInt;
 use petgraph::dot::Dot;
 use petgraph::prelude::*;
-use valence_server::protocol::packets::play::commands_s2c::{Node, NodeData, Parser, StringArg};
-use valence_server::protocol::packets::play::CommandsS2c;
-use valence_server::protocol::VarInt;
 
 use crate::modifier_value::ModifierValue;
 use crate::parsers::{CommandArg, ParseInput};
@@ -203,11 +203,11 @@ impl<'a> From<CommandGraph<'a>> for CommandsS2c<'a> {
 /// ```
 /// use std::collections::HashMap;
 /// use petgraph::visit::{EdgeCount, NodeCount};
-/// use valence_command::graph::{
+/// use chunkedge_command::graph::{
 ///     CommandGraph, CommandGraphBuilder
 /// };
-/// use valence_command::{CommandRegistry};
-/// use valence_command::parsers::CommandArg;
+/// use chunkedge_command::{CommandRegistry};
+/// use chunkedge_command::parsers::CommandArg;
 ///
 /// struct TestCommand {
 ///    test: i32,
@@ -354,8 +354,8 @@ impl<'a, T> CommandGraphBuilder<'a, T> {
     /// ```
     /// use std::collections::HashMap;
     ///
-    /// use valence_command::graph::CommandGraphBuilder;
-    /// use valence_command::CommandRegistry;
+    /// use chunkedge_command::graph::CommandGraphBuilder;
+    /// use chunkedge_command::CommandRegistry;
     ///
     /// struct TestCommand;
     ///
@@ -422,8 +422,8 @@ impl<'a, T> CommandGraphBuilder<'a, T> {
     /// ```
     /// use std::collections::HashMap;
     ///
-    /// use valence_command::graph::CommandGraphBuilder;
-    /// use valence_command::CommandRegistry;
+    /// use chunkedge_command::graph::CommandGraphBuilder;
+    /// use chunkedge_command::CommandRegistry;
     ///
     /// struct TestCommand;
     ///

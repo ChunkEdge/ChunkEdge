@@ -1,6 +1,6 @@
 [package]
-name = "valence_command"
-description = "Command management for Valence"
+name = "chunkedge_command"
+description = "Command management for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true
@@ -19,5 +19,5 @@ ordered-float.workspace = true
 petgraph.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
-valence_server.workspace = true
-valence_text.workspace = true
+chunkedge_server.workspace = true
+chunkedge_text.workspace = true

@@ -1,8 +1,8 @@
+use chunkedge_build_utils::{ident, rerun_if_changed};
 use heck::ToPascalCase;
 use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
-use valence_build_utils::{ident, rerun_if_changed};
 
 #[derive(Deserialize, Debug)]
 struct Sound {
@@ -72,7 +72,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
         .collect::<Vec<_>>();
 
     Ok(quote! {
-        use valence_ident::{Ident, ident};
+        use chunkedge_ident::{Ident, ident};
         use crate::registry_id::RegistryId;
 
         #[doc = "Represents a sound from the game"]

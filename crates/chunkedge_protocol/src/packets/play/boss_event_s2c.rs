@@ -2,8 +2,8 @@ use std::borrow::Cow;
 
 use bevy_ecs::prelude::Component;
 use bitfield_struct::bitfield;
+use chunkedge_binary::{Decode, Encode, TextComponent};
 use uuid::Uuid;
-use valence_binary::{Decode, Encode, TextComponent};
 
 use crate::Packet;
 

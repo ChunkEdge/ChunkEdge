@@ -1,17 +1,17 @@
-use valence_equipment::{Equipment, EquipmentInventorySync};
-use valence_inventory::player_inventory::PlayerInventory;
-use valence_inventory::{ClickMode, ClientInventoryState, Inventory};
-use valence_item::HashedItemStack;
-use valence_server::entity::armor_stand::ArmorStandEntityBundle;
-use valence_server::entity::item::ItemEntityBundle;
-use valence_server::entity::zombie::ZombieEntityBundle;
-use valence_server::entity::{EntityLayerId, Position};
-use valence_server::math::DVec3;
-use valence_server::protocol::packets::play::container_click_c2s::HashedSlotChange;
-use valence_server::protocol::packets::play::{
+use chunkedge_equipment::{Equipment, EquipmentInventorySync};
+use chunkedge_inventory::player_inventory::PlayerInventory;
+use chunkedge_inventory::{ClickMode, ClientInventoryState, Inventory};
+use chunkedge_item::HashedItemStack;
+use chunkedge_server::entity::armor_stand::ArmorStandEntityBundle;
+use chunkedge_server::entity::item::ItemEntityBundle;
+use chunkedge_server::entity::zombie::ZombieEntityBundle;
+use chunkedge_server::entity::{EntityLayerId, Position};
+use chunkedge_server::math::DVec3;
+use chunkedge_server::protocol::packets::play::container_click_c2s::HashedSlotChange;
+use chunkedge_server::protocol::packets::play::{
     ContainerClickC2s, SetCarriedItemC2s, SetEquipmentS2c,
 };
-use valence_server::{ItemKind, ItemStack};
+use chunkedge_server::{ItemKind, ItemStack};
 
 use crate::testing::ScenarioSingleClient;
 

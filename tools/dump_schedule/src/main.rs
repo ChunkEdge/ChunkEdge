@@ -5,8 +5,8 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
+use chunkedge::prelude::*;
 use clap::Parser;
-use valence::prelude::*;
 
 #[derive(Parser)]
 #[command(author, version, about)]

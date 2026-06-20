@@ -1,8 +1,8 @@
 use std::hint::black_box;
 
+use chunkedge_binary::{Decode, Encode, VarLong};
 use divan::Bencher;
 use rand::Rng;
-use valence_binary::{Decode, Encode, VarLong};
 
 #[divan::bench]
 fn varlong_encode(bencher: Bencher) {

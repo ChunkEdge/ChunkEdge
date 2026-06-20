@@ -2,9 +2,9 @@ use std::borrow::Cow;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_inventory::player_inventory::PlayerInventory;
-use valence_item::ItemComponent;
-use valence_server::protocol::IntoTextComponent;
+use chunkedge_inventory::player_inventory::PlayerInventory;
+use chunkedge_item::ItemComponent;
+use chunkedge_server::protocol::IntoTextComponent;
 
 use crate::inventory::{
     convert_to_player_slot_id, ClickMode, ClientInventoryState, CursorItem, DropItemStackEvent,
@@ -537,7 +537,7 @@ fn test_should_modify_open_inventory_click_slot() {
 }
 
 #[test]
-fn test_sync_inventory_change_made_from_valence_while_inventory_is_opened() {
+fn test_sync_inventory_change_made_from_chunkedge_while_inventory_is_opened() {
     let ScenarioSingleClient {
         mut app,
         client,

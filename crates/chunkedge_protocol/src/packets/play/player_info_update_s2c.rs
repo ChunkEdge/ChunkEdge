@@ -2,8 +2,8 @@ use std::borrow::Cow;
 use std::io::Write;
 
 use bitfield_struct::bitfield;
+use chunkedge_binary::{Decode, Encode, TextComponent, VarInt};
 use uuid::Uuid;
-use valence_binary::{Decode, Encode, TextComponent, VarInt};
 
 use crate::profile::Property;
 use crate::{GameMode, Packet};

@@ -1,14 +1,14 @@
 # Packet Inspector
 
-![packet inspector screenshot](https://raw.githubusercontent.com/valence-rs/valence/main/assets/packet-inspector.png)
+![packet inspector screenshot](https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/packet-inspector.png)
 
 The packet inspector is a Minecraft proxy for viewing the contents of packets as
-they are sent/received. It uses Valence's protocol facilities to display packet
+they are sent/received. It uses ChunkEdge's protocol facilities to display packet
 contents. This was made for three purposes:
 
-- Check that packets between Valence and client are matching your expectations.
+- Check that packets between ChunkEdge and client are matching your expectations.
 - Check that packets between vanilla server and client are parsed correctly by
-  Valence.
+  ChunkEdge.
 - Understand how the protocol works between the vanilla server and client.
 
 # Usage

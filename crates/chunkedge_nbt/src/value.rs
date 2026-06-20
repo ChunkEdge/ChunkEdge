@@ -552,12 +552,12 @@ impl<S> From<uuid::Uuid> for Value<S> {
     }
 }
 
-#[cfg(feature = "valence_ident")]
-impl<I, S> From<valence_ident::Ident<I>> for Value<S>
+#[cfg(feature = "chunkedge_ident")]
+impl<I, S> From<chunkedge_ident::Ident<I>> for Value<S>
 where
     I: Into<Value<S>>,
 {
-    fn from(value: valence_ident::Ident<I>) -> Self {
+    fn from(value: chunkedge_ident::Ident<I>) -> Self {
         value.into_inner().into()
     }
 }
@@ -598,9 +598,9 @@ impl<'a, S> From<ValueMut<'a, S>> for ValueRef<'a, S> {
     }
 }
 
-#[cfg(feature = "valence_ident")]
-impl<'a> From<&'a valence_ident::Ident<String>> for ValueRef<'a, String> {
-    fn from(v: &'a valence_ident::Ident<String>) -> Self {
+#[cfg(feature = "chunkedge_ident")]
+impl<'a> From<&'a chunkedge_ident::Ident<String>> for ValueRef<'a, String> {
+    fn from(v: &'a chunkedge_ident::Ident<String>) -> Self {
         Self::String(v.as_ref())
     }
 }

@@ -1,7 +1,7 @@
 use std::hint::black_box;
 
+use chunkedge_binary::{Decode, Encode};
 use divan::Bencher;
-use valence_binary::{Decode, Encode};
 
 #[divan::bench]
 pub(crate) fn decode_small_array(bencher: Bencher) {

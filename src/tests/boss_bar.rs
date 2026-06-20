@@ -1,12 +1,12 @@
-use valence_boss_bar::{
+use chunkedge_boss_bar::{
     BossBarBundle, BossBarColor, BossBarDivision, BossBarFlags, BossBarHealth, BossBarStyle,
     BossBarTitle,
 };
-use valence_server::client::VisibleEntityLayers;
-use valence_server::entity::EntityLayerId;
-use valence_server::protocol::packets::play::BossEventS2c;
-use valence_server::text::IntoText;
-use valence_server::Despawned;
+use chunkedge_server::client::VisibleEntityLayers;
+use chunkedge_server::entity::EntityLayerId;
+use chunkedge_server::protocol::packets::play::BossEventS2c;
+use chunkedge_server::text::IntoText;
+use chunkedge_server::Despawned;
 
 use crate::testing::ScenarioSingleClient;
 use crate::Text;

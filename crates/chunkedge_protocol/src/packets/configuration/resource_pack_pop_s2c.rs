@@ -1,5 +1,5 @@
+use chunkedge_binary::{Decode, Encode};
 use uuid::Uuid;
-use valence_binary::{Decode, Encode};
 
 use crate::{Packet, PacketState};
 

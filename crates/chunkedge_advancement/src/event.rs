@@ -1,7 +1,7 @@
 use bevy_ecs::prelude::*;
-use valence_server::event_loop::PacketEvent;
-use valence_server::protocol::packets::play::SeenAdvancementsC2s;
-use valence_server::Ident;
+use chunkedge_server::event_loop::PacketEvent;
+use chunkedge_server::protocol::packets::play::SeenAdvancementsC2s;
+use chunkedge_server::Ident;
 
 /// This event sends when the client changes or closes advancement's tab.
 #[derive(Event, Clone, PartialEq, Eq, Debug)]

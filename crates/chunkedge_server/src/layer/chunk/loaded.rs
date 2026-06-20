@@ -3,23 +3,23 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::mem;
 use std::sync::atomic::{AtomicU32, Ordering};
 
-use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
-use valence_binary::Encode;
-use valence_generated::block::{BlockKind, PropName, PropValue};
-use valence_nbt::Compound;
-use valence_protocol::encode::{PacketWriter, WritePacket};
-use valence_protocol::packets::play::level_chunk_with_light_s2c::{
+use chunkedge_binary::Encode;
+use chunkedge_generated::block::{BlockKind, PropName, PropValue};
+use chunkedge_nbt::Compound;
+use chunkedge_protocol::encode::{PacketWriter, WritePacket};
+use chunkedge_protocol::packets::play::level_chunk_with_light_s2c::{
     ChunkDataBlockEntity, HeightMap, HeightMapKind,
 };
-use valence_protocol::packets::play::section_blocks_update_s2c::ChunkDeltaUpdateEntry;
-use valence_protocol::packets::play::{
+use chunkedge_protocol::packets::play::section_blocks_update_s2c::ChunkDeltaUpdateEntry;
+use chunkedge_protocol::packets::play::{
     BlockEntityDataS2c, BlockUpdateS2c, LevelChunkWithLightS2c, SectionBlocksUpdateS2c,
 };
-use valence_protocol::{
+use chunkedge_protocol::{
     BlockPos, BlockState, ChunkPos, ChunkSectionPos, FixedArray, VariableBitSet,
 };
-use valence_registry::biome::BiomeId;
-use valence_registry::RegistryIdx;
+use chunkedge_registry::biome::BiomeId;
+use chunkedge_registry::RegistryIdx;
+use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
 
 use super::chunk::{
     bit_width, check_biome_oob, check_block_oob, check_section_oob, BiomeContainer,
@@ -386,7 +386,7 @@ impl LoadedChunk {
     /// [`DimensionType::min_y`]. Note that blocks cannot be placed at `min_y -
     /// 1`.
     ///
-    /// [`DimensionType::min_y`]: valence_registry::dimension_type::DimensionType::min_y
+    /// [`DimensionType::min_y`]: chunkedge_registry::dimension_type::DimensionType::min_y
     pub(crate) fn build_heightmap(
         &self,
         mut is_occupied: impl FnMut(BlockState) -> bool,
@@ -853,9 +853,9 @@ impl Chunk for LoadedChunk {
 
 #[cfg(test)]
 mod tests {
-    use valence_nbt::compound;
-    use valence_protocol::CompressionThreshold;
-    use valence_registry::dimension_type::DimensionTypeId;
+    use chunkedge_nbt::compound;
+    use chunkedge_protocol::CompressionThreshold;
+    use chunkedge_registry::dimension_type::DimensionTypeId;
 
     use super::*;
 

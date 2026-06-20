@@ -1,7 +1,7 @@
 #![allow(clippy::type_complexity)]
 
-use valence::prelude::*;
-use valence::status::RequestRespawnEvent;
+use chunkedge::prelude::*;
+use chunkedge::status::RequestRespawnEvent;
 
 const SPAWN_Y: i32 = 64;
 
@@ -82,7 +82,7 @@ fn init_clients(
         *game_mode = GameMode::Creative;
 
         client.send_chat_message(
-            "Welcome to Valence! Sneak to die in the game (but not in real life).".italic(),
+            "Welcome to ChunkEdge! Sneak to die in the game (but not in real life).".italic(),
         );
     }
 }

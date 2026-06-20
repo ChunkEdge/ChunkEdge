@@ -1,5 +1,5 @@
-use valence_binary::{Decode, Encode, VarInt};
-use valence_item::ItemStack;
+use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_item::ItemStack;
 
 use crate::Packet;
 

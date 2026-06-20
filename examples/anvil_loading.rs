@@ -2,11 +2,11 @@
 
 use std::path::PathBuf;
 
+use chunkedge::abilities::{FlyingSpeed, FovModifier, PlayerAbilitiesFlags};
+use chunkedge::message::SendMessage;
+use chunkedge::prelude::*;
+use chunkedge_anvil::{AnvilLevel, ChunkLoadEvent, ChunkLoadStatus};
 use clap::Parser;
-use valence::abilities::{FlyingSpeed, FovModifier, PlayerAbilitiesFlags};
-use valence::message::SendMessage;
-use valence::prelude::*;
-use valence_anvil::{AnvilLevel, ChunkLoadEvent, ChunkLoadStatus};
 
 const SPAWN_POS: DVec3 = DVec3::new(0.0, 256.0, 0.0);
 

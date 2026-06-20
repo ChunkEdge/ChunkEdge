@@ -2,9 +2,9 @@ use std::collections::BTreeMap;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_ident::Ident;
+use chunkedge_nbt::{compound, Compound, List, Value};
 use tracing::error;
-use valence_ident::Ident;
-use valence_nbt::{compound, Compound, List, Value};
 
 use crate::RegistrySet;
 

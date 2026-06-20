@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode, RawBytes, VarInt};
+use chunkedge_binary::{Decode, Encode, RawBytes, VarInt};
 
 use crate::Packet;
 

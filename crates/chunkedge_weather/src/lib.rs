@@ -2,12 +2,12 @@
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_server::client::{Client, FlushPacketsSet, UpdateClientsSet, VisibleChunkLayer};
+use chunkedge_server::protocol::packets::play::game_event_s2c::GameEventKind;
+use chunkedge_server::protocol::packets::play::GameEventS2c;
+use chunkedge_server::protocol::WritePacket;
+use chunkedge_server::ChunkLayer;
 use derive_more::{Deref, DerefMut};
-use valence_server::client::{Client, FlushPacketsSet, UpdateClientsSet, VisibleChunkLayer};
-use valence_server::protocol::packets::play::game_event_s2c::GameEventKind;
-use valence_server::protocol::packets::play::GameEventS2c;
-use valence_server::protocol::WritePacket;
-use valence_server::ChunkLayer;
 
 pub struct WeatherPlugin;
 
@@ -29,7 +29,7 @@ impl Plugin for WeatherPlugin {
     }
 }
 
-/// Bundle containing rain and thunder components. `valence_weather` allows this
+/// Bundle containing rain and thunder components. `chunkedge_weather` allows this
 /// to be added to clients and chunk layer entities.
 #[derive(Bundle, Default, PartialEq, PartialOrd)]
 pub struct WeatherBundle {

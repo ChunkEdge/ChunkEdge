@@ -1,3 +1,3 @@
-# `valence_server_common`
+# `chunkedge_server_common`
 
-Contains some miscellaneous types for the `valence_server` family of crates, like `valence_entity`. `valence_registry`, and `valence_server`.
+Contains some miscellaneous types for the `chunkedge_server` family of crates, like `chunkedge_entity`. `chunkedge_registry`, and `chunkedge_server`.

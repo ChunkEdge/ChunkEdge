@@ -1,4 +1,4 @@
-use valence_binary::{Decode, Encode};
+use chunkedge_binary::{Decode, Encode};
 
 use crate::packets::configuration::server_links_s2c::ServerLink;
 use crate::Packet;

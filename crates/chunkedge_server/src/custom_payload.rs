@@ -1,8 +1,8 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use valence_binary::Bounded;
-use valence_protocol::packets::play::{CustomPayloadC2s, CustomPayloadS2c};
-use valence_protocol::{Ident, WritePacket};
+use chunkedge_binary::Bounded;
+use chunkedge_protocol::packets::play::{CustomPayloadC2s, CustomPayloadS2c};
+use chunkedge_protocol::{Ident, WritePacket};
 
 use crate::client::Client;
 use crate::event_loop::{EventLoopPreUpdate, PacketEvent};

@@ -1,6 +1,6 @@
-use valence_binary::{Bounded, Encode};
-use valence_protocol::packets::play::CustomPayloadS2c;
-use valence_protocol::{ident, VarInt, WritePacket};
+use chunkedge_binary::{Bounded, Encode};
+use chunkedge_protocol::packets::play::CustomPayloadS2c;
+use chunkedge_protocol::{ident, VarInt, WritePacket};
 
 pub trait SetBrand {
     /// Sets the brand of the server.

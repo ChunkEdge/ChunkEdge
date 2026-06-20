@@ -1,21 +1,21 @@
 # Before You Start
 
-We recommend you get familiar with Bevy's Entity Component System architecture and API, as Valence uses the exact same crate for its ECS. You can find [Bevy's introduction to ECS here](https://bevyengine.org/learn/book/getting-started/ecs/).
+We recommend you get familiar with Bevy's Entity Component System architecture and API, as ChunkEdge uses the exact same crate for its ECS. You can find [Bevy's introduction to ECS here](https://bevyengine.org/learn/book/getting-started/ecs/).
 
 You should also download Minecraft, obviously. You can use any launcher you'd like, but we recommend using the [Prism Launcher](https://prismlauncher.org/) as it will let you run offline mode clients a bit easier.
 
 # Getting Started
 
-The first thing you'll need to do is create a new binary Rust project. You can do this by running `cargo new --bin my_project` in your terminal. Once you've done that, you'll need to add Valence as a dependency:
+The first thing you'll need to do is create a new binary Rust project. You can do this by running `cargo new --bin my_project` in your terminal. Once you've done that, you'll need to add ChunkEdge as a dependency:
 
 ```bash
-cargo add valence
+cargo add chunkedge
 ```
 
-Next, you'll need to set up a new `App` in `main()`. This is the bare minimum you need to get a Valence app running.
+Next, you'll need to set up a new `App` in `main()`. This is the bare minimum you need to get a ChunkEdge app running.
 
 ```rust
-use valence::prelude::*;
+use chunkedge::prelude::*;
 
 fn main() {
     App::new()
@@ -30,7 +30,7 @@ If you run this and try to join the server, you'll see "Joining world..." and th
 
 Let's add a startup system that will put a single block under the spawn position. There's gonna be a lot of new stuff here, but don't worry, we'll briefly touch on most of it.
 
-Chunk Layers are the way Valence handles worlds. A client can only view a single chunk layer at a time. So the first thing we need to do is create a new pair of chunk and entity layers (`LayerBundle`), add some chunks to it, and then set our desired block in the world.
+Chunk Layers are the way ChunkEdge handles worlds. A client can only view a single chunk layer at a time. So the first thing we need to do is create a new pair of chunk and entity layers (`LayerBundle`), add some chunks to it, and then set our desired block in the world.
 
 ```rust
 fn setup(
@@ -58,7 +58,7 @@ fn setup(
 }
 ```
 
-Now we need to handle clients when they join the server. Valence automatically spawns a new entity for each client that joins the server, we just need to add a system detects when clients are added.
+Now we need to handle clients when they join the server. ChunkEdge automatically spawns a new entity for each client that joins the server, we just need to add a system detects when clients are added.
 
 ```rust
 fn init_clients(

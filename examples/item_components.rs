@@ -1,11 +1,11 @@
-use valence::entity::attributes::EntityAttributeOperation;
-use valence::item::{
+use chunkedge::entity::attributes::EntityAttributeOperation;
+use chunkedge::item::{
     AttributeModifier, AttributeSlot, ConsumableAnimation, EquipSlot, ItemComponent,
     ResolvableProfile, SoundEventDefinition,
 };
-use valence::prelude::*;
-use valence::protocol::IntoTextComponent;
-use valence_binary::{IdOr, VarInt};
+use chunkedge::prelude::*;
+use chunkedge::protocol::IntoTextComponent;
+use chunkedge_binary::{IdOr, VarInt};
 
 fn main() {
     App::new()

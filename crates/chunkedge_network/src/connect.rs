@@ -7,6 +7,32 @@ use std::time::Duration;
 
 use anyhow::{bail, ensure, Context};
 use base64::prelude::*;
+use chunkedge_binary::{Bounded, Decode, RawBytes};
+use chunkedge_lang::keys;
+use chunkedge_protocol::packets::configuration::select_known_packs_s2c::KnownPack;
+use chunkedge_protocol::packets::configuration::{
+    ClientInformationC2s, CustomPayloadC2s, CustomPayloadS2c, FinishConfigurationC2s,
+    FinishConfigurationS2c, RegistryDataS2c, SelectKnownPacksC2s, SelectKnownPacksS2c,
+    UpdateEnabledFeaturesS2c, UpdateTagsS2c,
+};
+use chunkedge_protocol::packets::login::{LoginAcknowledgedC2s, LoginFinishedS2c};
+use chunkedge_protocol::packets::status::{
+    PingRequestC2s, PongResponseS2c, StatusRequestC2s, StatusResponseS2c,
+};
+use chunkedge_protocol::profile::Property;
+use chunkedge_protocol::JsonText;
+use chunkedge_server::client::Properties;
+use chunkedge_server::nbt::serde::ser::CompoundSerializer;
+use chunkedge_server::protocol::packets::handshake::intention_c2s::HandShakeIntent;
+use chunkedge_server::protocol::packets::handshake::IntentionC2s;
+use chunkedge_server::protocol::packets::login::{
+    CustomQueryAnswerC2s, CustomQueryS2c, HelloC2s, HelloS2c, KeyC2s, LoginCompressionS2c,
+    LoginDisconnectS2c,
+};
+use chunkedge_server::protocol::{PacketDecoder, PacketEncoder, VarInt};
+use chunkedge_server::registry::{BiomeRegistry, DimensionTypeRegistry, RegistryCodec};
+use chunkedge_server::text::{Color, IntoText};
+use chunkedge_server::{ident, Ident, Text, MINECRAFT_VERSION, PROTOCOL_VERSION};
 use hmac::digest::Update;
 use hmac::{Hmac, Mac};
 use num_bigint::BigInt;
@@ -19,32 +45,6 @@ use sha2::{Digest, Sha256};
 use tokio::net::{TcpListener, TcpStream};
 use tracing::{error, info, trace, warn};
 use uuid::Uuid;
-use valence_binary::{Bounded, Decode, RawBytes};
-use valence_lang::keys;
-use valence_protocol::packets::configuration::select_known_packs_s2c::KnownPack;
-use valence_protocol::packets::configuration::{
-    ClientInformationC2s, CustomPayloadC2s, CustomPayloadS2c, FinishConfigurationC2s,
-    FinishConfigurationS2c, RegistryDataS2c, SelectKnownPacksC2s, SelectKnownPacksS2c,
-    UpdateEnabledFeaturesS2c, UpdateTagsS2c,
-};
-use valence_protocol::packets::login::{LoginAcknowledgedC2s, LoginFinishedS2c};
-use valence_protocol::packets::status::{
-    PingRequestC2s, PongResponseS2c, StatusRequestC2s, StatusResponseS2c,
-};
-use valence_protocol::profile::Property;
-use valence_protocol::JsonText;
-use valence_server::client::Properties;
-use valence_server::nbt::serde::ser::CompoundSerializer;
-use valence_server::protocol::packets::handshake::intention_c2s::HandShakeIntent;
-use valence_server::protocol::packets::handshake::IntentionC2s;
-use valence_server::protocol::packets::login::{
-    CustomQueryAnswerC2s, CustomQueryS2c, HelloC2s, HelloS2c, KeyC2s, LoginCompressionS2c,
-    LoginDisconnectS2c,
-};
-use valence_server::protocol::{PacketDecoder, PacketEncoder, VarInt};
-use valence_server::registry::{BiomeRegistry, DimensionTypeRegistry, RegistryCodec};
-use valence_server::text::{Color, IntoText};
-use valence_server::{ident, Ident, Text, MINECRAFT_VERSION, PROTOCOL_VERSION};
 
 use crate::legacy_ping::try_handle_legacy_ping;
 use crate::packet_io::PacketIo;
@@ -375,7 +375,7 @@ async fn handle_login(
 
     let _: SelectKnownPacksC2s = io.recv_packet().await?;
 
-    // We have valence support for the `worldgen/biome` and `dimension_type`
+    // We have chunkedge support for the `worldgen/biome` and `dimension_type`
     // registries, therefore we use the current state of these registries here
     // (instead of the default values) This means the server can add/remove
     // biomes and dimensions at runtime.

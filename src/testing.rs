@@ -6,17 +6,17 @@ use std::time::{Duration, Instant};
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use bytes::{Buf, BufMut, BytesMut};
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_ident::ident;
+use chunkedge_network::NetworkPlugin;
+use chunkedge_registry::{BiomeRegistry, DimensionTypeRegistry};
+use chunkedge_server::client::{ClientBundle, ClientBundleArgs, ClientConnection, ReceivedPacket};
+use chunkedge_server::keepalive::KeepaliveSettings;
+use chunkedge_server::protocol::decode::PacketFrame;
+use chunkedge_server::protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
+use chunkedge_server::protocol::{Packet, PacketDecoder, PacketEncoder, VarInt};
+use chunkedge_server::{ChunkLayer, EntityLayer, Server, ServerSettings};
 use uuid::Uuid;
-use valence_binary::{Decode, Encode};
-use valence_ident::ident;
-use valence_network::NetworkPlugin;
-use valence_registry::{BiomeRegistry, DimensionTypeRegistry};
-use valence_server::client::{ClientBundle, ClientBundleArgs, ClientConnection, ReceivedPacket};
-use valence_server::keepalive::KeepaliveSettings;
-use valence_server::protocol::decode::PacketFrame;
-use valence_server::protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
-use valence_server::protocol::{Packet, PacketDecoder, PacketEncoder, VarInt};
-use valence_server::{ChunkLayer, EntityLayer, Server, ServerSettings};
 
 use crate::DefaultPlugins;
 pub struct ScenarioSingleClient {
@@ -31,7 +31,7 @@ pub struct ScenarioSingleClient {
 }
 
 impl ScenarioSingleClient {
-    /// Sets up Valence with a single mock client and entity+chunk layer. The
+    /// Sets up ChunkEdge with a single mock client and entity+chunk layer. The
     /// client is configured to be placed within the layer.
     ///
     /// Reduces boilerplate in unit tests.

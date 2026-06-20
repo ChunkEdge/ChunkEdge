@@ -1,4 +1,4 @@
-# `valence_world_border`
+# `chunkedge_world_border`
 
 Contains the plugin for working with Minecraft's [world border](https://minecraft.wiki/w/World_border).
 
@@ -9,7 +9,7 @@ Note that the layer entity must have the [`ChunkLayer`] component for this to wo
 
 ```rust
 use bevy_ecs::prelude::*;
-use valence_world_border::*;
+use chunkedge_world_border::*;
 
 fn example_system(mut world_borders: Query<(&mut WorldBorderCenter, &mut WorldBorderLerp)>) {
     for (mut center, mut lerp) in &mut world_borders {

@@ -2,7 +2,7 @@
 
 use std::mem;
 
-use valence::prelude::*;
+use chunkedge::prelude::*;
 
 const BOARD_MIN_X: i32 = -30;
 const BOARD_MAX_X: i32 = 30;

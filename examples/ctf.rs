@@ -3,20 +3,20 @@
 use std::collections::HashMap;
 
 use bevy_ecs::query::QueryData;
-use valence::entity::cow::CowEntityBundle;
-use valence::entity::entity::Flags;
-use valence::entity::living::Health;
-use valence::entity::pig::PigEntityBundle;
-use valence::entity::player::PlayerEntityBundle;
-use valence::entity::{EntityAnimations, EntityStatuses, OnGround, Velocity};
-use valence::interact_block::InteractBlockEvent;
-use valence::inventory::HeldItem;
-use valence::log::debug;
-use valence::math::{Aabb, Vec3Swizzles};
-use valence::nbt::{compound, List};
-use valence::prelude::*;
-use valence::scoreboard::*;
-use valence::status::RequestRespawnEvent;
+use chunkedge::entity::cow::CowEntityBundle;
+use chunkedge::entity::entity::Flags;
+use chunkedge::entity::living::Health;
+use chunkedge::entity::pig::PigEntityBundle;
+use chunkedge::entity::player::PlayerEntityBundle;
+use chunkedge::entity::{EntityAnimations, EntityStatuses, OnGround, Velocity};
+use chunkedge::interact_block::InteractBlockEvent;
+use chunkedge::inventory::HeldItem;
+use chunkedge::log::debug;
+use chunkedge::math::{Aabb, Vec3Swizzles};
+use chunkedge::nbt::{compound, List};
+use chunkedge::prelude::*;
+use chunkedge::scoreboard::*;
+use chunkedge::status::RequestRespawnEvent;
 
 const ARENA_Y: i32 = 64;
 const ARENA_MID_WIDTH: i32 = 2;
@@ -397,7 +397,7 @@ fn init_clients(
         health.0 = PLAYER_MAX_HEALTH;
 
         client.send_chat_message(
-            "Welcome to Valence! Select a team by jumping in the team's portal.".italic(),
+            "Welcome to ChunkEdge! Select a team by jumping in the team's portal.".italic(),
         );
     }
 }

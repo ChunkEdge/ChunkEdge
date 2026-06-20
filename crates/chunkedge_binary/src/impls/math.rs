@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use valence_math::*;
+use chunkedge_math::*;
 
 use crate::{Decode, Encode};
 

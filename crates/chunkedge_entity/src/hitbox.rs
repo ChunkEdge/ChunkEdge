@@ -2,10 +2,10 @@
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_binary::IdOr;
+use chunkedge_math::{Aabb, UVec3, Vec3Swizzles};
+use chunkedge_protocol::Direction;
 use derive_more::Deref;
-use valence_binary::IdOr;
-use valence_math::{Aabb, UVec3, Vec3Swizzles};
-use valence_protocol::Direction;
 
 use crate::*;
 

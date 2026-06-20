@@ -12,7 +12,7 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
 
     add_trait_bounds(
         &mut input.generics,
-        quote!(::valence_binary::__private::Encode),
+        quote!(::chunkedge_binary::__private::Encode),
     );
 
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
@@ -45,11 +45,11 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
 
             Ok(quote! {
                 #[allow(unused_imports)]
-                impl #impl_generics ::valence_binary::__private::Encode for #input_name #ty_generics
+                impl #impl_generics ::chunkedge_binary::__private::Encode for #input_name #ty_generics
                 #where_clause
                 {
-                    fn encode(&self, mut _w: impl ::std::io::Write) -> ::valence_binary::__private::Result<()> {
-                        use ::valence_binary::__private::{Encode, Context};
+                    fn encode(&self, mut _w: impl ::std::io::Write) -> ::chunkedge_binary::__private::Result<()> {
+                        use ::chunkedge_binary::__private::{Encode, Context};
 
                         #encode_fields
 
@@ -143,11 +143,11 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
 
             Ok(quote! {
                 #[allow(unused_imports, unreachable_code)]
-                impl #impl_generics ::valence_binary::__private::Encode for #input_name #ty_generics
+                impl #impl_generics ::chunkedge_binary::__private::Encode for #input_name #ty_generics
                 #where_clause
                 {
-                    fn encode(&self, mut _w: impl ::std::io::Write) -> ::valence_binary::__private::Result<()> {
-                        use ::valence_binary::__private::{Encode, VarInt, Context};
+                    fn encode(&self, mut _w: impl ::std::io::Write) -> ::chunkedge_binary::__private::Result<()> {
+                        use ::chunkedge_binary::__private::{Encode, VarInt, Context};
 
                         // Break any recursion loop by erasing the type
                         let mut _w: &mut dyn ::std::io::Write = &mut _w;

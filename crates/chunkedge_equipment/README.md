@@ -1,4 +1,4 @@
-# `valence_equipment`
+# `chunkedge_equipment`
 Manages Minecraft's entity equipment (armor, held items) via the `Equipment` component.
 By default this is separated from an entities `Inventory` (which means that changes are only visible to other players), but it can be synced by attaching the `EquipmentInventorySync`
 component to a entity (currently only Players).
@@ -7,8 +7,8 @@ component to a entity (currently only Players).
 
 ```rust 
 use bevy_ecs::prelude::*;
-use valence_equipment::*;
-use valence_server::{
+use chunkedge_equipment::*;
+use chunkedge_server::{
     ItemStack, ItemKind,
     entity::player::PlayerEntity,
 };
@@ -36,6 +36,6 @@ fn init_equipment(
 
 ### See also
 
-Examples related to inventories in the `valence/examples/` directory:
+Examples related to inventories in the `chunkedge/examples/` directory:
 - `equipment`
 

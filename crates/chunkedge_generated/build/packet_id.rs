@@ -1,8 +1,8 @@
+use chunkedge_build_utils::rerun_if_changed;
 use heck::ToShoutySnakeCase;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use serde::Deserialize;
-use valence_build_utils::rerun_if_changed;
 
 #[derive(Deserialize)]
 struct Packet {

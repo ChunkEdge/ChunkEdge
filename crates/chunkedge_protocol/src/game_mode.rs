@@ -2,8 +2,8 @@ use std::io::Write;
 
 use anyhow::bail;
 use bevy_ecs::prelude::*;
+use chunkedge_binary::{Decode, Encode};
 use derive_more::{From, Into};
-use valence_binary::{Decode, Encode};
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default, Encode, Decode, Component)]
 pub enum GameMode {

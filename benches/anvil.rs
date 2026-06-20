@@ -7,8 +7,8 @@ use anyhow::{ensure, Context};
 use criterion::Criterion;
 use fs_extra::dir::CopyOptions;
 use reqwest::IntoUrl;
-use valence::anvil::AnvilWorld;
-use valence::instance::Chunk;
+use chunkedge::anvil::AnvilWorld;
+use chunkedge::instance::Chunk;
 use zip::ZipArchive;
 
 pub fn load(c: &mut Criterion) {
@@ -34,7 +34,7 @@ pub fn load(c: &mut Criterion) {
 
                     let mut chunk = Chunk::new(24);
 
-                    valence_anvil::to_valence(&nbt, &mut chunk, 4, |_| Default::default()).unwrap();
+                    chunkedge_anvil::to_valence(&nbt, &mut chunk, 4, |_| Default::default()).unwrap();
 
                     black_box(chunk);
                 }

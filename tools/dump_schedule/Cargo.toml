@@ -13,4 +13,4 @@ workspace = true
 [dependencies]
 bevy_mod_debugdump.workspace = true
 clap.workspace = true
-valence.workspace = true
+chunkedge.workspace = true

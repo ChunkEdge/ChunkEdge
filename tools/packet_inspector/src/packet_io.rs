@@ -4,13 +4,13 @@ use std::sync::Arc;
 
 use anyhow::ensure;
 use bytes::{BufMut, BytesMut};
+use chunkedge_binary::Encode;
+use chunkedge_protocol::decode::{PacketDecoder, PacketFrame};
+use chunkedge_protocol::encode::PacketEncoder;
+use chunkedge_protocol::{CompressionThreshold, VarInt, MAX_PACKET_SIZE};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio::sync::RwLock;
-use valence_binary::Encode;
-use valence_protocol::decode::{PacketDecoder, PacketFrame};
-use valence_protocol::encode::PacketEncoder;
-use valence_protocol::{CompressionThreshold, VarInt, MAX_PACKET_SIZE};
 
 pub(crate) struct PacketIoReader {
     reader: tokio::io::ReadHalf<tokio::net::TcpStream>,

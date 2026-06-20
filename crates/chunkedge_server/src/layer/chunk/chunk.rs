@@ -1,6 +1,6 @@
-use valence_nbt::Compound;
-use valence_protocol::BlockState;
-use valence_registry::biome::BiomeId;
+use chunkedge_nbt::Compound;
+use chunkedge_protocol::BlockState;
+use chunkedge_registry::biome::BiomeId;
 
 use super::paletted_container::PalettedContainer;
 

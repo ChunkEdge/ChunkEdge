@@ -1,8 +1,8 @@
 #![allow(clippy::type_complexity)]
 
-use valence::interact_block::InteractBlockEvent;
-use valence::inventory::HeldItem;
-use valence::prelude::*;
+use chunkedge::interact_block::InteractBlockEvent;
+use chunkedge::inventory::HeldItem;
+use chunkedge::prelude::*;
 
 const SPAWN_Y: i32 = 64;
 
@@ -79,7 +79,7 @@ fn init_clients(
         pos.set([0.0, f64::from(SPAWN_Y) + 1.0, 0.0]);
         *game_mode = GameMode::Creative;
 
-        client.send_chat_message("Welcome to Valence! Build something cool.".italic());
+        client.send_chat_message("Welcome to ChunkEdge! Build something cool.".italic());
     }
 }
 

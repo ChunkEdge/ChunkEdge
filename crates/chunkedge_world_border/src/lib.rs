@@ -2,14 +2,14 @@
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use derive_more::{Deref, DerefMut};
-use valence_server::client::{Client, UpdateClientsSet, VisibleChunkLayer};
-use valence_server::protocol::packets::play::{
+use chunkedge_server::client::{Client, UpdateClientsSet, VisibleChunkLayer};
+use chunkedge_server::protocol::packets::play::{
     InitializeBorderS2c, SetBorderCenterS2c, SetBorderLerpSizeS2c, SetBorderSizeS2c,
     SetBorderWarningDelayS2c, SetBorderWarningDistanceS2c,
 };
-use valence_server::protocol::WritePacket;
-use valence_server::{ChunkLayer, Server};
+use chunkedge_server::protocol::WritePacket;
+use chunkedge_server::{ChunkLayer, Server};
+use derive_more::{Deref, DerefMut};
 
 // https://minecraft.wiki/w/World_border
 pub const DEFAULT_PORTAL_LIMIT: i32 = 29999984;

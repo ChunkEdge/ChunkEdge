@@ -3,8 +3,8 @@ use std::io::Write;
 
 use anyhow::ensure;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
-use valence_nbt::Tag;
-use valence_text::{IntoText, Text};
+use chunkedge_nbt::Tag;
+use chunkedge_text::{IntoText, Text};
 
 use crate::{Decode, Encode};
 
@@ -74,7 +74,7 @@ impl Encode for TextComponent {
             let mut w = w;
             w.write_u8(Tag::String as u8)?;
 
-            let valence_text::TextContent::Text { text: string } = &self.text.content else {
+            let chunkedge_text::TextContent::Text { text: string } = &self.text.content else {
                 // is_plain should mean this is unreachable
                 unreachable!()
             };

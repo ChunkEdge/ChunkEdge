@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 use std::io::Write;
 
-use valence_binary::{Decode, Encode};
-use valence_ident::Ident;
+use chunkedge_binary::{Decode, Encode};
+use chunkedge_ident::Ident;
 
 use crate::sound::SoundCategory;
 use crate::Packet;

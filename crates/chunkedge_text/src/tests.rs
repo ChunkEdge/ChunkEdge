@@ -1,4 +1,4 @@
-use valence_ident::ident;
+use chunkedge_ident::ident;
 
 use super::*;
 

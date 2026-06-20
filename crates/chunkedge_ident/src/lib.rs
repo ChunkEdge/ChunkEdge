@@ -6,12 +6,12 @@ use std::fmt;
 use std::fmt::Formatter;
 use std::str::FromStr;
 
+/// Used internally by the `ident` macro. Not public API.
+#[doc(hidden)]
+pub use chunkedge_ident_macros::parse_ident_str;
 use serde::de::Error as _;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use thiserror::Error;
-/// Used internally by the `ident` macro. Not public API.
-#[doc(hidden)]
-pub use valence_ident_macros::parse_ident_str;
 
 /// Creates a new [`Ident`] at compile time from a string literal. A compile
 /// error is raised if the string is not a valid resource identifier.
@@ -22,7 +22,7 @@ pub use valence_ident_macros::parse_ident_str;
 /// # Examples
 ///
 /// ```
-/// # use valence_ident::{ident, Ident};
+/// # use chunkedge_ident::{ident, Ident};
 /// let my_ident: Ident<&'static str> = ident!("apple");
 ///
 /// println!("{my_ident}");
@@ -38,7 +38,7 @@ macro_rules! ident {
 /// valid resource identifier.
 ///
 /// A resource identifier is a string divided into a "namespace" part and a
-/// "path" part. For instance `minecraft:apple` and `valence:frobnicator` are
+/// "path" part. For instance `minecraft:apple` and `chunkedge:frobnicator` are
 /// both valid identifiers. A string must match the regex
 /// `^([a-z0-9_.-]+:)?[a-z0-9_.-\/]+$` to be successfully parsed.
 ///
@@ -355,7 +355,7 @@ mod tests {
     fn parse_valid() {
         ident!("minecraft:whatever");
         ident!("_what-ever55_:.whatever/whatever123456789_");
-        ident!("valence:frobnicator");
+        ident!("chunkedge:frobnicator");
     }
 
     #[test]

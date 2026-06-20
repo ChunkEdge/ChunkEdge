@@ -4,18 +4,18 @@ use std::borrow::Cow;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use derive_more::{Deref, DerefMut};
-use valence_server::client::{Client, Properties, Username};
-use valence_server::keepalive::Ping;
-use valence_server::layer::UpdateLayersPreClientSet;
-use valence_server::protocol::encode::PacketWriter;
-use valence_server::protocol::packets::play::{
+use chunkedge_server::client::{Client, Properties, Username};
+use chunkedge_server::keepalive::Ping;
+use chunkedge_server::layer::UpdateLayersPreClientSet;
+use chunkedge_server::protocol::encode::PacketWriter;
+use chunkedge_server::protocol::packets::play::{
     player_info_update_s2c as packet, PlayerInfoRemoveS2c, PlayerInfoUpdateS2c, TabListS2c,
 };
-use valence_server::protocol::{IntoTextComponent, WritePacket};
-use valence_server::text::IntoText;
-use valence_server::uuid::Uuid;
-use valence_server::{Despawned, GameMode, Server, Text, UniqueId};
+use chunkedge_server::protocol::{IntoTextComponent, WritePacket};
+use chunkedge_server::text::IntoText;
+use chunkedge_server::uuid::Uuid;
+use chunkedge_server::{Despawned, GameMode, Server, Text, UniqueId};
+use derive_more::{Deref, DerefMut};
 
 pub struct PlayerListPlugin;
 

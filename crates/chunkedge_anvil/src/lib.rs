@@ -11,12 +11,12 @@ use std::time::{SystemTime, UNIX_EPOCH};
 pub use bevy::*;
 use bitfield_struct::bitfield;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
+use chunkedge_nbt::binary::{FromModifiedUtf8, ToModifiedUtf8};
+use chunkedge_nbt::Compound;
 use flate2::bufread::{GzDecoder, ZlibDecoder};
 use flate2::write::{GzEncoder, ZlibEncoder};
 use lru::LruCache;
 use thiserror::Error;
-use valence_nbt::binary::{FromModifiedUtf8, ToModifiedUtf8};
-use valence_nbt::Compound;
 
 #[cfg(feature = "bevy_plugin")]
 mod bevy;
@@ -44,7 +44,7 @@ pub enum RegionError {
     #[error("invalid compression scheme number of {0}")]
     InvalidCompressionScheme(u8),
     #[error("failed to parse NBT: {0}")]
-    Nbt(#[from] valence_nbt::Error),
+    Nbt(#[from] chunkedge_nbt::Error),
     #[error("not all chunk NBT data was read")]
     TrailingNbtData,
     #[error("oversized chunk")]
@@ -491,7 +491,7 @@ impl Region {
             None => return Err(RegionError::InvalidCompressionScheme(compression)),
         };
 
-        let (data, _) = valence_nbt::from_binary(&mut nbt_slice)?;
+        let (data, _) = chunkedge_nbt::from_binary(&mut nbt_slice)?;
 
         if !nbt_slice.is_empty() {
             return Err(RegionError::TrailingNbtData);
@@ -554,17 +554,17 @@ impl Region {
         compress_buf.clear();
         let mut compress_cursor = Cursor::new(compress_buf);
         match options.compression {
-            Compression::Gzip => valence_nbt::to_binary(
+            Compression::Gzip => chunkedge_nbt::to_binary(
                 chunk,
                 GzEncoder::new(&mut compress_cursor, flate2::Compression::default()),
                 Some(""),
             )?,
-            Compression::Zlib => valence_nbt::to_binary(
+            Compression::Zlib => chunkedge_nbt::to_binary(
                 chunk,
                 ZlibEncoder::new(&mut compress_cursor, flate2::Compression::default()),
                 Some(""),
             )?,
-            Compression::None => valence_nbt::to_binary(chunk, &mut compress_cursor, Some(""))?,
+            Compression::None => chunkedge_nbt::to_binary(chunk, &mut compress_cursor, Some(""))?,
         }
         let compress_buf = compress_cursor.into_inner();
 

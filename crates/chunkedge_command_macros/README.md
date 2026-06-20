@@ -1,11 +1,11 @@
-Simplify the creation of Valence commands with a derive macro.
+Simplify the creation of ChunkEdge commands with a derive macro.
 
 ## Usage
 
 ```rust
 #[derive(Command, Debug, Clone)]
 #[paths("teleport", "tp")]
-#[scopes("valence.command.teleport")]
+#[scopes("chunkedge.command.teleport")]
 enum TeleportCommand {
     #[paths = "{location}"]
     ExecutorToLocation { location: Vec3Parser },
@@ -25,7 +25,7 @@ enum TeleportCommand {
 
 #[derive(Command, Debug, Clone)]
 #[paths("gamemode", "gm")]
-#[scopes("valence.command.gamemode")]
+#[scopes("chunkedge.command.gamemode")]
 enum GamemodeCommand {
     #[paths("survival", "{/} gms")]
     Survival,
@@ -39,7 +39,7 @@ enum GamemodeCommand {
 
 #[derive(Command, Debug, Clone)]
 #[paths("test", "t")]
-#[scopes("valence.command.test")]
+#[scopes("chunkedge.command.test")]
 #[allow(dead_code)]
 enum TestCommand {
     // 3 literals with an arg each
@@ -97,8 +97,8 @@ The `#[scopes(...)]` or `#[scopes = "..."]` attribute is used to specify the sco
 are used to specify who can use the command. The scopes are specified as string literals, where each scope is separated
 by a colon.
 
-For example, in the `Teleport` enum, the variants are assigned the scope `valence:command:teleport`, which means they
-can be used by anyone with the `valence:command:teleport`, `valence:command` or `valence` scope.
+For example, in the `Teleport` enum, the variants are assigned the scope `chunkedge:command:teleport`, which means they
+can be used by anyone with the `chunkedge:command:teleport`, `chunkedge:command` or `chunkedge` scope.
 
 The scopes attribute can have multiple values separated by commas, representing the different scopes that the command
 belongs to.
@@ -108,7 +108,7 @@ belongs to.
 This is the core of the command system. It is a graph of `CommandNode`s that are connected by the `CommandEdgeType`. The
 graph is used to determine what command to run when a command is entered. The graph is also used to generate the command
 tree that is sent to the client. You can think of it as a tree where each leaf is part of a command, and the path to the
-leaf is the command. See the documentation for `command.rs` in `valence_command` for more information.
+leaf is the command. See the documentation for `command.rs` in `chunkedge_command` for more information.
 
 
 ### Our teleport command from the example (made with graphviz)

@@ -1,16 +1,16 @@
 use std::borrow::Cow;
 use std::hint::black_box;
 
+use chunkedge::prelude::*;
+use chunkedge::protocol::decode::PacketDecoder;
+use chunkedge::protocol::encode::{PacketEncoder, PacketWriter, WritePacket};
+use chunkedge::protocol::packets::play::level_chunk_with_light_s2c::{HeightMap, HeightMapKind};
+use chunkedge::protocol::packets::play::{AddEntityS2c, LevelChunkWithLightS2c, TabListS2c};
+use chunkedge::protocol::{ByteAngle, FixedArray, IntoTextComponent, VarInt, VariableBitSet};
+use chunkedge::text::IntoText;
+use chunkedge_server::protocol::Velocity;
+use chunkedge_server::CompressionThreshold;
 use divan::Bencher;
-use valence::prelude::*;
-use valence::protocol::decode::PacketDecoder;
-use valence::protocol::encode::{PacketEncoder, PacketWriter, WritePacket};
-use valence::protocol::packets::play::level_chunk_with_light_s2c::{HeightMap, HeightMapKind};
-use valence::protocol::packets::play::{AddEntityS2c, LevelChunkWithLightS2c, TabListS2c};
-use valence::protocol::{ByteAngle, FixedArray, IntoTextComponent, VarInt, VariableBitSet};
-use valence::text::IntoText;
-use valence_server::protocol::Velocity;
-use valence_server::CompressionThreshold;
 
 pub(crate) fn setup<'a>() -> (
     PacketEncoder,

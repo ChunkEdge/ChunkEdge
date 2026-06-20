@@ -1,7 +1,7 @@
 use std::mem;
 use std::ops::Range;
 
-use valence_protocol::ChunkPos;
+use chunkedge_protocol::ChunkPos;
 
 use crate::ChunkView;
 

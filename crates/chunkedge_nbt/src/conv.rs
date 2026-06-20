@@ -1,4 +1,4 @@
-//! Zero-cost conversion functions for `valence_nbt`.
+//! Zero-cost conversion functions for `chunkedge_nbt`.
 //!
 //! While working with [`Value`], it is often necessary to convert between
 //! collections of signed and unsigned integer types due to API

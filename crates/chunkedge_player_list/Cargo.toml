@@ -1,6 +1,6 @@
 [package]
-name = "valence_player_list"
-description = "Player list (tablist) support for Valence"
+name = "chunkedge_player_list"
+description = "Player list (tablist) support for ChunkEdge"
 readme = "README.md"
 version.workspace = true
 edition.workspace = true
@@ -18,4 +18,4 @@ derive_more = { workspace = true, features = [
     "deref",
     "deref_mut",
 ] }
-valence_server.workspace = true
+chunkedge_server.workspace = true

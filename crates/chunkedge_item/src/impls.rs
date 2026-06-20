@@ -1,7 +1,7 @@
 use std::io::Write;
 
-use valence_binary::{cautious_capacity, Decode, Encode, VarInt};
-use valence_generated::item::ItemKind;
+use chunkedge_binary::{cautious_capacity, Decode, Encode, VarInt};
+use chunkedge_generated::item::ItemKind;
 
 use crate::components::{BlockPredicate, ExactComponentMatcher, ItemComponent, Patchable};
 use crate::vanilla_components::ItemKindExt;

@@ -1,4 +1,4 @@
-use valence_math::DVec3;
+use chunkedge_math::DVec3;
 
 use crate::BlockPos;
 

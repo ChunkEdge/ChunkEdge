@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import java.lang.reflect.Field;
 import java.util.Map;
 import net.minecraft.util.Language;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.Main;
 
 public class TranslationKeys implements Main.Extractor {
 

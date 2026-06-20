@@ -14,7 +14,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "rs.valence.extractor.Main"
+      "com.chunkedge.extractor.Main"
     ]
   },
   "mixins": [

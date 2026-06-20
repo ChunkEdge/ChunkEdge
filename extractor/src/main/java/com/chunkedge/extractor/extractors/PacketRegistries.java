@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,7 +7,7 @@ import com.mojang.serialization.JsonOps;
 import java.util.stream.Stream;
 import net.minecraft.registry.*;
 import net.minecraft.server.MinecraftServer;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.Main;
 
 public class PacketRegistries implements Main.Extractor {
 

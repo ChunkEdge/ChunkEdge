@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,7 +14,7 @@ import net.minecraft.network.packet.s2c.play.EntityAnimationS2CPacket;
 import net.minecraft.registry.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Direction;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.Main;
 
 public class Misc implements Main.Extractor {
 

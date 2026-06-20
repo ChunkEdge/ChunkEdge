@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,7 +8,7 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.server.MinecraftServer;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.Main;
 
 public class Paintings implements Main.Extractor {
 

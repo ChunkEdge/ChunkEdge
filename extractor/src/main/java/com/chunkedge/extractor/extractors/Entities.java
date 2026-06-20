@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
@@ -27,9 +27,9 @@ import net.minecraft.village.VillagerData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import rs.valence.extractor.ClassComparator;
-import rs.valence.extractor.DummyPlayerEntity;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.ClassComparator;
+import com.chunkedge.extractor.DummyPlayerEntity;
+import com.chunkedge.extractor.Main;
 
 public class Entities implements Main.Extractor {
 

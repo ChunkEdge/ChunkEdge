@@ -1,4 +1,4 @@
-package rs.valence.extractor;
+package com.chunkedge.extractor;
 
 import java.util.Collection;
 import java.util.List;

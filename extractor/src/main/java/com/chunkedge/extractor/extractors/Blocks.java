@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,8 +10,8 @@ import net.minecraft.item.VerticallyAttachableBlockItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EmptyBlockView;
-import rs.valence.extractor.Main;
-import rs.valence.extractor.mixin.ExposeWallBlock;
+import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.mixin.ExposeWallBlock;
 
 public class Blocks implements Main.Extractor {
 

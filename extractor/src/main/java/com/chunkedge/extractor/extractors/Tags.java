@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
@@ -16,8 +16,8 @@ import net.minecraft.registry.ServerDynamicRegistryType;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import rs.valence.extractor.Main;
-import rs.valence.extractor.RegistryKeyComparator;
+import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.RegistryKeyComparator;
 
 public class Tags implements Main.Extractor {
 

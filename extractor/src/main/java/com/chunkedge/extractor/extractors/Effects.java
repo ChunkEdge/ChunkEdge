@@ -1,10 +1,10 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.registry.Registries;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.Main;
 
 public class Effects implements Main.Extractor {
 

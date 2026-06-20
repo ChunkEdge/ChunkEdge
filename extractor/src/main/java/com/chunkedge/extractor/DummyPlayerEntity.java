@@ -1,4 +1,4 @@
-package rs.valence.extractor;
+package com.chunkedge.extractor;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.data.DataTracker;

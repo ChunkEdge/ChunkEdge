@@ -1,11 +1,11 @@
-package rs.valence.extractor;
+package com.chunkedge.extractor;
 
 /**
  * Utility class for various methods.
  */
-public class ValenceUtils {
+public class ChunkEdgeUtils {
 
-    private ValenceUtils() {
+    private ChunkEdgeUtils() {
         throw new UnsupportedOperationException(
             "This class cannot be instantiated"
         );

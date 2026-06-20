@@ -1,4 +1,4 @@
-package rs.valence.extractor.extractors;
+package com.chunkedge.extractor.extractors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import net.minecraft.network.state.NetworkState;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.state.*;
-import rs.valence.extractor.Main;
+import com.chunkedge.extractor.Main;
 
 public class Packets implements Main.Extractor {
 

@@ -20,7 +20,7 @@ Next, run `copy_extractor_output.sh`. This copies the files to the appropriate l
 ./copy_extractor_output.sh
 ```
 
-## How to update valence to a new version of Minecraft
+## How to update ChunkEdge to a new version of Minecraft
 
 The general process should go something like this:
 1. Update `gradle.properties` to the new version of Minecraft using https://fabricmc.net/develop

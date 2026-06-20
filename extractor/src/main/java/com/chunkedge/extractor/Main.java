@@ -1,4 +1,4 @@
-package rs.valence.extractor;
+package com.chunkedge.extractor;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -12,7 +12,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rs.valence.extractor.extractors.*;
+import com.chunkedge.extractor.extractors.*;
 import sun.reflect.ReflectionFactory;
 
 public class Main implements ModInitializer {

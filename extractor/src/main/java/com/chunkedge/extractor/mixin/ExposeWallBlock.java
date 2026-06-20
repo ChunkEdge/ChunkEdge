@@ -1,4 +1,4 @@
-package rs.valence.extractor.mixin;
+package com.chunkedge.extractor.mixin;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.VerticallyAttachableBlockItem;

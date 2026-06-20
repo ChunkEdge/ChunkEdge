@@ -1,4 +1,4 @@
-package rs.valence.extractor;
+package com.chunkedge.extractor;
 
 import java.io.Serializable;
 import java.util.Comparator;

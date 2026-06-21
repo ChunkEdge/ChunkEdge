@@ -115,7 +115,7 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/ChunkEdge/ChunkEdge"
-documentation = "https://docs.rs/chunkedge/"
+documentation = "https://docs.chunkedge.com"
 license = "MIT"
 
 [workspace.dependencies]

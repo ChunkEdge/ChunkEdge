@@ -10,7 +10,7 @@
 
 ![License](https://img.shields.io/github/license/ChunkEdge/ChunkEdge)
 ![Minecraft version](https://img.shields.io/badge/Minecraft_version-1.21.5-blue)
-[![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://docs.chunkedge.com/)
+[![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://docs.chunkedge.com/chunkedge/)
 ![Tests](https://github.com/ChunkEdge/ChunkEdge/actions/workflows/ci.yml/badge.svg)
 ![ChunkEdge Repo stars](https://img.shields.io/github/stars/ChunkEdge/ChunkEdge)
 
@@ -58,6 +58,15 @@ Here are some noteworthy achievements:
 
 ## Getting Started
 
+### Creating a New Project
+
+To create your own server project using ChunkEdge, please see the [Getting Started guide](https://docs.chunkedge.com/chunkedge/docs/guides/getting_started/).
+
+Other usefull resources from the documentation include:
+
+- [Full API Documentation (rustdoc)](https://docs.chunkedge.com/chunkedge/)
+- [General docs page with links to guides and the FAQ](https://docs.chunkedge.com/chunkedge/docs/)
+
 ### Running the Examples
 
 After cloning the repository, run this command to try an example.
@@ -75,19 +84,6 @@ cargo run --example
 Recommended examples to try are `parkour`, `game_of_life`, `terrain`, and `cow_sphere`.
 
 Open your Minecraft client and connect to the address `localhost`. If all goes well, you should be able to play the example.
-
-### Adding ChunkEdge as a Dependency
-
-Since ChunkEdge is still unstable and in early development, we don't yet publish crate versions.
-
-To use the most recent development version, add ChunkEdge as a [git dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories).
-
-```toml
-[dependencies]
-chunkedge = { git = "https://github.com/ChunkEdge/ChunkEdge", rev = "<COMMIT_HASH>" }
-```
-
-Documentation from the main branch is available [here](https://docs.chunkedge.com/).
 
 ## Contributing
 

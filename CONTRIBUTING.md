@@ -1,21 +1,20 @@
-ChunkEdge has a public Discord server [here](https://discord.gg/8Fqqy9XrYb) and GitHub discussions [here](https://github.com/ChunkEdge/ChunkEdge/discussions). Check those out if you have additional questions
-or comments.
+# Contributing to ChunkEdge
 
-# What version of Rust should I use?
+Before contributing, please first discuss the change you wish to make. For bugs and features proposals, first open an issue with a detailed description of the problem and the solution you would like to see. This makes sure that your contribution is aligned with the project and avoids wasted effort. Otherwise, you risk that your contribution will be rejected when it is submitted for review.
 
-To _use_ ChunkEdge, only the most recent stable version of Rust is required. However, contributors should know that
-unstable `rustfmt` settings are enabled in the project. To run `rustfmt` with the nightly toolchain, use
-the `cargo +nightly fmt` command.
+If there are open issues that are already planned by the maintainers, you can reply to the issue to express your interest in working on it stating that you plan to submit a pull request. This will help avoid duplicate work. If the open issue does not yet contain a proposed solution and requires significant change, please first describe your proposal in the issue before starting to work on it.
 
-# What issues should I work on?
+For general questions and discussions related to the project, please use [GitHub discussions](https://github.com/ChunkEdge/ChunkEdge/discussions).
 
-Issues
-labelled [good first issue](https://github.com/ChunkEdge/ChunkEdge/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
-are a good place to start. This label is reserved for issues that are relatively uncontroversial and shouldn't require too much specialized domain
-knowledge to complete. New contributors are not required to start with these issues.
+To get started with your first contribution to the project, you can check out the [issues tagged with "good first issue"](https://github.com/ChunkEdge/ChunkEdge/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
 
-If you plan to work on something that's not an open issue, consider making one first so that it can be discussed. This
-way, your contribution will not be rejected when it is submitted for review.
+## Use of AI
+
+Use of AI and LLM tools is generally allowed when contributing. However, it is the contributor's responsibility to ensure that the generated content is correct. You need to understand exactly what the generated code does, and why it does it. Submitting vibe-coded code will results in your pull request being rejected and will likely lead to a ban from contributing to the project. You should not expect the maintainers to review your AI-generated code when you do not understand it yourself.
+
+## What version of Rust should I use?
+
+It is generally best to use the same stable version of Rust that is currently being used in the CI of the project. You can find out this version by examining the `.github/workflows/ci.yml` file. Some features (such as `miri`) may require the nightly toolchain.
 
 ## Playgrounds
 
@@ -34,29 +33,21 @@ cargo run -p playground # simply run the playground, or
 cargo watch -c -x "run -p playground" # run the playground and watch for changes
 ```
 
-# Automatic Checks
+## Automatic Checks
 
-When you submit a pull request, your code will automatically run through clippy, rustfmt, etc. to check for any errors.
-If an error does occur, it must be fixed before the pull request can be merged.
+When you submit a pull request, your code will automatically run through clippy, rustfmt, etc. to check for any errors or mistakes. If an error does occur, it must be fixed before the pull request can be merged.
 
-# Code Conventions
+## Code Conventions
 
-Here are some rules you should follow for your code. Generally the goal here is to be consistent with existing code, the
-standard library, and the Rust ecosystem as a whole. Nonconforming code is not necessarily a blocker for accepting your
-contribution, but conformance is advised.
+Here are some rules you should follow for your code. Generally the goal here is to be consistent with existing code, the standard library, and the Rust ecosystem as a whole. Nonconforming code is not necessarily a blocker for accepting your contribution, but conformance is advised.
 
-These guidelines are intended to complement
-the [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/naming.html).
+These guidelines are intended to complement the [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/naming.html).
 
-## Top-down Modules
+### Top-down Modules
 
-Readers of the module should be able to understand your code by reading it from top to bottom.
-Whenever [items](https://doc.rust-lang.org/reference/items.html) in your module form a parent-child relationship, the
-parent should be written above the children. Typically this means that important `pub` items are placed before private
-implementation details.
+Readers of the module should be able to understand your code by reading it from top to bottom. Whenever [items](https://doc.rust-lang.org/reference/items.html) in your module form a parent-child relationship, the parent should be written above the children. Typically this means that important `pub` items are placed before private implementation details.
 
-For instance, here are three functions. Notice how the definition of `foo` is placed above its dependencies. The parent
-is `foo` while its children are `bar` and `baz`.
+For instance, here are three functions. Notice how the definition of `foo` is placed above its dependencies. The parent is `foo` while its children are `bar` and `baz`.
 
 ```rust
 pub fn foo() {
@@ -81,7 +72,7 @@ struct Bar {
 }
 ```
 
-## Getters and Setters
+### Getters and Setters
 
 Getters should not start with a `get_` prefix.
 
@@ -99,6 +90,7 @@ impl Foo {
     fn set_bar(&mut self, bar: Bar) { ... }
 }
 ```
+
 </td>
 <td>
 
@@ -108,24 +100,20 @@ impl Foo {
     fn set_bar(&mut self, bar: Bar) { ... }
 }
 ```
+
 </td>
 </tr>
 </table>
 
-See [`SocketAddr`](https://doc.rust-lang.org/stable/std/net/enum.SocketAddr.html) for an example of a standard library
-type that uses this convention.
+See [`SocketAddr`](https://doc.rust-lang.org/stable/std/net/enum.SocketAddr.html) for an example of a standard library type that uses this convention.
 
-Under appropriate circumstances a different naming scheme can be
-used. [`Command`](https://doc.rust-lang.org/stable/std/process/struct.Command.html) is a standard type that demonstrates
-this.
+Under appropriate circumstances a different naming scheme can be used. [`Command`](https://doc.rust-lang.org/stable/std/process/struct.Command.html) is a standard type that demonstrates this.
 
-If a `bar` field exists and no invariants need to be maintained by the getters and setters, it is usually better to make
-the `bar` field public.
+If a `bar` field exists and no invariants need to be maintained by the getters and setters, it is usually better to make the `bar` field public.
 
-## Bevy `Event`s
+### Bevy `Event`s
 
-Types intended to be used as events in [`EventReader`] and [`EventWriter`] should end in the `Event` suffix.
-This is helpful for readers trying to distinguish events from other types in the program.
+Types intended to be used as events in [`EventReader`] and [`EventWriter`] should end in the `Event` suffix. This is helpful for readers trying to distinguish events from other types in the program.
 
 <table>
 <tr>
@@ -140,6 +128,7 @@ struct CollisionEvent { ... }
 
 fn handle_collisions(mut events: EventReader<CollisionEvent>) { ... }
 ```
+
 </td>
 <td>
 
@@ -148,14 +137,12 @@ struct Collision { ... }
 
 fn handle_collisions(mut events: EventReader<Collision>) { ... }
 ```
+
 </td>
 </tr>
 </table>
 
-[`EventReader`]: https://docs.rs/bevy_ecs/latest/bevy_ecs/event/struct.EventReader.html
-[`EventWriter`]: https://docs.rs/bevy_ecs/latest/bevy_ecs/event/struct.EventWriter.html
-
-## Specifying Dependencies
+### Specifying Dependencies
 
 When adding a new dependency to a crate, make sure you specify the full semver version.
 
@@ -171,6 +158,7 @@ When adding a new dependency to a crate, make sure you specify the full semver v
 [dependencies]
 serde_json = "1.0.96"
 ```
+
 </td>
 <td>
 
@@ -178,14 +166,14 @@ serde_json = "1.0.96"
 [dependencies]
 serde_json = "1"
 ```
+
 </td>
 </tr>
 </table>
 
-## Writing Unit Tests
-When writing unit tests, unwrap errors instead of returning them.
-Panicking displays the line and column of the error, which is useful for debugging.
-This information is lost when the error is returned.
+### Writing Unit Tests
+
+When writing unit tests, unwrap errors instead of returning them. Panicking displays the line and column of the error, which is useful for debugging. This information is lost when the error is returned.
 
 <table>
 <tr>
@@ -201,6 +189,7 @@ fn my_test() {
     some_fallible_func().unwrap();
 }
 ```
+
 </td>
 <td>
 
@@ -212,24 +201,22 @@ fn my_test() -> anyhow::Result<()> {
     Ok(())
 }
 ```
+
 </td>
 </tr>
 </table>
 
-## Documentation
+### Documentation
 
-All public items should be documented. Documentation must be written with complete sentences and correct grammar.
-Consider using [intra-doc links](https://doc.rust-lang.org/rustdoc/write-documentation/linking-to-items-by-name.html)
-where appropriate.
+All public items should be documented. Documentation must be written with complete sentences and correct grammar. Consider using [intra-doc links](https://doc.rust-lang.org/rustdoc/write-documentation/linking-to-items-by-name.html) where appropriate.
 
-## Unit Tests
+### Unit Tests
 
-Unit tests help your contributions last! They ensure that your code works as expected and that it continues to work in
-the future.
+Unit tests help your contributions last! They ensure that your code works as expected and that it continues to work in the future.
 
 whole-server unit tests can be found in [`/src/tests/`](/src/tests).
 
-## Naming Quantities
+### Naming Quantities
 
 Variables intended to hold quantities should be written with the `_count` suffix instead of the `num_` prefix.
 
@@ -244,12 +231,14 @@ Variables intended to hold quantities should be written with the `_count` suffix
 ```rust
 let block_count = ...;
 ```
+
 </td>
 <td>
 
 ```rust
 let num_blocks = ...;
 ```
+
 </td>
 </tr>
 </table>

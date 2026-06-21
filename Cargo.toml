@@ -135,7 +135,7 @@ bevy_hierarchy = { version = "0.14.2", default-features = false, features = [
   "bevy_app",
 ] }
 bevy_log = { version = "0.14.2" }
-bevy_mod_debugdump = { version = "0.11.1" }
+bevy_mod_debugdump = { version = "0.16.0" }
 bevy_utils = { version = "0.14.2" }
 bitfield-struct = "0.8.0"
 bitvec = "1.0.1"

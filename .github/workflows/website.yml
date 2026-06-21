@@ -33,7 +33,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Build website
         run: |
-          RUSTDOCFLAGS='--cfg unstable_doc' cargo doc --no-deps --workspace --all-features
+          RUSTDOCFLAGS='--cfg unstable_doc --html-in-header docs/rustdoc-header.html' cargo doc --no-deps --workspace --all-features
 
           cat > target/doc/index.html <<'EOF'
           <!doctype html>

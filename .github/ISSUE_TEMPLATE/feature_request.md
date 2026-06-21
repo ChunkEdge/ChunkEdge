@@ -1,10 +1,12 @@
 ---
 name: Feature Request
 about: Do you have an idea for a new feature?
-title: ''
-labels: enhancement
-assignees: ''
+title: ""
+labels: enhancement, triage
+assignees: ""
 ---
+
+# Feature Request
 
 ## Describe the problem related to your feature request.
 

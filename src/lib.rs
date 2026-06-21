@@ -1,8 +1,12 @@
 #![cfg_attr(
     unstable_doc,
-    doc = "**❗ NOTE:** This documentation is sourced from the `main` branch. If you're looking for the most recent stable release, go [here](https://docs.rs/chunkedge/latest/chunkedge/).\n\n---\n"
+    doc = "**❗ NOTE:** This documentation is sourced from the `main` branch. Guides and general project documentation can be found in [`docs`].\n\n---\n"
 )]
 #![doc = include_str!("../README.md")]
+#![cfg_attr(
+    doc,
+    doc = "\n\n## General Project Documentation\n\nThe guides, FAQ, and other pages are available in [`docs`].\n"
+)]
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/logo.svg",
     html_favicon_url = "https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/logo.svg"
@@ -26,6 +30,9 @@
 )]
 
 use bevy_app::{PluginGroup, PluginGroupBuilder};
+
+#[cfg(doc)]
+pub mod docs;
 
 #[cfg(feature = "testing")]
 pub mod testing;

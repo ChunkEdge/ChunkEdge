@@ -1,16 +1,21 @@
-# Before You Start
-
-We recommend you get familiar with Bevy's Entity Component System architecture and API, as ChunkEdge uses the exact same crate for its ECS. You can find [Bevy's introduction to ECS here](https://bevyengine.org/learn/book/getting-started/ecs/).
-
-You should also download Minecraft, obviously. You can use any launcher you'd like, but we recommend using the [Prism Launcher](https://prismlauncher.org/) as it will let you run offline mode clients a bit easier.
-
 # Getting Started
 
-The first thing you'll need to do is create a new binary Rust project. You can do this by running `cargo new --bin my_project` in your terminal. Once you've done that, you'll need to add ChunkEdge as a dependency:
+## Before You Start
 
-```bash
-cargo add chunkedge
+We recommend you get familiar with [Bevy's Entity Component System architecture and API](https://bevy.org/learn/quick-start/getting-started/ecs/), as ChunkEdge uses the exact same crate for its ECS.
+
+You should also install Minecraft and [Rust](https://rust-lang.org/learn/get-started/).
+
+## Creating a New Project
+
+The first thing you'll need to do is create a new binary Rust project. You can do this by running `cargo new --bin my_project` in your terminal. Once you've done that, you'll need to add ChunkEdge as a dependency. Since ChunkEdge is still unstable and in early development, we don't yet publish crate versions. To use the most recent development version, add ChunkEdge as a [git dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories).
+
+```toml
+[dependencies]
+chunkedge = { git = "https://github.com/ChunkEdge/ChunkEdge", rev = "<COMMIT_HASH>" }
 ```
+
+To find the `<COMMIT_HASH>` you can go to the [ChunkEdge main branch commit list](https://github.com/ChunkEdge/ChunkEdge/commits/main/) and copy the hash of the latest commit.
 
 Next, you'll need to set up a new `App` in `main()`. This is the bare minimum you need to get a ChunkEdge app running.
 
@@ -26,13 +31,13 @@ fn main() {
 
 If you run this and try to join the server, you'll see "Joining world..." and then... nothing. It just sits there. That's because we need to tell the client what position to spawn at. Let's fix that.
 
-# Hello World
+## Hello World
 
 Let's add a startup system that will put a single block under the spawn position. There's gonna be a lot of new stuff here, but don't worry, we'll briefly touch on most of it.
 
 Chunk Layers are the way ChunkEdge handles worlds. A client can only view a single chunk layer at a time. So the first thing we need to do is create a new pair of chunk and entity layers (`LayerBundle`), add some chunks to it, and then set our desired block in the world.
 
-```rust
+```rust,ignore
 fn setup(
     mut commands: Commands,
     server: Res<Server>,
@@ -60,7 +65,7 @@ fn setup(
 
 Now we need to handle clients when they join the server. ChunkEdge automatically spawns a new entity for each client that joins the server, we just need to add a system detects when clients are added.
 
-```rust
+```rust,ignore
 fn init_clients(
     mut clients: Query<
         (

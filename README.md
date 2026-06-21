@@ -23,7 +23,7 @@ Built on top of [Bevy ECS](https://bevy.org/learn/quick-start/getting-started/ec
 Opinionated features like dynamic scripting, dedicated executables, and vanilla game mechanics are all expected to be built as optional plugins. This level of modularity is desirable for those looking to bunild highly custom experiences in Minecraft such as minigame servers.
 
 > [!WARNING]  
-> ChunkEdge is still early in development with many features unimplemented or incomplete. Expect to encounter bugs, limitations, and breaking changes. At the moment, ChunkEdge is only compatible with Minecraft `1.21.5` at the moment. The aim is to support the latest stable version of Minecraft. For now, you can use a proxy (for example [ViaProxy](https://github.com/ViaVersion/ViaProxy) combined with [Velocity](https://papermc.io/software/velocity/)) to allow players on both older and newer clients to connect to your server.
+> ChunkEdge is still early in development with many features unimplemented or incomplete. Expect to encounter bugs, limitations, and breaking changes. At the moment, ChunkEdge is only compatible with Minecraft `1.21.5`. The aim is to support the latest stable version of Minecraft. For now, you can use a proxy (for example [ViaProxy](https://github.com/ViaVersion/ViaProxy) combined with [Velocity](https://papermc.io/software/velocity/)) to allow players on both older and newer clients to connect to your server.
 
 ## Goals
 

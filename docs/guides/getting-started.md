@@ -19,7 +19,7 @@ To find the `<COMMIT_HASH>` you can go to the [ChunkEdge main branch commit list
 
 Next, you'll need to set up a new `App` in `main()`. This is the bare minimum you need to get a ChunkEdge app running.
 
-```rust
+```rust,no_run
 use chunkedge::prelude::*;
 
 fn main() {
@@ -37,7 +37,8 @@ Let's add a startup system that will put a single block under the spawn position
 
 Chunk Layers are the way ChunkEdge handles worlds. A client can only view a single chunk layer at a time. So the first thing we need to do is create a new pair of chunk and entity layers (`LayerBundle`), add some chunks to it, and then set our desired block in the world.
 
-```rust,ignore
+```rust,no_run
+# use chunkedge::prelude::*;
 fn setup(
     mut commands: Commands,
     server: Res<Server>,
@@ -65,7 +66,8 @@ fn setup(
 
 Now we need to handle clients when they join the server. ChunkEdge automatically spawns a new entity for each client that joins the server, we just need to add a system detects when clients are added.
 
-```rust,ignore
+```rust,no_run
+# use chunkedge::prelude::*;
 fn init_clients(
     mut clients: Query<
         (
@@ -110,7 +112,10 @@ So from top to bottom this code does the following:
 
 Finally, we'll need to add these systems to our `App`:
 
-```rust
+```rust,no_run
+# use chunkedge::prelude::*;
+# fn setup() {}
+# fn init_clients() {}
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)

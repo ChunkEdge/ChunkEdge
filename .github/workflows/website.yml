@@ -33,11 +33,30 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Build website
         run: |
-          RUSTDOCFLAGS='--cfg unstable_doc' cargo doc --no-deps --workspace --all-features --open
+          RUSTDOCFLAGS='--cfg unstable_doc' cargo doc --no-deps --workspace --all-features
+
+          cat > target/doc/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <title>Redirecting…</title>
+              <meta http-equiv="refresh" content="0; url=./chunkedge/">
+              <link rel="canonical" href="./chunkedge/">
+              <script>
+                window.location.replace("./chunkedge/");
+              </script>
+            </head>
+            <body>
+              <p>Redirecting to <a href="./chunkedge/">ChunkEdge documentation</a>…</p>
+            </body>
+          </html>
+          EOF
+
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./target/doc/chunkedge
+          path: ./target/doc
 
   # Deployment job
   deploy:

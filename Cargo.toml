@@ -131,7 +131,7 @@ bevy_derive = "0.14.2"
 bevy_ecs = { version = "0.14.2", default-features = false, features = [
   "multi_threaded",
 ] }
-bevy_hierarchy = { version = "0.14.2", default-features = false, features = [
+bevy_hierarchy = { version = "0.15.3", default-features = false, features = [
   "bevy_app",
 ] }
 bevy_log = { version = "0.14.2" }

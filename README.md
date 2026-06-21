@@ -10,7 +10,7 @@
 
 ![License](https://img.shields.io/github/license/ChunkEdge/ChunkEdge)
 ![Minecraft version](https://img.shields.io/badge/Minecraft_version-1.21.5-blue)
-![Documentation](https://img.shields.io/badge/Documentation-main-blue?link=https%3A%2F%2Fdocs.chunkedge.com)
+[![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://docs.chunkedge.com/)
 ![Tests](https://github.com/ChunkEdge/ChunkEdge/actions/workflows/ci.yml/badge.svg)
 ![ChunkBase Repo stars](https://img.shields.io/github/stars/ChunkEdge/ChunkEdge)
 

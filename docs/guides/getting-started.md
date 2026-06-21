@@ -29,7 +29,7 @@ fn main() {
 }
 ```
 
-If you run this and try to join the server, you'll see "Joining world..." and then... nothing. It just sits there. That's because we need to tell the client what position to spawn at. Let's fix that.
+If you run this using `cargo run` and try to join the server, you'll see a protocol error. That's because we need to tell the client what position to spawn at and how the world looks. Let's fix that.
 
 ## Hello World
 

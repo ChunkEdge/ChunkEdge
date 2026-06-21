@@ -1,10 +1,8 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/rebrand/assets/logo-full.svg" width="650" align="center">
+<img src="https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/logo-full.svg" width="650" align="center">
 </div>
 
 # ChunkEdge
-
-<!-- TODO: replace rebrand with main -->
 
 <p align="center">
 
@@ -87,7 +85,7 @@ Open your Minecraft client and connect to the address `localhost`. If all goes w
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/ChunkEdge/ChunkEdge/blob/rebrand/CONTRIBUTING.md). You can use [GitHub Discussions](https://github.com/ChunkEdge/ChunkEdge/discussions) to discuss the project and ask questions.
+Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/ChunkEdge/ChunkEdge/blob/main/CONTRIBUTING.md). You can use [GitHub Discussions](https://github.com/ChunkEdge/ChunkEdge/discussions) to discuss the project and ask questions.
 
 ## License
 

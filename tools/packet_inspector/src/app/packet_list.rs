@@ -149,8 +149,13 @@ fn draw_packet_widget(ui: &mut Ui, packet: &Packet, selected: bool) -> Response 
     };
 
     if ui.is_rect_visible(rect) {
-        ui.painter()
-            .rect(rect, 0.0, fill, Stroke::new(1.0, Rgba::BLACK), StrokeKind::Inside);
+        ui.painter().rect(
+            rect,
+            0.0,
+            fill,
+            Stroke::new(1.0, Rgba::BLACK),
+            StrokeKind::Inside,
+        );
 
         let shape = get_triangle(packet.side, &rect);
         ui.painter().add(Shape::Path(shape));

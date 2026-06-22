@@ -90,7 +90,10 @@ fn init_clients(
     }
 }
 
-fn prompt_on_punch(mut clients: Query<&mut Client>, mut events: MessageReader<InteractEntityEvent>) {
+fn prompt_on_punch(
+    mut clients: Query<&mut Client>,
+    mut events: MessageReader<InteractEntityEvent>,
+) {
     for event in events.read() {
         if let Ok(mut client) = clients.get_mut(event.client) {
             if event.interact == EntityInteraction::Attack {

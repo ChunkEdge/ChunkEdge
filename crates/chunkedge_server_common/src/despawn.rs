@@ -11,8 +11,8 @@ use bevy_ecs::prelude::*;
 /// `Despawned` component. At the end of the tick, ChunkEdge will despawn all
 /// entities with this component for you.
 ///
-/// The `Despawned` component can be used on entities that ChunkEdge does not know
-/// about. The entity will be despawned regardless.
+/// The `Despawned` component can be used on entities that ChunkEdge does not
+/// know about. The entity will be despawned regardless.
 #[derive(Component, Copy, Clone, Default, PartialEq, Eq, Debug)]
 pub struct Despawned;
 

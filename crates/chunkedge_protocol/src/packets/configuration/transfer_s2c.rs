@@ -1,5 +1,6 @@
-use crate::{Packet, PacketState};
 use chunkedge_binary::{Bounded, Decode, Encode, VarInt};
+
+use crate::{Packet, PacketState};
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 #[packet(state = PacketState::Configuration)]

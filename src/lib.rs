@@ -1,11 +1,13 @@
 #![cfg_attr(
     unstable_doc,
-    doc = "**❗ NOTE:** This documentation is sourced from the `main` branch. Guides and general project documentation can be found in [`docs`].\n\n---\n"
+    doc = "**❗ NOTE:** This documentation is sourced from the `main` branch. Guides and general \
+           project documentation can be found in [`docs`].\n\n---\n"
 )]
 #![doc = include_str!("../README.md")]
 #![cfg_attr(
     doc,
-    doc = "\n\n## General Project Documentation\n\nThe guides, FAQ, and other pages are available in [`docs`].\n"
+    doc = "\n\n## General Project Documentation\n\nThe guides, FAQ, and other pages are available \
+           in [`docs`].\n"
 )]
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/ChunkEdge/ChunkEdge/main/assets/logo.svg",
@@ -56,6 +58,8 @@ pub use chunkedge_command_macros as command_macros;
 pub use chunkedge_equipment as equipment;
 #[cfg(feature = "inventory")]
 pub use chunkedge_inventory as inventory;
+pub use chunkedge_item as item;
+pub use chunkedge_lang as lang;
 #[cfg(feature = "network")]
 pub use chunkedge_network as network;
 #[cfg(feature = "player_list")]
@@ -93,7 +97,6 @@ pub use chunkedge_weather as weather;
 pub use chunkedge_world_border as world_border;
 use registry::biome::BiomePlugin;
 use registry::dimension_type::DimensionTypePlugin;
-pub use {chunkedge_item as item, chunkedge_lang as lang};
 
 /// Contains the most frequently used items in ChunkEdge projects.
 ///

@@ -29,8 +29,8 @@ impl Plugin for WeatherPlugin {
     }
 }
 
-/// Bundle containing rain and thunder components. `chunkedge_weather` allows this
-/// to be added to clients and chunk layer entities.
+/// Bundle containing rain and thunder components. `chunkedge_weather` allows
+/// this to be added to clients and chunk layer entities.
 #[derive(Bundle, Default, PartialEq, PartialOrd)]
 pub struct WeatherBundle {
     pub rain: Rain,

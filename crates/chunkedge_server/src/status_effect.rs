@@ -143,11 +143,12 @@ fn set_swirl(
 
 /// Used to set the color of the swirls in the potion effect.
 ///
-/// Equivalent to net.minecraft.component.type.PotionContentsComponent#mixColors (Yarn mapping).
+/// Equivalent to net.minecraft.component.type.PotionContentsComponent#mixColors
+/// (Yarn mapping).
 fn _get_color(effects: &ActiveStatusEffects) -> i32 {
     if effects.no_effects() {
-        // vanilla mc seems to return 0xFF385DC6 (i32), decimal: -13083194 if there are no effects
-        // dunno why
+        // vanilla mc seems to return 0xFF385DC6 (i32), decimal: -13083194 if there are
+        // no effects dunno why
         // imma just say to return 0 to remove the swirls
         return 0;
     }
@@ -179,5 +180,5 @@ fn _get_color(effects: &ActiveStatusEffects) -> i32 {
     let g = g / total;
     let b = b / total;
     // Alpha is always 255
-    ((0xFF_u32 << 24) | (r << 16) | (g << 8) | b) as i32
+    ((0xff_u32 << 24) | (r << 16) | (g << 8) | b) as i32
 }

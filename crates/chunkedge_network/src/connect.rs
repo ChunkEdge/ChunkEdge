@@ -693,7 +693,11 @@ fn parse_velocity_player_info(
         .context("failed to decode velocity version")?
         .0;
 
-    ensure!(version != i32::from(VELOCITY_MIN_MAX_SUPPORTED_VERSION), "Client tried to connect with an unsupported Velocity version: {version}. While we only support version {VELOCITY_MIN_MAX_SUPPORTED_VERSION}.");
+    ensure!(
+        version != i32::from(VELOCITY_MIN_MAX_SUPPORTED_VERSION),
+        "Client tried to connect with an unsupported Velocity version: {version}. While we only \
+         support version {VELOCITY_MIN_MAX_SUPPORTED_VERSION}."
+    );
 
     // Get client address
     let remote_addr = String::decode(&mut data_without_signature)?.parse()?;

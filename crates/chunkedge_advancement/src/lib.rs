@@ -7,9 +7,9 @@ use std::io::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use bevy_app::prelude::*;
+use bevy_ecs::hierarchy::{ChildOf, Children};
 use bevy_ecs::prelude::*;
 use bevy_ecs::system::SystemParam;
-use bevy_ecs::hierarchy::{ChildOf, Children};
 use chunkedge_binary::{Encode, RawBytes};
 use chunkedge_generated::packet_id;
 use chunkedge_server::client::{Client, FlushPacketsSet, SpawnClientsSet};
@@ -35,27 +35,27 @@ pub struct WriteAdvancementToCacheSet;
 impl Plugin for AdvancementPlugin {
     fn build(&self, app: &mut bevy_app::App) {
         app.configure_sets(
-                PostUpdate,
-                (
-                    WriteAdvancementPacketToClientsSet.before(FlushPacketsSet),
-                    WriteAdvancementToCacheSet.before(WriteAdvancementPacketToClientsSet),
-                ),
-            )
-            .add_message::<AdvancementTabChangeEvent>()
-            .add_systems(
-                PreUpdate,
-                (
-                    add_advancement_update_component_to_new_clients.after(SpawnClientsSet),
-                    handle_advancement_tab_change,
-                ),
-            )
-            .add_systems(
-                PostUpdate,
-                (
-                    update_advancement_cached_bytes.in_set(WriteAdvancementToCacheSet),
-                    send_advancement_update_packet.in_set(WriteAdvancementPacketToClientsSet),
-                ),
-            );
+            PostUpdate,
+            (
+                WriteAdvancementPacketToClientsSet.before(FlushPacketsSet),
+                WriteAdvancementToCacheSet.before(WriteAdvancementPacketToClientsSet),
+            ),
+        )
+        .add_message::<AdvancementTabChangeEvent>()
+        .add_systems(
+            PreUpdate,
+            (
+                add_advancement_update_component_to_new_clients.after(SpawnClientsSet),
+                handle_advancement_tab_change,
+            ),
+        )
+        .add_systems(
+            PostUpdate,
+            (
+                update_advancement_cached_bytes.in_set(WriteAdvancementToCacheSet),
+                send_advancement_update_packet.in_set(WriteAdvancementPacketToClientsSet),
+            ),
+        );
     }
 }
 

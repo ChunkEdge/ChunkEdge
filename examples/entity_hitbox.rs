@@ -12,8 +12,8 @@ use chunkedge::entity::zombie::ZombieEntityBundle;
 use chunkedge::entity::zombie_horse::ZombieHorseEntityBundle;
 use chunkedge::entity::{entity, Pose};
 use chunkedge::prelude::*;
-use rand::RngExt;
 use entity::NameVisible;
+use rand::RngExt;
 
 pub fn main() {
     App::new()

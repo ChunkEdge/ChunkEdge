@@ -212,8 +212,8 @@ fn init_player_list_for_clients(
                                 .as_ref()
                                 .map(IntoTextComponent::into_cow_text_component),
                             priority: 0,
-                            hat: false, // TODO: Hat
-                                        // priority: todo!("Implement priority"),
+                            hat: false, /* TODO: Hat
+                                         * priority: todo!("Implement priority"), */
                         }
                     },
                 )

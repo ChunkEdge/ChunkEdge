@@ -4,13 +4,14 @@
 //! Each scope is a node in a graph. A path from one node to another indicates
 //! that the first scope implies the second. A dot in the scope name indicates
 //! a sub-scope. You can use this to create a hierarchy of scopes. For example,
-//! the scope "chunkedge.command" implies "chunkedge.command.tp". this means that if
-//! a player has the "chunkedge.command" scope, they can use the "tp" command.
+//! the scope "chunkedge.command" implies "chunkedge.command.tp". this means
+//! that if a player has the "chunkedge.command" scope, they can use the "tp"
+//! command.
 //!
 //! You may also link scopes together in the registry. This is useful for admin
 //! scope umbrellas. For example, if the scope "chunkedge.admin" is linked to
-//! "chunkedge.command", It means that if a player has the "chunkedge.admin" scope,
-//! they can use all commands under the command scope.
+//! "chunkedge.command", It means that if a player has the "chunkedge.admin"
+//! scope, they can use all commands under the command scope.
 //!
 //! # Example
 //! ```
@@ -42,9 +43,8 @@ use std::fmt::{Debug, Formatter};
 
 use bevy_app::{App, Plugin, Update};
 use bevy_derive::{Deref, DerefMut};
-use bevy_ecs::prelude::{Component, ResMut};
+use bevy_ecs::prelude::{Component, ResMut, Resource};
 use bevy_ecs::query::Changed;
-use bevy_ecs::prelude::Resource;
 use bevy_ecs::system::Query;
 use petgraph::dot;
 use petgraph::dot::Dot;

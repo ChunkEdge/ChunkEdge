@@ -8,12 +8,14 @@ use rand::RngExt;
 fn varint_encode(bencher: Bencher) {
     let mut rng = rand::rng();
 
-    bencher.with_inputs(|| rng.random()).bench_local_values(|i| {
-        let i: i32 = black_box(i);
+    bencher
+        .with_inputs(|| rng.random())
+        .bench_local_values(|i| {
+            let i: i32 = black_box(i);
 
-        let mut buf = [0; VarInt::MAX_SIZE];
-        let _ = black_box(VarInt(i).encode(buf.as_mut_slice()));
-    });
+            let mut buf = [0; VarInt::MAX_SIZE];
+            let _ = black_box(VarInt(i).encode(buf.as_mut_slice()));
+        });
 }
 
 #[divan::bench]
@@ -23,7 +25,9 @@ fn varint_decode(bencher: Bencher) {
     bencher
         .with_inputs(|| {
             let mut buf = [0; VarInt::MAX_SIZE];
-            VarInt(rng.random::<i32>()).encode(buf.as_mut_slice()).unwrap();
+            VarInt(rng.random::<i32>())
+                .encode(buf.as_mut_slice())
+                .unwrap();
             buf
         })
         .bench_local_values(|buf| {

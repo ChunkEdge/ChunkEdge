@@ -81,6 +81,10 @@ fn init_clients(
     >,
     layers: Query<Entity, (With<ChunkLayer>, With<EntityLayer>)>,
 ) {
+    let Ok(layer) = layers.single() else {
+        return;
+    };
+
     for (
         mut layer_id,
         mut visible_chunk_layer,
@@ -89,8 +93,6 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
-
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
         visible_entity_layers.0.insert(layer);

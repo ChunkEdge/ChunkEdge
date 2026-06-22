@@ -10,12 +10,12 @@ pub struct InteractEntityPlugin;
 
 impl Plugin for InteractEntityPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<InteractEntityEvent>()
+        app.add_message::<InteractEntityEvent>()
             .add_systems(EventLoopPreUpdate, handle_interact_entity);
     }
 }
 
-#[derive(Event, Copy, Clone, Debug)]
+#[derive(Message, Copy, Clone, Debug)]
 pub struct InteractEntityEvent {
     pub client: Entity,
     /// The entity being interacted with.
@@ -27,9 +27,9 @@ pub struct InteractEntityEvent {
 }
 
 fn handle_interact_entity(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     entities: Res<EntityManager>,
-    mut events: EventWriter<InteractEntityEvent>,
+    mut events: MessageWriter<InteractEntityEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<InteractC2s>() {
@@ -38,7 +38,7 @@ fn handle_interact_entity(
             // within some configurable tolerance level.
 
             if let Some(entity) = entities.get_by_id(pkt.entity_id.0) {
-                events.send(InteractEntityEvent {
+                events.write(InteractEntityEvent {
                     client: packet.client,
                     entity,
                     sneaking: pkt.sneaking,

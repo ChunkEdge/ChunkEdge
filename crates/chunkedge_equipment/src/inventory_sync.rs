@@ -67,7 +67,7 @@ pub(crate) fn equipment_inventory_sync(
 /// suppressed for this)
 pub(crate) fn equipment_held_item_sync_from_client(
     mut clients: Query<(&HeldItem, &Inventory, &mut Equipment), With<EquipmentInventorySync>>,
-    mut events: EventReader<UpdateSelectedSlotEvent>,
+    mut events: MessageReader<UpdateSelectedSlotEvent>,
 ) {
     for event in events.read() {
         let Ok((held_item, inventory, mut equipment)) = clients.get_mut(event.client) else {

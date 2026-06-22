@@ -34,13 +34,13 @@ impl Default for FovModifier {
 }
 
 /// Send if the client sends [`PlayerAbilitiesC2s::StartFlying`]
-#[derive(Event)]
+#[derive(Message)]
 pub struct PlayerStartFlyingEvent {
     pub client: Entity,
 }
 
 /// Send if the client sends [`PlayerAbilitiesC2s::StopFlying`]
-#[derive(Event)]
+#[derive(Message)]
 pub struct PlayerStopFlyingEvent {
     pub client: Entity,
 }
@@ -62,8 +62,8 @@ pub struct AbilitiesPlugin;
 
 impl Plugin for AbilitiesPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<PlayerStartFlyingEvent>()
-            .add_event::<PlayerStopFlyingEvent>()
+        app.add_message::<PlayerStartFlyingEvent>()
+            .add_message::<PlayerStopFlyingEvent>()
             .add_systems(
                 PostUpdate,
                 (
@@ -104,8 +104,8 @@ fn update_client_player_abilities(
 /// /!\ This system does not trigger change detection on
 /// [`PlayerAbilitiesFlags`]
 fn update_player_abilities(
-    mut player_start_flying_event_writer: EventWriter<PlayerStartFlyingEvent>,
-    mut player_stop_flying_event_writer: EventWriter<PlayerStopFlyingEvent>,
+    mut player_start_flying_event_writer: MessageWriter<PlayerStartFlyingEvent>,
+    mut player_stop_flying_event_writer: MessageWriter<PlayerStopFlyingEvent>,
     mut client_query: Query<(Entity, &mut PlayerAbilitiesFlags, &GameMode), Changed<GameMode>>,
 ) {
     for (entity, mut mut_flags, gamemode) in &mut client_query {
@@ -121,21 +121,21 @@ fn update_player_abilities(
                 flags.set_allow_flying(true);
                 flags.set_instant_break(false);
                 flags.set_flying(true);
-                player_start_flying_event_writer.send(PlayerStartFlyingEvent { client: entity });
+                player_start_flying_event_writer.write(PlayerStartFlyingEvent { client: entity });
             }
             GameMode::Survival => {
                 flags.set_invulnerable(false);
                 flags.set_allow_flying(false);
                 flags.set_instant_break(false);
                 flags.set_flying(false);
-                player_stop_flying_event_writer.send(PlayerStopFlyingEvent { client: entity });
+                player_stop_flying_event_writer.write(PlayerStopFlyingEvent { client: entity });
             }
             GameMode::Adventure => {
                 flags.set_invulnerable(false);
                 flags.set_allow_flying(false);
                 flags.set_instant_break(false);
                 flags.set_flying(false);
-                player_stop_flying_event_writer.send(PlayerStopFlyingEvent { client: entity });
+                player_stop_flying_event_writer.write(PlayerStopFlyingEvent { client: entity });
             }
         }
     }
@@ -144,9 +144,9 @@ fn update_player_abilities(
 /// /!\ This system does not trigger change detection on
 /// [`PlayerAbilitiesFlags`]
 fn update_server_player_abilities(
-    mut packet_events: EventReader<PacketEvent>,
-    mut player_start_flying_event_writer: EventWriter<PlayerStartFlyingEvent>,
-    mut player_stop_flying_event_writer: EventWriter<PlayerStopFlyingEvent>,
+    mut packet_events: MessageReader<PacketEvent>,
+    mut player_start_flying_event_writer: MessageWriter<PlayerStartFlyingEvent>,
+    mut player_stop_flying_event_writer: MessageWriter<PlayerStopFlyingEvent>,
     mut client_query: Query<&mut PlayerAbilitiesFlags>,
 ) {
     for packets in packet_events.read() {
@@ -156,13 +156,13 @@ fn update_server_player_abilities(
                 match pkt {
                     PlayerAbilitiesC2s::StartFlying => {
                         flags.set_flying(true);
-                        player_start_flying_event_writer.send(PlayerStartFlyingEvent {
+                        player_start_flying_event_writer.write(PlayerStartFlyingEvent {
                             client: packets.client,
                         });
                     }
                     PlayerAbilitiesC2s::StopFlying => {
                         flags.set_flying(false);
-                        player_stop_flying_event_writer.send(PlayerStopFlyingEvent {
+                        player_stop_flying_event_writer.write(PlayerStopFlyingEvent {
                             client: packets.client,
                         });
                     }

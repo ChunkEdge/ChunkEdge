@@ -78,7 +78,7 @@ fn init_clients(
         mut inventory,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         pos.0 = [0.0, f64::from(SPAWN_Y) + 1.0, 0.0].into();
         layer_id.0 = layer;
@@ -94,7 +94,7 @@ fn init_clients(
 fn on_item_interact(
     mut commands: Commands,
     clients: Query<(Entity, &HeldItem, &Inventory)>,
-    mut events: EventReader<InteractItemEvent>,
+    mut events: MessageReader<InteractItemEvent>,
 ) {
     for event in events.read() {
         let Ok((player_ent, held_item, inventory)) = clients.get(event.client) else {
@@ -118,7 +118,7 @@ fn open_menu(commands: &mut Commands, player: Entity) {
 
 fn on_make_selection(
     mut clients: Query<(&mut Client, &Position)>,
-    mut events: EventReader<MenuItemSelectEvent>,
+    mut events: MessageReader<MenuItemSelectEvent>,
 ) {
     for event in events.read() {
         let Ok((mut client, pos)) = clients.get_mut(event.client) else {
@@ -151,13 +151,13 @@ mod item_menu {
     impl Plugin for ItemMenuPlugin {
         fn build(&self, app: &mut App) {
             app.add_systems(Update, (open_menu, select_menu_item))
-                .add_event::<MenuItemSelectEvent>()
-                .observe(close_menu);
+                .add_message::<MenuItemSelectEvent>()
+                .add_observer(close_menu);
         }
     }
 
     /// This event is fired when the player interacts with an item in the menu.
-    #[derive(Debug, Clone, PartialEq, Eq, Event)]
+    #[derive(Debug, Clone, PartialEq, Eq, Message)]
     pub(crate) struct MenuItemSelectEvent {
         /// Player entity
         pub client: Entity,
@@ -195,7 +195,7 @@ mod item_menu {
     }
 
     fn close_menu(
-        _trigger: Trigger<OnRemove, OpenInventory>,
+        _trigger: On<Remove, OpenInventory>,
         mut commands: Commands,
         clients: Query<Entity, With<ItemMenu>>,
     ) {
@@ -206,8 +206,8 @@ mod item_menu {
 
     fn select_menu_item(
         mut clients: Query<(Entity, &ItemMenu)>,
-        mut events: EventReader<ClickSlotEvent>,
-        mut event_writer: EventWriter<MenuItemSelectEvent>,
+        mut events: MessageReader<ClickSlotEvent>,
+        mut event_writer: MessageWriter<MenuItemSelectEvent>,
     ) {
         for event in events.read() {
             let selected_slot = event.slot_id;
@@ -219,7 +219,7 @@ mod item_menu {
                 continue;
             }
 
-            event_writer.send(MenuItemSelectEvent {
+            event_writer.write(MenuItemSelectEvent {
                 client: player,
                 idx: selected_slot as u16,
             });

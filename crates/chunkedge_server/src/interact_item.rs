@@ -10,12 +10,12 @@ pub struct InteractItemPlugin;
 
 impl Plugin for InteractItemPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<InteractItemEvent>()
+        app.add_message::<InteractItemEvent>()
             .add_systems(EventLoopPreUpdate, handle_player_interact_item);
     }
 }
 
-#[derive(Event, Copy, Clone, Debug)]
+#[derive(Message, Copy, Clone, Debug)]
 pub struct InteractItemEvent {
     pub client: Entity,
     pub hand: Hand,
@@ -23,9 +23,9 @@ pub struct InteractItemEvent {
 }
 
 fn handle_player_interact_item(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<&mut ActionSequence>,
-    mut events: EventWriter<InteractItemEvent>,
+    mut events: MessageWriter<InteractItemEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<UseItemC2s>() {
@@ -33,7 +33,7 @@ fn handle_player_interact_item(
                 action_seq.update(pkt.sequence.0);
             }
 
-            events.send(InteractItemEvent {
+            events.write(InteractItemEvent {
                 client: packet.client,
                 hand: pkt.hand,
                 sequence: pkt.sequence.0,

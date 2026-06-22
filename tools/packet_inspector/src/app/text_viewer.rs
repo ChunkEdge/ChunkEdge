@@ -50,10 +50,10 @@ pub(crate) fn code_view_ui(ui: &mut egui::Ui, mut code: &str) {
     let language = "rs";
     let theme = CodeTheme::from_memory(ui.ctx());
 
-    let mut layouter = |ui: &egui::Ui, string: &str, wrap_width: f32| {
-        let mut layout_job = highlight(ui.ctx(), &theme, string, language);
+    let mut layouter = |ui: &egui::Ui, buffer: &dyn egui::TextBuffer, wrap_width: f32| {
+        let mut layout_job = highlight(ui.ctx(), &theme, buffer.as_str(), language);
         layout_job.wrap.max_width = wrap_width; // no wrapping
-        ui.fonts(|f| f.layout_job(layout_job))
+        ui.fonts_mut(|f| f.layout_job(layout_job))
     };
 
     ui.add(
@@ -80,6 +80,7 @@ pub(crate) fn highlight(
         mem.caches
             .cache::<HighlightCache>()
             .get((theme, code, language))
+            .clone()
     })
 }
 
@@ -174,7 +175,7 @@ impl CodeTheme {
     }
 
     pub(crate) fn from_memory(ctx: &egui::Context) -> Self {
-        if ctx.style().visuals.dark_mode {
+        if ctx.global_style().visuals.dark_mode {
             ctx.data_mut(|d| {
                 d.get_persisted(egui::Id::new("dark"))
                     .unwrap_or_else(CodeTheme::dark)
@@ -213,7 +214,7 @@ impl CodeTheme {
     }
 
     pub(crate) fn ui(&mut self, ui: &mut egui::Ui) {
-        egui::widgets::global_dark_light_mode_buttons(ui);
+        egui::widgets::global_theme_preference_buttons(ui);
 
         for theme in SyntectTheme::all() {
             if theme.is_dark() == self.dark_mode {

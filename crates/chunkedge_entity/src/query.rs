@@ -33,7 +33,7 @@ pub struct EntityInitQuery {
     pub tracked_data: &'static TrackedData,
 }
 
-impl EntityInitQueryItem<'_> {
+impl EntityInitQueryItem<'_, '_> {
     /// Writes the appropriate packets to initialize an entity. This will spawn
     /// the entity and initialize tracked data. `pos` is the initial position of
     /// the entity.
@@ -80,7 +80,7 @@ pub struct UpdateEntityQuery {
     pub tracked_attributes: Option<&'static TrackedEntityAttributes>,
 }
 
-impl UpdateEntityQueryItem<'_> {
+impl UpdateEntityQueryItem<'_, '_> {
     pub fn write_update_packets<W: WritePacket>(&self, mut writer: W) {
         // TODO: @RJ I saw you're using UpdateEntityPosition and UpdateEntityRotation sometimes. These two packets are actually broken on the client and will erase previous position/rotation https://bugs.mojang.com/browse/MC-255263 -Moulberry
 

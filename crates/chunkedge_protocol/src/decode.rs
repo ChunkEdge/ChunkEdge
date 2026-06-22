@@ -1,5 +1,5 @@
 #[cfg(feature = "encryption")]
-use aes::cipher::{generic_array::GenericArray, BlockDecryptMut, BlockSizeUser, KeyIvInit};
+use aes::cipher::KeyIvInit;
 use anyhow::{bail, ensure, Context};
 use bytes::{Buf, BytesMut};
 use chunkedge_binary::{Decode, VarInt, VarIntDecodeError};
@@ -163,10 +163,7 @@ impl PacketDecoder {
     /// consuming the cipher.
     #[cfg(feature = "encryption")]
     fn decrypt_bytes(cipher: &mut Cipher, bytes: &mut [u8]) {
-        for chunk in bytes.chunks_mut(Cipher::block_size()) {
-            let gen_arr = GenericArray::from_mut_slice(chunk);
-            cipher.decrypt_block_mut(gen_arr);
-        }
+        cipher.decrypt(bytes);
     }
 
     pub fn queue_bytes(&mut self, mut bytes: BytesMut) {

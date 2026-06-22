@@ -7,7 +7,7 @@ use chunkedge::entity::zombie::ZombieEntityBundle;
 use chunkedge::equipment::{EquipmentInteractionBroadcast, EquipmentInventorySync};
 use chunkedge::prelude::*;
 use chunkedge::protocol::packets::play::set_equipment_s2c::EquipmentSlot;
-use rand::Rng;
+use rand::RngExt;
 
 pub fn main() {
     App::new()
@@ -88,7 +88,7 @@ fn init_clients(
         mut inv,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         pos.0 = [0.0, f64::from(SPAWN_Y) + 1.0, 0.0].into();
         layer_id.0 = layer;
@@ -117,7 +117,7 @@ fn randomize_equipment(mut query: Query<&mut Equipment, Without<Client>>, server
     for mut equipment in &mut query {
         equipment.clear();
 
-        let (slot, item_stack) = match rand::thread_rng().gen_range(0..=5) {
+        let (slot, item_stack) = match rand::rng().random_range(0..=5) {
             0 => (
                 EquipmentSlot::MainHand,
                 ItemStack::new(ItemKind::DiamondSword, 1),

@@ -278,7 +278,7 @@ fn partition<T>(s: &mut [T], mut pred: impl FnMut(&T) -> bool) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use rand::Rng;
+    use rand::RngExt;
 
     use super::*;
 
@@ -301,13 +301,13 @@ mod tests {
         let mut positions = vec![];
 
         let size = 500;
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         // Create a bunch of positions in a large area.
         for _ in 0..100_000 {
             positions.push(ChunkPos {
-                x: rng.gen_range(-size / 2..size / 2),
-                z: rng.gen_range(-size / 2..size / 2),
+                x: rng.random_range(-size / 2..size / 2),
+                z: rng.random_range(-size / 2..size / 2),
             });
         }
 

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-use chunkedge::advancement::bevy_hierarchy::{BuildChildren, Children, Parent};
+use bevy_ecs::hierarchy::{ChildOf, Children};
+use bevy_ecs::schedule::ApplyDeferred;
 use chunkedge::advancement::ForceTabUpdate;
 use chunkedge::prelude::*;
 
@@ -31,7 +32,7 @@ fn main() {
             Update,
             (
                 load_clients,
-                apply_deferred.after(load_clients).before(init_advancements),
+                ApplyDeferred.after(load_clients).before(init_advancements),
                 init_clients,
                 init_advancements,
                 sneak,
@@ -112,7 +113,7 @@ fn setup(
                 y_coord: -0.5,
             },
         ))
-        .set_parent(root_advancement);
+        .insert(ChildOf(root_advancement));
 
     commands
         .spawn((
@@ -133,7 +134,7 @@ fn setup(
                 y_coord: 0.5,
             },
         ))
-        .set_parent(root_advancement);
+        .insert(ChildOf(root_advancement));
 
     let root2_criteria = commands
         .spawn((
@@ -185,7 +186,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -220,14 +221,14 @@ fn init_advancements(
         ),
         Added<AdvancementClientUpdate>,
     >,
-    root_advancement_query: Query<Entity, (Without<Parent>, With<Advancement>)>,
+    root_advancement_query: Query<Entity, (Without<ChildOf>, With<Advancement>)>,
     children_query: Query<&Children>,
     advancement_check_query: Query<(), With<Advancement>>,
     root2_criteria: Query<Entity, With<Root2Criteria>>,
     root_criteria: Query<Entity, With<RootCriteria>>,
 ) {
-    let root_c = root_criteria.single();
-    let root2_c = root2_criteria.single();
+    let root_c = root_criteria.single().unwrap();
+    let root2_c = root2_criteria.single().unwrap();
     for (mut advancement_client_update, root_criteria, tab_change) in &mut clients {
         for root_advancement in root_advancement_query.iter() {
             advancement_client_update.send_advancements(
@@ -246,13 +247,13 @@ fn init_advancements(
 }
 
 fn sneak(
-    mut sneaking: EventReader<SneakEvent>,
+    mut sneaking: MessageReader<SneakEvent>,
     mut client: Query<(&mut AdvancementClientUpdate, &mut RootCriteriaDone)>,
     root_criteria: Query<Entity, With<RootCriteria>>,
     client_uuid: Query<&UniqueId>,
     mut client_save: ResMut<ClientSave>,
 ) {
-    let root_criteria = root_criteria.single();
+    let root_criteria = root_criteria.single().unwrap();
     for sneaking in sneaking.read() {
         if sneaking.state == SneakState::Stop {
             continue;
@@ -281,15 +282,15 @@ fn sneak(
 }
 
 fn tab_change(
-    mut tab_change: EventReader<AdvancementTabChangeEvent>,
+    mut tab_change: MessageReader<AdvancementTabChangeEvent>,
     mut client: Query<(&mut AdvancementClientUpdate, &mut TabChangeCount)>,
     root2_criteria: Query<Entity, With<Root2Criteria>>,
     root: Query<Entity, With<RootAdvancement>>,
     client_uuid: Query<&UniqueId>,
     mut client_save: ResMut<ClientSave>,
 ) {
-    let root2_criteria = root2_criteria.single();
-    let root = root.single();
+    let root2_criteria = root2_criteria.single().unwrap();
+    let root = root.single().unwrap();
     for tab_change in tab_change.read() {
         let Ok((mut advancement_client_update, mut tab_change_count)) =
             client.get_mut(tab_change.client)

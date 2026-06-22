@@ -133,7 +133,7 @@ fn init_clients(
         mut is_flat,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -147,6 +147,7 @@ fn init_clients(
 fn remove_unviewed_chunks(mut layers: Query<&mut ChunkLayer>) {
     layers
         .single_mut()
+        .unwrap()
         .retain_chunks(|_, chunk| chunk.viewer_count_mut() > 0);
 }
 
@@ -155,7 +156,7 @@ fn update_client_views(
     mut clients: Query<(&mut Client, View, OldView)>,
     mut state: ResMut<GameState>,
 ) {
-    let layer = layers.single_mut();
+    let layer = layers.single_mut().unwrap();
 
     for (client, view, old_view) in &mut clients {
         let view = view.get();
@@ -189,7 +190,7 @@ fn update_client_views(
 }
 
 fn send_recv_chunks(mut layers: Query<&mut ChunkLayer>, state: ResMut<GameState>) {
-    let mut layer = layers.single_mut();
+    let mut layer = layers.single_mut().unwrap();
     let state = state.into_inner();
 
     // Insert the chunks that are finished generating into the instance.

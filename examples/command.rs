@@ -206,7 +206,7 @@ enum TeleportDestination {
 }
 
 fn handle_teleport_command(
-    mut events: EventReader<CommandResultEvent<TeleportCommand>>,
+    mut events: MessageReader<CommandResultEvent<TeleportCommand>>,
     living_entities: Query<Entity, With<LivingEntity>>,
     mut clients: Query<(Entity, &mut Client)>,
     entity_layers: Query<&EntityLayerId>,
@@ -389,7 +389,7 @@ fn find_targets(
                     .filter(|(entity, ..)| {
                         *entity_layers.get(*entity).unwrap() == executor_entity_layer
                     })
-                    .choose(&mut rand::thread_rng())
+                    .choose(&mut rand::rng())
                     .map(|(target, ..)| target);
                 match target {
                     None => {
@@ -412,7 +412,7 @@ fn find_targets(
 }
 
 fn handle_test_command(
-    mut events: EventReader<CommandResultEvent<TestCommand>>,
+    mut events: MessageReader<CommandResultEvent<TestCommand>>,
     mut clients: Query<&mut Client>,
 ) {
     for event in events.read() {
@@ -425,7 +425,7 @@ fn handle_test_command(
 }
 
 fn handle_complex_command(
-    mut events: EventReader<CommandResultEvent<ComplexRedirectionCommand>>,
+    mut events: MessageReader<CommandResultEvent<ComplexRedirectionCommand>>,
     mut clients: Query<&mut Client>,
 ) {
     for event in events.read() {
@@ -438,7 +438,7 @@ fn handle_complex_command(
 }
 
 fn handle_struct_command(
-    mut events: EventReader<CommandResultEvent<StructCommand>>,
+    mut events: MessageReader<CommandResultEvent<StructCommand>>,
     mut clients: Query<&mut Client>,
 ) {
     for event in events.read() {
@@ -451,7 +451,7 @@ fn handle_struct_command(
 }
 
 fn handle_gamemode_command(
-    mut events: EventReader<CommandResultEvent<GamemodeCommand>>,
+    mut events: MessageReader<CommandResultEvent<GamemodeCommand>>,
     mut clients: Query<(&mut Client, &mut GameMode, &Username, Entity)>,
     positions: Query<&Position>,
 ) {
@@ -569,7 +569,7 @@ fn handle_gamemode_command(
                     EntitySelectors::RandomPlayer => {
                         let target = clients
                             .iter_mut()
-                            .choose(&mut rand::thread_rng())
+                            .choose(&mut rand::rng())
                             .map(|(.., target)| target);
 
                         match target {
@@ -658,7 +658,7 @@ fn init_clients(
         mut op_level,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;

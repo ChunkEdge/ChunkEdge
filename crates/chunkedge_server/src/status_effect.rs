@@ -16,14 +16,14 @@ use crate::EventLoopPostUpdate;
 
 /// Event for when a status effect is added to an entity or the amplifier or
 /// duration of an existing status effect is changed.
-#[derive(Event, Clone, PartialEq, Eq, Debug)]
+#[derive(Message, Clone, PartialEq, Eq, Debug)]
 pub struct StatusEffectAdded {
     pub entity: Entity,
     pub status_effect: StatusEffect,
 }
 
 /// Event for when a status effect is removed from an entity.
-#[derive(Event, Clone, PartialEq, Eq, Debug)]
+#[derive(Message, Clone, PartialEq, Eq, Debug)]
 pub struct StatusEffectRemoved {
     pub entity: Entity,
     pub status_effect: ActiveStatusEffect,
@@ -33,8 +33,8 @@ pub struct StatusEffectPlugin;
 
 impl Plugin for StatusEffectPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<StatusEffectAdded>()
-            .add_event::<StatusEffectRemoved>()
+        app.add_message::<StatusEffectAdded>()
+            .add_message::<StatusEffectRemoved>()
             .add_systems(
                 EventLoopPostUpdate,
                 (
@@ -81,8 +81,8 @@ struct StatusEffectQuery {
 
 fn add_status_effects(
     mut query: Query<StatusEffectQuery>,
-    mut add_events: EventWriter<StatusEffectAdded>,
-    mut remove_events: EventWriter<StatusEffectRemoved>,
+    mut add_events: MessageWriter<StatusEffectAdded>,
+    mut remove_events: MessageWriter<StatusEffectRemoved>,
 ) {
     for mut query in &mut query {
         let updated = query.active_effects.apply_changes();
@@ -95,12 +95,12 @@ fn add_status_effects(
 
         for (status_effect, prev) in updated {
             if query.active_effects.has_effect(status_effect) {
-                add_events.send(StatusEffectAdded {
+                add_events.write(StatusEffectAdded {
                     entity: query.entity,
                     status_effect,
                 });
             } else if let Some(prev) = prev {
-                remove_events.send(StatusEffectRemoved {
+                remove_events.write(StatusEffectRemoved {
                     entity: query.entity,
                     status_effect: prev,
                 });

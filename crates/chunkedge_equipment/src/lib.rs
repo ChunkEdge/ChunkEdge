@@ -36,7 +36,7 @@ impl Plugin for EquipmentPlugin {
                 on_entity_load.before(FlushPacketsSet),
             ),
         )
-        .add_event::<EquipmentChangeEvent>();
+        .add_message::<EquipmentChangeEvent>();
     }
 }
 
@@ -180,7 +180,7 @@ pub struct EquipmentSlotChange {
     stack: ItemStack,
 }
 
-#[derive(Debug, Clone, Event)]
+#[derive(Debug, Clone, Message)]
 pub struct EquipmentChangeEvent {
     pub client: Entity,
     pub changed: Vec<EquipmentSlotChange>,
@@ -191,7 +191,7 @@ fn update_equipment(
         (Entity, &EntityId, &EntityLayerId, &Position, &mut Equipment),
         Changed<Equipment>,
     >,
-    mut event_writer: EventWriter<EquipmentChangeEvent>,
+    mut event_writer: MessageWriter<EquipmentChangeEvent>,
     mut entity_layer: Query<&mut EntityLayer>,
 ) {
     for (entity, entity_id, entity_layer_id, position, mut equipment) in &mut clients {
@@ -225,7 +225,7 @@ fn update_equipment(
                         .collect(),
                 });
 
-            event_writer.send(EquipmentChangeEvent {
+            event_writer.write(EquipmentChangeEvent {
                 client: entity,
                 changed: slots_changed,
             });
@@ -240,7 +240,7 @@ fn update_equipment(
 fn on_entity_load(
     mut clients: Query<&mut Client>,
     entities: Query<(&EntityId, &Equipment)>,
-    mut events: EventReader<LoadEntityForClientEvent>,
+    mut events: MessageReader<LoadEntityForClientEvent>,
 ) {
     for event in events.read() {
         let Ok(mut client) = clients.get_mut(event.client) else {

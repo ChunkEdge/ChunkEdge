@@ -10,21 +10,21 @@ pub struct HandSwingPlugin;
 
 impl Plugin for HandSwingPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<HandSwingEvent>()
+        app.add_message::<HandSwingEvent>()
             .add_systems(EventLoopPreUpdate, handle_hand_swing);
     }
 }
 
-#[derive(Event, Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
 pub struct HandSwingEvent {
     pub client: Entity,
     pub hand: Hand,
 }
 
 fn handle_hand_swing(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<&mut EntityAnimations>,
-    mut events: EventWriter<HandSwingEvent>,
+    mut events: MessageWriter<HandSwingEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<SwingC2s>() {
@@ -35,7 +35,7 @@ fn handle_hand_swing(
                 });
             }
 
-            events.send(HandSwingEvent {
+            events.write(HandSwingEvent {
                 client: packet.client,
                 hand: pkt.hand,
             });

@@ -93,7 +93,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -172,7 +172,7 @@ impl LifeBoard {
     }
 }
 
-fn toggle_cell_on_dig(mut events: EventReader<DiggingEvent>, mut board: ResMut<LifeBoard>) {
+fn toggle_cell_on_dig(mut events: MessageReader<DiggingEvent>, mut board: ResMut<LifeBoard>) {
     for event in events.read() {
         if event.state == DiggingState::Start {
             let (x, z) = (event.position.x, event.position.z);
@@ -192,7 +192,7 @@ fn update_board(
         board.update();
     }
 
-    let mut layer = layers.single_mut();
+    let mut layer = layers.single_mut().unwrap();
 
     for z in BOARD_MIN_Z..=BOARD_MAX_Z {
         for x in BOARD_MIN_X..=BOARD_MAX_X {
@@ -208,13 +208,13 @@ fn update_board(
 }
 
 fn pause_on_crouch(
-    mut events: EventReader<SneakEvent>,
+    mut events: MessageReader<SneakEvent>,
     mut board: ResMut<LifeBoard>,
     mut layers: Query<&mut EntityLayer>,
 ) {
     for event in events.read() {
         if event.state == SneakState::Start {
-            let mut layer = layers.single_mut();
+            let mut layer = layers.single_mut().unwrap();
 
             if board.playing {
                 board.playing = false;

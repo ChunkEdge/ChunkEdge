@@ -3,7 +3,7 @@
 use chunkedge::keepalive::Ping;
 use chunkedge::player_list::{DisplayName, PlayerListEntryBundle};
 use chunkedge::prelude::*;
-use rand::Rng;
+use rand::RngExt;
 
 const SPAWN_Y: i32 = 64;
 const PLAYER_UUID_1: Uuid = Uuid::from_u128(1);
@@ -79,7 +79,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -116,8 +116,8 @@ fn update_player_list(
     if tick % 5 == 0 {
         for (_, uuid, mut display_name) in &mut entries {
             if uuid.0 == PLAYER_UUID_1 {
-                let mut rng = rand::thread_rng();
-                let color = Color::rgb(rng.gen(), rng.gen(), rng.gen());
+                let mut rng = rand::rng();
+                let color = Color::rgb(rng.random(), rng.random(), rng.random());
 
                 let new_name = display_name.0.clone().unwrap_or_default().color(color);
                 display_name.0 = Some(new_name);

@@ -34,7 +34,7 @@ use chunkedge_server::registry::{BiomeRegistry, DimensionTypeRegistry, RegistryC
 use chunkedge_server::text::{Color, IntoText};
 use chunkedge_server::{ident, Ident, Text, MINECRAFT_VERSION, PROTOCOL_VERSION};
 use hmac::digest::Update;
-use hmac::{Hmac, Mac};
+use hmac::{Hmac, KeyInit, Mac};
 use num_bigint::BigInt;
 use reqwest::StatusCode;
 use rsa::Pkcs1v15Encrypt;

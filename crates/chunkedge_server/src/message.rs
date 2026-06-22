@@ -13,7 +13,7 @@ pub struct MessagePlugin;
 
 impl Plugin for MessagePlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<ChatMessageEvent>()
+        app.add_message::<ChatMessageEvent>()
             .add_systems(EventLoopPreUpdate, handle_chat_message);
     }
 }
@@ -41,7 +41,7 @@ impl<T: WritePacket> SendMessage for T {
     }
 }
 
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct ChatMessageEvent {
     pub client: Entity,
     pub message: Box<str>,
@@ -49,12 +49,12 @@ pub struct ChatMessageEvent {
 }
 
 pub fn handle_chat_message(
-    mut packets: EventReader<PacketEvent>,
-    mut events: EventWriter<ChatMessageEvent>,
+    mut packets: MessageReader<PacketEvent>,
+    mut events: MessageWriter<ChatMessageEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<ChatC2s>() {
-            events.send(ChatMessageEvent {
+            events.write(ChatMessageEvent {
                 client: packet.client,
                 message: pkt.message.0.into(),
                 timestamp: pkt.timestamp,

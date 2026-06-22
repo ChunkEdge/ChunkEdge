@@ -101,7 +101,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -113,11 +113,11 @@ fn init_clients(
 
 fn event_handler(
     clients: Query<&Username>,
-    mut messages: EventReader<ChatMessageEvent>,
-    mut block_interacts: EventReader<InteractBlockEvent>,
+    mut messages: MessageReader<ChatMessageEvent>,
+    mut block_interacts: MessageReader<InteractBlockEvent>,
     mut layers: Query<&mut ChunkLayer>,
 ) {
-    let mut layer = layers.single_mut();
+    let mut layer = layers.single_mut().unwrap();
 
     for ChatMessageEvent {
         client, message, ..

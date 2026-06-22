@@ -92,7 +92,7 @@ fn send_keepalive(
 }
 
 fn handle_keepalive_response(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<(Entity, &mut KeepaliveState, &mut Ping)>,
     mut commands: Commands,
 ) {

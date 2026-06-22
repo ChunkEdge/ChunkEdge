@@ -15,7 +15,7 @@ pub struct MovementPlugin;
 impl Plugin for MovementPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<MovementSettings>()
-            .add_event::<MovementEvent>()
+            .add_message::<MovementEvent>()
             .add_systems(EventLoopPreUpdate, handle_client_movement);
     }
 }
@@ -25,7 +25,7 @@ impl Plugin for MovementPlugin {
 pub struct MovementSettings; // TODO
 
 /// Event sent when a client successfully moves.
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct MovementEvent {
     pub client: Entity,
     pub position: DVec3,
@@ -37,7 +37,7 @@ pub struct MovementEvent {
 }
 
 fn handle_client_movement(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<(
         &mut Position,
         &mut Look,
@@ -45,7 +45,7 @@ fn handle_client_movement(
         &mut OnGround,
         &mut TeleportState,
     )>,
-    mut movement_events: EventWriter<MovementEvent>,
+    mut movement_events: MessageWriter<MovementEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<MovePlayerPosC2s>() {
@@ -188,7 +188,7 @@ fn handle(
     mut head_yaw: Mut<HeadYaw>,
     mut on_ground: Mut<OnGround>,
     mut teleport_state: Mut<TeleportState>,
-    movement_events: &mut EventWriter<MovementEvent>,
+    movement_events: &mut MessageWriter<MovementEvent>,
 ) {
     if teleport_state.pending_teleports() != 0 {
         return;
@@ -204,5 +204,5 @@ fn handle(
     head_yaw.set_if_neq(HeadYaw(mov.look.yaw));
     on_ground.set_if_neq(OnGround(mov.on_ground));
 
-    movement_events.send(mov);
+    movement_events.write(mov);
 }

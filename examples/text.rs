@@ -61,7 +61,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         pos.0 = [0.0, f64::from(SPAWN_Y) + 1.0, 0.0].into();
         layer_id.0 = layer;

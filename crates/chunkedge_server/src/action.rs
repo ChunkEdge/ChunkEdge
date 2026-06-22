@@ -12,7 +12,7 @@ pub struct ActionPlugin;
 
 impl Plugin for ActionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<DiggingEvent>()
+        app.add_message::<DiggingEvent>()
             .add_systems(EventLoopPreUpdate, handle_player_action)
             .add_systems(
                 PostUpdate,
@@ -21,7 +21,7 @@ impl Plugin for ActionPlugin {
     }
 }
 
-#[derive(Event, Copy, Clone, Debug)]
+#[derive(Message, Copy, Clone, Debug)]
 pub struct DiggingEvent {
     pub client: Entity,
     pub position: BlockPos,
@@ -51,8 +51,8 @@ impl ActionSequence {
 
 fn handle_player_action(
     mut clients: Query<&mut ActionSequence>,
-    mut packets: EventReader<PacketEvent>,
-    mut digging_events: EventWriter<DiggingEvent>,
+    mut packets: MessageReader<PacketEvent>,
+    mut digging_events: MessageWriter<DiggingEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerActionC2s>() {
@@ -65,7 +65,7 @@ fn handle_player_action(
 
             match pkt.action {
                 PlayerAction::StartDestroyBlock => {
-                    digging_events.send(DiggingEvent {
+                    digging_events.write(DiggingEvent {
                         client: packet.client,
                         position: pkt.position,
                         direction: pkt.direction,
@@ -73,7 +73,7 @@ fn handle_player_action(
                     });
                 }
                 PlayerAction::AbortDestroyBlock => {
-                    digging_events.send(DiggingEvent {
+                    digging_events.write(DiggingEvent {
                         client: packet.client,
                         position: pkt.position,
                         direction: pkt.direction,
@@ -81,7 +81,7 @@ fn handle_player_action(
                     });
                 }
                 PlayerAction::StopDestroyBlock => {
-                    digging_events.send(DiggingEvent {
+                    digging_events.write(DiggingEvent {
                         client: packet.client,
                         position: pkt.position,
                         direction: pkt.direction,

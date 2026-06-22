@@ -87,7 +87,7 @@ fn init_clients(
     }
 }
 
-fn squat_and_die(mut clients: Query<&mut Client>, mut events: EventReader<SneakEvent>) {
+fn squat_and_die(mut clients: Query<&mut Client>, mut events: MessageReader<SneakEvent>) {
     for event in events.read() {
         if event.state == SneakState::Start {
             if let Ok(mut client) = clients.get_mut(event.client) {
@@ -104,7 +104,7 @@ fn necromancy(
         &mut VisibleEntityLayers,
         &mut RespawnPosition,
     )>,
-    mut events: EventReader<RequestRespawnEvent>,
+    mut events: MessageReader<RequestRespawnEvent>,
     layers: Query<Entity, (With<ChunkLayer>, With<EntityLayer>)>,
 ) {
     for event in events.read() {

@@ -78,7 +78,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -90,7 +90,7 @@ fn init_clients(
     }
 }
 
-fn prompt_on_punch(mut clients: Query<&mut Client>, mut events: EventReader<InteractEntityEvent>) {
+fn prompt_on_punch(mut clients: Query<&mut Client>, mut events: MessageReader<InteractEntityEvent>) {
     for event in events.read() {
         if let Ok(mut client) = clients.get_mut(event.client) {
             if event.interact == EntityInteraction::Attack {
@@ -107,7 +107,7 @@ fn prompt_on_punch(mut clients: Query<&mut Client>, mut events: EventReader<Inte
 
 fn on_resource_pack_status(
     mut clients: Query<&mut Client>,
-    mut events: EventReader<ResourcePackStatusEvent>,
+    mut events: MessageReader<ResourcePackStatusEvent>,
 ) {
     for (client, event) in events.read().map(|e| (e.client, e.status)) {
         if let Ok(mut client) = clients.get_mut(client) {

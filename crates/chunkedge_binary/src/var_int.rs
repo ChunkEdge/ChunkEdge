@@ -111,17 +111,17 @@ impl Decode<'_> for VarInt {
 
 #[cfg(test)]
 mod tests {
-    use rand::{thread_rng, Rng};
+    use rand::{rng, RngExt};
 
     use super::*;
 
     #[test]
     fn varint_written_size() {
-        let mut rng = thread_rng();
+        let mut rng = rng();
         let mut buf = vec![];
 
         for n in (0..100_000)
-            .map(|_| rng.gen())
+            .map(|_| rng.random::<i32>())
             .chain([0, i32::MIN, i32::MAX])
             .map(VarInt)
         {
@@ -133,11 +133,11 @@ mod tests {
 
     #[test]
     fn varint_round_trip() {
-        let mut rng = thread_rng();
+        let mut rng = rng();
         let mut buf = vec![];
 
         for n in (0..1_000_000)
-            .map(|_| rng.gen())
+            .map(|_| rng.random::<i32>())
             .chain([0, i32::MIN, i32::MAX])
         {
             VarInt(n).encode(&mut buf).unwrap();

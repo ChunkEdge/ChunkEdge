@@ -34,7 +34,7 @@ use connect::do_accept_loop;
 pub use connect::HandshakeData;
 use flume::{Receiver, Sender};
 pub use legacy_ping::{ServerListLegacyPingPayload, ServerListLegacyPingResponse};
-use rand::rngs::OsRng;
+use rsa::rand_core::OsRng;
 use rsa::traits::PublicKeyParts;
 use rsa::RsaPrivateKey;
 use serde::Serialize;

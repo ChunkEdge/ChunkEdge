@@ -100,7 +100,7 @@ fn init_clients(
         mut fov_modifier,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -114,10 +114,10 @@ fn init_clients(
 }
 
 fn handle_chunk_loads(
-    mut events: EventReader<ChunkLoadEvent>,
+    mut events: MessageReader<ChunkLoadEvent>,
     mut layers: Query<&mut ChunkLayer, With<AnvilLevel>>,
 ) {
-    let mut layer = layers.single_mut();
+    let mut layer = layers.single_mut().unwrap();
 
     for event in events.read() {
         match &event.status {
@@ -147,7 +147,7 @@ fn handle_chunk_loads(
 
 // Display the number of loaded chunks in the action bar of all clients.
 fn display_loaded_chunk_count(mut layers: Query<&mut ChunkLayer>, mut last_count: Local<usize>) {
-    let mut layer = layers.single_mut();
+    let mut layer = layers.single_mut().unwrap();
 
     let cnt = layer.chunks().count();
 

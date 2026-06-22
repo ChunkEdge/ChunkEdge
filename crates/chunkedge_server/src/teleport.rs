@@ -116,7 +116,7 @@ fn teleport(
 }
 
 fn handle_teleport_confirmations(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<&mut TeleportState>,
     mut commands: Commands,
 ) {

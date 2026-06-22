@@ -277,7 +277,7 @@ fn encode_compact_u64s(
 
 #[cfg(test)]
 mod tests {
-    use rand::Rng;
+    use rand::RngExt;
 
     use super::*;
 
@@ -294,23 +294,23 @@ mod tests {
         const LEN: usize = 100;
         let range = 0..64;
 
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         for _ in 0..20 {
             let mut p = PalettedContainer::<u32, LEN, { LEN / 2 }>::new();
 
-            let init = rng.gen_range(range.clone());
+            let init = rng.random_range(range.clone());
 
             p.fill(init);
             let mut a = [init; LEN];
 
             assert!(check(&p, &a));
 
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
 
             for _ in 0..LEN * 10 {
-                let idx = rng.gen_range(0..LEN);
-                let val = rng.gen_range(range.clone());
+                let idx = rng.random_range(0..LEN);
+                let val = rng.random_range(range.clone());
 
                 assert_eq!(p.get(idx), p.set(idx, val));
                 assert_eq!(val, p.get(idx));

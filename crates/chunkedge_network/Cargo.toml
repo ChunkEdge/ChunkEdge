@@ -37,12 +37,12 @@ uuid.workspace = true
 chunkedge_binary.workspace = true
 chunkedge_lang.workspace = true
 chunkedge_protocol = { workspace = true, features = [
-    "encryption",
-    "compression",
+  "encryption",
+  "compression",
 ] }
 chunkedge_server.workspace = true
 [dependencies.reqwest]
 workspace = true
 default-features = false
 # Avoid OpenSSL dependency on Linux.
-features = ["rustls-tls", "json"]
+features = ["rustls", "json"]

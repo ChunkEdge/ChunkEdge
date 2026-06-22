@@ -14,11 +14,7 @@ workspace = true
 [dependencies]
 bevy_app.workspace = true
 bevy_ecs.workspace = true
-bevy_hierarchy.workspace = true
-derive_more = {workspace = true, features = [
-    "deref",
-    "deref_mut",
-] }
+derive_more = { workspace = true, features = ["deref", "deref_mut"] }
 rustc-hash.workspace = true
 chunkedge_binary.workspace = true
 chunkedge_generated.workspace = true

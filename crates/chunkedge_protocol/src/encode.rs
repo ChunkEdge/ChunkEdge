@@ -1,9 +1,7 @@
 use std::io::Write;
 
 #[cfg(feature = "encryption")]
-use aes::cipher::generic_array::GenericArray;
-#[cfg(feature = "encryption")]
-use aes::cipher::{BlockEncryptMut, BlockSizeUser, KeyIvInit};
+use aes::cipher::KeyIvInit;
 use anyhow::ensure;
 use bytes::{BufMut, BytesMut};
 use chunkedge_binary::{Encode, VarInt};
@@ -150,10 +148,7 @@ impl PacketEncoder {
     pub fn take(&mut self) -> BytesMut {
         #[cfg(feature = "encryption")]
         if let Some(cipher) = &mut self.cipher {
-            for chunk in self.buf.chunks_mut(Cipher::block_size()) {
-                let gen_arr = GenericArray::from_mut_slice(chunk);
-                cipher.encrypt_block_mut(gen_arr);
-            }
+            cipher.encrypt(&mut self.buf);
         }
 
         self.buf.split()

@@ -1,6 +1,7 @@
 use std::net::SocketAddr;
 use std::sync::{Arc, RwLock};
 
+use egui_dock::widgets::tab_viewer::OnCloseResponse;
 use egui_dock::{DockArea, DockState, NodeIndex, Style};
 use packet_inspector::Proxy;
 use tokio::task::JoinHandle;
@@ -44,8 +45,8 @@ impl egui_dock::TabViewer for TabViewer {
         tab.name().into()
     }
 
-    fn on_close(&mut self, _tab: &mut Self::Tab) -> bool {
-        false
+    fn on_close(&mut self, _tab: &mut Self::Tab) -> OnCloseResponse {
+        OnCloseResponse::Ignore
     }
 }
 
@@ -128,13 +129,14 @@ impl eframe::App for GuiApp {
         );
     }
 
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        let style = Style::from_egui(ui.ctx().global_style().as_ref());
         DockArea::new(&mut self.tree)
             .show_add_buttons(false)
             .show_add_popup(false)
             .show_close_buttons(false)
-            .style(Style::from_egui(ctx.style().as_ref()))
-            .show(ctx, &mut self.tab_viewer);
+            .style(style)
+            .show_inside(ui, &mut self.tab_viewer);
     }
 }
 

@@ -3,8 +3,8 @@ use std::marker::PhantomData;
 
 use bevy_app::{App, Plugin, PostStartup};
 use bevy_ecs::change_detection::ResMut;
-use bevy_ecs::event::{Event, EventReader, EventWriter};
-use bevy_ecs::prelude::{Entity, IntoSystemConfigs, Resource};
+use bevy_ecs::message::{Message, MessageReader, MessageWriter};
+use bevy_ecs::prelude::{Entity, IntoScheduleConfigs, Resource};
 use chunkedge_server::EventLoopPreUpdate;
 use petgraph::prelude::NodeIndex;
 
@@ -20,7 +20,7 @@ where
     T: Command + Send + Sync + 'static,
 {
     fn build(&self, app: &mut App) {
-        app.add_event::<CommandResultEvent<T>>()
+        app.add_message::<CommandResultEvent<T>>()
             .insert_resource(CommandResource::<T>::new())
             .add_systems(PostStartup, command_startup_system::<T>)
             .add_systems(
@@ -69,7 +69,7 @@ impl<T: Command + Send + Sync> CommandResource<T> {
     }
 }
 
-#[derive(Event)]
+#[derive(Message)]
 pub struct CommandResultEvent<T>
 where
     T: Command,
@@ -107,8 +107,8 @@ fn command_startup_system<T>(
 
 /// This system reads incoming command events.
 fn command_event_system<T>(
-    mut commands_executed: EventReader<CommandProcessedEvent>,
-    mut events: EventWriter<CommandResultEvent<T>>,
+    mut commands_executed: MessageReader<CommandProcessedEvent>,
+    mut events: MessageWriter<CommandResultEvent<T>>,
     command: ResMut<CommandResource<T>>,
 ) where
     T: Command + Send + Sync,
@@ -116,7 +116,7 @@ fn command_event_system<T>(
     for command_event in commands_executed.read() {
         if let Some(executable) = command.executables.get(&command_event.node) {
             let result = executable(&mut ParseInput::new(&command_event.command));
-            events.send(CommandResultEvent {
+            events.write(CommandResultEvent {
                 result,
                 executor: command_event.executor,
                 modifiers: command_event.modifiers.clone(),

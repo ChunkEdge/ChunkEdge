@@ -2,13 +2,13 @@ use std::hint::black_box;
 
 use chunkedge_binary::{Decode, Encode, VarLong};
 use divan::Bencher;
-use rand::Rng;
+use rand::RngExt;
 
 #[divan::bench]
 fn varlong_encode(bencher: Bencher) {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
-    bencher.with_inputs(|| rng.gen()).bench_local_values(|i| {
+    bencher.with_inputs(|| rng.random()).bench_local_values(|i| {
         let i: i64 = black_box(i);
 
         let mut buf = [0; VarLong::MAX_SIZE];
@@ -18,12 +18,12 @@ fn varlong_encode(bencher: Bencher) {
 
 #[divan::bench]
 fn varlong_decode(bencher: Bencher) {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     bencher
         .with_inputs(|| {
             let mut buf = [0; VarLong::MAX_SIZE];
-            VarLong(rng.gen()).encode(buf.as_mut_slice()).unwrap();
+            VarLong(rng.random::<i64>()).encode(buf.as_mut_slice()).unwrap();
             buf
         })
         .bench_local_values(|buf| {

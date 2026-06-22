@@ -11,12 +11,12 @@ pub struct CustomPayloadPlugin;
 
 impl Plugin for CustomPayloadPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<CustomPayloadEvent>()
+        app.add_message::<CustomPayloadEvent>()
             .add_systems(EventLoopPreUpdate, handle_custom_payload);
     }
 }
 
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct CustomPayloadEvent {
     pub client: Entity,
     pub channel: Ident<String>,
@@ -33,12 +33,12 @@ impl Client {
 }
 
 fn handle_custom_payload(
-    mut packets: EventReader<PacketEvent>,
-    mut events: EventWriter<CustomPayloadEvent>,
+    mut packets: MessageReader<PacketEvent>,
+    mut events: MessageWriter<CustomPayloadEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<CustomPayloadC2s>() {
-            events.send(CustomPayloadEvent {
+            events.write(CustomPayloadEvent {
                 client: packet.client,
                 channel: pkt.channel.into(),
                 data: pkt.data.0 .0.into(),

@@ -6,8 +6,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use chunkedge::prelude::*;
 use chunkedge::protocol::sound::{Sound, SoundCategory};
 use chunkedge::spawn::IsFlat;
-use rand::seq::SliceRandom;
-use rand::Rng;
+use rand::seq::IndexedRandom;
+use rand::RngExt;
 
 const START_POS: BlockPos = BlockPos::new(0, 100, 0);
 const VIEW_DIST: u8 = 10;
@@ -221,7 +221,7 @@ fn generate_next_block(state: &mut GameState, layer: &mut ChunkLayer, in_game: b
         state.target_y = START_POS.y;
     }
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     layer.set_block(block_pos, *BLOCK_TYPES.choose(&mut rng).unwrap());
     state.blocks.push_back(block_pos);
@@ -234,20 +234,20 @@ fn generate_next_block(state: &mut GameState, layer: &mut ChunkLayer, in_game: b
 }
 
 fn generate_random_block(pos: BlockPos, target_y: i32) -> BlockPos {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     // if above or below target_y, change y to gradually reach it
     let y = match target_y {
-        0 => rng.gen_range(-1..2),
+        0 => rng.random_range(-1..2),
         y if y > pos.y => 1,
         _ => -1,
     };
     let z = match y {
-        1 => rng.gen_range(1..3),
-        -1 => rng.gen_range(2..5),
-        _ => rng.gen_range(1..4),
+        1 => rng.random_range(1..3),
+        -1 => rng.random_range(2..5),
+        _ => rng.random_range(1..4),
     };
-    let x = rng.gen_range(-3..4);
+    let x = rng.random_range(-3..4);
 
     BlockPos::new(pos.x + x, pos.y + y, pos.z + z)
 }

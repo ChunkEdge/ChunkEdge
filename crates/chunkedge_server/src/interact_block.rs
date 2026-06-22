@@ -11,12 +11,12 @@ pub struct InteractBlockPlugin;
 
 impl Plugin for InteractBlockPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<InteractBlockEvent>()
+        app.add_message::<InteractBlockEvent>()
             .add_systems(EventLoopPreUpdate, handle_interact_block);
     }
 }
 
-#[derive(Event, Copy, Clone, Debug)]
+#[derive(Message, Copy, Clone, Debug)]
 pub struct InteractBlockEvent {
     pub client: Entity,
     /// The hand that was used
@@ -34,9 +34,9 @@ pub struct InteractBlockEvent {
 }
 
 fn handle_interact_block(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<&mut ActionSequence>,
-    mut events: EventWriter<InteractBlockEvent>,
+    mut events: MessageWriter<InteractBlockEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<UseItemOnC2s>() {
@@ -46,7 +46,7 @@ fn handle_interact_block(
 
             // TODO: check that the block interaction is valid.
 
-            events.send(InteractBlockEvent {
+            events.write(InteractBlockEvent {
                 client: packet.client,
                 hand: pkt.hand,
                 position: pkt.position,

@@ -28,7 +28,7 @@ pub struct ClientSettings {
 }
 
 fn handle_client_settings(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<(
         &mut ViewDistance,
         &mut ClientSettings,

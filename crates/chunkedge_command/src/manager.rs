@@ -3,8 +3,8 @@ use std::collections::{HashMap, HashSet};
 use bevy_app::{App, Plugin, PreUpdate};
 use bevy_ecs::entity::Entity;
 use bevy_ecs::prelude::{
-    Added, Changed, Commands, DetectChanges, Event, EventReader, EventWriter, IntoSystemConfigs,
-    Mut, Or, Query, Res,
+    Added, Changed, Commands, DetectChanges, IntoScheduleConfigs, Message, MessageReader,
+    MessageWriter, Mut, Or, Query, Res,
 };
 use chunkedge_server::client::{Client, SpawnClientsSet};
 use chunkedge_server::event_loop::PacketEvent;
@@ -29,8 +29,8 @@ pub struct CommandPlugin;
 impl Plugin for CommandPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(CommandScopePlugin)
-            .add_event::<CommandExecutionEvent>()
-            .add_event::<CommandProcessedEvent>()
+            .add_message::<CommandExecutionEvent>()
+            .add_message::<CommandProcessedEvent>()
             .add_systems(PreUpdate, insert_scope_component.after(SpawnClientsSet))
             .add_systems(
                 EventLoopPreUpdate,
@@ -58,7 +58,7 @@ impl Plugin for CommandPlugin {
 
 /// This event is sent when a command is sent (you can send this with any
 /// entity)
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Event)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Message)]
 pub struct CommandExecutionEvent {
     /// the command that was executed eg. "teleport @p 0 ~ 0"
     pub command: String,
@@ -69,7 +69,7 @@ pub struct CommandExecutionEvent {
 
 /// This will only be sent if the command was successfully parsed and an
 /// executable was found
-#[derive(Debug, Clone, PartialEq, Eq, Event)]
+#[derive(Debug, Clone, PartialEq, Eq, Message)]
 pub struct CommandProcessedEvent {
     /// the command that was executed eg. "teleport @p 0 ~ 0"
     pub command: String,
@@ -89,14 +89,14 @@ fn insert_scope_component(mut clients: Query<Entity, Added<Client>>, mut command
 }
 
 fn read_incoming_packets(
-    mut packets: EventReader<PacketEvent>,
-    mut event_writer: EventWriter<CommandExecutionEvent>,
+    mut packets: MessageReader<PacketEvent>,
+    mut event_writer: MessageWriter<CommandExecutionEvent>,
 ) {
     for packet in packets.read() {
         let client = packet.client;
 
         if let Some(unsigned) = packet.decode::<ChatCommandC2s>() {
-            event_writer.send(CommandExecutionEvent {
+            event_writer.write(CommandExecutionEvent {
                 command: unsigned.command.to_string(),
                 executor: client,
             });
@@ -105,7 +105,7 @@ fn read_incoming_packets(
             // As per this gist: https://gist.github.com/kennytv/ed783dd244ca0321bbd882c347892874
             // It looks like the client only sends the signed version if a command requires
             // it (in vanilla thats /say for example).
-            event_writer.send(CommandExecutionEvent {
+            event_writer.write(CommandExecutionEvent {
                 command: signed.command.to_string(),
                 executor: client,
             });
@@ -226,8 +226,8 @@ fn update_client_command_tree(
 }
 
 fn parse_incoming_commands(
-    mut event_reader: EventReader<CommandExecutionEvent>,
-    mut event_writer: EventWriter<CommandProcessedEvent>,
+    mut event_reader: MessageReader<CommandExecutionEvent>,
+    mut event_writer: MessageWriter<CommandProcessedEvent>,
     command_registry: Res<CommandRegistry>,
     scope_registry: Res<CommandScopeRegistry>,
     entity_scopes: Query<&CommandScopes>,
@@ -273,7 +273,7 @@ fn parse_incoming_commands(
 
         for node in to_be_executed {
             trace!("executing node: {node:?}");
-            event_writer.send(CommandProcessedEvent {
+            event_writer.write(CommandProcessedEvent {
                 command: args.join(" "),
                 executor,
                 modifiers: modifiers.clone(),

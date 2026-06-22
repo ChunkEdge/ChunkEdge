@@ -59,10 +59,10 @@ impl Plugin for InventoryPlugin {
             ),
         )
         .init_resource::<InventorySettings>()
-        .add_event::<ClickSlotEvent>()
-        .add_event::<DropItemStackEvent>()
-        .add_event::<CreativeInventoryActionEvent>()
-        .add_event::<UpdateSelectedSlotEvent>();
+        .add_message::<ClickSlotEvent>()
+        .add_message::<DropItemStackEvent>()
+        .add_message::<CreativeInventoryActionEvent>()
+        .add_message::<UpdateSelectedSlotEvent>();
     }
 }
 
@@ -819,10 +819,10 @@ fn update_cursor_item(
 }
 
 /// Handles clients telling the server that they are closing an inventory.
-fn handle_close_handled_screen(mut packets: EventReader<PacketEvent>, mut commands: Commands) {
+fn handle_close_handled_screen(mut packets: MessageReader<PacketEvent>, mut commands: Commands) {
     for packet in packets.read() {
         if packet.decode::<ContainerCloseC2s>().is_some() {
-            if let Some(mut entity) = commands.get_entity(packet.client) {
+            if let Ok(mut entity) = commands.get_entity(packet.client) {
                 entity.remove::<OpenInventory>();
             }
         }
@@ -845,7 +845,7 @@ fn update_client_on_close_inventory(
 }
 
 // TODO: make this event user friendly.
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct ClickSlotEvent {
     pub client: Entity,
     pub window_id: VarInt,
@@ -857,7 +857,7 @@ pub struct ClickSlotEvent {
     pub carried_item: ItemStack,
 }
 
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct DropItemStackEvent {
     pub client: Entity,
     pub from_slot: Option<u16>,
@@ -865,7 +865,7 @@ pub struct DropItemStackEvent {
 }
 
 fn handle_click_slot(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<(
         &mut Client,
         &mut Inventory,
@@ -874,8 +874,8 @@ fn handle_click_slot(
         &mut CursorItem,
     )>,
     mut inventories: Query<&mut Inventory, Without<Client>>,
-    mut drop_item_stack_events: EventWriter<DropItemStackEvent>,
-    mut click_slot_events: EventWriter<ClickSlotEvent>,
+    mut drop_item_stack_events: MessageWriter<DropItemStackEvent>,
+    mut click_slot_events: MessageWriter<ClickSlotEvent>,
 ) {
     for packet in packets.read() {
         let Some(pkt) = packet.decode::<ContainerClickC2s>() else {
@@ -930,7 +930,7 @@ fn handle_click_slot(
             let stack = std::mem::take(&mut cursor_item.0);
 
             if !stack.is_empty() {
-                drop_item_stack_events.send(DropItemStackEvent {
+                drop_item_stack_events.write(DropItemStackEvent {
                     client: packet.client,
                     from_slot: None,
                     stack,
@@ -1006,7 +1006,7 @@ fn handle_click_slot(
                             old_slot
                         };
 
-                        drop_item_stack_events.send(DropItemStackEvent {
+                        drop_item_stack_events.write(DropItemStackEvent {
                             client: packet.client,
                             from_slot: Some(pkt.slot_idx as u16),
                             stack: dropped,
@@ -1043,7 +1043,7 @@ fn handle_click_slot(
                             old_slot
                         };
 
-                        drop_item_stack_events.send(DropItemStackEvent {
+                        drop_item_stack_events.write(DropItemStackEvent {
                             client: packet.client,
                             from_slot: Some(slot_id),
                             stack: dropped,
@@ -1088,7 +1088,7 @@ fn handle_click_slot(
                         old_slot
                     };
 
-                    drop_item_stack_events.send(DropItemStackEvent {
+                    drop_item_stack_events.write(DropItemStackEvent {
                         client: packet.client,
                         from_slot: Some(pkt.slot_idx as u16),
                         stack: dropped,
@@ -1244,7 +1244,7 @@ fn handle_click_slot(
                 }
             }
 
-            click_slot_events.send(ClickSlotEvent {
+            click_slot_events.write(ClickSlotEvent {
                 client: packet.client,
                 window_id: pkt.window_id,
                 state_id: pkt.state_id.0,
@@ -1259,14 +1259,14 @@ fn handle_click_slot(
 }
 
 fn handle_player_actions(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<(
         &mut Inventory,
         &mut ClientInventoryState,
         &HeldItem,
         &mut Client,
     )>,
-    mut drop_item_stack_events: EventWriter<DropItemStackEvent>,
+    mut drop_item_stack_events: MessageWriter<DropItemStackEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerActionC2s>() {
@@ -1291,7 +1291,7 @@ fn handle_player_actions(
                         if !stack.is_empty() {
                             inv_state.slots_changed |= 1 << held.slot();
 
-                            drop_item_stack_events.send(DropItemStackEvent {
+                            drop_item_stack_events.write(DropItemStackEvent {
                                 client: packet.client,
                                 from_slot: Some(held.slot()),
                                 stack,
@@ -1328,7 +1328,7 @@ fn handle_player_actions(
 
                             inv_state.slots_changed |= 1 << held.slot();
 
-                            drop_item_stack_events.send(DropItemStackEvent {
+                            drop_item_stack_events.write(DropItemStackEvent {
                                 client: packet.client,
                                 from_slot: Some(held.slot()),
                                 stack,
@@ -1365,7 +1365,7 @@ fn handle_player_actions(
 /// it will be desynced, therefore we set the slot as changed.
 fn resync_readonly_inventory_after_block_interaction(
     mut clients: Query<(&mut Inventory, &HeldItem)>,
-    mut events: EventReader<InteractBlockEvent>,
+    mut events: MessageReader<InteractBlockEvent>,
 ) {
     for event in events.read() {
         let Ok((mut inventory, held_item)) = clients.get_mut(event.client) else {
@@ -1391,7 +1391,7 @@ fn resync_readonly_inventory_after_block_interaction(
 }
 
 // TODO: make this event user friendly.
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct CreativeInventoryActionEvent {
     pub client: Entity,
     pub slot: i16,
@@ -1399,15 +1399,15 @@ pub struct CreativeInventoryActionEvent {
 }
 
 fn handle_creative_inventory_action(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<(
         &mut Client,
         &mut Inventory,
         &mut ClientInventoryState,
         &GameMode,
     )>,
-    mut inv_action_events: EventWriter<CreativeInventoryActionEvent>,
-    mut drop_item_stack_events: EventWriter<DropItemStackEvent>,
+    mut inv_action_events: MessageWriter<CreativeInventoryActionEvent>,
+    mut drop_item_stack_events: MessageWriter<DropItemStackEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<SetCreativeModeSlotC2s>() {
@@ -1426,7 +1426,7 @@ fn handle_creative_inventory_action(
                 let stack = pkt.clicked_item.clone();
 
                 if !stack.is_empty() {
-                    drop_item_stack_events.send(DropItemStackEvent {
+                    drop_item_stack_events.write(DropItemStackEvent {
                         client: packet.client,
                         from_slot: None,
                         stack,
@@ -1456,7 +1456,7 @@ fn handle_creative_inventory_action(
                 slot_data: Cow::Borrowed(&pkt.clicked_item),
             });
 
-            inv_action_events.send(CreativeInventoryActionEvent {
+            inv_action_events.write(CreativeInventoryActionEvent {
                 client: packet.client,
                 slot: pkt.slot,
                 clicked_item: pkt.clicked_item,
@@ -1465,7 +1465,7 @@ fn handle_creative_inventory_action(
     }
 }
 
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct UpdateSelectedSlotEvent {
     pub client: Entity,
     pub slot: u8,
@@ -1483,9 +1483,9 @@ fn update_player_selected_slot(mut clients: Query<(&mut Client, &HeldItem), Chan
 
 /// Client to Server `HeldItem` Slot
 fn handle_update_selected_slot(
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
     mut clients: Query<&mut HeldItem>,
-    mut events: EventWriter<UpdateSelectedSlotEvent>,
+    mut events: MessageWriter<UpdateSelectedSlotEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<SetCarriedItemC2s>() {
@@ -1501,7 +1501,7 @@ fn handle_update_selected_slot(
 
                 held.set_hotbar_idx(pkt.slot as u8);
 
-                events.send(UpdateSelectedSlotEvent {
+                events.write(UpdateSelectedSlotEvent {
                     client: packet.client,
                     slot: pkt.slot as u8,
                 });

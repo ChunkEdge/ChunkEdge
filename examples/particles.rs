@@ -63,7 +63,7 @@ fn init_clients(
         mut game_mode,
     ) in &mut clients
     {
-        let layer = layers.single();
+        let layer = layers.single().unwrap();
 
         layer_id.0 = layer;
         visible_chunk_layer.0 = layer;
@@ -92,7 +92,7 @@ fn manage_particles(
     let pos = [0.5, f64::from(SPAWN_Y) + 2.0, 5.0];
     let offset = [0.5, 0.5, 0.5];
 
-    let mut layer = layers.single_mut();
+    let mut layer = layers.single_mut().unwrap();
 
     layer.play_particle(particle, true, true, pos, offset, 0.1, 100);
     layer.set_action_bar(name.bold());

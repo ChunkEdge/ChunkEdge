@@ -12,12 +12,12 @@ pub struct ResourcePackPlugin;
 
 impl Plugin for ResourcePackPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<ResourcePackStatusEvent>()
+        app.add_message::<ResourcePackStatusEvent>()
             .add_systems(EventLoopPreUpdate, handle_resource_pack_status);
     }
 }
 
-#[derive(Event, Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
 pub struct ResourcePackStatusEvent {
     pub client: Entity,
     pub status: ResourcePackC2s,
@@ -86,12 +86,12 @@ impl Client {
 }
 
 fn handle_resource_pack_status(
-    mut packets: EventReader<PacketEvent>,
-    mut events: EventWriter<ResourcePackStatusEvent>,
+    mut packets: MessageReader<PacketEvent>,
+    mut events: MessageWriter<ResourcePackStatusEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<ResourcePackC2s>() {
-            events.send(ResourcePackStatusEvent {
+            events.write(ResourcePackStatusEvent {
                 client: packet.client,
                 status: pkt,
             });

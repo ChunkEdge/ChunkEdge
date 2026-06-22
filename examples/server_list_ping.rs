@@ -8,7 +8,7 @@ use chunkedge::network::{
 };
 use chunkedge::prelude::*;
 use chunkedge::MINECRAFT_VERSION;
-use rand::Rng;
+use rand::RngExt;
 
 pub fn main() {
     App::new()
@@ -34,7 +34,7 @@ impl NetworkCallbacks for MyCallbacks {
         let max_players = 420;
 
         ServerListPing::Respond {
-            online_players: rand::thread_rng().gen_range(0..=max_players),
+            online_players: rand::rng().random_range(0..=max_players),
             max_players,
             player_sample: vec![PlayerSampleEntry {
                 name: "foobar".into(),

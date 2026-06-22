@@ -19,7 +19,7 @@ pub(crate) fn start_interaction(
         (&Inventory, &HeldItem, &mut LivingFlags),
         (With<Client>, With<EquipmentInteractionBroadcast>),
     >,
-    mut events: EventReader<InteractItemEvent>,
+    mut events: MessageReader<InteractItemEvent>,
 ) {
     for event in events.read() {
         if let Ok((inv, held_item, mut flags)) = clients.get_mut(event.client) {
@@ -41,7 +41,7 @@ pub(crate) fn start_interaction(
 // item.
 pub(crate) fn stop_interaction(
     mut clients: Query<&mut LivingFlags, (With<Client>, With<EquipmentInteractionBroadcast>)>,
-    mut packets: EventReader<PacketEvent>,
+    mut packets: MessageReader<PacketEvent>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerActionC2s>() {

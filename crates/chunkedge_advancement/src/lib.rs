@@ -9,8 +9,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use bevy_ecs::system::SystemParam;
-pub use bevy_hierarchy;
-use bevy_hierarchy::{Children, HierarchyPlugin, Parent};
+use bevy_ecs::hierarchy::{ChildOf, Children};
 use chunkedge_binary::{Encode, RawBytes};
 use chunkedge_generated::packet_id;
 use chunkedge_server::client::{Client, FlushPacketsSet, SpawnClientsSet};
@@ -35,15 +34,14 @@ pub struct WriteAdvancementToCacheSet;
 
 impl Plugin for AdvancementPlugin {
     fn build(&self, app: &mut bevy_app::App) {
-        app.add_plugins(HierarchyPlugin)
-            .configure_sets(
+        app.configure_sets(
                 PostUpdate,
                 (
                     WriteAdvancementPacketToClientsSet.before(FlushPacketsSet),
                     WriteAdvancementToCacheSet.before(WriteAdvancementPacketToClientsSet),
                 ),
             )
-            .add_event::<AdvancementTabChangeEvent>()
+            .add_message::<AdvancementTabChangeEvent>()
             .add_systems(
                 PreUpdate,
                 (
@@ -64,7 +62,7 @@ impl Plugin for AdvancementPlugin {
 /// Components for advancement that are required
 /// Optional components:
 /// [`AdvancementDisplay`]
-/// [`Parent`] - parent advancement
+/// [`ChildOf`] - parent advancement
 #[derive(Bundle)]
 pub struct AdvancementBundle {
     pub advancement: Advancement,
@@ -96,7 +94,7 @@ impl UpdateAdvancementCachedBytesQuery<'_, '_> {
         a_requirements: &AdvancementRequirements,
         a_display: Option<&AdvancementDisplay>,
         _a_children: Option<&Children>,
-        a_parent: Option<&Parent>,
+        a_parent: Option<&ChildOf>,
         w: impl Write,
     ) -> anyhow::Result<()> {
         let Self {
@@ -112,7 +110,7 @@ impl UpdateAdvancementCachedBytesQuery<'_, '_> {
         };
 
         if let Some(a_parent) = a_parent {
-            let a_identifier = advancement_id_query.get(a_parent.get())?;
+            let a_identifier = advancement_id_query.get(a_parent.parent())?;
             pkt.parent_id = Some(a_identifier.0.borrowed());
         }
 
@@ -152,12 +150,12 @@ fn update_advancement_cached_bytes(
             &mut AdvancementCachedBytes,
             Option<&AdvancementDisplay>,
             Option<&Children>,
-            Option<&Parent>,
+            Option<&ChildOf>,
         ),
         Or<(
             Changed<AdvancementDisplay>,
             Changed<Children>,
-            Changed<Parent>,
+            Changed<ChildOf>,
             Changed<AdvancementRequirements>,
         )>,
     >,
@@ -184,7 +182,7 @@ pub(crate) struct SingleAdvancementUpdateQuery<'w, 's> {
     advancement_bytes: Query<'w, 's, &'static AdvancementCachedBytes>,
     advancement_id: Query<'w, 's, &'static Advancement>,
     criteria: Query<'w, 's, &'static AdvancementCriteria>,
-    parent: Query<'w, 's, &'static Parent>,
+    parent: Query<'w, 's, &'static ChildOf>,
 }
 
 #[derive(Debug)]
@@ -234,7 +232,7 @@ impl Encode for AdvancementUpdateEncodeS2c<'_, '_, '_> {
         for progress in progress {
             let a = parent_query.get(progress.0)?;
             progress_mapping
-                .entry(a.get())
+                .entry(a.parent())
                 .and_modify(|v| v.push(*progress))
                 .or_insert(vec![*progress]);
         }

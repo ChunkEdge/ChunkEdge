@@ -7,7 +7,7 @@ use chunkedge::prelude::*;
 /// sneaking.
 pub(crate) fn toggle_gamemode_on_sneak(
     mut clients: Query<&mut GameMode>,
-    mut events: EventReader<SneakEvent>,
+    mut events: MessageReader<SneakEvent>,
 ) {
     for event in events.read() {
         if event.state == SneakState::Start {

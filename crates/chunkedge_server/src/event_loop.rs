@@ -16,7 +16,7 @@ pub struct EventLoopPlugin;
 
 impl Plugin for EventLoopPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<PacketEvent>()
+        app.add_message::<PacketEvent>()
             .add_schedule(Schedule::new(RunEventLoop))
             .add_schedule(Schedule::new(EventLoopPreUpdate))
             .add_schedule(Schedule::new(EventLoopUpdate))
@@ -45,7 +45,7 @@ pub struct EventLoopUpdate;
 #[derive(ScheduleLabel, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct EventLoopPostUpdate;
 
-#[derive(Event, Clone, Debug)]
+#[derive(Message, Clone, Debug)]
 pub struct PacketEvent {
     /// The client this packet originated from.
     pub client: Entity,
@@ -106,7 +106,7 @@ fn run_event_loop(
     world: &mut World,
     state: &mut SystemState<(
         Query<(Entity, &mut Client)>,
-        EventWriter<PacketEvent>,
+        MessageWriter<PacketEvent>,
         Commands,
     )>,
     mut check_again: Local<Vec<(Entity, usize)>>,
@@ -118,7 +118,7 @@ fn run_event_loop(
     for (entity, mut client) in &mut clients {
         match client.connection_mut().try_recv() {
             Ok(Some(pkt)) => {
-                event_writer.send(PacketEvent {
+                event_writer.write(PacketEvent {
                     client: entity,
                     timestamp: pkt.timestamp,
                     id: pkt.id,
@@ -152,7 +152,7 @@ fn run_event_loop(
             if let Ok((_, mut client)) = clients.get_mut(*entity) {
                 match client.connection_mut().try_recv() {
                     Ok(Some(pkt)) => {
-                        event_writer.send(PacketEvent {
+                        event_writer.write(PacketEvent {
                             client: *entity,
                             timestamp: pkt.timestamp,
                             id: pkt.id,

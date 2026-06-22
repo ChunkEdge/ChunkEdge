@@ -48,7 +48,7 @@ impl PacketDecoder {
             return Ok(None);
         }
 
-        let packet_len_len = VarInt(packet_len).written_size();
+        let packet_len_len = self.buf.len() - r.len();
 
         let mut data;
 
@@ -71,9 +71,9 @@ impl PacketDecoder {
             // Is this packet compressed?
             if data_len > 0 {
                 ensure!(
-                    data_len > self.threshold.0,
-                    "decompressed packet length of {data_len} is <= the compression threshold of \
-                     {}",
+                    data_len >= self.threshold.0,
+                    "decompressed packet length of {data_len} is below the compression threshold \
+                     of {}",
                     self.threshold.0
                 );
 
@@ -91,24 +91,23 @@ impl PacketDecoder {
                     "decompressed packet length is shorter than expected"
                 );
 
-                let total_packet_len = VarInt(packet_len).written_size() + packet_len as usize;
-
-                self.buf.advance(total_packet_len);
+                self.buf.advance(packet_len_len + packet_len as usize);
 
                 data = self.decompress_buf.split();
             } else {
                 debug_assert_eq!(data_len, 0);
 
                 ensure!(
-                    r.len() <= self.threshold.0 as usize,
-                    "uncompressed packet length of {} exceeds compression threshold of {}",
+                    r.len() < self.threshold.0 as usize,
+                    "uncompressed packet length of {} is not below the compression threshold of {}",
                     r.len(),
                     self.threshold.0
                 );
 
+                let data_len_len = packet_len as usize - r.len();
                 let remaining_len = r.len();
 
-                self.buf.advance(packet_len_len + 1);
+                self.buf.advance(packet_len_len + data_len_len);
 
                 data = self.buf.split_to(remaining_len);
             }

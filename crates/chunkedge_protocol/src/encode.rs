@@ -74,7 +74,7 @@ impl PacketEncoder {
             use flate2::bufread::ZlibEncoder;
             use flate2::Compression;
 
-            if data_len > self.threshold.0 as usize {
+            if data_len >= self.threshold.0 as usize {
                 let mut z = ZlibEncoder::new(&self.buf[start_len..], Compression::new(4));
 
                 self.compress_buf.clear();
@@ -341,7 +341,7 @@ where
 
     let data_len = buf.len() - start_len;
 
-    if data_len > threshold as usize {
+    if data_len >= threshold as usize {
         let mut z = ZlibEncoder::new(&buf[start_len..], Compression::new(4));
 
         let mut scratch = vec![];

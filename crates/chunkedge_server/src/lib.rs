@@ -18,6 +18,7 @@ pub mod layer;
 pub mod message;
 pub mod movement;
 pub mod op_level;
+pub mod passenger;
 pub mod resource_pack;
 pub mod spawn;
 pub mod status;

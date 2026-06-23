@@ -5,6 +5,7 @@ mod example;
 mod hunger;
 mod inventory;
 mod layer;
+mod passenger;
 mod player_list;
 mod potions;
 mod scoreboard;

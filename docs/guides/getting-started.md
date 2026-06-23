@@ -81,9 +81,7 @@ fn init_clients(
     >,
     layers: Query<Entity, (With<ChunkLayer>, With<EntityLayer>)>,
 ) {
-    let Ok(layer) = layers.single() else {
-        return;
-    };
+    let layer = layers.single().expect("could not get single layer");
 
     for (
         mut layer_id,

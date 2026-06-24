@@ -72,7 +72,7 @@ impl PacketIoWriter {
         let uncompressed_packet_length_varint = VarInt(uncompressed_packet_length as i32);
 
         if threshold.0 >= 0 {
-            if uncompressed_packet_length > threshold.0 as usize {
+            if uncompressed_packet_length >= threshold.0 as usize {
                 use std::io::Read;
 
                 use flate2::bufread::ZlibEncoder;

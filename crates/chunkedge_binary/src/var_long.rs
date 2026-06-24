@@ -34,6 +34,13 @@ impl VarLong {
 
     /// Returns the exact number of bytes this varlong will write when
     /// [`Encode::encode`] is called, assuming no error occurs.
+    ///
+    /// This is the size of "canonical" (non-padded) encoding for this
+    /// value, not necessarily the number of bytes that were consumed
+    /// while decoding it. Minecraft `VarLongs` may be padded by using
+    /// more continuation bytes than the value requires, so callers that
+    /// need the decoded wire length should compare the input slice length
+    /// before and after decoding instead.
     pub fn written_size(self) -> usize {
         match self.0 {
             0 => 1,

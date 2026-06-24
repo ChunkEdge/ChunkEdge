@@ -26,11 +26,11 @@ impl Plugin for PassengerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             PostUpdate,
-            (send_passengers, send_empty_passengers_on_removal).before(UpdateLayersPreClientSet),
-        )
-        .add_systems(
-            PostUpdate,
-            send_passengers_on_entity_load.before(FlushPacketsSet),
+            (
+                (send_passengers, send_empty_passengers_on_removal)
+                    .before(UpdateLayersPreClientSet),
+                send_passengers_on_entity_load.before(FlushPacketsSet),
+            ),
         );
     }
 }
@@ -47,8 +47,9 @@ pub struct Riding(pub Entity);
 /// Automatically maintained on a vehicle entity; lists the entities currently
 /// riding it.
 ///
-/// Do not construct or mutate this directly. It is populated by inserting
+/// This is populated by inserting
 /// [`Riding`] on passenger entities.
+/// You can access the passenger entities using `.iter()`
 #[derive(Component, Debug)]
 #[relationship_target(relationship = Riding)]
 pub struct Passengers(Vec<Entity>);

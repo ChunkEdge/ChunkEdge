@@ -236,3 +236,72 @@ impl PacketFrame {
         Ok(pkt)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn accepts_padded_packet_length_and_packet_id() {
+        let mut decoder = PacketDecoder::new();
+
+        // packet_len = 2 encoded in two bytes, then packet_id = 0 encoded in two bytes.
+        decoder.queue_slice(&[0x82, 0x00, 0x80, 0x00]);
+
+        let frame = decoder.try_next_packet().unwrap().unwrap();
+
+        assert_eq!(frame.id, 0);
+        assert!(frame.body.is_empty());
+        assert!(decoder.try_next_packet().unwrap().is_none());
+    }
+
+    #[cfg(feature = "compression")]
+    #[test]
+    fn accepts_padded_uncompressed_data_length_and_packet_id() {
+        let mut decoder = PacketDecoder::new();
+        decoder.set_compression(CompressionThreshold(256));
+
+        // packet_len = 4 encoded in two bytes, then uncompressed data_len = 0 encoded in two bytes, then packet_id = 0 encoded in two bytes.
+        decoder.queue_slice(&[0x84, 0x00, 0x80, 0x00, 0x80, 0x00]);
+
+        let frame = decoder.try_next_packet().unwrap().unwrap();
+
+        assert_eq!(frame.id, 0);
+        assert!(frame.body.is_empty());
+        assert!(decoder.try_next_packet().unwrap().is_none());
+    }
+
+    #[cfg(feature = "compression")]
+    #[test]
+    fn accepts_compressed_packet_at_compression_threshold() {
+        use std::io::Read;
+
+        use chunkedge_binary::Encode;
+        use flate2::bufread::ZlibEncoder;
+        use flate2::Compression;
+
+        let threshold = 3;
+        let mut decoder = PacketDecoder::new();
+        decoder.set_compression(CompressionThreshold(threshold));
+
+        let uncompressed_packet = [0x00, 0xab, 0xcd];
+        let mut compressed_packet = vec![];
+        ZlibEncoder::new(&uncompressed_packet[..], Compression::new(4))
+            .read_to_end(&mut compressed_packet)
+            .unwrap();
+
+        let packet_len = VarInt(threshold).written_size() + compressed_packet.len();
+        let mut packet = vec![];
+        VarInt(packet_len as i32).encode(&mut packet).unwrap();
+        VarInt(threshold).encode(&mut packet).unwrap();
+        packet.extend_from_slice(&compressed_packet);
+
+        decoder.queue_slice(&packet);
+
+        let frame = decoder.try_next_packet().unwrap().unwrap();
+
+        assert_eq!(frame.id, 0);
+        assert_eq!(&frame.body[..], [0xab, 0xcd]);
+        assert!(decoder.try_next_packet().unwrap().is_none());
+    }
+}

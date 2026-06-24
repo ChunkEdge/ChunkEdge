@@ -197,6 +197,12 @@ impl ItemStack {
         matches!(self.item, ItemKind::Air) || self.count <= 0
     }
 
+    /// Returns `true` if `self` and `other` are the same item kind with the
+    /// same component data. Counts are ignored.
+    pub fn is_same_item_same_components(&self, other: &Self) -> bool {
+        self.item == other.item && self.components == other.components
+    }
+
     pub fn encode_recursive<W: Write>(
         &self,
         mut w: W,

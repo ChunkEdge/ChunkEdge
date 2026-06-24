@@ -216,7 +216,7 @@ pub(super) fn validate_click_slot_packet(
                         && match (!old_slot.is_empty(), !cursor_item.is_empty()) {
                             // We assume we only want to consider items for merging if they have the same
                             // kind and components.
-                            // 
+                            //
                             // TODO: as noted in a previous component, the client might add additional NBT data. confirm if this is the case and allow merging if client item has additional components.
                             (true, true) => !old_slot.is_same_item_same_components(&cursor_item.0),
                             (true, false) => true,
@@ -1168,10 +1168,9 @@ mod tests {
             .expect("packet should be valid");
     }
 
-
     #[test]
     fn click_swap_same_kind_different_components() {
-        // Repro of bug from https://github.com/jobpaardekooper/valence/commit/d86a64f69a2ce66e2141e6412d537d9ee2cee97c: 
+        // Repro of bug from https://github.com/jobpaardekooper/valence/commit/d86a64f69a2ce66e2141e6412d537d9ee2cee97c:
         // examples/item_components.rs:
         // serverside, two items (with same kind+count) with different components must be treated
         // as different items, so left-clicking one while holding the other is a
@@ -1220,8 +1219,7 @@ mod tests {
         );
         assert_eq!(
             new_cursor, probe_b,
-            "cursor should hold Probe B after the swap, got {:?}",
-            new_cursor,
+            "cursor should hold Probe B after the swap, got {new_cursor:?}",
         );
     }
 }

@@ -3,7 +3,9 @@ use std::collections::HashMap;
 use bevy_ecs::prelude::*;
 use chunkedge_server::entity::EntityLayerId;
 use chunkedge_server::protocol::packets::play::set_display_objective_s2c::ScoreboardPosition;
-use chunkedge_server::protocol::packets::play::set_objective_s2c::ObjectiveRenderType;
+use chunkedge_server::protocol::packets::play::set_objective_s2c::{
+    NumberFormat, ObjectiveRenderType,
+};
 use chunkedge_server::text::IntoText;
 use chunkedge_server::Text;
 use derive_more::{Deref, DerefMut};
@@ -37,6 +39,10 @@ impl Objective {
 /// is used.
 #[derive(Debug, Clone, PartialEq, Component, Deref, DerefMut)]
 pub struct ObjectiveDisplay(pub Text);
+
+/// Defines how the scores number is displayed.
+#[derive(Component, Clone, PartialEq, Debug, Default)]
+pub struct ObjectiveNumberFormat(pub Option<NumberFormat<'static>>);
 
 /// A mapping of keys to their scores.
 #[derive(Debug, Clone, Component, Default)]
@@ -100,6 +106,7 @@ pub struct ObjectiveBundle {
     pub name: Objective,
     pub display: ObjectiveDisplay,
     pub render_type: ObjectiveRenderType,
+    pub number_format: ObjectiveNumberFormat,
     pub scores: ObjectiveScores,
     pub old_scores: OldObjectiveScores,
     pub position: ScoreboardPosition,
@@ -112,6 +119,7 @@ impl Default for ObjectiveBundle {
             name: Objective::new(""),
             display: ObjectiveDisplay("".into_text()),
             render_type: Default::default(),
+            number_format: Default::default(),
             scores: Default::default(),
             old_scores: Default::default(),
             position: Default::default(),

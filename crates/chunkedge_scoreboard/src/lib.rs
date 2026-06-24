@@ -59,13 +59,14 @@ fn create_or_update_objectives(
             Ref<Objective>,
             &ObjectiveDisplay,
             &ObjectiveRenderType,
+            &ObjectiveNumberFormat,
             &EntityLayerId,
         ),
         Or<(Changed<ObjectiveDisplay>, Changed<ObjectiveRenderType>)>,
     >,
     mut layers: Query<&mut EntityLayer>,
 ) {
-    for (objective, display, render_type, entity_layer) in objectives.iter() {
+    for (objective, display, render_type, number_format, entity_layer) in objectives.iter() {
         if objective.name().is_empty() {
             warn!("Objective name is empty");
         }
@@ -73,13 +74,13 @@ fn create_or_update_objectives(
             ObjectiveMode::Create {
                 objective_display_name: (&display.0).into_cow_text_component(),
                 render_type: *render_type,
-                number_format: None,
+                number_format: number_format.0.clone(),
             }
         } else {
             ObjectiveMode::Update {
                 objective_display_name: (&display.0).into_cow_text_component(),
                 render_type: *render_type,
-                number_format: None,
+                number_format: number_format.0.clone(),
             }
         };
 
@@ -156,6 +157,7 @@ fn handle_new_clients(
             &Objective,
             &ObjectiveDisplay,
             &ObjectiveRenderType,
+            &ObjectiveNumberFormat,
             &ScoreboardPosition,
             &ObjectiveScores,
             &EntityLayerId,
@@ -171,7 +173,7 @@ fn handle_new_clients(
             .difference(&visible_layers.0)
             .collect();
 
-        for (objective, _, _, _, _, layer) in objectives.iter() {
+        for (objective, _, _, _, _, _, layer) in objectives.iter() {
             if !removed_layers.contains(&layer.0) {
                 continue;
             }
@@ -197,7 +199,9 @@ fn handle_new_clients(
                 .collect::<BTreeSet<_>>()
         };
 
-        for (objective, display, render_type, position, scores, layer) in objectives.iter() {
+        for (objective, display, render_type, number_format, position, scores, layer) in
+            objectives.iter()
+        {
             if !added_layers.contains(&layer.0) {
                 continue;
             }
@@ -207,7 +211,7 @@ fn handle_new_clients(
                 mode: ObjectiveMode::Create {
                     objective_display_name: (&display.0).into_cow_text_component(),
                     render_type: *render_type,
-                    number_format: None,
+                    number_format: number_format.0.clone(),
                 },
             });
             client.write_packet(&SetDisplayObjectiveS2c {

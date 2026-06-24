@@ -37,7 +37,7 @@ impl VarLong {
     ///
     /// This is the size of "canonical" (non-padded) encoding for this
     /// value, not necessarily the number of bytes that were consumed
-    /// while decoding it. Minecraft VarLongs may be padded by using
+    /// while decoding it. Minecraft `VarLongs` may be padded by using
     /// more continuation bytes than the value requires, so callers that
     /// need the decoded wire length should compare the input slice length
     /// before and after decoding instead.

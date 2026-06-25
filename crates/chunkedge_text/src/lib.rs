@@ -94,7 +94,7 @@ pub struct TextInner {
     pub insertion: Option<Cow<'static, str>>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub click_event: Option<ClickMessage>,
+    pub click_event: Option<ClickEvent>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hover_event: Option<HoverEvent>,
@@ -201,7 +201,7 @@ pub struct ScoreboardValueContent {
 /// Action to take on click of the text.
 #[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
 #[serde(tag = "action", rename_all = "snake_case")]
-pub enum ClickMessage {
+pub enum ClickEvent {
     /// Opens an URL. it must start with `http://` or `https://`.
     OpenUrl { url: Cow<'static, str> },
     /// Only usable by internal servers for security reasons.

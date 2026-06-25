@@ -4,19 +4,19 @@ use chunkedge_entity::EntityManager;
 pub use chunkedge_protocol::packets::play::interact_c2s::EntityInteraction;
 use chunkedge_protocol::packets::play::InteractC2s;
 
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct InteractEntityPlugin;
 
 impl Plugin for InteractEntityPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<InteractEntityEvent>()
+        app.add_message::<InteractEntityMessage>()
             .add_systems(EventLoopPreUpdate, handle_interact_entity);
     }
 }
 
 #[derive(Message, Copy, Clone, Debug)]
-pub struct InteractEntityEvent {
+pub struct InteractEntityMessage {
     pub client: Entity,
     /// The entity being interacted with.
     pub entity: Entity,
@@ -27,9 +27,9 @@ pub struct InteractEntityEvent {
 }
 
 fn handle_interact_entity(
-    mut packets: MessageReader<PacketEvent>,
+    mut packets: MessageReader<PacketMessage>,
     entities: Res<EntityManager>,
-    mut events: MessageWriter<InteractEntityEvent>,
+    mut messages: MessageWriter<InteractEntityMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<InteractC2s>() {
@@ -38,7 +38,7 @@ fn handle_interact_entity(
             // within some configurable tolerance level.
 
             if let Some(entity) = entities.get_by_id(pkt.entity_id.0) {
-                events.write(InteractEntityEvent {
+                messages.write(InteractEntityMessage {
                     client: packet.client,
                     entity,
                     sneaking: pkt.sneaking,

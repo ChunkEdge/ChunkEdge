@@ -12,7 +12,7 @@ use crate::graph::CommandGraphBuilder;
 use crate::modifier_value::ModifierValue;
 use crate::parsers::ParseInput;
 use crate::{
-    Command, CommandProcessedEvent, CommandRegistry, CommandScopeRegistry, CommandSystemSet,
+    Command, CommandProcessedMessage, CommandRegistry, CommandScopeRegistry, CommandSystemSet,
 };
 
 impl<T> Plugin for CommandHandlerPlugin<T>
@@ -20,12 +20,12 @@ where
     T: Command + Send + Sync + 'static,
 {
     fn build(&self, app: &mut App) {
-        app.add_message::<CommandResultEvent<T>>()
+        app.add_message::<CommandResultMessage<T>>()
             .insert_resource(CommandResource::<T>::new())
             .add_systems(PostStartup, command_startup_system::<T>)
             .add_systems(
                 EventLoopPreUpdate,
-                command_event_system::<T>.after(CommandSystemSet),
+                command_message_system::<T>.after(CommandSystemSet),
             );
     }
 }
@@ -70,7 +70,7 @@ impl<T: Command + Send + Sync> CommandResource<T> {
 }
 
 #[derive(Message)]
-pub struct CommandResultEvent<T>
+pub struct CommandResultMessage<T>
 where
     T: Command,
     T: Send + Sync + 'static,
@@ -105,21 +105,21 @@ fn command_startup_system<T>(
     registry.executables.extend(executables.keys());
 }
 
-/// This system reads incoming command events.
-fn command_event_system<T>(
-    mut commands_executed: MessageReader<CommandProcessedEvent>,
-    mut events: MessageWriter<CommandResultEvent<T>>,
+/// This system reads incoming command messages.
+fn command_message_system<T>(
+    mut commands_executed: MessageReader<CommandProcessedMessage>,
+    mut messages: MessageWriter<CommandResultMessage<T>>,
     command: ResMut<CommandResource<T>>,
 ) where
     T: Command + Send + Sync,
 {
-    for command_event in commands_executed.read() {
-        if let Some(executable) = command.executables.get(&command_event.node) {
-            let result = executable(&mut ParseInput::new(&command_event.command));
-            events.write(CommandResultEvent {
+    for command_message in commands_executed.read() {
+        if let Some(executable) = command.executables.get(&command_message.node) {
+            let result = executable(&mut ParseInput::new(&command_message.command));
+            messages.write(CommandResultMessage {
                 result,
-                executor: command_event.executor,
-                modifiers: command_event.modifiers.clone(),
+                executor: command_message.executor,
+                modifiers: command_message.modifiers.clone(),
             });
         }
     }

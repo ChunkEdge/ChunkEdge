@@ -1,7 +1,7 @@
 #![allow(clippy::type_complexity)]
 
 use chunkedge::prelude::*;
-use chunkedge::status::RequestRespawnEvent;
+use chunkedge::status::RequestRespawnMessage;
 
 const SPAWN_Y: i32 = 64;
 
@@ -87,10 +87,10 @@ fn init_clients(
     }
 }
 
-fn squat_and_die(mut clients: Query<&mut Client>, mut events: MessageReader<SneakEvent>) {
-    for event in events.read() {
-        if event.state == SneakState::Start {
-            if let Ok(mut client) = clients.get_mut(event.client) {
+fn squat_and_die(mut clients: Query<&mut Client>, mut messages: MessageReader<SneakMessage>) {
+    for message in messages.read() {
+        if message.state == SneakState::Start {
+            if let Ok(mut client) = clients.get_mut(message.client) {
                 client.kill("Squatted too hard.");
             }
         }
@@ -104,16 +104,16 @@ fn necromancy(
         &mut VisibleEntityLayers,
         &mut RespawnPosition,
     )>,
-    mut events: MessageReader<RequestRespawnEvent>,
+    mut messages: MessageReader<RequestRespawnMessage>,
     layers: Query<Entity, (With<ChunkLayer>, With<EntityLayer>)>,
 ) {
-    for event in events.read() {
+    for message in messages.read() {
         if let Ok((
             mut layer_id,
             mut visible_chunk_layer,
             mut visible_entity_layers,
             mut respawn_pos,
-        )) = clients.get_mut(event.client)
+        )) = clients.get_mut(message.client)
         {
             respawn_pos.pos = BlockPos::new(0, SPAWN_Y, 0);
 

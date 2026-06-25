@@ -14,17 +14,17 @@ use chunkedge_protocol::{VarInt, WritePacket};
 use crate::client::Client;
 use crate::EventLoopPostUpdate;
 
-/// Event for when a status effect is added to an entity or the amplifier or
+/// Message for when a status effect is added to an entity or the amplifier or
 /// duration of an existing status effect is changed.
 #[derive(Message, Clone, PartialEq, Eq, Debug)]
-pub struct StatusEffectAdded {
+pub struct StatusEffectAddedMessage {
     pub entity: Entity,
     pub status_effect: StatusEffect,
 }
 
-/// Event for when a status effect is removed from an entity.
+/// Message for when a status effect is removed from an entity.
 #[derive(Message, Clone, PartialEq, Eq, Debug)]
-pub struct StatusEffectRemoved {
+pub struct StatusEffectRemovedMessage {
     pub entity: Entity,
     pub status_effect: ActiveStatusEffect,
 }
@@ -33,8 +33,8 @@ pub struct StatusEffectPlugin;
 
 impl Plugin for StatusEffectPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<StatusEffectAdded>()
-            .add_message::<StatusEffectRemoved>()
+        app.add_message::<StatusEffectAddedMessage>()
+            .add_message::<StatusEffectRemovedMessage>()
             .add_systems(
                 EventLoopPostUpdate,
                 (
@@ -81,8 +81,8 @@ struct StatusEffectQuery {
 
 fn add_status_effects(
     mut query: Query<StatusEffectQuery>,
-    mut add_events: MessageWriter<StatusEffectAdded>,
-    mut remove_events: MessageWriter<StatusEffectRemoved>,
+    mut add_messages: MessageWriter<StatusEffectAddedMessage>,
+    mut remove_messages: MessageWriter<StatusEffectRemovedMessage>,
 ) {
     for mut query in &mut query {
         let updated = query.active_effects.apply_changes();
@@ -95,12 +95,12 @@ fn add_status_effects(
 
         for (status_effect, prev) in updated {
             if query.active_effects.has_effect(status_effect) {
-                add_events.write(StatusEffectAdded {
+                add_messages.write(StatusEffectAddedMessage {
                     entity: query.entity,
                     status_effect,
                 });
             } else if let Some(prev) = prev {
-                remove_events.write(StatusEffectRemoved {
+                remove_messages.write(StatusEffectRemovedMessage {
                     entity: query.entity,
                     status_effect: prev,
                 });

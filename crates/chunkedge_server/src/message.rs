@@ -7,13 +7,13 @@ use chunkedge_protocol::packets::play::{ChatC2s, SystemChatS2c};
 use chunkedge_protocol::text::IntoText;
 use chunkedge_protocol::IntoTextComponent;
 
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct MessagePlugin;
 
 impl Plugin for MessagePlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<ChatMessageEvent>()
+        app.add_message::<ChatReceivedMessage>()
             .add_systems(EventLoopPreUpdate, handle_chat_message);
     }
 }
@@ -41,20 +41,24 @@ impl<T: WritePacket> SendMessage for T {
     }
 }
 
+/// Message emitted when a client sends a chat message to the server.
 #[derive(Message, Clone, Debug)]
-pub struct ChatMessageEvent {
+pub struct ChatReceivedMessage {
+    /// The client that sent the chat message.
     pub client: Entity,
+    /// The raw chat message text sent.
     pub message: Box<str>,
+    /// The client-provided timestamp.
     pub timestamp: u64,
 }
 
 pub fn handle_chat_message(
-    mut packets: MessageReader<PacketEvent>,
-    mut events: MessageWriter<ChatMessageEvent>,
+    mut packets: MessageReader<PacketMessage>,
+    mut messages: MessageWriter<ChatReceivedMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<ChatC2s>() {
-            events.write(ChatMessageEvent {
+            messages.write(ChatReceivedMessage {
                 client: packet.client,
                 message: pkt.message.0.into(),
                 timestamp: pkt.timestamp,

@@ -7,7 +7,7 @@ use chunkedge_item::ItemComponent;
 use chunkedge_server::protocol::IntoTextComponent;
 
 use crate::inventory::{
-    convert_to_player_slot_id, ClickMode, ClientInventoryState, CursorItem, DropItemStackEvent,
+    convert_to_player_slot_id, ClickMode, ClientInventoryState, CursorItem, DropItemStackMessage,
     HeldItem, Inventory, InventoryKind, OpenInventory, SlotChange,
 };
 use crate::protocol::packets::play::{
@@ -1513,17 +1513,17 @@ mod dropping_items {
 
         assert_eq!(inventory.slot(36), &ItemStack::new(ItemKind::IronIngot, 2));
 
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
-        assert_eq!(events[0].from_slot, Some(36));
-        assert_eq!(events[0].stack, ItemStack::new(ItemKind::IronIngot, 1));
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
+        assert_eq!(messages[0].from_slot, Some(36));
+        assert_eq!(messages[0].stack, ItemStack::new(ItemKind::IronIngot, 1));
 
         let sent_packets = helper.collect_received();
 
@@ -1571,15 +1571,15 @@ mod dropping_items {
             &ItemStack::new(ItemKind::IronIngot, 3)
         );
 
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        // when the inventory is read-only we do not emit a drop event
-        assert_eq!(events.len(), 0);
+        // when the inventory is read-only we do not emit a drop message
+        assert_eq!(messages.len(), 0);
 
         let sent_packets = helper.collect_received();
 
@@ -1626,15 +1626,15 @@ mod dropping_items {
             .get::<Inventory>(client)
             .expect("could not find inventory");
         assert_eq!(inventory.slot(36), &ItemStack::EMPTY);
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
-        assert_eq!(events[0].from_slot, Some(36));
-        assert_eq!(events[0].stack, ItemStack::new(ItemKind::IronIngot, 32));
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
+        assert_eq!(messages[0].from_slot, Some(36));
+        assert_eq!(messages[0].stack, ItemStack::new(ItemKind::IronIngot, 32));
     }
 
     #[test]
@@ -1678,14 +1678,14 @@ mod dropping_items {
             .expect("could not find inventory");
         // Inventory is read-only, item is not being dropped
         assert_eq!(inventory.slot(36), &ItemStack::new(ItemKind::IronIngot, 32));
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        // when the inventory is read-only we do not emit a drop event
-        assert_eq!(events.len(), 0);
+        // when the inventory is read-only we do not emit a drop message
+        assert_eq!(messages.len(), 0);
     }
 
     #[test]
@@ -1713,17 +1713,17 @@ mod dropping_items {
         app.update();
 
         // Make assertions
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events")
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages")
             .iter_current_update_messages()
             .collect::<Vec<_>>();
 
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
-        assert_eq!(events[0].from_slot, None);
-        assert_eq!(events[0].stack, ItemStack::new(ItemKind::IronIngot, 32));
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
+        assert_eq!(messages[0].from_slot, None);
+        assert_eq!(messages[0].stack, ItemStack::new(ItemKind::IronIngot, 32));
     }
 
     #[test]
@@ -1774,18 +1774,18 @@ mod dropping_items {
 
         assert_eq!(cursor_item.0, ItemStack::EMPTY);
 
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
-        assert_eq!(events[0].from_slot, None);
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
+        assert_eq!(messages[0].from_slot, None);
         assert_eq!(
-            events[0].stack,
+            messages[0].stack,
             ItemStack::new(ItemKind::IronIngot, 32).with_components(vec![
                 ItemComponent::CustomName("Droppable Iron".into_text_component()),
             ])
@@ -1836,13 +1836,13 @@ mod dropping_items {
             .expect("could not find client");
         assert_eq!(cursor_item.0, stack);
 
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events")
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages")
             .iter_current_update_messages()
             .collect::<Vec<_>>();
-        assert_eq!(events.len(), 0);
+        assert_eq!(messages.len(), 0);
 
         let sent_packets = helper.collect_received();
         sent_packets.assert_count::<ContainerSetContentS2c>(0);
@@ -1909,18 +1909,18 @@ mod dropping_items {
         app.update();
 
         // Make assertions
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
-        assert_eq!(events[0].from_slot, Some(40));
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
+        assert_eq!(messages[0].from_slot, Some(40));
         assert_eq!(
-            events[0].stack,
+            messages[0].stack,
             ItemStack::new(ItemKind::IronIngot, 1).with_components(vec![
                 ItemComponent::CustomName("Custom Iron".into_text_component()),
                 ItemComponent::Lore(vec![
@@ -2009,15 +2009,15 @@ mod dropping_items {
             ])
         );
 
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        // when the inventory is read-only we do not emit a drop event
-        assert_eq!(events.len(), 0);
+        // when the inventory is read-only we do not emit a drop message
+        assert_eq!(messages.len(), 0);
     }
 
     #[test]
@@ -2074,18 +2074,18 @@ mod dropping_items {
         app.update();
 
         // Make assertions
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
-        assert_eq!(events[0].from_slot, Some(40));
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
+        assert_eq!(messages[0].from_slot, Some(40));
         assert_eq!(
-            events[0].stack,
+            messages[0].stack,
             ItemStack::new(ItemKind::IronIngot, 32).with_components(vec![
                 ItemComponent::CustomName("Custom Iron".into_text_component()),
                 ItemComponent::Lore(vec![
@@ -2168,15 +2168,15 @@ mod dropping_items {
             ])
         );
 
-        let events = app
+        let messages = app
             .world_mut()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        // when the inventory is read-only we do not emit a drop event
-        assert_eq!(events.len(), 0);
+        // when the inventory is read-only we do not emit a drop message
+        assert_eq!(messages.len(), 0);
     }
 
     /// The item should be dropped successfully, if the player has an inventory
@@ -2247,27 +2247,27 @@ mod dropping_items {
         app.update();
 
         // Make assertions
-        let events = app
+        let messages = app
             .world()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
         let player_inventory = app
             .world()
             .get::<Inventory>(client)
             .expect("could not find inventory");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-        assert_eq!(events.len(), 1);
-        assert_eq!(events[0].client, client);
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].client, client);
         assert_eq!(
-            events[0].from_slot,
+            messages[0].from_slot,
             Some(convert_to_player_slot_id(InventoryKind::Generic9x3, 50))
         );
 
         assert_eq!(
-            events[0].stack,
+            messages[0].stack,
             ItemStack::new(ItemKind::IronIngot, 1).with_components(vec![
                 ItemComponent::CustomName("Custom Iron".into_text_component()),
                 ItemComponent::Lore(vec![
@@ -2346,19 +2346,19 @@ mod dropping_items {
         app.update();
 
         // Make assertions
-        let events = app
+        let messages = app
             .world()
-            .get_resource::<Messages<DropItemStackEvent>>()
-            .expect("expected drop item stack events");
+            .get_resource::<Messages<DropItemStackMessage>>()
+            .expect("expected drop item stack messages");
 
         let player_inventory = app
             .world()
             .get::<Inventory>(client)
             .expect("could not find inventory");
 
-        let events = events.iter_current_update_messages().collect::<Vec<_>>();
-        // when the inventory is read-only we do not emit a drop event
-        assert_eq!(events.len(), 0);
+        let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
+        // when the inventory is read-only we do not emit a drop message
+        assert_eq!(messages.len(), 0);
 
         // Also make sure that the player inventory was not updated (as it is
         // read-only).
@@ -2432,26 +2432,26 @@ fn should_drop_item_stack_player_open_inventory_with_dropkey() {
     app.update();
 
     // Make assertions
-    let events = app
+    let messages = app
         .world()
-        .get_resource::<Messages<DropItemStackEvent>>()
-        .expect("expected drop item stack events");
+        .get_resource::<Messages<DropItemStackMessage>>()
+        .expect("expected drop item stack messages");
 
     let player_inventory = app
         .world()
         .get::<Inventory>(client)
         .expect("could not find inventory");
 
-    let events = events.iter_current_update_messages().collect::<Vec<_>>();
+    let messages = messages.iter_current_update_messages().collect::<Vec<_>>();
 
-    assert_eq!(events.len(), 1);
-    assert_eq!(events[0].client, client);
+    assert_eq!(messages.len(), 1);
+    assert_eq!(messages[0].client, client);
     assert_eq!(
-        events[0].from_slot,
+        messages[0].from_slot,
         Some(convert_to_player_slot_id(InventoryKind::Generic9x3, 50))
     );
     assert_eq!(
-        events[0].stack,
+        messages[0].stack,
         ItemStack::new(ItemKind::IronIngot, 32).with_components(vec![
             ItemComponent::CustomName("Custom Iron".into_text_component()),
             ItemComponent::Lore(vec![

@@ -6,7 +6,7 @@ dispatching commands.
 #### This plugin manages the following:
 
 - Registering commands to a Command Graph which is used parse commands.
-- Receiving commands from the client and turning them into events.
+- Receiving commands from the client and turning them into messages.
 - Parsing commands and dispatching them in the registered executable format.
 - Sending the command graph to clients.
 

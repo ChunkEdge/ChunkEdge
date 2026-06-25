@@ -111,9 +111,9 @@ Under appropriate circumstances a different naming scheme can be used. [`Command
 
 If a `bar` field exists and no invariants need to be maintained by the getters and setters, it is usually better to make the `bar` field public.
 
-### Bevy `Event`s
+### Bevy `Message`s
 
-Types intended to be used as events in [`EventReader`] and [`EventWriter`] should end in the `Event` suffix. This is helpful for readers trying to distinguish events from other types in the program.
+Types intended to be used as messages in [`MessageReader`] and [`MessageWriter`] should end in the `Message` suffix. This is helpful for readers trying to distinguish messages from other types in the program.
 
 <table>
 <tr>
@@ -124,9 +124,9 @@ Types intended to be used as events in [`EventReader`] and [`EventWriter`] shoul
 <td>
 
 ```rust
-struct CollisionEvent { ... }
+struct CollisionMessage { ... }
 
-fn handle_collisions(mut events: EventReader<CollisionEvent>) { ... }
+fn handle_collisions(mut messages: MessageReader<CollisionMessage>) { ... }
 ```
 
 </td>
@@ -135,7 +135,7 @@ fn handle_collisions(mut events: EventReader<CollisionEvent>) { ... }
 ```rust
 struct Collision { ... }
 
-fn handle_collisions(mut events: EventReader<Collision>) { ... }
+fn handle_collisions(mut messages: MessageReader<Collision>) { ... }
 ```
 
 </td>

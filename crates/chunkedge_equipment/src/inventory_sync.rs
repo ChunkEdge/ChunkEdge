@@ -1,5 +1,5 @@
 use chunkedge_inventory::player_inventory::PlayerInventory;
-use chunkedge_inventory::{HeldItem, Inventory, UpdateSelectedSlotEvent};
+use chunkedge_inventory::{HeldItem, Inventory, UpdateSelectedSlotMessage};
 use chunkedge_server::entity::player::PlayerEntity;
 
 use super::*;
@@ -67,10 +67,10 @@ pub(crate) fn equipment_inventory_sync(
 /// suppressed for this)
 pub(crate) fn equipment_held_item_sync_from_client(
     mut clients: Query<(&HeldItem, &Inventory, &mut Equipment), With<EquipmentInventorySync>>,
-    mut events: MessageReader<UpdateSelectedSlotEvent>,
+    mut messages: MessageReader<UpdateSelectedSlotMessage>,
 ) {
-    for event in events.read() {
-        let Ok((held_item, inventory, mut equipment)) = clients.get_mut(event.client) else {
+    for message in messages.read() {
+        let Ok((held_item, inventory, mut equipment)) = clients.get_mut(message.client) else {
             continue;
         };
 

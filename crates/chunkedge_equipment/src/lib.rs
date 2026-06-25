@@ -5,7 +5,7 @@ use bevy_ecs::prelude::*;
 mod interaction_broadcast;
 pub use interaction_broadcast::EquipmentInteractionBroadcast;
 mod inventory_sync;
-use chunkedge_server::client::{Client, FlushPacketsSet, LoadEntityForClientEvent};
+use chunkedge_server::client::{Client, FlushPacketsSet, LoadEntityForClientMessage};
 use chunkedge_server::entity::living::LivingEntity;
 use chunkedge_server::entity::{EntityId, EntityLayerId, Position};
 use chunkedge_server::protocol::packets::play::set_equipment_s2c::{EquipmentEntry, EquipmentSlot};
@@ -36,7 +36,7 @@ impl Plugin for EquipmentPlugin {
                 on_entity_load.before(FlushPacketsSet),
             ),
         )
-        .add_message::<EquipmentChangeEvent>();
+        .add_message::<EquipmentChangeMessage>();
     }
 }
 
@@ -181,7 +181,7 @@ pub struct EquipmentSlotChange {
 }
 
 #[derive(Debug, Clone, Message)]
-pub struct EquipmentChangeEvent {
+pub struct EquipmentChangeMessage {
     pub client: Entity,
     pub changed: Vec<EquipmentSlotChange>,
 }
@@ -191,7 +191,7 @@ fn update_equipment(
         (Entity, &EntityId, &EntityLayerId, &Position, &mut Equipment),
         Changed<Equipment>,
     >,
-    mut event_writer: MessageWriter<EquipmentChangeEvent>,
+    mut message_writer: MessageWriter<EquipmentChangeMessage>,
     mut entity_layer: Query<&mut EntityLayer>,
 ) {
     for (entity, entity_id, entity_layer_id, position, mut equipment) in &mut clients {
@@ -225,7 +225,7 @@ fn update_equipment(
                         .collect(),
                 });
 
-            event_writer.write(EquipmentChangeEvent {
+            message_writer.write(EquipmentChangeMessage {
                 client: entity,
                 changed: slots_changed,
             });
@@ -240,14 +240,14 @@ fn update_equipment(
 fn on_entity_load(
     mut clients: Query<&mut Client>,
     entities: Query<(&EntityId, &Equipment)>,
-    mut events: MessageReader<LoadEntityForClientEvent>,
+    mut messages: MessageReader<LoadEntityForClientMessage>,
 ) {
-    for event in events.read() {
-        let Ok(mut client) = clients.get_mut(event.client) else {
+    for message in messages.read() {
+        let Ok(mut client) = clients.get_mut(message.client) else {
             continue;
         };
 
-        let Ok((entity_id, equipment)) = entities.get(event.entity_loaded) else {
+        let Ok((entity_id, equipment)) = entities.get(message.entity_loaded) else {
             continue;
         };
 

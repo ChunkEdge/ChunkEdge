@@ -94,8 +94,8 @@ pub struct AnvilPlugin;
 
 impl Plugin for AnvilPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<ChunkLoadEvent>()
-            .add_message::<ChunkUnloadEvent>()
+        app.add_message::<ChunkLoadMessage>()
+            .add_message::<ChunkUnloadMessage>()
             .add_systems(PreUpdate, remove_unviewed_chunks)
             .add_systems(
                 PostUpdate,
@@ -120,14 +120,14 @@ fn init_anvil(mut query: Query<&mut AnvilLevel, (Added<AnvilLevel>, With<ChunkLa
 /// updated from the previous tick.
 fn remove_unviewed_chunks(
     mut chunk_layers: Query<(Entity, &mut ChunkLayer, &AnvilLevel)>,
-    mut unload_events: MessageWriter<ChunkUnloadEvent>,
+    mut unload_messages: MessageWriter<ChunkUnloadMessage>,
 ) {
     for (entity, mut layer, anvil) in &mut chunk_layers {
         layer.retain_chunks(|pos, chunk| {
             if chunk.viewer_count_mut() > 0 || anvil.ignored_chunks.contains(&pos) {
                 true
             } else {
-                unload_events.write(ChunkUnloadEvent {
+                unload_messages.write(ChunkUnloadMessage {
                     chunk_layer: entity,
                     pos,
                 });
@@ -181,13 +181,13 @@ fn update_client_views(
 fn send_recv_chunks(
     mut layers: Query<(Entity, &mut ChunkLayer, &mut AnvilLevel)>,
     mut to_send: Local<Vec<(Priority, ChunkPos)>>,
-    mut load_events: MessageWriter<ChunkLoadEvent>,
+    mut load_messages: MessageWriter<ChunkLoadMessage>,
 ) {
     for (entity, mut layer, anvil) in &mut layers {
         let anvil = anvil.into_inner();
 
         // Insert the chunks that are finished loading into the chunk layer and send
-        // load events.
+        // load messages.
         for (pos, res) in anvil.receiver.drain() {
             anvil.pending.remove(&pos);
 
@@ -200,7 +200,7 @@ fn send_recv_chunks(
                 Err(e) => ChunkLoadStatus::Failed(e),
             };
 
-            load_events.write(ChunkLoadEvent {
+            load_messages.write(ChunkLoadMessage {
                 chunk_layer: entity,
                 pos,
                 status,
@@ -235,9 +235,9 @@ fn anvil_worker(mut state: ChunkWorkerState) {
     }
 }
 
-/// An event sent by `chunkedge_anvil` after an attempt to load a chunk is made.
+/// A message sent by `chunkedge_anvil` after an attempt to load a chunk is made.
 #[derive(Message, Debug)]
-pub struct ChunkLoadEvent {
+pub struct ChunkLoadMessage {
     /// The [`ChunkLayer`] where the chunk is located.
     pub chunk_layer: Entity,
     /// The position of the chunk in the layer.
@@ -260,9 +260,9 @@ pub enum ChunkLoadStatus {
     Failed(anyhow::Error),
 }
 
-/// An event sent by `chunkedge_anvil` when a chunk is unloaded from an layer.
+/// A message sent by `chunkedge_anvil` when a chunk is unloaded from an layer.
 #[derive(Message, Debug)]
-pub struct ChunkUnloadEvent {
+pub struct ChunkUnloadMessage {
     /// The [`ChunkLayer`] where the chunk was unloaded.
     pub chunk_layer: Entity,
     /// The position of the chunk that was unloaded.

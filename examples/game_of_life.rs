@@ -172,10 +172,10 @@ impl LifeBoard {
     }
 }
 
-fn toggle_cell_on_dig(mut events: MessageReader<DiggingEvent>, mut board: ResMut<LifeBoard>) {
-    for event in events.read() {
-        if event.state == DiggingState::Start {
-            let (x, z) = (event.position.x, event.position.z);
+fn toggle_cell_on_dig(mut messages: MessageReader<DiggingMessage>, mut board: ResMut<LifeBoard>) {
+    for message in messages.read() {
+        if message.state == DiggingState::Start {
+            let (x, z) = (message.position.x, message.position.z);
 
             let live = board.get(x, z);
             board.set(x, z, !live);
@@ -208,12 +208,12 @@ fn update_board(
 }
 
 fn pause_on_crouch(
-    mut events: MessageReader<SneakEvent>,
+    mut messages: MessageReader<SneakMessage>,
     mut board: ResMut<LifeBoard>,
     mut layers: Query<&mut EntityLayer>,
 ) {
-    for event in events.read() {
-        if event.state == SneakState::Start {
+    for message in messages.read() {
+        if message.state == SneakState::Start {
             let mut layer = layers.single_mut().unwrap();
 
             if board.playing {

@@ -6,19 +6,19 @@ use chunkedge_protocol::{IntoTextComponent, WritePacket};
 use uuid::Uuid;
 
 use crate::client::Client;
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct ResourcePackPlugin;
 
 impl Plugin for ResourcePackPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<ResourcePackStatusEvent>()
+        app.add_message::<ResourcePackStatusMessage>()
             .add_systems(EventLoopPreUpdate, handle_resource_pack_status);
     }
 }
 
 #[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
-pub struct ResourcePackStatusEvent {
+pub struct ResourcePackStatusMessage {
     pub client: Entity,
     pub status: ResourcePackC2s,
 }
@@ -86,12 +86,12 @@ impl Client {
 }
 
 fn handle_resource_pack_status(
-    mut packets: MessageReader<PacketEvent>,
-    mut events: MessageWriter<ResourcePackStatusEvent>,
+    mut packets: MessageReader<PacketMessage>,
+    mut messages: MessageWriter<ResourcePackStatusMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<ResourcePackC2s>() {
-            events.write(ResourcePackStatusEvent {
+            messages.write(ResourcePackStatusMessage {
                 client: packet.client,
                 status: pkt,
             });

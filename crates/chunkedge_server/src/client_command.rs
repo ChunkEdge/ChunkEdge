@@ -5,22 +5,22 @@ use chunkedge_entity::{entity, Pose};
 pub use chunkedge_protocol::packets::play::player_command_c2s::PlayerCommand;
 use chunkedge_protocol::packets::play::PlayerCommandC2s;
 
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct ClientCommandPlugin;
 
 impl Plugin for ClientCommandPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<SprintEvent>()
-            .add_message::<SneakEvent>()
-            .add_message::<JumpWithHorseEvent>()
-            .add_message::<LeaveBedEvent>()
+        app.add_message::<SprintMessage>()
+            .add_message::<SneakMessage>()
+            .add_message::<JumpWithHorseMessage>()
+            .add_message::<LeaveBedMessage>()
             .add_systems(EventLoopPreUpdate, handle_client_command);
     }
 }
 
 #[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
-pub struct SprintEvent {
+pub struct SprintMessage {
     pub client: Entity,
     pub state: SprintState,
 }
@@ -32,7 +32,7 @@ pub enum SprintState {
 }
 
 #[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
-pub struct SneakEvent {
+pub struct SneakMessage {
     pub client: Entity,
     pub state: SneakState,
 }
@@ -44,7 +44,7 @@ pub enum SneakState {
 }
 
 #[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
-pub struct JumpWithHorseEvent {
+pub struct JumpWithHorseMessage {
     pub client: Entity,
     pub state: JumpWithHorseState,
 }
@@ -59,17 +59,17 @@ pub enum JumpWithHorseState {
 }
 
 #[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
-pub struct LeaveBedEvent {
+pub struct LeaveBedMessage {
     pub client: Entity,
 }
 
 fn handle_client_command(
-    mut packets: MessageReader<PacketEvent>,
+    mut packets: MessageReader<PacketMessage>,
     mut clients: Query<(&mut entity::Pose, &mut Flags)>,
-    mut sprinting_events: MessageWriter<SprintEvent>,
-    mut sneaking_events: MessageWriter<SneakEvent>,
-    mut jump_with_horse_events: MessageWriter<JumpWithHorseEvent>,
-    mut leave_bed_events: MessageWriter<LeaveBedEvent>,
+    mut sprinting_messages: MessageWriter<SprintMessage>,
+    mut sneaking_messages: MessageWriter<SneakMessage>,
+    mut jump_with_horse_messages: MessageWriter<JumpWithHorseMessage>,
+    mut leave_bed_messages: MessageWriter<LeaveBedMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerCommandC2s>() {
@@ -80,7 +80,7 @@ fn handle_client_command(
                         flags.set_sneaking(true);
                     }
 
-                    sneaking_events.write(SneakEvent {
+                    sneaking_messages.write(SneakMessage {
                         client: packet.client,
                         state: SneakState::Start,
                     });
@@ -91,13 +91,13 @@ fn handle_client_command(
                         flags.set_sneaking(false);
                     }
 
-                    sneaking_events.write(SneakEvent {
+                    sneaking_messages.write(SneakMessage {
                         client: packet.client,
                         state: SneakState::Stop,
                     });
                 }
                 PlayerCommand::LeaveBed => {
-                    leave_bed_events.write(LeaveBedEvent {
+                    leave_bed_messages.write(LeaveBedMessage {
                         client: packet.client,
                     });
                 }
@@ -106,7 +106,7 @@ fn handle_client_command(
                         flags.set_sprinting(true);
                     }
 
-                    sprinting_events.write(SprintEvent {
+                    sprinting_messages.write(SprintMessage {
                         client: packet.client,
                         state: SprintState::Start,
                     });
@@ -116,13 +116,13 @@ fn handle_client_command(
                         flags.set_sprinting(false);
                     }
 
-                    sprinting_events.write(SprintEvent {
+                    sprinting_messages.write(SprintMessage {
                         client: packet.client,
                         state: SprintState::Stop,
                     });
                 }
                 PlayerCommand::StartJumpWithHorse => {
-                    jump_with_horse_events.write(JumpWithHorseEvent {
+                    jump_with_horse_messages.write(JumpWithHorseMessage {
                         client: packet.client,
                         state: JumpWithHorseState::Start {
                             power: pkt.jump_boost.0 as u8,
@@ -130,7 +130,7 @@ fn handle_client_command(
                     });
                 }
                 PlayerCommand::StopJumpWithHorse => {
-                    jump_with_horse_events.write(JumpWithHorseEvent {
+                    jump_with_horse_messages.write(JumpWithHorseMessage {
                         client: packet.client,
                         state: JumpWithHorseState::Stop,
                     });

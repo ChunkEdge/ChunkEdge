@@ -21,7 +21,7 @@ pub fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
-        .add_systems(EventLoopUpdate, handle_combat_events)
+        .add_systems(EventLoopUpdate, handle_combat_messages)
         .add_systems(
             Update,
             (
@@ -118,19 +118,19 @@ struct CombatQuery {
     statuses: &'static mut EntityStatuses,
 }
 
-fn handle_combat_events(
+fn handle_combat_messages(
     server: Res<Server>,
     mut clients: Query<CombatQuery>,
-    mut sprinting: MessageReader<SprintEvent>,
-    mut interact_entity: MessageReader<InteractEntityEvent>,
+    mut sprinting: MessageReader<SprintMessage>,
+    mut interact_entity: MessageReader<InteractEntityMessage>,
 ) {
-    for &SprintEvent { client, state } in sprinting.read() {
+    for &SprintMessage { client, state } in sprinting.read() {
         if let Ok(mut client) = clients.get_mut(client) {
             client.state.has_bonus_knockback = state == SprintState::Start;
         }
     }
 
-    for &InteractEntityEvent {
+    for &InteractEntityMessage {
         client: attacker_client,
         entity: victim_client,
         ..

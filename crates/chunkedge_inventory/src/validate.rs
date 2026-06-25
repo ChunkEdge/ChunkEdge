@@ -1226,7 +1226,7 @@ mod tests {
     fn click_no_merge_same_kind_different_components() {
         // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
         // If it doesn't, and both items can stack (based on their ItemKind) then clicking one while holding the other will
-        // result in merging the stacks on the server, while they are actually differnet items and should not merge.
+        // result in merging the stacks on the server, while they are actually different items and should not merge.
         //This previously happened resutling in this regression test getting added when the bug was fixed.
         use chunkedge_item::ItemComponent;
 

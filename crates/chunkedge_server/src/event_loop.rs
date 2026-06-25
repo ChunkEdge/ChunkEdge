@@ -113,12 +113,12 @@ fn run_event_loop(
 ) {
     debug_assert!(check_again.is_empty());
 
-    let (mut clients, mut event_writer, mut commands) = state.get_mut(world);
+    let (mut clients, mut message_writer, mut commands) = state.get_mut(world);
 
     for (entity, mut client) in &mut clients {
         match client.connection_mut().try_recv() {
             Ok(Some(pkt)) => {
-                event_writer.write(PacketMessage {
+                message_writer.write(PacketMessage {
                     client: entity,
                     timestamp: pkt.timestamp,
                     id: pkt.id,
@@ -144,7 +144,7 @@ fn run_event_loop(
     run_event_loop_schedules(world);
 
     while !check_again.is_empty() {
-        let (mut clients, mut event_writer, mut commands) = state.get_mut(world);
+        let (mut clients, mut message_writer, mut commands) = state.get_mut(world);
 
         check_again.retain_mut(|(entity, remaining)| {
             debug_assert!(*remaining > 0);
@@ -152,7 +152,7 @@ fn run_event_loop(
             if let Ok((_, mut client)) = clients.get_mut(*entity) {
                 match client.connection_mut().try_recv() {
                     Ok(Some(pkt)) => {
-                        event_writer.write(PacketMessage {
+                        message_writer.write(PacketMessage {
                             client: *entity,
                             timestamp: pkt.timestamp,
                             id: pkt.id,

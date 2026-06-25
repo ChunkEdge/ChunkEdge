@@ -10,7 +10,7 @@ use std::fmt::Debug;
 
 use bevy_app::App;
 use bevy_ecs::prelude::{Resource, SystemSet};
-pub use manager::{CommandExecutionEvent, CommandProcessedEvent};
+pub use manager::{CommandExecutionMessage, CommandProcessedMessage};
 pub use modifier_value::ModifierValue;
 use petgraph::prelude::NodeIndex;
 pub use scopes::CommandScopeRegistry;

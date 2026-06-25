@@ -8,7 +8,7 @@ use derive_more::Deref;
 use tracing::warn;
 
 use crate::client::{Client, UpdateClientsSet};
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct KeepalivePlugin;
 
@@ -92,7 +92,7 @@ fn send_keepalive(
 }
 
 fn handle_keepalive_response(
-    mut packets: MessageReader<PacketEvent>,
+    mut packets: MessageReader<PacketMessage>,
     mut clients: Query<(Entity, &mut KeepaliveState, &mut Ping)>,
     mut commands: Commands,
 ) {

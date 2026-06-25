@@ -105,8 +105,8 @@ impl Plugin for ClientPlugin {
                 FlushPacketsSet,
             ),
         )
-        .add_message::<LoadEntityForClientEvent>()
-        .add_message::<UnloadEntityForClientEvent>();
+        .add_message::<LoadEntityForClientMessage>()
+        .add_message::<UnloadEntityForClientMessage>();
     }
 }
 
@@ -910,20 +910,20 @@ fn handle_layer_messages(
     );
 }
 
-/// This event will be emitted when a entity is unloaded for a client (e.g when
+/// This message will be emitted when a entity is unloaded for a client (e.g when
 /// moving out of range of the entity).
 #[derive(Debug, Clone, PartialEq, Message)]
-pub struct UnloadEntityForClientEvent {
+pub struct UnloadEntityForClientMessage {
     /// The client to unload the entity for.
     pub client: Entity,
     /// The entity ID of the entity that will be unloaded.
     pub entity_unloaded: Entity,
 }
 
-/// This event will be emitted when a entity is loaded for a client (e.g when
+/// This message will be emitted when a entity is loaded for a client (e.g when
 /// moving into range of the entity).
 #[derive(Debug, Clone, PartialEq, Message)]
-pub struct LoadEntityForClientEvent {
+pub struct LoadEntityForClientMessage {
     /// The client to load the entity for.
     pub client: Entity,
     /// The entity that will be loaded.
@@ -957,13 +957,13 @@ pub(crate) fn update_view_and_layers(
     entity_ids: Query<&EntityId>,
     entity_init: Query<(EntityInitQuery, &Position)>,
 
-    mut unload_entity_writer: MessageWriter<UnloadEntityForClientEvent>,
-    mut load_entity_writer: MessageWriter<LoadEntityForClientEvent>,
+    mut unload_entity_writer: MessageWriter<UnloadEntityForClientMessage>,
+    mut load_entity_writer: MessageWriter<LoadEntityForClientMessage>,
 ) {
-    // Wrap the events in this, so we only need one channel.
-    enum ChannelEvent {
-        UnloadEntity(UnloadEntityForClientEvent),
-        LoadEntity(LoadEntityForClientEvent),
+    // Wrap the messages in this, so we only need one channel.
+    enum ChannelMessage {
+        UnloadEntity(UnloadEntityForClientMessage),
+        LoadEntity(LoadEntityForClientMessage),
     }
 
     let (tx, rx) = std::sync::mpsc::channel();
@@ -1025,8 +1025,8 @@ pub(crate) fn update_view_and_layers(
                             for entity in layer.entities_at(pos) {
                                 if self_entity != entity {
                                     if let Ok(id) = entity_ids.get(entity) {
-                                        tx.send(ChannelEvent::UnloadEntity(
-                                            UnloadEntityForClientEvent {
+                                        tx.send(ChannelMessage::UnloadEntity(
+                                            UnloadEntityForClientMessage {
                                                 client: self_entity,
                                                 entity_unloaded: entity,
                                             },
@@ -1050,8 +1050,8 @@ pub(crate) fn update_view_and_layers(
                             for entity in layer.entities_at(pos) {
                                 if self_entity != entity {
                                     if let Ok((init, pos)) = entity_init.get(entity) {
-                                        tx.send(ChannelEvent::LoadEntity(
-                                            LoadEntityForClientEvent {
+                                        tx.send(ChannelMessage::LoadEntity(
+                                            LoadEntityForClientMessage {
                                                 client: self_entity,
                                                 entity_loaded: entity,
                                             },
@@ -1078,8 +1078,8 @@ pub(crate) fn update_view_and_layers(
                                 for entity in layer.entities_at(pos) {
                                     if self_entity != entity {
                                         if let Ok(id) = entity_ids.get(entity) {
-                                            tx.send(ChannelEvent::UnloadEntity(
-                                                UnloadEntityForClientEvent {
+                                            tx.send(ChannelMessage::UnloadEntity(
+                                                UnloadEntityForClientMessage {
                                                     client: self_entity,
                                                     entity_unloaded: entity,
                                                 },
@@ -1106,8 +1106,8 @@ pub(crate) fn update_view_and_layers(
                                 for entity in layer.entities_at(pos) {
                                     if self_entity != entity {
                                         if let Ok((init, pos)) = entity_init.get(entity) {
-                                            tx.send(ChannelEvent::LoadEntity(
-                                                LoadEntityForClientEvent {
+                                            tx.send(ChannelMessage::LoadEntity(
+                                                LoadEntityForClientMessage {
                                                     client: self_entity,
                                                     entity_loaded: entity,
                                                 },
@@ -1156,8 +1156,8 @@ pub(crate) fn update_view_and_layers(
                                 for entity in layer.entities_at(pos) {
                                     if self_entity != entity {
                                         if let Ok(id) = entity_ids.get(entity) {
-                                            tx.send(ChannelEvent::UnloadEntity(
-                                                UnloadEntityForClientEvent {
+                                            tx.send(ChannelMessage::UnloadEntity(
+                                                UnloadEntityForClientMessage {
                                                     client: self_entity,
                                                     entity_unloaded: entity,
                                                 },
@@ -1179,8 +1179,8 @@ pub(crate) fn update_view_and_layers(
                                 for entity in layer.entities_at(pos) {
                                     if self_entity != entity {
                                         if let Ok((init, pos)) = entity_init.get(entity) {
-                                            tx.send(ChannelEvent::LoadEntity(
-                                                LoadEntityForClientEvent {
+                                            tx.send(ChannelMessage::LoadEntity(
+                                                LoadEntityForClientMessage {
                                                     client: self_entity,
                                                     entity_loaded: entity,
                                                 },
@@ -1209,14 +1209,14 @@ pub(crate) fn update_view_and_layers(
         },
     );
 
-    // Send the events.
-    for event in rx.try_iter() {
-        match event {
-            ChannelEvent::UnloadEntity(event) => {
-                unload_entity_writer.write(event);
+    // Send the messages.
+    for message in rx.try_iter() {
+        match message {
+            ChannelMessage::UnloadEntity(message) => {
+                unload_entity_writer.write(message);
             }
-            ChannelEvent::LoadEntity(event) => {
-                load_entity_writer.write(event);
+            ChannelMessage::LoadEntity(message) => {
+                load_entity_writer.write(message);
             }
         };
     }

@@ -247,7 +247,7 @@ fn init_advancements(
 }
 
 fn sneak(
-    mut sneaking: MessageReader<SneakEvent>,
+    mut sneaking: MessageReader<SneakMessage>,
     mut client: Query<(&mut AdvancementClientUpdate, &mut RootCriteriaDone)>,
     root_criteria: Query<Entity, With<RootCriteria>>,
     client_uuid: Query<&UniqueId>,
@@ -282,7 +282,7 @@ fn sneak(
 }
 
 fn tab_change(
-    mut tab_change: MessageReader<AdvancementTabChangeEvent>,
+    mut tab_change: MessageReader<AdvancementTabChangeMessage>,
     mut client: Query<(&mut AdvancementClientUpdate, &mut TabChangeCount)>,
     root2_criteria: Query<Entity, With<Root2Criteria>>,
     root: Query<Entity, With<RootAdvancement>>,

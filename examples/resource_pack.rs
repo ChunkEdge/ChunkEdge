@@ -4,7 +4,7 @@ use chunkedge::entity::sheep::SheepEntityBundle;
 use chunkedge::message::SendMessage;
 use chunkedge::prelude::*;
 use chunkedge::protocol::packets::play::resource_pack_c2s::ResourcePackStatus;
-use chunkedge::resource_pack::ResourcePackStatusEvent;
+use chunkedge::resource_pack::ResourcePackStatusMessage;
 
 const SPAWN_Y: i32 = 64;
 
@@ -92,11 +92,11 @@ fn init_clients(
 
 fn prompt_on_punch(
     mut clients: Query<&mut Client>,
-    mut events: MessageReader<InteractEntityEvent>,
+    mut messages: MessageReader<InteractEntityMessage>,
 ) {
-    for event in events.read() {
-        if let Ok(mut client) = clients.get_mut(event.client) {
-            if event.interact == EntityInteraction::Attack {
+    for message in messages.read() {
+        if let Ok(mut client) = clients.get_mut(message.client) {
+            if message.interact == EntityInteraction::Attack {
                 client.set_resource_pack(
                     "https://github.com/ChunkEdge/ChunkEdge/raw/main/assets/example_pack.zip",
                     "d7c6108849fb190ec2a49f2d38b7f1f897d9ce9f",
@@ -110,11 +110,11 @@ fn prompt_on_punch(
 
 fn on_resource_pack_status(
     mut clients: Query<&mut Client>,
-    mut events: MessageReader<ResourcePackStatusEvent>,
+    mut messages: MessageReader<ResourcePackStatusMessage>,
 ) {
-    for (client, event) in events.read().map(|e| (e.client, e.status)) {
+    for (client, message) in messages.read().map(|e| (e.client, e.status)) {
         if let Ok(mut client) = clients.get_mut(client) {
-            match event.result {
+            match message.result {
                 ResourcePackStatus::Accepted => {
                     client.send_chat_message("Resource pack accepted.".color(Color::GREEN));
                 }

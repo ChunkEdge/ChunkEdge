@@ -5,19 +5,19 @@ use chunkedge_protocol::packets::play::{CustomPayloadC2s, CustomPayloadS2c};
 use chunkedge_protocol::{Ident, WritePacket};
 
 use crate::client::Client;
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct CustomPayloadPlugin;
 
 impl Plugin for CustomPayloadPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<CustomPayloadEvent>()
+        app.add_message::<CustomPayloadMessage>()
             .add_systems(EventLoopPreUpdate, handle_custom_payload);
     }
 }
 
 #[derive(Message, Clone, Debug)]
-pub struct CustomPayloadEvent {
+pub struct CustomPayloadMessage {
     pub client: Entity,
     pub channel: Ident<String>,
     pub data: Box<[u8]>,
@@ -33,12 +33,12 @@ impl Client {
 }
 
 fn handle_custom_payload(
-    mut packets: MessageReader<PacketEvent>,
-    mut events: MessageWriter<CustomPayloadEvent>,
+    mut packets: MessageReader<PacketMessage>,
+    mut messages: MessageWriter<CustomPayloadMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<CustomPayloadC2s>() {
-            events.write(CustomPayloadEvent {
+            messages.write(CustomPayloadMessage {
                 client: packet.client,
                 channel: pkt.channel.into(),
                 data: pkt.data.0 .0.into(),

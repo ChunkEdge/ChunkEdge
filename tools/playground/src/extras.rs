@@ -7,11 +7,11 @@ use chunkedge::prelude::*;
 /// sneaking.
 pub(crate) fn toggle_gamemode_on_sneak(
     mut clients: Query<&mut GameMode>,
-    mut events: MessageReader<SneakEvent>,
+    mut messages: MessageReader<SneakMessage>,
 ) {
-    for event in events.read() {
-        if event.state == SneakState::Start {
-            if let Ok(mut mode) = clients.get_mut(event.client) {
+    for message in messages.read() {
+        if message.state == SneakState::Start {
+            if let Ok(mut mode) = clients.get_mut(message.client) {
                 *mode = match *mode {
                     GameMode::Survival => GameMode::Creative,
                     GameMode::Creative => GameMode::Survival,

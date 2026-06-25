@@ -135,12 +135,12 @@ fn init_clients(
 
 pub fn add_potion_effect(
     mut clients: Query<&mut ActiveStatusEffects>,
-    mut events: MessageReader<SneakEvent>,
+    mut messages: MessageReader<SneakMessage>,
 ) {
     let mut rng = rand::rng();
-    for event in events.read() {
-        if event.state == SneakState::Start {
-            if let Ok(mut status) = clients.get_mut(event.client) {
+    for message in messages.read() {
+        if message.state == SneakState::Start {
+            if let Ok(mut status) = clients.get_mut(message.client) {
                 status.apply(
                     ActiveStatusEffect::from_effect(*StatusEffect::ALL.choose(&mut rng).unwrap())
                         .with_duration(rng.random_range(10..1000))
@@ -208,15 +208,15 @@ pub fn handle_status_effect_added(
         Option<&mut Absorption>,
         &mut Flags,
     )>,
-    mut events: MessageReader<StatusEffectAdded>,
+    mut messages: MessageReader<StatusEffectAdded>,
 ) {
-    for event in events.read() {
+    for message in messages.read() {
         if let Ok((status, mut attributes, mut health, absorption, mut flags)) =
-            clients.get_mut(event.entity)
+            clients.get_mut(message.entity)
         {
-            let effect = status.get_current_effect(event.status_effect).unwrap();
+            let effect = status.get_current_effect(message.status_effect).unwrap();
 
-            match event.status_effect {
+            match message.status_effect {
                 StatusEffect::Absorption => {
                     // not quite how vanilla does it. if you want to do it the vanilla way, you'll
                     // need to keep track of the previous absorption value and subtract that from
@@ -264,13 +264,13 @@ pub fn handle_status_effect_removed(
         Option<&mut Absorption>,
         &mut Flags,
     )>,
-    mut events: MessageReader<StatusEffectRemoved>,
+    mut messages: MessageReader<StatusEffectRemoved>,
 ) {
-    for event in events.read() {
+    for message in messages.read() {
         if let Ok((mut attributes, mut health, absorption, mut flags)) =
-            clients.get_mut(event.entity)
+            clients.get_mut(message.entity)
         {
-            let effect = &event.status_effect;
+            let effect = &message.status_effect;
             match effect.status_effect() {
                 StatusEffect::Absorption => {
                     if let Some(mut absorption) = absorption {

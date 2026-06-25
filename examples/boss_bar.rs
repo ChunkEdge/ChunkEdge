@@ -6,7 +6,7 @@ use chunkedge_boss_bar::{
     BossBarTitle,
 };
 use chunkedge_server::entity::cow::CowEntityBundle;
-use chunkedge_server::message::ChatMessageEvent;
+use chunkedge_server::message::ChatMessageMessage;
 use chunkedge_text::color::NamedColor;
 use rand::seq::IndexedRandom;
 
@@ -137,7 +137,7 @@ fn init_clients(
 }
 
 fn listen_messages(
-    mut message_events: MessageReader<ChatMessageEvent>,
+    mut message_messages: MessageReader<ChatMessageMessage>,
     mut boss_bars_query: Query<
         (
             &mut BossBarStyle,
@@ -158,9 +158,9 @@ fn listen_messages(
         entity_layer_id,
     ) = boss_bars_query.single_mut().unwrap();
 
-    for ChatMessageEvent {
+    for ChatMessageMessage {
         client, message, ..
-    } in message_events.read()
+    } in message_messages.read()
     {
         match message.as_ref() {
             "view" => {

@@ -6,13 +6,13 @@ use chunkedge_protocol::{BlockPos, Direction, VarInt, WritePacket};
 use derive_more::Deref;
 
 use crate::client::{Client, UpdateClientsSet};
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct ActionPlugin;
 
 impl Plugin for ActionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<DiggingEvent>()
+        app.add_message::<DiggingMessage>()
             .add_systems(EventLoopPreUpdate, handle_player_action)
             .add_systems(
                 PostUpdate,
@@ -22,7 +22,7 @@ impl Plugin for ActionPlugin {
 }
 
 #[derive(Message, Copy, Clone, Debug)]
-pub struct DiggingEvent {
+pub struct DiggingMessage {
     pub client: Entity,
     pub position: BlockPos,
     pub direction: Direction,
@@ -51,8 +51,8 @@ impl ActionSequence {
 
 fn handle_player_action(
     mut clients: Query<&mut ActionSequence>,
-    mut packets: MessageReader<PacketEvent>,
-    mut digging_events: MessageWriter<DiggingEvent>,
+    mut packets: MessageReader<PacketMessage>,
+    mut digging_messages: MessageWriter<DiggingMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerActionC2s>() {
@@ -65,7 +65,7 @@ fn handle_player_action(
 
             match pkt.action {
                 PlayerAction::StartDestroyBlock => {
-                    digging_events.write(DiggingEvent {
+                    digging_messages.write(DiggingMessage {
                         client: packet.client,
                         position: pkt.position,
                         direction: pkt.direction,
@@ -73,7 +73,7 @@ fn handle_player_action(
                     });
                 }
                 PlayerAction::AbortDestroyBlock => {
-                    digging_events.write(DiggingEvent {
+                    digging_messages.write(DiggingMessage {
                         client: packet.client,
                         position: pkt.position,
                         direction: pkt.direction,
@@ -81,7 +81,7 @@ fn handle_player_action(
                     });
                 }
                 PlayerAction::StopDestroyBlock => {
-                    digging_events.write(DiggingEvent {
+                    digging_messages.write(DiggingMessage {
                         client: packet.client,
                         position: pkt.position,
                         direction: pkt.direction,

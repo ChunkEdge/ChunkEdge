@@ -1,6 +1,6 @@
 #![allow(clippy::type_complexity)]
 
-use chunkedge::interact_block::InteractBlockEvent;
+use chunkedge::interact_block::InteractBlockMessage;
 use chunkedge::inventory::HeldItem;
 use chunkedge::prelude::*;
 
@@ -85,13 +85,13 @@ fn init_clients(
 
 fn toggle_gamemode_on_sneak(
     mut clients: Query<&mut GameMode>,
-    mut events: MessageReader<SneakEvent>,
+    mut messages: MessageReader<SneakMessage>,
 ) {
-    for event in events.read() {
-        let Ok(mut mode) = clients.get_mut(event.client) else {
+    for message in messages.read() {
+        let Ok(mut mode) = clients.get_mut(message.client) else {
             continue;
         };
-        if event.state == SneakState::Start {
+        if message.state == SneakState::Start {
             *mode = match *mode {
                 GameMode::Survival => GameMode::Creative,
                 GameMode::Creative => GameMode::Survival,
@@ -104,19 +104,19 @@ fn toggle_gamemode_on_sneak(
 fn digging(
     clients: Query<&GameMode>,
     mut layers: Query<&mut ChunkLayer>,
-    mut events: MessageReader<DiggingEvent>,
+    mut messages: MessageReader<DiggingMessage>,
 ) {
     let mut layer = layers.single_mut().unwrap();
 
-    for event in events.read() {
-        let Ok(game_mode) = clients.get(event.client) else {
+    for message in messages.read() {
+        let Ok(game_mode) = clients.get(message.client) else {
             continue;
         };
 
-        if (*game_mode == GameMode::Creative && event.state == DiggingState::Start)
-            || (*game_mode == GameMode::Survival && event.state == DiggingState::Stop)
+        if (*game_mode == GameMode::Creative && message.state == DiggingState::Start)
+            || (*game_mode == GameMode::Survival && message.state == DiggingState::Stop)
         {
-            layer.set_block(event.position, BlockState::AIR);
+            layer.set_block(message.position, BlockState::AIR);
         }
     }
 }
@@ -124,15 +124,15 @@ fn digging(
 fn place_blocks(
     mut clients: Query<(&mut Inventory, &GameMode, &HeldItem)>,
     mut layers: Query<&mut ChunkLayer>,
-    mut events: MessageReader<InteractBlockEvent>,
+    mut messages: MessageReader<InteractBlockMessage>,
 ) {
     let mut layer = layers.single_mut().unwrap();
 
-    for event in events.read() {
-        let Ok((mut inventory, game_mode, held)) = clients.get_mut(event.client) else {
+    for message in messages.read() {
+        let Ok((mut inventory, game_mode, held)) = clients.get_mut(message.client) else {
             continue;
         };
-        if event.hand != Hand::Main {
+        if message.hand != Hand::Main {
             continue;
         }
 
@@ -159,10 +159,10 @@ fn place_blocks(
                 inventory.set_slot(slot_id, ItemStack::EMPTY);
             }
         }
-        let real_pos = event.position.get_in_direction(event.face);
+        let real_pos = message.position.get_in_direction(message.face);
         let state = block_kind.to_state().set(
             PropName::Axis,
-            match event.face {
+            match message.face {
                 Direction::Down | Direction::Up => PropValue::Y,
                 Direction::North | Direction::South => PropValue::Z,
                 Direction::West | Direction::East => PropValue::X,

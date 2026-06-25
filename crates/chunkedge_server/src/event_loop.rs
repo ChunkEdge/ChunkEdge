@@ -16,7 +16,7 @@ pub struct EventLoopPlugin;
 
 impl Plugin for EventLoopPlugin {
     fn build(&self, app: &mut App) {
-        app.add_message::<PacketEvent>()
+        app.add_message::<PacketMessage>()
             .add_schedule(Schedule::new(RunEventLoop))
             .add_schedule(Schedule::new(EventLoopPreUpdate))
             .add_schedule(Schedule::new(EventLoopUpdate))
@@ -46,7 +46,7 @@ pub struct EventLoopUpdate;
 pub struct EventLoopPostUpdate;
 
 #[derive(Message, Clone, Debug)]
-pub struct PacketEvent {
+pub struct PacketMessage {
     /// The client this packet originated from.
     pub client: Entity,
     /// The moment in time this packet arrived.
@@ -57,7 +57,7 @@ pub struct PacketEvent {
     pub data: Bytes,
 }
 
-impl PacketEvent {
+impl PacketMessage {
     /// Attempts to decode this packet as the packet `P`.
     ///
     /// If the packet ID is mismatched or an error occurs, `None` is returned.
@@ -106,7 +106,7 @@ fn run_event_loop(
     world: &mut World,
     state: &mut SystemState<(
         Query<(Entity, &mut Client)>,
-        MessageWriter<PacketEvent>,
+        MessageWriter<PacketMessage>,
         Commands,
     )>,
     mut check_again: Local<Vec<(Entity, usize)>>,
@@ -118,7 +118,7 @@ fn run_event_loop(
     for (entity, mut client) in &mut clients {
         match client.connection_mut().try_recv() {
             Ok(Some(pkt)) => {
-                event_writer.write(PacketEvent {
+                event_writer.write(PacketMessage {
                     client: entity,
                     timestamp: pkt.timestamp,
                     id: pkt.id,
@@ -152,7 +152,7 @@ fn run_event_loop(
             if let Ok((_, mut client)) = clients.get_mut(*entity) {
                 match client.connection_mut().try_recv() {
                     Ok(Some(pkt)) => {
-                        event_writer.write(PacketEvent {
+                        event_writer.write(PacketMessage {
                             client: *entity,
                             timestamp: pkt.timestamp,
                             id: pkt.id,

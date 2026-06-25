@@ -1,7 +1,7 @@
 use chunkedge_inventory::{HeldItem, Inventory, PlayerAction};
 use chunkedge_server::entity::living::LivingFlags;
-use chunkedge_server::event_loop::PacketEvent;
-use chunkedge_server::interact_item::InteractItemEvent;
+use chunkedge_server::event_loop::PacketMessage;
+use chunkedge_server::interact_item::InteractItemMessage;
 use chunkedge_server::protocol::packets::play::PlayerActionC2s;
 use chunkedge_server::ItemKind;
 
@@ -19,10 +19,10 @@ pub(crate) fn start_interaction(
         (&Inventory, &HeldItem, &mut LivingFlags),
         (With<Client>, With<EquipmentInteractionBroadcast>),
     >,
-    mut events: MessageReader<InteractItemEvent>,
+    mut messages: MessageReader<InteractItemMessage>,
 ) {
-    for event in events.read() {
-        if let Ok((inv, held_item, mut flags)) = clients.get_mut(event.client) {
+    for message in messages.read() {
+        if let Ok((inv, held_item, mut flags)) = clients.get_mut(message.client) {
             let item = inv.slot(held_item.slot()).item;
             let has_arrows = inv.first_slot_with_item(ItemKind::Arrow, i8::MAX).is_some();
             if (item == ItemKind::Bow && !has_arrows)
@@ -41,7 +41,7 @@ pub(crate) fn start_interaction(
 // item.
 pub(crate) fn stop_interaction(
     mut clients: Query<&mut LivingFlags, (With<Client>, With<EquipmentInteractionBroadcast>)>,
-    mut packets: MessageReader<PacketEvent>,
+    mut packets: MessageReader<PacketMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerActionC2s>() {

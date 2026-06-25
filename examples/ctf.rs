@@ -9,14 +9,14 @@ use chunkedge::entity::living::Health;
 use chunkedge::entity::pig::PigEntityBundle;
 use chunkedge::entity::player::PlayerEntityBundle;
 use chunkedge::entity::{EntityAnimations, EntityStatuses, OnGround, Velocity};
-use chunkedge::interact_block::InteractBlockEvent;
+use chunkedge::interact_block::InteractBlockMessage;
 use chunkedge::inventory::HeldItem;
 use chunkedge::log::debug;
 use chunkedge::math::{Aabb, Vec3Swizzles};
 use chunkedge::nbt::{compound, List};
 use chunkedge::prelude::*;
 use chunkedge::scoreboard::*;
-use chunkedge::status::RequestRespawnEvent;
+use chunkedge::status::RequestRespawnMessage;
 
 const ARENA_Y: i32 = 64;
 const ARENA_MID_WIDTH: i32 = 2;
@@ -38,7 +38,7 @@ pub fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
-        .add_systems(EventLoopUpdate, handle_combat_events)
+        .add_systems(EventLoopUpdate, handle_combat_messages)
         .add_systems(
             Update,
             (
@@ -436,35 +436,37 @@ impl Team {
 fn digging(
     mut clients: Query<(&GameMode, &Team, Entity, &mut Client, &mut Inventory)>,
     mut layers: Query<&mut ChunkLayer>,
-    mut events: MessageReader<DiggingEvent>,
+    mut messages: MessageReader<DiggingMessage>,
     mut commands: Commands,
     globals: Res<CtfGlobals>,
     mut flag_manager: ResMut<FlagManager>,
 ) {
     let mut layer = layers.single_mut().unwrap();
 
-    for event in events.read() {
-        let Ok((game_mode, team, ent, mut client, mut inv)) = clients.get_mut(event.client) else {
+    for message in messages.read() {
+        let Ok((game_mode, team, ent, mut client, mut inv)) = clients.get_mut(message.client)
+        else {
             continue;
         };
 
-        if (*game_mode == GameMode::Creative && event.state == DiggingState::Start)
-            || (*game_mode == GameMode::Survival && event.state == DiggingState::Stop)
+        if (*game_mode == GameMode::Creative && message.state == DiggingState::Start)
+            || (*game_mode == GameMode::Survival && message.state == DiggingState::Stop)
         {
-            let Some(block) = layer.block(event.position) else {
+            let Some(block) = layer.block(message.position) else {
                 continue;
             };
-            let is_flag = event.position == globals.red_flag || event.position == globals.blue_flag;
+            let is_flag =
+                message.position == globals.red_flag || message.position == globals.blue_flag;
 
             match (team, block.state) {
-                (Team::Blue, BlockState::RED_WOOL) if event.position == globals.red_flag => {
-                    commands.entity(event.client).insert(HasFlag(Team::Red));
+                (Team::Blue, BlockState::RED_WOOL) if message.position == globals.red_flag => {
+                    commands.entity(message.client).insert(HasFlag(Team::Red));
                     client.send_chat_message("You have the flag!".italic());
                     flag_manager.red = Some(ent);
                     return;
                 }
-                (Team::Red, BlockState::BLUE_WOOL) if event.position == globals.blue_flag => {
-                    commands.entity(event.client).insert(HasFlag(Team::Blue));
+                (Team::Red, BlockState::BLUE_WOOL) if message.position == globals.blue_flag => {
+                    commands.entity(message.client).insert(HasFlag(Team::Blue));
                     client.send_chat_message("You have the flag!".italic());
                     flag_manager.blue = Some(ent);
                     return;
@@ -472,14 +474,14 @@ fn digging(
                 _ => {}
             }
 
-            if event.position.y <= ARENA_Y
+            if message.position.y <= ARENA_Y
                 || block.state.to_kind() == BlockKind::OakFence
                 || is_flag
             {
                 continue;
             }
 
-            let prev = layer.set_block(event.position, BlockState::AIR);
+            let prev = layer.set_block(message.position, BlockState::AIR);
 
             if let Some(prev) = prev {
                 let kind: ItemKind = prev.state.to_kind().to_item_kind();
@@ -503,15 +505,15 @@ fn place_blocks(
     mut clients: Query<(&mut Inventory, &GameMode, &HeldItem, &Hitbox)>,
     mut layers: Query<&mut ChunkLayer>,
     globals: Res<CtfGlobals>,
-    mut events: MessageReader<InteractBlockEvent>,
+    mut messages: MessageReader<InteractBlockMessage>,
 ) {
     let mut layer = layers.single_mut().unwrap();
 
-    for event in events.read() {
-        let Ok((mut inventory, game_mode, held, hitbox)) = clients.get_mut(event.client) else {
+    for message in messages.read() {
+        let Ok((mut inventory, game_mode, held, hitbox)) = clients.get_mut(message.client) else {
             continue;
         };
-        if event.hand != Hand::Main {
+        if message.hand != Hand::Main {
             continue;
         }
 
@@ -526,7 +528,7 @@ fn place_blocks(
             // can't place this item as a block
             continue;
         };
-        let real_pos = event.position.get_in_direction(event.face);
+        let real_pos = message.position.get_in_direction(message.face);
 
         // Can't place blocks on the flag positions
         if real_pos == globals.red_flag || real_pos == globals.blue_flag {
@@ -944,20 +946,20 @@ struct CombatQuery {
     team: &'static Team,
 }
 
-fn handle_combat_events(
+fn handle_combat_messages(
     server: Res<Server>,
     mut clients: Query<CombatQuery>,
-    mut sprinting: MessageReader<SprintEvent>,
-    mut interact_entity: MessageReader<InteractEntityEvent>,
+    mut sprinting: MessageReader<SprintMessage>,
+    mut interact_entity: MessageReader<InteractEntityMessage>,
     clones: Query<&ClonedEntity>,
 ) {
-    for &SprintEvent { client, state } in sprinting.read() {
+    for &SprintMessage { client, state } in sprinting.read() {
         if let Ok(mut client) = clients.get_mut(client) {
             client.state.has_bonus_knockback = state == SprintState::Start;
         }
     }
 
-    for &InteractEntityEvent {
+    for &InteractEntityMessage {
         client: attacker_client,
         entity: victim_client,
         ..
@@ -969,7 +971,7 @@ fn handle_combat_events(
         let Ok([mut attacker, mut victim]) =
             clients.get_many_mut([attacker_client, true_victim_ent])
         else {
-            debug!("Failed to get clients for combat event");
+            debug!("Failed to get clients for combat message");
             // Victim or attacker does not exist, or the attacker is attacking itself.
             continue;
         };
@@ -1041,12 +1043,12 @@ fn necromancy(
         &Team,
         &mut Health,
     )>,
-    mut events: MessageReader<RequestRespawnEvent>,
+    mut messages: MessageReader<RequestRespawnMessage>,
     layers: Query<Entity, (With<ChunkLayer>, With<EntityLayer>)>,
 ) {
-    for event in events.read() {
+    for message in messages.read() {
         if let Ok((mut visible_chunk_layer, mut respawn_pos, team, mut health)) =
-            clients.get_mut(event.client)
+            clients.get_mut(message.client)
         {
             respawn_pos.pos = team.spawn_pos().into();
             health.0 = PLAYER_MAX_HEALTH;

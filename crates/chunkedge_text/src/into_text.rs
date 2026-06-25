@@ -2,7 +2,7 @@
 
 use std::borrow::Cow;
 
-use super::{ClickEvent, Color, Font, HoverEvent, Text};
+use super::{ClickMessage, Color, Font, HoverEvent, Text};
 
 /// Trait for any data that can be converted to a [`Text`] object.
 ///
@@ -171,14 +171,14 @@ pub trait IntoText<'a>: Sized {
     /// On click, opens the given URL. Has to be `http` or `https` protocol.
     fn on_click_open_url(self, url: impl Into<Cow<'static, str>>) -> Text {
         let mut value = self.into_text();
-        value.click_event = Some(ClickEvent::OpenUrl { url: url.into() });
+        value.click_event = Some(ClickMessage::OpenUrl { url: url.into() });
         value
     }
     /// On click, sends a command. Doesn't actually have to be a command, can be
     /// a simple chat message.
     fn on_click_run_command(self, command: impl Into<Cow<'static, str>>) -> Text {
         let mut value = self.into_text();
-        value.click_event = Some(ClickEvent::RunCommand {
+        value.click_event = Some(ClickMessage::RunCommand {
             command: command.into(),
         });
         value
@@ -186,7 +186,7 @@ pub trait IntoText<'a>: Sized {
     /// On click, copies the given text to the chat box.
     fn on_click_suggest_command(self, command: impl Into<Cow<'static, str>>) -> Text {
         let mut value = self.into_text();
-        value.click_event = Some(ClickEvent::SuggestCommand {
+        value.click_event = Some(ClickMessage::SuggestCommand {
             command: command.into(),
         });
         value
@@ -195,13 +195,13 @@ pub trait IntoText<'a>: Sized {
     /// Indexing starts at `1`.
     fn on_click_change_page(self, page: impl Into<i32>) -> Text {
         let mut value = self.into_text();
-        value.click_event = Some(ClickEvent::ChangePage { page: page.into() });
+        value.click_event = Some(ClickMessage::ChangePage { page: page.into() });
         value
     }
     /// On click, copies the given text to clipboard.
     fn on_click_copy_to_clipboard(self, text: impl Into<Cow<'static, str>>) -> Text {
         let mut value = self.into_text();
-        value.click_event = Some(ClickEvent::CopyToClipboard { value: text.into() });
+        value.click_event = Some(ClickMessage::CopyToClipboard { value: text.into() });
         value
     }
     /// Clears the `click_event` property of the text. Property of the parent

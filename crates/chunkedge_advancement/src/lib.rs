@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-pub mod event;
+pub mod message;
 
 use std::borrow::Cow;
 use std::io::Write;
@@ -21,7 +21,7 @@ use chunkedge_server::protocol::{
 };
 use chunkedge_server::{Ident, ItemStack, Text};
 use derive_more::{Deref, DerefMut};
-use event::{handle_advancement_tab_change, AdvancementTabChangeEvent};
+use message::{handle_advancement_tab_change, AdvancementTabChangeMessage};
 use rustc_hash::FxHashMap;
 
 pub struct AdvancementPlugin;
@@ -41,7 +41,7 @@ impl Plugin for AdvancementPlugin {
                 WriteAdvancementToCacheSet.before(WriteAdvancementPacketToClientsSet),
             ),
         )
-        .add_message::<AdvancementTabChangeEvent>()
+        .add_message::<AdvancementTabChangeMessage>()
         .add_systems(
             PreUpdate,
             (

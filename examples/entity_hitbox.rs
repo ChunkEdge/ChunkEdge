@@ -83,7 +83,7 @@ fn init_clients(
 
 fn spawn_entity(
     mut commands: Commands,
-    mut sneaking: MessageReader<SneakEvent>,
+    mut sneaking: MessageReader<SneakMessage>,
     client_query: Query<(&Position, &EntityLayerId)>,
 ) {
     for sneaking in sneaking.read() {

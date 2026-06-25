@@ -3,7 +3,7 @@
 use bevy_app::App;
 use chunkedge::client::despawn_disconnected_clients;
 use chunkedge::inventory::HeldItem;
-use chunkedge::message::{ChatMessageEvent, SendMessage};
+use chunkedge::message::{ChatMessageMessage, SendMessage};
 use chunkedge::prelude::*;
 use chunkedge::world_border::*;
 
@@ -106,10 +106,10 @@ fn display_diameter(mut layers: Query<(&mut ChunkLayer, &WorldBorderLerp)>) {
 }
 
 fn border_controls(
-    mut events: MessageReader<ChatMessageEvent>,
+    mut messages: MessageReader<ChatMessageMessage>,
     mut layers: Query<(&mut WorldBorderCenter, &mut WorldBorderLerp), With<ChunkLayer>>,
 ) {
-    for x in events.read() {
+    for x in messages.read() {
         let parts: Vec<&str> = x.message.split(' ').collect();
         match parts[0] {
             "add" => {

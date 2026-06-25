@@ -116,8 +116,9 @@ pub mod prelude {
     pub use bevy_ecs::prelude::*;
     #[cfg(feature = "advancement")]
     pub use chunkedge_advancement::{
-        event::AdvancementTabChangeEvent, Advancement, AdvancementBundle, AdvancementClientUpdate,
-        AdvancementCriteria, AdvancementDisplay, AdvancementFrameType, AdvancementRequirements,
+        message::AdvancementTabChangeMessage, Advancement, AdvancementBundle,
+        AdvancementClientUpdate, AdvancementCriteria, AdvancementDisplay, AdvancementFrameType,
+        AdvancementRequirements,
     };
     #[cfg(feature = "equipment")]
     pub use chunkedge_equipment::Equipment;
@@ -134,15 +135,15 @@ pub mod prelude {
     pub use chunkedge_player_list::{PlayerList, PlayerListEntry};
     pub use chunkedge_registry::biome::{Biome, BiomeId, BiomeRegistry};
     pub use chunkedge_registry::dimension_type::{DimensionType, DimensionTypeRegistry};
-    pub use chunkedge_server::action::{DiggingEvent, DiggingState};
+    pub use chunkedge_server::action::{DiggingMessage, DiggingState};
     pub use chunkedge_server::block::{BlockKind, BlockState, PropName, PropValue};
     pub use chunkedge_server::client::{
         despawn_disconnected_clients, Client, Ip, OldView, OldViewDistance, Properties, Username,
         View, ViewDistance, VisibleChunkLayer, VisibleEntityLayers,
     };
     pub use chunkedge_server::client_command::{
-        JumpWithHorseEvent, JumpWithHorseState, LeaveBedEvent, PlayerCommand, SneakEvent,
-        SneakState, SprintEvent, SprintState,
+        JumpWithHorseMessage, JumpWithHorseState, LeaveBedMessage, PlayerCommand, SneakMessage,
+        SneakState, SprintMessage, SprintState,
     };
     pub use chunkedge_server::entity::hitbox::{Hitbox, HitboxShape};
     pub use chunkedge_server::entity::{
@@ -153,7 +154,7 @@ pub mod prelude {
         EventLoopPostUpdate, EventLoopPreUpdate, EventLoopUpdate,
     };
     pub use chunkedge_server::ident::Ident;
-    pub use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityEvent};
+    pub use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityMessage};
     pub use chunkedge_server::layer::chunk::{
         Block, BlockRef, Chunk, ChunkLayer, LoadedChunk, UnloadedChunk,
     };

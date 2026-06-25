@@ -8,7 +8,7 @@ use chunkedge_protocol::WritePacket;
 use tracing::warn;
 
 use crate::client::{update_view_and_layers, Client, UpdateClientsSet};
-use crate::event_loop::{EventLoopPreUpdate, PacketEvent};
+use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 use crate::spawn::update_respawn_position;
 
 pub struct TeleportPlugin;
@@ -116,7 +116,7 @@ fn teleport(
 }
 
 fn handle_teleport_confirmations(
-    mut packets: MessageReader<PacketEvent>,
+    mut packets: MessageReader<PacketMessage>,
     mut clients: Query<&mut TeleportState>,
     mut commands: Commands,
 ) {

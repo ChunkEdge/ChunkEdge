@@ -1221,4 +1221,58 @@ mod tests {
             "cursor should hold Probe B after the swap, got {new_cursor:?}",
         );
     }
+
+    #[test]
+    fn click_no_merge_same_kind_different_components() {
+        // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
+        // If it doesn't, and both items can stack (based on their ItemKind) then clicking one while holding the other will
+        // result in merging the stacks on the server, while they are actually differnet items and should not merge.
+        //This previously happened resutling in this regression test getting added when the bug was fixed.
+        use chunkedge_item::ItemComponent;
+
+        let mut player_inventory = Inventory::new(InventoryKind::Player);
+
+        let probe_a = ItemStack::new(ItemKind::Diamond, 4)
+            .with_components(vec![ItemComponent::DyedColor { color: 0xff0000 }]);
+        let probe_b = ItemStack::new(ItemKind::Diamond, 5)
+            .with_components(vec![ItemComponent::DyedColor { color: 0x0000ff }]);
+
+        // slot 36 = Probe B, cursor = Probe A.
+        player_inventory.set_slot(36, probe_b.clone());
+        let cursor_item = CursorItem(probe_a.clone());
+
+        // Client clicks slot 36. client perspective: the slot now holds Probe A
+        // (what was on the cursor) and the cursor now holds Probe B.
+        let packet = ContainerClickC2s {
+            window_id: VarInt(0),
+            state_id: VarInt(0),
+            slot_idx: 36,
+            button: 0,
+            mode: ClickMode::Click,
+            slot_changes: vec![SlotChange {
+                idx: 36,
+                stack: probe_a.clone(),
+            }
+            .into()]
+            .into(),
+            carried_item: probe_b.clone().into(),
+        };
+
+        let (new_cursor, slot_changes) =
+            validate_click_slot_packet(&packet, &player_inventory, None, &cursor_item)
+                .expect("packet should validate");
+
+        assert_eq!(slot_changes.len(), 1);
+        assert_eq!(slot_changes[0].idx, 36);
+
+        assert_eq!(
+            slot_changes[0].stack, probe_a,
+            "slot 36 should hold Probe A after the swap, got {:?}",
+            slot_changes[0].stack,
+        );
+        assert_eq!(
+            new_cursor, probe_b,
+            "cursor should hold Probe B after the swap, got {new_cursor:?}",
+        );
+    }
 }

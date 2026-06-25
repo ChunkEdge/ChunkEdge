@@ -7,7 +7,7 @@ use chunkedge::status_effects::{AttributeModifier, StatusEffect};
 use chunkedge_server::entity::attributes::{EntityAttribute, EntityAttributes};
 use chunkedge_server::entity::entity::Flags;
 use chunkedge_server::entity::living::{Absorption, Health};
-use chunkedge_server::status_effect::{StatusEffectAdded, StatusEffectRemoved};
+use chunkedge_server::status_effect::{StatusEffectAdded, StatusEffectRemovedMessage};
 use rand::seq::IndexedRandom;
 use rand::RngExt;
 
@@ -264,7 +264,7 @@ pub fn handle_status_effect_removed(
         Option<&mut Absorption>,
         &mut Flags,
     )>,
-    mut messages: MessageReader<StatusEffectRemoved>,
+    mut messages: MessageReader<StatusEffectRemovedMessage>,
 ) {
     for message in messages.read() {
         if let Ok((mut attributes, mut health, absorption, mut flags)) =

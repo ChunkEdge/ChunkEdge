@@ -24,7 +24,7 @@ pub struct StatusEffectAdded {
 
 /// Message for when a status effect is removed from an entity.
 #[derive(Message, Clone, PartialEq, Eq, Debug)]
-pub struct StatusEffectRemoved {
+pub struct StatusEffectRemovedMessage {
     pub entity: Entity,
     pub status_effect: ActiveStatusEffect,
 }
@@ -34,7 +34,7 @@ pub struct StatusEffectPlugin;
 impl Plugin for StatusEffectPlugin {
     fn build(&self, app: &mut App) {
         app.add_message::<StatusEffectAdded>()
-            .add_message::<StatusEffectRemoved>()
+            .add_message::<StatusEffectRemovedMessage>()
             .add_systems(
                 EventLoopPostUpdate,
                 (
@@ -82,7 +82,7 @@ struct StatusEffectQuery {
 fn add_status_effects(
     mut query: Query<StatusEffectQuery>,
     mut add_messages: MessageWriter<StatusEffectAdded>,
-    mut remove_messages: MessageWriter<StatusEffectRemoved>,
+    mut remove_messages: MessageWriter<StatusEffectRemovedMessage>,
 ) {
     for mut query in &mut query {
         let updated = query.active_effects.apply_changes();
@@ -100,7 +100,7 @@ fn add_status_effects(
                     status_effect,
                 });
             } else if let Some(prev) = prev {
-                remove_messages.write(StatusEffectRemoved {
+                remove_messages.write(StatusEffectRemovedMessage {
                     entity: query.entity,
                     status_effect: prev,
                 });

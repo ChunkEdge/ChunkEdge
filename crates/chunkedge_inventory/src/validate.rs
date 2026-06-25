@@ -81,8 +81,9 @@ pub(super) fn validate_click_slot_packet(
         ClickMode::ShiftClick => {
             ensure!((0..=1).contains(&packet.button), "invalid button");
             ensure!(
-                packet.carried_item.is_empty(),
-                "carried item must be empty for a hotbar swap"
+                packet.carried_item.item == cursor_item.0.item
+                    && packet.carried_item.count == cursor_item.0.count,
+                "shift clicking must not change the cursor but it did"
             );
             ensure!(
                 (0..=max_slot).contains(&(packet.slot_idx as u16)),
@@ -94,6 +95,10 @@ pub(super) fn validate_click_slot_packet(
             ensure!(
                 packet.carried_item.is_empty(),
                 "carried item must be empty for a hotbar swap"
+            );
+            ensure!(
+                cursor_item.is_empty(),
+                "cursor must be empty for a hotbar swap"
             );
         }
         ClickMode::CreativeMiddleClick => {
@@ -204,12 +209,16 @@ pub(super) fn validate_click_slot_packet(
 
                     let hashed_change = &packet.slot_changes[0];
                     let old_slot = window.slot(hashed_change.idx as u16);
-                    // TODO: make sure NBT is the same.
-                    //       Sometimes, the client will add nbt data to an item if it's missing,
-                    // like       "Damage" to a sword.
+
                     let should_swap: bool = packet.button == 0
                         && match (!old_slot.is_empty(), !cursor_item.is_empty()) {
-                            (true, true) => old_slot.item != cursor_item.item,
+                            // We assume we only want to consider items for merging if they have the same
+                            // kind and components.
+
+                            // TODO: The client might add additional NBT data. confirm if this is the case and allow merging if client item has additional components.
+                            (true, true) => {
+                                !old_slot.is_same_item_kind_and_same_components(&cursor_item.0)
+                            }
                             (true, false) => true,
                             (false, true) => cursor_item.count <= cursor_item.item.max_stack(),
                             (false, false) => false,
@@ -227,7 +236,6 @@ pub(super) fn validate_click_slot_packet(
                             "swapped items must match"
                         );
 
-                        // Find the unhashed cursor
                         new_slot_changes.push(SlotChange {
                             idx: hashed_change.idx,
                             stack: cursor_item.0.clone().with_count(hashed_change.stack.count),
@@ -235,6 +243,14 @@ pub(super) fn validate_click_slot_packet(
                         new_cursor_stack = old_slot.clone().with_count(packet.carried_item.count);
                     } else {
                         // assert that a merge occurs
+                        if !cursor_item.is_empty() && !old_slot.is_empty() {
+                            // We assume that itemkind + itemcomponents -> stackable.
+                            ensure!(
+                                old_slot.is_same_item_kind_and_same_components(&cursor_item.0),
+                                "merge requires stackable cursor and slot"
+                            );
+                        }
+
                         let count_deltas = calculate_net_item_delta(packet, &window, cursor_item);
                         ensure!(
                             count_deltas == 0,
@@ -1151,5 +1167,112 @@ mod tests {
 
         validate_click_slot_packet(&packet, &player_inventory, None, &cursor_item)
             .expect("packet should be valid");
+    }
+
+    #[test]
+    fn click_swap_same_kind_different_components() {
+        // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
+        // If it doesn't, then clicking one while holding the other will result in an item sawp on the client, but not on the server.
+        // This results in an inventory desync. This previously happened resutling in this regression test getting added when the bug was fixed.
+        use chunkedge_item::ItemComponent;
+
+        let mut player_inventory = Inventory::new(InventoryKind::Player);
+
+        let probe_a = ItemStack::new(ItemKind::IronSword, 1)
+            .with_components(vec![ItemComponent::DyedColor { color: 0xff0000 }]);
+        let probe_b = ItemStack::new(ItemKind::IronSword, 1)
+            .with_components(vec![ItemComponent::DyedColor { color: 0x0000ff }]);
+
+        // slot 36 = Probe B, cursor = Probe A.
+        player_inventory.set_slot(36, probe_b.clone());
+        let cursor_item = CursorItem(probe_a.clone());
+
+        // Client clicks slot 36. client perspective: the slot now holds Probe A
+        // (what was on the cursor) and the cursor now holds Probe B.
+        let packet = ContainerClickC2s {
+            window_id: VarInt(0),
+            state_id: VarInt(0),
+            slot_idx: 36,
+            button: 0,
+            mode: ClickMode::Click,
+            slot_changes: vec![SlotChange {
+                idx: 36,
+                stack: probe_a.clone(),
+            }
+            .into()]
+            .into(),
+            carried_item: probe_b.clone().into(),
+        };
+
+        let (new_cursor, slot_changes) =
+            validate_click_slot_packet(&packet, &player_inventory, None, &cursor_item)
+                .expect("packet should validate");
+
+        assert_eq!(slot_changes.len(), 1);
+        assert_eq!(slot_changes[0].idx, 36);
+
+        assert_eq!(
+            slot_changes[0].stack, probe_a,
+            "slot 36 should hold Probe A after the swap, got {:?}",
+            slot_changes[0].stack,
+        );
+        assert_eq!(
+            new_cursor, probe_b,
+            "cursor should hold Probe B after the swap, got {new_cursor:?}",
+        );
+    }
+
+    #[test]
+    fn click_no_merge_same_kind_different_components() {
+        // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
+        // If it doesn't, and both items can stack (based on their ItemKind) then clicking one while holding the other will
+        // result in merging the stacks on the server, while they are actually different items and should not merge.
+        //This previously happened resutling in this regression test getting added when the bug was fixed.
+        use chunkedge_item::ItemComponent;
+
+        let mut player_inventory = Inventory::new(InventoryKind::Player);
+
+        let probe_a = ItemStack::new(ItemKind::Diamond, 4)
+            .with_components(vec![ItemComponent::DyedColor { color: 0xff0000 }]);
+        let probe_b = ItemStack::new(ItemKind::Diamond, 5)
+            .with_components(vec![ItemComponent::DyedColor { color: 0x0000ff }]);
+
+        // slot 36 = Probe B, cursor = Probe A.
+        player_inventory.set_slot(36, probe_b.clone());
+        let cursor_item = CursorItem(probe_a.clone());
+
+        // Client clicks slot 36. client perspective: the slot now holds Probe A
+        // (what was on the cursor) and the cursor now holds Probe B.
+        let packet = ContainerClickC2s {
+            window_id: VarInt(0),
+            state_id: VarInt(0),
+            slot_idx: 36,
+            button: 0,
+            mode: ClickMode::Click,
+            slot_changes: vec![SlotChange {
+                idx: 36,
+                stack: probe_a.clone(),
+            }
+            .into()]
+            .into(),
+            carried_item: probe_b.clone().into(),
+        };
+
+        let (new_cursor, slot_changes) =
+            validate_click_slot_packet(&packet, &player_inventory, None, &cursor_item)
+                .expect("packet should validate");
+
+        assert_eq!(slot_changes.len(), 1);
+        assert_eq!(slot_changes[0].idx, 36);
+
+        assert_eq!(
+            slot_changes[0].stack, probe_a,
+            "slot 36 should hold Probe A after the swap, got {:?}",
+            slot_changes[0].stack,
+        );
+        assert_eq!(
+            new_cursor, probe_b,
+            "cursor should hold Probe B after the swap, got {new_cursor:?}",
+        );
     }
 }

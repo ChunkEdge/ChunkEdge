@@ -198,8 +198,8 @@ impl ItemStack {
     }
 
     /// Returns `true` if `self` and `other` are the same item kind with the
-    /// same component data. Counts are ignored.
-    pub fn is_same_item_same_components(&self, other: &Self) -> bool {
+    /// same component data. **Counts are ignored.**
+    pub fn is_same_item_kind_and_same_components(&self, other: &Self) -> bool {
         self.item == other.item && self.components == other.components
     }
 

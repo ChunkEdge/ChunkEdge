@@ -80,12 +80,10 @@ pub(super) fn validate_click_slot_packet(
         }
         ClickMode::ShiftClick => {
             ensure!((0..=1).contains(&packet.button), "invalid button");
-            // Shift click does not interact with the cursor at all.
-            // cursor should not change.
             ensure!(
                 packet.carried_item.item == cursor_item.0.item
                     && packet.carried_item.count == cursor_item.0.count,
-                "shift click must not change the cursor"
+                "shift clicking must not change the cursor but it did"
             );
             ensure!(
                 (0..=max_slot).contains(&(packet.slot_idx as u16)),
@@ -216,9 +214,11 @@ pub(super) fn validate_click_slot_packet(
                         && match (!old_slot.is_empty(), !cursor_item.is_empty()) {
                             // We assume we only want to consider items for merging if they have the same
                             // kind and components.
-                            //
-                            // TODO: as noted in a previous component, the client might add additional NBT data. confirm if this is the case and allow merging if client item has additional components.
-                            (true, true) => !old_slot.is_same_item_same_components(&cursor_item.0),
+
+                            // TODO: The client might add additional NBT data. confirm if this is the case and allow merging if client item has additional components.
+                            (true, true) => {
+                                !old_slot.is_same_item_kind_and_same_components(&cursor_item.0)
+                            }
                             (true, false) => true,
                             (false, true) => cursor_item.count <= cursor_item.item.max_stack(),
                             (false, false) => false,
@@ -244,8 +244,9 @@ pub(super) fn validate_click_slot_packet(
                     } else {
                         // assert that a merge occurs
                         if !cursor_item.is_empty() && !old_slot.is_empty() {
+                            // We assume that itemkind + itemcomponents -> stackable.
                             ensure!(
-                                old_slot.is_same_item_same_components(&cursor_item.0), // We assume that itemkind + itemcomponents -> stackable.
+                                old_slot.is_same_item_kind_and_same_components(&cursor_item.0),
                                 "merge requires stackable cursor and slot"
                             );
                         }
@@ -1170,11 +1171,9 @@ mod tests {
 
     #[test]
     fn click_swap_same_kind_different_components() {
-        // Repro of bug from https://github.com/jobpaardekooper/valence/commit/d86a64f69a2ce66e2141e6412d537d9ee2cee97c:
-        // examples/item_components.rs:
-        // serverside, two items (with same kind+count) with different components must be treated
-        // as different items, so left-clicking one while holding the other is a
-        // SWAP — not a merge that loses Probe B.
+        // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
+        // If it doesn't, then clicking one while holding the other will result in an item sawp on the client, but not on the server.
+        // This results in an inventory desync. This previously happened resutling in this regression test getting added when the bug was fixed.
         use chunkedge_item::ItemComponent;
 
         let mut player_inventory = Inventory::new(InventoryKind::Player);

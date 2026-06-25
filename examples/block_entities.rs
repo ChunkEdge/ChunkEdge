@@ -1,7 +1,7 @@
 #![allow(clippy::type_complexity)]
 
 use chunkedge::interact_block::InteractBlockMessage;
-use chunkedge::message::ChatMessageMessage;
+use chunkedge::message::ChatReceivedMessage;
 use chunkedge::nbt::{compound, List};
 use chunkedge::prelude::*;
 
@@ -113,13 +113,13 @@ fn init_clients(
 
 fn event_handler(
     clients: Query<&Username>,
-    mut messages: MessageReader<ChatMessageMessage>,
+    mut messages: MessageReader<ChatReceivedMessage>,
     mut block_interacts: MessageReader<InteractBlockMessage>,
     mut layers: Query<&mut ChunkLayer>,
 ) {
     let mut layer = layers.single_mut().unwrap();
 
-    for ChatMessageMessage {
+    for ChatReceivedMessage {
         client, message, ..
     } in messages.read()
     {

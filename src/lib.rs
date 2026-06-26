@@ -85,6 +85,7 @@ use chunkedge_server::layer::LayerPlugin;
 use chunkedge_server::message::MessagePlugin;
 use chunkedge_server::movement::MovementPlugin;
 use chunkedge_server::op_level::OpLevelPlugin;
+use chunkedge_server::passenger::PassengerPlugin;
 pub use chunkedge_server::protocol::status_effects;
 use chunkedge_server::resource_pack::ResourcePackPlugin;
 use chunkedge_server::status::StatusPlugin;
@@ -162,6 +163,7 @@ pub mod prelude {
     pub use chunkedge_server::math::{DVec2, DVec3, Vec2, Vec3};
     pub use chunkedge_server::message::SendMessage as _;
     pub use chunkedge_server::nbt::Compound;
+    pub use chunkedge_server::passenger::{Passengers, Riding};
     pub use chunkedge_server::protocol::packets::play::level_particles_s2c::Particle;
     pub use chunkedge_server::protocol::text::{Color, IntoText, Text};
     pub use chunkedge_server::protocol::RegistryId;
@@ -203,6 +205,7 @@ impl PluginGroup for DefaultPlugins {
             .add(ClientCommandPlugin)
             .add(KeepalivePlugin)
             .add(InteractEntityPlugin)
+            .add(PassengerPlugin)
             .add(ClientSettingsPlugin)
             .add(ActionPlugin)
             .add(TeleportPlugin)

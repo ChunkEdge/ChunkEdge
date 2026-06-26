@@ -1,5 +1,5 @@
 use bevy_ecs::prelude::*;
-use chunkedge_server::entity::pig::PigEntityBundle;
+use chunkedge_server::entity::pig::PigEntity;
 use chunkedge_server::entity::{EntityId, EntityLayerId, Position};
 use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityMessage};
 use chunkedge_server::passenger::{Passengers, Riding};
@@ -23,11 +23,11 @@ fn passengers_broadcast_on_mount_and_dismount() {
 
     let vehicle = app
         .world_mut()
-        .spawn(PigEntityBundle {
-            layer: EntityLayerId(layer),
-            position: Position::new([0.0, 64.0, 0.0]),
-            ..Default::default()
-        })
+        .spawn((
+            PigEntity,
+            EntityLayerId(layer),
+            Position::new([0.0, 64.0, 0.0]),
+        ))
         .id();
 
     app.update();
@@ -88,19 +88,11 @@ fn passengers_sent_when_vehicle_enters_view() {
 
     let vehicle = app
         .world_mut()
-        .spawn(PigEntityBundle {
-            layer: EntityLayerId(layer),
-            position: Position::new(far),
-            ..Default::default()
-        })
+        .spawn((PigEntity, EntityLayerId(layer), Position::new(far)))
         .id();
     let rider = app
         .world_mut()
-        .spawn(PigEntityBundle {
-            layer: EntityLayerId(layer),
-            position: Position::new(far),
-            ..Default::default()
-        })
+        .spawn((PigEntity, EntityLayerId(layer), Position::new(far)))
         .id();
     app.world_mut().entity_mut(rider).insert(Riding(vehicle));
 
@@ -174,11 +166,9 @@ fn right_click_interaction_mounts_the_client() {
     let vehicle = app
         .world_mut()
         .spawn((
-            PigEntityBundle {
-                layer: EntityLayerId(layer),
-                position: Position::new([0.0, 64.0, 0.0]),
-                ..Default::default()
-            },
+            PigEntity,
+            EntityLayerId(layer),
+            Position::new([0.0, 64.0, 0.0]),
             Vehicle,
         ))
         .id();

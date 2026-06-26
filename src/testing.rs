@@ -59,7 +59,7 @@ impl ScenarioSingleClient {
         let layer = app.world_mut().spawn((chunk_layer, entity_layer)).id();
 
         let (mut client, helper) = create_mock_client("test");
-        client.player.layer.0 = layer;
+        client.layer.0 = layer;
         client.visible_chunk_layer.0 = layer;
         client.visible_entity_layers.0.insert(layer);
         let client = app.world_mut().spawn(client).id();

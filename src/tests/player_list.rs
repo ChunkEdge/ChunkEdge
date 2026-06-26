@@ -34,7 +34,7 @@ fn player_list_arrives_before_player_spawn() {
     };
 
     let (mut client_2, mut client_helper_2) = create_mock_client("test_2");
-    client_2.player.layer.0 = layer_ent;
+    client_2.layer.0 = layer_ent;
     client_2.visible_chunk_layer.0 = layer_ent;
     client_2.visible_entity_layers.0.insert(layer_ent);
 

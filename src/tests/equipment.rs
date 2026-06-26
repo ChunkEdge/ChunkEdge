@@ -2,9 +2,9 @@ use chunkedge_equipment::{Equipment, EquipmentInventorySync};
 use chunkedge_inventory::player_inventory::PlayerInventory;
 use chunkedge_inventory::{ClickMode, ClientInventoryState, Inventory};
 use chunkedge_item::HashedItemStack;
-use chunkedge_server::entity::armor_stand::ArmorStandEntityBundle;
-use chunkedge_server::entity::item::ItemEntityBundle;
-use chunkedge_server::entity::zombie::ZombieEntityBundle;
+use chunkedge_server::entity::armor_stand::ArmorStandEntity;
+use chunkedge_server::entity::item::ItemEntity;
+use chunkedge_server::entity::zombie::ZombieEntity;
 use chunkedge_server::entity::{EntityLayerId, Position};
 use chunkedge_server::math::DVec3;
 use chunkedge_server::protocol::packets::play::container_click_c2s::HashedSlotChange;
@@ -57,10 +57,7 @@ fn test_multiple_entities() {
     app.update();
     helper.clear_received();
 
-    let zombie_bundle = ZombieEntityBundle {
-        layer: EntityLayerId(layer),
-        ..Default::default()
-    };
+    let zombie_bundle = (ZombieEntity, EntityLayerId(layer));
 
     let zombie = app.world_mut().spawn(zombie_bundle).id();
 
@@ -111,11 +108,11 @@ fn test_update_on_load_entity() {
     app.update();
     helper.clear_received();
 
-    let zombie_bundle = ZombieEntityBundle {
-        layer: EntityLayerId(layer),
-        position: Position::new(DVec3::new(1000.0, 0.0, 1000.0)),
-        ..Default::default()
-    };
+    let zombie_bundle = (
+        ZombieEntity,
+        EntityLayerId(layer),
+        Position::new(DVec3::new(1000.0, 0.0, 1000.0)),
+    );
 
     let zombie = app
         .world_mut()
@@ -171,11 +168,11 @@ fn test_skip_update_for_empty_equipment() {
     app.update();
     helper.clear_received();
 
-    let zombie_bundle = ZombieEntityBundle {
-        layer: EntityLayerId(layer),
-        position: Position::new(DVec3::new(1000.0, 0.0, 1000.0)),
-        ..Default::default()
-    };
+    let zombie_bundle = (
+        ZombieEntity,
+        EntityLayerId(layer),
+        Position::new(DVec3::new(1000.0, 0.0, 1000.0)),
+    );
 
     app.world_mut()
         .spawn(zombie_bundle)
@@ -219,20 +216,11 @@ fn test_ensure_living_entities_only() {
     app.update();
     helper.clear_received();
 
-    let zombie_bundle = ZombieEntityBundle {
-        layer: EntityLayerId(layer),
-        ..Default::default()
-    };
+    let zombie_bundle = (ZombieEntity, EntityLayerId(layer));
 
-    let armor_stand_bundle = ArmorStandEntityBundle {
-        layer: EntityLayerId(layer),
-        ..Default::default()
-    };
+    let armor_stand_bundle = (ArmorStandEntity, EntityLayerId(layer));
 
-    let item_bundle = ItemEntityBundle {
-        layer: EntityLayerId(layer),
-        ..Default::default()
-    };
+    let item_bundle = (ItemEntity, EntityLayerId(layer));
 
     let zombie = app.world_mut().spawn(zombie_bundle).id();
 

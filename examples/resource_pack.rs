@@ -1,6 +1,6 @@
 #![allow(clippy::type_complexity)]
 
-use chunkedge::entity::sheep::SheepEntityBundle;
+use chunkedge::entity::sheep::SheepEntity;
 use chunkedge::message::SendMessage;
 use chunkedge::prelude::*;
 use chunkedge::protocol::packets::play::resource_pack_c2s::ResourcePackStatus;
@@ -46,13 +46,13 @@ fn setup(
 
     let layer_ent = commands.spawn(layer).id();
 
-    commands.spawn(SheepEntityBundle {
-        layer: EntityLayerId(layer_ent),
-        position: Position::new([0.0, f64::from(SPAWN_Y) + 1.0, 2.0]),
-        look: Look::new(180.0, 0.0),
-        head_yaw: HeadYaw(180.0),
-        ..Default::default()
-    });
+    commands.spawn((
+        SheepEntity,
+        EntityLayerId(layer_ent),
+        Position::new([0.0, f64::from(SPAWN_Y) + 1.0, 2.0]),
+        Look::new(180.0, 0.0),
+        HeadYaw(180.0),
+    ));
 }
 
 fn init_clients(

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use chunkedge::entity::breeze::BreezeEntityBundle;
-use chunkedge::entity::cat::{self, CatEntityBundle};
-use chunkedge::entity::enderman::{self, EndermanEntityBundle};
-use chunkedge::entity::frog::FrogEntityBundle;
-use chunkedge::entity::painting::{self, PaintingEntityBundle};
-use chunkedge::entity::player::PlayerEntityBundle;
-use chunkedge::entity::warden::WardenEntityBundle;
-use chunkedge::entity::zombie::ZombieEntityBundle;
+use chunkedge::entity::breeze::BreezeEntity;
+use chunkedge::entity::cat::{self, CatEntity};
+use chunkedge::entity::enderman::{self, EndermanEntity};
+use chunkedge::entity::frog::FrogEntity;
+use chunkedge::entity::painting::{self, PaintingEntity};
+use chunkedge::entity::player::PlayerEntity;
+use chunkedge::entity::warden::WardenEntity;
+use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::{
     entity, CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, PaintingVariantDefinition,
     Pose,
@@ -80,26 +80,26 @@ impl MobDemo {
         layer: EntityLayerId,
         pose: Pose,
     ) -> Entity {
-        macro_rules! spawn_bundle {
-            ($bundle:ident) => {
+        macro_rules! spawn_entity {
+            ($marker:ident) => {
                 commands
-                    .spawn($bundle {
+                    .spawn((
+                        $marker,
                         position,
                         layer,
-                        look: Look::new(DEMO_ENTITY_YAW, 0.0),
-                        head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-                        entity_pose: entity::Pose(pose),
-                        ..Default::default()
-                    })
+                        Look::new(DEMO_ENTITY_YAW, 0.0),
+                        HeadYaw(DEMO_ENTITY_YAW),
+                        entity::Pose(pose),
+                    ))
                     .id()
             };
         }
 
         match self {
-            Self::Breeze => spawn_bundle!(BreezeEntityBundle),
-            Self::Frog => spawn_bundle!(FrogEntityBundle),
-            Self::Warden => spawn_bundle!(WardenEntityBundle),
-            Self::Zombie => spawn_bundle!(ZombieEntityBundle),
+            Self::Breeze => spawn_entity!(BreezeEntity),
+            Self::Frog => spawn_entity!(FrogEntity),
+            Self::Warden => spawn_entity!(WardenEntity),
+            Self::Zombie => spawn_entity!(ZombieEntity),
         }
     }
 }
@@ -416,14 +416,14 @@ fn spawn_cat_variant(
     variant: CatKind,
 ) -> Entity {
     commands
-        .spawn(CatEntityBundle {
+        .spawn((
+            CatEntity,
             layer,
             position,
-            look: Look::new(DEMO_ENTITY_YAW, 0.0),
-            head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-            cat_cat_variant: cat::CatVariant(variant),
-            ..Default::default()
-        })
+            Look::new(DEMO_ENTITY_YAW, 0.0),
+            HeadYaw(DEMO_ENTITY_YAW),
+            cat::CatVariant(variant),
+        ))
         .id()
 }
 
@@ -434,13 +434,13 @@ fn spawn_painting_variant(
     variant: IdOr<PaintingVariantDefinition>,
 ) -> Entity {
     commands
-        .spawn(PaintingEntityBundle {
+        .spawn((
+            PaintingEntity,
             layer,
-            position: Position::new((position.0.x, position.0.y + 1.0, position.0.z)),
-            object_data: ObjectData(2),
-            painting_variant: painting::Variant(variant),
-            ..Default::default()
-        })
+            Position::new((position.0.x, position.0.y + 1.0, position.0.z)),
+            ObjectData(2),
+            painting::Variant(variant),
+        ))
         .id()
 }
 
@@ -458,14 +458,14 @@ fn spawn_enderman(
     }
 
     commands
-        .spawn(EndermanEntityBundle {
+        .spawn((
+            EndermanEntity,
             layer,
             position,
-            look: Look::new(DEMO_ENTITY_YAW, 0.0),
-            head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-            enderman_carried_block: enderman::CarriedBlock(carried_block),
-            ..Default::default()
-        })
+            Look::new(DEMO_ENTITY_YAW, 0.0),
+            HeadYaw(DEMO_ENTITY_YAW),
+            enderman::CarriedBlock(carried_block),
+        ))
         .id()
 }
 
@@ -591,14 +591,14 @@ fn spawn_player_npc(
     let npc = station.player_npc.unwrap();
 
     commands
-        .spawn(PlayerEntityBundle {
-            uuid: npc.uuid,
+        .spawn((
+            PlayerEntity,
+            npc.uuid,
             layer,
-            position: station.spawn_pos,
-            look: Look::new(DEMO_ENTITY_YAW, 0.0),
-            head_yaw: HeadYaw(DEMO_ENTITY_YAW),
-            entity_pose: entity::Pose(pose),
-            ..Default::default()
-        })
+            station.spawn_pos,
+            Look::new(DEMO_ENTITY_YAW, 0.0),
+            HeadYaw(DEMO_ENTITY_YAW),
+            entity::Pose(pose),
+        ))
         .id()
 }

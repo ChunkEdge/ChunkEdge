@@ -13,7 +13,7 @@ use chunkedge_entity::{EntityId, EntityLayerId, Position};
 use derive_more::Deref;
 
 use crate::client::{
-    Client, FlushPacketsSet, LoadEntityForClientEvent, ViewDistance, VisibleEntityLayers,
+    Client, FlushPacketsSet, LoadEntityForClientMessage, ViewDistance, VisibleEntityLayers,
 };
 use crate::layer::UpdateLayersPreClientSet;
 use crate::protocol::packets::play::SetPassengersS2c;
@@ -109,16 +109,16 @@ fn send_empty_passengers_on_removal(
 }
 
 fn send_passengers_on_entity_load(
-    mut events: MessageReader<LoadEntityForClientEvent>,
+    mut messages: MessageReader<LoadEntityForClientMessage>,
     mut clients: Query<(&mut Client, &EntityId)>,
     vehicles: Query<(&EntityId, &Passengers)>,
     entity_ids: Query<&EntityId>,
 ) {
-    for event in events.read() {
-        let Ok((vehicle_id, passengers)) = vehicles.get(event.entity_loaded) else {
+    for message in messages.read() {
+        let Ok((vehicle_id, passengers)) = vehicles.get(message.entity_loaded) else {
             continue;
         };
-        let Ok((mut client, client_id)) = clients.get_mut(event.client) else {
+        let Ok((mut client, client_id)) = clients.get_mut(message.client) else {
             continue;
         };
 

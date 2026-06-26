@@ -139,45 +139,47 @@ fn init_clients(
 
 fn mount_on_interact(
     mut commands: Commands,
-    mut events: MessageReader<InteractEntityEvent>,
+    mut messages: MessageReader<InteractEntityMessage>,
     vehicles: Query<(), With<Vehicle>>,
     riders: Query<Has<Riding>>,
 ) {
-    for event in events.read() {
-        if !matches!(event.interact, EntityInteraction::Interact(_)) {
+    for message in messages.read() {
+        if !matches!(message.interact, EntityInteraction::Interact(_)) {
             continue;
         }
 
-        if vehicles.get(event.entity).is_err() {
+        if vehicles.get(message.entity).is_err() {
             continue;
         }
 
-        let Ok(is_riding) = riders.get(event.client) else {
+        let Ok(is_riding) = riders.get(message.client) else {
             continue;
         };
 
         if !is_riding {
-            commands.entity(event.client).insert(Riding(event.entity));
+            commands
+                .entity(message.client)
+                .insert(Riding(message.entity));
         }
     }
 }
 
 fn dismount_on_sneak(
     mut commands: Commands,
-    mut events: MessageReader<SneakEvent>,
+    mut messages: MessageReader<SneakMessage>,
     riders: Query<Has<Riding>>,
 ) {
-    for event in events.read() {
-        if event.state != SneakState::Start {
+    for message in messages.read() {
+        if message.state != SneakState::Start {
             continue;
         }
 
-        let Ok(is_riding) = riders.get(event.client) else {
+        let Ok(is_riding) = riders.get(message.client) else {
             continue;
         };
 
         if is_riding {
-            commands.entity(event.client).remove::<Riding>();
+            commands.entity(message.client).remove::<Riding>();
         }
     }
 }

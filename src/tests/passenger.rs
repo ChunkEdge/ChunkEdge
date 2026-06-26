@@ -1,7 +1,7 @@
 use bevy_ecs::prelude::*;
 use chunkedge_server::entity::pig::PigEntityBundle;
 use chunkedge_server::entity::{EntityId, EntityLayerId, Position};
-use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityEvent};
+use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityMessage};
 use chunkedge_server::passenger::{Passengers, Riding};
 use chunkedge_server::protocol::packets::play::{InteractC2s, SetPassengersS2c};
 use chunkedge_server::protocol::VarInt;
@@ -131,23 +131,25 @@ struct Vehicle;
 
 fn toggle_ride(
     mut commands: Commands,
-    mut events: MessageReader<InteractEntityEvent>,
+    mut messages: MessageReader<InteractEntityMessage>,
     vehicles: Query<(), With<Vehicle>>,
     riders: Query<Has<Riding>>,
 ) {
-    for event in events.read() {
-        if !matches!(event.interact, EntityInteraction::Interact(_)) {
+    for message in messages.read() {
+        if !matches!(message.interact, EntityInteraction::Interact(_)) {
             continue;
         }
-        if vehicles.get(event.entity).is_err() {
+        if vehicles.get(message.entity).is_err() {
             continue;
         }
-        match riders.get(event.client) {
+        match riders.get(message.client) {
             Ok(true) => {
-                commands.entity(event.client).remove::<Riding>();
+                commands.entity(message.client).remove::<Riding>();
             }
             Ok(false) => {
-                commands.entity(event.client).insert(Riding(event.entity));
+                commands
+                    .entity(message.client)
+                    .insert(Riding(message.entity));
             }
             Err(_) => {}
         }

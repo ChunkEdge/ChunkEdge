@@ -76,10 +76,7 @@ chunkedge_server.workspace = true
 chunkedge_text.workspace = true
 chunkedge_weather = { workspace = true, optional = true }
 chunkedge_world_border = { workspace = true, optional = true }
-chunkedge_protocol = {
-  workspace = true,
-  optional = true
-}
+chunkedge_protocol = { workspace = true, optional = true }
 
 [dev-dependencies]
 anyhow.workspace = true

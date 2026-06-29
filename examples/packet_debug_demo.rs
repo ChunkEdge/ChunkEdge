@@ -17,6 +17,9 @@ use std::io::Write;
 use chunkedge::protocol::decode::PacketFrame;
 use chunkedge::protocol::{Packet, PacketSide, PacketState};
 use chunkedge_binary::{Bounded, Decode, Encode};
+// To pass ci we convince the unused deps detector we do infact use this dep as the macros do
+#[allow(unused_imports)]
+use chunkedge_protocol::*;
 use chunkedge_protocol_macros::{debug_decode, Packet as DerivePacket};
 
 #[derive(Debug, Encode, Decode, DerivePacket)]

@@ -43,8 +43,8 @@ world_border = ["dep:chunkedge_world_border"]
 command = ["dep:chunkedge_command", "dep:chunkedge_command_macros"]
 weather = ["dep:chunkedge_weather"]
 testing = []
-debug-packets = ["dep:chunkedge_protocol", "chunkedge_protocol/debug-packets"]
-debug-packets-on-error = ["dep:chunkedge_protocol", "chunkedge_protocol/debug-packets-on-error"]
+debug-packets = ["chunkedge_server/debug-packets"]
+debug-packets-on-error = ["chunkedge_server/debug-packets-on-error"]
 
 [dependencies]
 anyhow.workspace = true
@@ -76,7 +76,6 @@ chunkedge_server.workspace = true
 chunkedge_text.workspace = true
 chunkedge_weather = { workspace = true, optional = true }
 chunkedge_world_border = { workspace = true, optional = true }
-chunkedge_protocol = { workspace = true, optional = true }
 
 [dev-dependencies]
 anyhow.workspace = true
@@ -84,6 +83,7 @@ clap.workspace = true
 divan.workspace = true
 flume.workspace = true
 chunkedge_protocol_macros.workspace = true
+chunkedge_protocol.workspace = true
 noise.workspace = true   # For the terrain example.
 tracing.workspace = true
 

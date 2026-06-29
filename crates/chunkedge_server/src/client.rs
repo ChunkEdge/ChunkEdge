@@ -910,8 +910,8 @@ fn handle_layer_messages(
     );
 }
 
-/// This message will be emitted when a entity is unloaded for a client (e.g when
-/// moving out of range of the entity).
+/// This message will be emitted when a entity is unloaded for a client (e.g
+/// when moving out of range of the entity).
 #[derive(Debug, Clone, PartialEq, Message)]
 pub struct UnloadEntityForClientMessage {
     /// The client to unload the entity for.

@@ -32,7 +32,7 @@ time = { workspace = true, features = ["local-offset"] }
 tokio = { workspace = true, features = ["full"] }
 tracing.workspace = true
 chunkedge_binary.workspace = true
-chunkedge_protocol = { workspace = true, features = ["compression"] }
+chunkedge_protocol = { workspace = true, features = ["compression", "debug-packets"] }
 
 [build-dependencies]
 anyhow.workspace = true

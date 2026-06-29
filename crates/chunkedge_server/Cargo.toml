@@ -8,6 +8,10 @@ repository.workspace = true
 documentation.workspace = true
 license.workspace = true
 
+[features]
+debug-packets = ["chunkedge_protocol/debug-packets"]
+debug-packets-on-error = ["chunkedge_protocol/debug-packets-on-error"]
+
 [lints]
 workspace = true
 

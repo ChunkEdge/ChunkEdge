@@ -3,6 +3,7 @@ use std::mem::{self, MaybeUninit};
 use std::slice;
 
 use anyhow::ensure;
+use chunkedge_protocol_macros::debug_decode;
 
 use crate::impls::cautious_capacity;
 use crate::{Bounded, Decode, Encode, VarInt};
@@ -15,6 +16,7 @@ impl<T: Encode, const N: usize> Encode for [T; N] {
     }
 }
 
+#[debug_decode]
 impl<'a, T: Decode<'a>, const N: usize> Decode<'a> for [T; N] {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         // TODO: rewrite using std::array::try_from_fn when stabilized?
@@ -42,6 +44,7 @@ impl<'a, T: Decode<'a>, const N: usize> Decode<'a> for [T; N] {
 }
 
 /// References to fixed-length arrays are not length prefixed.
+#[debug_decode]
 impl<'a, const N: usize> Decode<'a> for &'a [u8; N] {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         ensure!(
@@ -86,6 +89,7 @@ impl<T: Encode, const MAX_LEN: usize> Encode for Bounded<&'_ [T], MAX_LEN> {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for &'a [u8] {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let len = VarInt::decode(r)?.0;
@@ -104,6 +108,7 @@ impl<'a> Decode<'a> for &'a [u8] {
     }
 }
 
+#[debug_decode]
 impl<'a, const MAX_LEN: usize> Decode<'a> for Bounded<&'a [u8], MAX_LEN> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let res = <&[u8]>::decode(r)?;
@@ -118,6 +123,7 @@ impl<'a, const MAX_LEN: usize> Decode<'a> for Bounded<&'a [u8], MAX_LEN> {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for &'a [i8] {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let bytes = <&[u8]>::decode(r)?;
@@ -135,6 +141,7 @@ impl<T: Encode> Encode for Vec<T> {
     }
 }
 
+#[debug_decode]
 impl<'a, T: Decode<'a>> Decode<'a> for Vec<T> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let len = VarInt::decode(r)?.0;
@@ -151,6 +158,7 @@ impl<'a, T: Decode<'a>> Decode<'a> for Vec<T> {
     }
 }
 
+#[debug_decode]
 impl<'a, T: Decode<'a>, const MAX_LEN: usize> Decode<'a> for Bounded<Vec<T>, MAX_LEN> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let len = VarInt::decode(r)?.0;
@@ -172,12 +180,14 @@ impl<'a, T: Decode<'a>, const MAX_LEN: usize> Decode<'a> for Bounded<Vec<T>, MAX
     }
 }
 
+#[debug_decode]
 impl<'a, T: Decode<'a>> Decode<'a> for Box<[T]> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         Ok(Vec::decode(r)?.into_boxed_slice())
     }
 }
 
+#[debug_decode]
 impl<'a, T: Decode<'a>, const MAX_LEN: usize> Decode<'a> for Bounded<Box<[T]>, MAX_LEN> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         Ok(Bounded::<Vec<_>, MAX_LEN>::decode(r)?.map_into())

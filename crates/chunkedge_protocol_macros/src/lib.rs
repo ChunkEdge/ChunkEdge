@@ -8,6 +8,7 @@ use syn::{
     Variant,
 };
 
+mod debug_decode;
 mod decode;
 mod encode;
 mod packet;
@@ -31,6 +32,16 @@ pub fn derive_decode(item: StdTokenStream) -> StdTokenStream {
 #[proc_macro_derive(Packet, attributes(packet))]
 pub fn derive_packet(item: StdTokenStream) -> StdTokenStream {
     match packet::derive_packet(item.into()) {
+        Ok(tokens) => tokens.into(),
+        Err(e) => e.into_compile_error().into(),
+    }
+}
+
+/// Wraps a manual `impl Decode` method body with the standard field-trace
+/// hooks.  
+#[proc_macro_attribute]
+pub fn debug_decode(args: StdTokenStream, input: StdTokenStream) -> StdTokenStream {
+    match debug_decode::debug_decode_impl(args.into(), input.into()) {
         Ok(tokens) => tokens.into(),
         Err(e) => e.into_compile_error().into(),
     }

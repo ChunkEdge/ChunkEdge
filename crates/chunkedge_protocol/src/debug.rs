@@ -12,7 +12,7 @@
 //!    [`IndentGuard`] (bumping the tree depth), calls the real decoder, and
 //!    then calls either [`log_field_success`] or [`log_field_error`].
 //! 3. [`log_field_success`] computes the consumed byte range via pointer
-//!    arithmetic and pushes a [`Span`] onto the recording context.
+//!    arithmetic and pushes a `Span` onto the recording context.
 //! 4. After decoding finishes (or fails), [`dump_packet_trace`] prints a
 //!    colorized hex dump with each byte annotated by which span covers it.
 
@@ -254,8 +254,7 @@ pub fn log_variant(name: &str) {
     });
 }
 
-/// Record a successfully decoded field, close its console line, and push a
-/// [`Span`] into the context.
+/// Record a successfully decoded field, close its console line.
 pub fn log_field_success(
     type_name: &str,
     val: &dyn std::fmt::Debug,
@@ -326,8 +325,7 @@ pub fn log_field_success(
     });
 }
 
-/// Record a failed field decode, close any pending console line, and push a
-/// failure [`Span`].
+/// Record a failed field decode and close any pending console line.
 pub fn log_field_error(err: &anyhow::Error, start_slice: &[u8]) {
     let range = get_range(start_slice, start_slice);
 

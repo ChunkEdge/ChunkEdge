@@ -235,7 +235,8 @@ fn anvil_worker(mut state: ChunkWorkerState) {
     }
 }
 
-/// A message sent by `chunkedge_anvil` after an attempt to load a chunk is made.
+/// A message sent by `chunkedge_anvil` after an attempt to load a chunk is
+/// made.
 #[derive(Message, Debug)]
 pub struct ChunkLoadMessage {
     /// The [`ChunkLayer`] where the chunk is located.

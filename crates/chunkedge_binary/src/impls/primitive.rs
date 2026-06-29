@@ -3,6 +3,7 @@ use std::slice;
 
 use anyhow::ensure;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
+use chunkedge_protocol_macros::debug_decode;
 
 use crate::{Decode, Encode};
 
@@ -19,6 +20,7 @@ impl Encode for bool {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for bool {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let n = r.read_u8()?;
@@ -37,6 +39,7 @@ impl Encode for u8 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for u8 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_u8()?)
@@ -55,6 +58,7 @@ impl Encode for i8 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for i8 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_i8()?)
@@ -67,6 +71,7 @@ impl Encode for u16 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for u16 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_u16::<BigEndian>()?)
@@ -79,6 +84,7 @@ impl Encode for i16 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for i16 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_i16::<BigEndian>()?)
@@ -91,6 +97,7 @@ impl Encode for u32 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for u32 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_u32::<BigEndian>()?)
@@ -103,6 +110,7 @@ impl Encode for i32 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for i32 {
     fn decode(r: &mut &'_ [u8]) -> anyhow::Result<Self> {
         Ok(r.read_i32::<BigEndian>()?)
@@ -115,6 +123,7 @@ impl Encode for u64 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for u64 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_u64::<BigEndian>()?)
@@ -127,6 +136,7 @@ impl Encode for i64 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for i64 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_i64::<BigEndian>()?)
@@ -139,6 +149,7 @@ impl Encode for u128 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for u128 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(r.read_u128::<BigEndian>()?)
@@ -151,6 +162,7 @@ impl Encode for i128 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for i128 {
     fn decode(r: &mut &'_ [u8]) -> anyhow::Result<Self> {
         Ok(r.read_i128::<BigEndian>()?)
@@ -167,6 +179,7 @@ impl Encode for f32 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for f32 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let f = r.read_f32::<BigEndian>()?;
@@ -185,6 +198,7 @@ impl Encode for f64 {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for f64 {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let f = r.read_f64::<BigEndian>()?;

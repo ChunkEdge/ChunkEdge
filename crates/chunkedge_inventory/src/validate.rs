@@ -212,10 +212,11 @@ pub(super) fn validate_click_slot_packet(
 
                     let should_swap: bool = packet.button == 0
                         && match (!old_slot.is_empty(), !cursor_item.is_empty()) {
-                            // We assume we only want to consider items for merging if they have the same
-                            // kind and components.
+                            // We assume we only want to consider items for merging if they have the
+                            // same kind and components.
 
-                            // TODO: The client might add additional NBT data. confirm if this is the case and allow merging if client item has additional components.
+                            // TODO: The client might add additional NBT data. confirm if this is
+                            // the case and allow merging if client item has additional components.
                             (true, true) => {
                                 !old_slot.is_same_item_kind_and_same_components(&cursor_item.0)
                             }
@@ -1171,9 +1172,12 @@ mod tests {
 
     #[test]
     fn click_swap_same_kind_different_components() {
-        // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
-        // If it doesn't, then clicking one while holding the other will result in an item sawp on the client, but not on the server.
-        // This results in an inventory desync. This previously happened resutling in this regression test getting added when the bug was fixed.
+        // If two ItemStacks are of the same ItemKind but have different components,
+        // they should be treated as different items. If it doesn't, then
+        // clicking one while holding the other will result in an item sawp on the
+        // client, but not on the server. This results in an inventory desync.
+        // This previously happened resutling in this regression test getting added when
+        // the bug was fixed.
         use chunkedge_item::ItemComponent;
 
         let mut player_inventory = Inventory::new(InventoryKind::Player);
@@ -1224,10 +1228,13 @@ mod tests {
 
     #[test]
     fn click_no_merge_same_kind_different_components() {
-        // If two ItemStacks are of the same ItemKind but have different components, they should be treated as different items.
-        // If it doesn't, and both items can stack (based on their ItemKind) then clicking one while holding the other will
-        // result in merging the stacks on the server, while they are actually different items and should not merge.
-        //This previously happened resutling in this regression test getting added when the bug was fixed.
+        // If two ItemStacks are of the same ItemKind but have different components,
+        // they should be treated as different items. If it doesn't, and both
+        // items can stack (based on their ItemKind) then clicking one while holding the
+        // other will result in merging the stacks on the server, while they are
+        // actually different items and should not merge. This previously
+        // happened resutling in this regression test getting added when the bug was
+        // fixed.
         use chunkedge_item::ItemComponent;
 
         let mut player_inventory = Inventory::new(InventoryKind::Player);

@@ -2,6 +2,7 @@ use std::io::{Read, Write};
 
 use anyhow::bail;
 use byteorder::ReadBytesExt;
+use chunkedge_protocol_macros::debug_decode;
 use derive_more::{Deref, DerefMut, From, Into};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -102,6 +103,7 @@ impl Encode for VarInt {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for VarInt {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let mut val = 0;

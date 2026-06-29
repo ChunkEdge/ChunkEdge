@@ -64,7 +64,7 @@ where
 
 impl<'a, B> Decode<'a> for Cow<'_, B>
 where
-    B: ToOwned + ?Sized,
+    B: ToOwned + ?Sized + std::fmt::Debug,
     B::Owned: Decode<'a>,
 {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {

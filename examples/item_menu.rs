@@ -156,7 +156,8 @@ mod item_menu {
         }
     }
 
-    /// This message is fired when the player interacts with an item in the menu.
+    /// This message is fired when the player interacts with an item in the
+    /// menu.
     #[derive(Debug, Clone, PartialEq, Eq, Message)]
     pub(crate) struct MenuItemSelectMessage {
         /// Player entity

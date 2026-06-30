@@ -133,6 +133,7 @@ bevy_ecs = { version = "0.18.1", default-features = false, features = [
 ] }
 bevy_log = { version = "0.18.1" }
 bevy_mod_debugdump = { version = "0.15.0" }
+bevy_tasks = { version = "0.18.1", default-features = false }
 bevy_utils = { version = "0.18.1" }
 bitfield-struct = "0.13.0"
 bitvec = "1.0.1"

@@ -4,10 +4,10 @@ mod despawn;
 mod uuid;
 
 use std::num::NonZeroU32;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use bevy_app::prelude::*;
-use bevy_app::ScheduleRunnerPlugin;
+use bevy_app::PluginsState;
 use bevy_ecs::prelude::*;
 use chunkedge_protocol::CompressionThreshold;
 pub use despawn::*;
@@ -78,13 +78,59 @@ impl Plugin for ServerPlugin {
         let tick_period = Duration::from_secs_f64(f64::from(settings.tick_rate.get()).recip());
 
         // Make the app loop forever at the configured TPS.
-        app.add_plugins(ScheduleRunnerPlugin::run_loop(tick_period));
+        app.set_runner(tick_loop_runner(tick_period));
 
         fn increment_tick_counter(mut server: ResMut<Server>) {
             server.current_tick += 1;
         }
 
         app.add_systems(Last, (increment_tick_counter, despawn_marked_entities));
+    }
+}
+
+/// Builds the server's tick loop runner.
+///
+/// Behaves like vanilla Minecraft's scheduler: it targets an absolute per-tick
+/// deadline so that `thread::sleep` overshoot is reclaimed on the following tick, keeping the long-run average
+/// at exactly the configured TPS. When a tick runs long it catches up by
+/// skipping the sleep; if it falls more than [`MAX_CATCH_UP`] behind it drops
+/// the backlog instead of spiraling.
+///
+/// This replaces Bevy's [`ScheduleRunnerPlugin`](bevy_app::ScheduleRunnerPlugin),
+/// which resets its clock every iteration and so never reclaims sleep overshoot.
+fn tick_loop_runner(tick_period: Duration) -> impl FnOnce(App) -> AppExit {
+    /// Maximum lag we try to make up before giving up and resetting the clock.
+    /// Matches vanilla's "Can't keep up" threshold of 2 seconds.
+    const MAX_CATCH_UP: Duration = Duration::from_secs(2);
+
+    move |mut app: App| {
+        // Drive plugins to readiness
+        if app.plugins_state() != PluginsState::Cleaned {
+            while app.plugins_state() == PluginsState::Adding {
+                bevy_tasks::tick_global_task_pools_on_main_thread();
+            }
+            app.finish();
+            app.cleanup();
+        }
+
+        let mut next_tick = Instant::now();
+        loop {
+            app.update();
+            if let Some(exit) = app.should_exit() {
+                return exit;
+            }
+
+            next_tick += tick_period;
+            let now = Instant::now();
+            if now < next_tick {
+                // Ahead of schedule: wait until the next tick is due.
+                std::thread::sleep(next_tick - now);
+            } else if now - next_tick > MAX_CATCH_UP {
+                // Too far behind: abandon the backlog so we don't death-spiral.
+                next_tick = now;
+            }
+            // loop immediately to catch up.
+        }
     }
 }
 

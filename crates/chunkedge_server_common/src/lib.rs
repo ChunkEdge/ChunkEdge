@@ -88,6 +88,10 @@ impl Plugin for ServerPlugin {
     }
 }
 
+/// Maximum lag we try to make up before giving up and resetting the clock.
+/// Matches vanilla's "Can't keep up" threshold of 2 seconds.
+const MAX_CATCH_UP: Duration = Duration::from_secs(2);
+
 /// Builds the server's tick loop runner.
 ///
 /// Behaves like vanilla Minecraft's scheduler: it targets an absolute per-tick
@@ -99,10 +103,6 @@ impl Plugin for ServerPlugin {
 /// This replaces Bevy's [`ScheduleRunnerPlugin`](bevy_app::ScheduleRunnerPlugin),
 /// which resets its clock every iteration and so never reclaims sleep overshoot.
 fn tick_loop_runner(tick_period: Duration) -> impl FnOnce(App) -> AppExit {
-    /// Maximum lag we try to make up before giving up and resetting the clock.
-    /// Matches vanilla's "Can't keep up" threshold of 2 seconds.
-    const MAX_CATCH_UP: Duration = Duration::from_secs(2);
-
     move |mut app: App| {
         // Drive plugins to readiness
         if app.plugins_state() != PluginsState::Cleaned {

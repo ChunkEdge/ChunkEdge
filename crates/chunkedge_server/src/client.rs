@@ -13,7 +13,9 @@ use bytes::{Bytes, BytesMut};
 use chunkedge_binary::Encode;
 use chunkedge_entity::attributes::{EntityAttributes, TrackedEntityAttributes};
 use chunkedge_entity::living::Health;
-use chunkedge_entity::player::{Food, MainArm as PlayerMainArm, PlayerEntity, PlayerModelParts, Saturation};
+use chunkedge_entity::player::{
+    Food, MainArm as PlayerMainArm, PlayerEntity, PlayerModelParts, Saturation,
+};
 use chunkedge_entity::query::EntityInitQuery;
 use chunkedge_entity::tracked_data::TrackedData;
 use chunkedge_entity::{
@@ -201,9 +203,7 @@ impl ClientBundle {
             player: PlayerEntity,
             uuid: UniqueId(args.uuid),
             layer: Default::default(),
-            player_model_parts: PlayerModelParts(u8::from(
-                args.displayed_skin_parts,
-            ) as i8),
+            player_model_parts: PlayerModelParts(u8::from(args.displayed_skin_parts) as i8),
             main_arm: PlayerMainArm(args.main_arm as i8),
         }
     }

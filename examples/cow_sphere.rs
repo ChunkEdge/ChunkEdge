@@ -18,7 +18,7 @@ const SPHERE_FREQ: f64 = 0.5;
 const SPAWN_POS: BlockPos = BlockPos::new(0, 100, -16);
 
 /// Marker component for entities that are part of the sphere.
-#[derive(Component)]
+#[derive(Component, Copy, Clone)]
 struct SpherePart;
 
 fn main() {
@@ -55,8 +55,7 @@ fn setup(
 
     let layer_id = commands.spawn(layer).id();
 
-    commands
-        .spawn_batch([0; SPHERE_AMOUNT].map(|_| (CowEntity, EntityLayerId(layer_id), SpherePart)));
+    commands.spawn_batch([(CowEntity, EntityLayerId(layer_id), SpherePart); SPHERE_AMOUNT]);
 }
 
 fn init_clients(

@@ -3,12 +3,11 @@
 use std::f64::consts::TAU;
 
 use chunkedge::abilities::{PlayerStartFlyingMessage, PlayerStopFlyingMessage};
+use chunkedge::entity::cow::CowEntity;
 use chunkedge::math::{DQuat, EulerRot};
 use chunkedge::message::SendMessage;
 use chunkedge::prelude::*;
 use chunkedge_text::color::NamedColor;
-
-type SpherePartBundle = chunkedge::entity::cow::CowEntityBundle;
 
 const SPHERE_CENTER: DVec3 = DVec3::new(0.5, SPAWN_POS.y as f64 + 2.0, 0.5);
 const SPHERE_AMOUNT: usize = 200;
@@ -19,7 +18,7 @@ const SPHERE_FREQ: f64 = 0.5;
 const SPAWN_POS: BlockPos = BlockPos::new(0, 100, -16);
 
 /// Marker component for entities that are part of the sphere.
-#[derive(Component)]
+#[derive(Component, Copy, Clone)]
 struct SpherePart;
 
 fn main() {
@@ -56,15 +55,7 @@ fn setup(
 
     let layer_id = commands.spawn(layer).id();
 
-    commands.spawn_batch([0; SPHERE_AMOUNT].map(|_| {
-        (
-            SpherePartBundle {
-                layer: EntityLayerId(layer_id),
-                ..Default::default()
-            },
-            SpherePart,
-        )
-    }));
+    commands.spawn_batch([(CowEntity, EntityLayerId(layer_id), SpherePart); SPHERE_AMOUNT]);
 }
 
 fn init_clients(

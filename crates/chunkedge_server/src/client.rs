@@ -13,11 +13,13 @@ use bytes::{Bytes, BytesMut};
 use chunkedge_binary::Encode;
 use chunkedge_entity::attributes::{EntityAttributes, TrackedEntityAttributes};
 use chunkedge_entity::living::Health;
-use chunkedge_entity::player::{Food, PlayerEntityBundle, Saturation};
+use chunkedge_entity::player::{
+    Food, MainArm as PlayerMainArm, PlayerEntity, PlayerModelParts, Saturation,
+};
 use chunkedge_entity::query::EntityInitQuery;
 use chunkedge_entity::tracked_data::TrackedData;
 use chunkedge_entity::{
-    ClearEntityChangesSet, EntityId, EntityStatus, OldPosition, Position, Velocity,
+    ClearEntityChangesSet, EntityId, EntityLayerId, EntityStatus, OldPosition, Position, Velocity,
 };
 use chunkedge_math::{DVec3, Vec3};
 use chunkedge_protocol::encode::{PacketEncoder, WritePacket};
@@ -146,7 +148,11 @@ pub struct ClientBundle {
     pub flying_speed: crate::abilities::FlyingSpeed,
     pub fov_modifier: crate::abilities::FovModifier,
     pub player_abilities_flags: crate::abilities::PlayerAbilitiesFlags,
-    pub player: PlayerEntityBundle,
+    pub player: PlayerEntity,
+    pub uuid: UniqueId,
+    pub layer: EntityLayerId,
+    pub player_model_parts: PlayerModelParts,
+    pub main_arm: PlayerMainArm,
 }
 
 impl ClientBundle {
@@ -194,15 +200,11 @@ impl ClientBundle {
             flying_speed: Default::default(),
             fov_modifier: Default::default(),
             player_abilities_flags: Default::default(),
-            player: PlayerEntityBundle {
-                uuid: UniqueId(args.uuid),
-                player_player_model_parts: chunkedge_entity::player::PlayerModelParts(u8::from(
-                    args.displayed_skin_parts,
-                )
-                    as i8),
-                player_main_arm: chunkedge_entity::player::MainArm(args.main_arm as i8),
-                ..Default::default()
-            },
+            player: PlayerEntity,
+            uuid: UniqueId(args.uuid),
+            layer: Default::default(),
+            player_model_parts: PlayerModelParts(u8::from(args.displayed_skin_parts) as i8),
+            main_arm: PlayerMainArm(args.main_arm as i8),
         }
     }
 }

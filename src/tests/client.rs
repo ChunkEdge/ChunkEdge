@@ -30,7 +30,7 @@ fn client_teleport_and_move() {
 
     let (mut bundle, mut helper_2) = create_mock_client("other");
 
-    bundle.player.layer.0 = layer_ent;
+    bundle.layer.0 = layer_ent;
     bundle.visible_chunk_layer.0 = layer_ent;
     bundle.visible_entity_layers.0.insert(layer_ent);
 

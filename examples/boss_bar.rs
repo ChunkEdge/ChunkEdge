@@ -5,7 +5,7 @@ use chunkedge_boss_bar::{
     BossBarBundle, BossBarColor, BossBarDivision, BossBarFlags, BossBarHealth, BossBarStyle,
     BossBarTitle,
 };
-use chunkedge_server::entity::cow::CowEntityBundle;
+use chunkedge_server::entity::cow::CowEntity;
 use chunkedge_server::message::ChatReceivedMessage;
 use chunkedge_text::color::NamedColor;
 use rand::seq::IndexedRandom;
@@ -61,11 +61,9 @@ fn setup(
     ));
 
     commands.spawn((
-        CowEntityBundle {
-            position: Position::new([0.0, f64::from(SPAWN_Y) + 1.0, 0.0]),
-            layer: EntityLayerId(layer_id),
-            ..Default::default()
-        },
+        CowEntity,
+        Position::new([0.0, f64::from(SPAWN_Y) + 1.0, 0.0]),
+        EntityLayerId(layer_id),
         BossBarTitle("Louis XVI".color(NamedColor::Red)),
         BossBarHealth(0.5),
         BossBarStyle {

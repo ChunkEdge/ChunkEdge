@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use bevy_ecs::world::EntityWorldMut;
 
 use crate::client::{ViewDistance, VisibleEntityLayers};
-use crate::entity::cow::CowEntityBundle;
+use crate::entity::cow::CowEntity;
 use crate::entity::{EntityLayerId, Position};
 use crate::layer::chunk::UnloadedChunk;
 use crate::layer::{ChunkLayer, EntityLayer};
@@ -237,20 +237,11 @@ fn entity_layer_switching() {
 
     // Spawn three entities and put them all on the main layer to start.
 
-    let e1 = CowEntityBundle {
-        layer: EntityLayerId(l1),
-        ..Default::default()
-    };
+    let e1 = (CowEntity, EntityLayerId(l1));
 
-    let e2 = CowEntityBundle {
-        layer: EntityLayerId(l1),
-        ..Default::default()
-    };
+    let e2 = (CowEntity, EntityLayerId(l1));
 
-    let e3 = CowEntityBundle {
-        layer: EntityLayerId(l1),
-        ..Default::default()
-    };
+    let e3 = (CowEntity, EntityLayerId(l1));
 
     let e1 = app.world_mut().spawn(e1).id();
     let _e2 = app.world_mut().spawn(e2).id();
@@ -346,11 +337,11 @@ fn chunk_entity_spawn_despawn() {
     // Put an entity in the new chunk.
     let cow_ent = app
         .world_mut()
-        .spawn(CowEntityBundle {
-            position: Position::new([8.0, 0.0, 8.0]),
-            layer: EntityLayerId(layer_ent),
-            ..Default::default()
-        })
+        .spawn((
+            CowEntity,
+            Position::new([8.0, 0.0, 8.0]),
+            EntityLayerId(layer_ent),
+        ))
         .id();
 
     app.update();

@@ -68,16 +68,17 @@ fn run_many_players(bencher: Bencher, client_count: usize, view_dist: u8, world_
 
         bundle.visible_chunk_layer.0 = layer;
         bundle.visible_entity_layers.0.insert(layer);
-        bundle.player.layer.0 = layer;
+        bundle.layer.0 = layer;
         bundle.view_distance.set(view_dist);
 
         let mut rng = rand::rng();
         let x = rng.random_range(-f64::from(world_size) * 16.0..=f64::from(world_size) * 16.0);
         let z = rng.random_range(-f64::from(world_size) * 16.0..=f64::from(world_size) * 16.0);
 
-        bundle.player.position.set(DVec3::new(x, 64.0, z));
-
-        let id = app.world_mut().spawn(bundle).id();
+        let id = app
+            .world_mut()
+            .spawn((bundle, Position::new(DVec3::new(x, 64.0, z))))
+            .id();
 
         clients.push((id, helper));
     }

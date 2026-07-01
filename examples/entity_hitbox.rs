@@ -4,12 +4,12 @@ use std::collections::HashMap;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge::entity::hoglin::HoglinEntityBundle;
-use chunkedge::entity::pig::PigEntityBundle;
-use chunkedge::entity::sheep::SheepEntityBundle;
-use chunkedge::entity::warden::WardenEntityBundle;
-use chunkedge::entity::zombie::ZombieEntityBundle;
-use chunkedge::entity::zombie_horse::ZombieHorseEntityBundle;
+use chunkedge::entity::hoglin::HoglinEntity;
+use chunkedge::entity::pig::PigEntity;
+use chunkedge::entity::sheep::SheepEntity;
+use chunkedge::entity::warden::WardenEntity;
+use chunkedge::entity::zombie::ZombieEntity;
+use chunkedge::entity::zombie_horse::ZombieHorseEntity;
 use chunkedge::entity::{entity, Pose};
 use chunkedge::prelude::*;
 use entity::NameVisible;
@@ -97,49 +97,19 @@ fn spawn_entity(
         let layer = *layer;
 
         match rand::rng().random_range(0..7) {
-            0 => commands.spawn(SheepEntityBundle {
+            0 => commands.spawn((SheepEntity, position, layer, NameVisible(true))),
+            1 => commands.spawn((PigEntity, position, layer, NameVisible(true))),
+            2 => commands.spawn((ZombieEntity, position, layer, NameVisible(true))),
+            3 => commands.spawn((ZombieHorseEntity, position, layer, NameVisible(true))),
+            4 => commands.spawn((
+                WardenEntity,
                 position,
                 layer,
-                entity_name_visible: NameVisible(true),
-                ..Default::default()
-            }),
-            1 => commands.spawn(PigEntityBundle {
-                position,
-                layer,
-                entity_name_visible: NameVisible(true),
-                ..Default::default()
-            }),
-            2 => commands.spawn(ZombieEntityBundle {
-                position,
-                layer,
-                entity_name_visible: NameVisible(true),
-                ..Default::default()
-            }),
-            3 => commands.spawn(ZombieHorseEntityBundle {
-                position,
-                layer,
-                entity_name_visible: NameVisible(true),
-                ..Default::default()
-            }),
-            4 => commands.spawn(WardenEntityBundle {
-                position,
-                layer,
-                entity_name_visible: NameVisible(true),
-                entity_pose: entity::Pose(Pose::Digging),
-                ..Default::default()
-            }),
-            5 => commands.spawn(WardenEntityBundle {
-                position,
-                layer,
-                entity_name_visible: NameVisible(true),
-                ..Default::default()
-            }),
-            6 => commands.spawn(HoglinEntityBundle {
-                position,
-                layer,
-                entity_name_visible: NameVisible(true),
-                ..Default::default()
-            }),
+                NameVisible(true),
+                entity::Pose(Pose::Digging),
+            )),
+            5 => commands.spawn((WardenEntity, position, layer, NameVisible(true))),
+            6 => commands.spawn((HoglinEntity, position, layer, NameVisible(true))),
             _ => unreachable!(),
         };
     }

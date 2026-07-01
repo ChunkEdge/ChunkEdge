@@ -1,4 +1,4 @@
-use chunkedge::entity::player::PlayerEntityBundle;
+use chunkedge::entity::player::PlayerEntity;
 use chunkedge::player_list::{DisplayName, Listed, PlayerListEntryBundle};
 use chunkedge::prelude::*;
 use chunkedge::text::IntoText;
@@ -46,14 +46,14 @@ fn setup(
 
     let npc_id = UniqueId::default();
 
-    commands.spawn(PlayerEntityBundle {
-        layer: EntityLayerId(layer_id),
-        uuid: npc_id,
-        position: Position::new((0.0, f64::from(SPAWN_Y) + 1.0, 6.0)),
-        look: Look::new(180.0, 0.0),
-        head_yaw: HeadYaw(180.0),
-        ..Default::default()
-    });
+    commands.spawn((
+        PlayerEntity,
+        EntityLayerId(layer_id),
+        npc_id,
+        Position::new((0.0, f64::from(SPAWN_Y) + 1.0, 6.0)),
+        Look::new(180.0, 0.0),
+        HeadYaw(180.0),
+    ));
 
     // In order for the player entity to be visible to other players, there must
     // be an entry in the player list.

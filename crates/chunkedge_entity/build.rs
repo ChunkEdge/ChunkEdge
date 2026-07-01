@@ -434,7 +434,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
     let mut system_names = vec![];
     let mut derived_system_names = vec![];
 
-    for (entity_name, entity) in entities.clone() {
+    for (entity_name, entity) in entities {
         let entity_name_ident = ident(&entity_name);
         let stripped_shouty_entity_name = strip_entity_suffix(&entity_name).to_shouty_snake_case();
         let stripped_shouty_entity_name_ident = ident(&stripped_shouty_entity_name);
@@ -443,8 +443,12 @@ fn build_entities() -> anyhow::Result<TokenStream> {
 
         let mut module_body = TokenStream::new();
 
-        if let Some(parent_name) = entity.parent {
-            let stripped_snake_parent_name = strip_entity_suffix(&parent_name).to_snake_case();
+        let mut requires: Vec<TokenStream> = vec![];
+
+        if let Some(parent_name) = &entity.parent {
+            let stripped_snake_parent_name = strip_entity_suffix(parent_name).to_snake_case();
+            let stripped_snake_parent_name_ident = ident(&stripped_snake_parent_name);
+            let pascal_parent_name_ident = ident(parent_name);
 
             let module_doc = format!(
                 "Parent class: \
@@ -454,6 +458,27 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             module_body.extend([quote! {
                 #![doc = #module_doc]
             }]);
+
+            requires.push(quote! {
+                super::#stripped_snake_parent_name_ident::#pascal_parent_name_ident
+            });
+        } else {
+            requires.push(quote! {
+                super::EntityId,
+                super::UniqueId,
+                super::EntityLayerId,
+                super::OldEntityLayerId,
+                super::Position,
+                super::OldPosition,
+                super::Look,
+                super::HeadYaw,
+                super::OnGround,
+                super::Velocity,
+                super::EntityStatuses,
+                super::EntityAnimations,
+                super::ObjectData,
+                super::tracked_data::TrackedData
+            });
         }
 
         // Is this a concrete entity type?
@@ -478,168 +503,29 @@ fn build_entities() -> anyhow::Result<TokenStream> {
                 EntityKind::#stripped_shouty_entity_name_ident => #translation_key_expr,
             }]);
 
-            // Create bundle type.
-            let mut bundle_fields = TokenStream::new();
-            let mut bundle_init_fields = TokenStream::new();
+            requires.push(quote! {
+                super::EntityKind = super::EntityKind::#stripped_shouty_entity_name_ident
+            });
 
-            for marker_or_field in collect_bundle_fields(&entity_name, &entities) {
-                match marker_or_field {
-                    MarkerOrField::Marker { entity_name } => {
-                        let stripped_entity_name = strip_entity_suffix(entity_name);
+            if let Some(attributes) = &entity.attributes {
+                let mut attribute_default_values = TokenStream::new();
 
-                        let snake_entity_name_ident = ident(entity_name.to_snake_case());
-                        let stripped_snake_entity_name_ident =
-                            ident(stripped_entity_name.to_snake_case());
-                        let pascal_entity_name_ident = ident(entity_name.to_pascal_case());
-
-                        bundle_fields.extend([quote! {
-                            pub #snake_entity_name_ident: super::#stripped_snake_entity_name_ident::#pascal_entity_name_ident,
-                        }]);
-
-                        bundle_init_fields.extend([quote! {
-                            #snake_entity_name_ident: Default::default(),
-                        }]);
-
-                        match entity_name {
-                            "LivingEntity" => {
-                                bundle_fields.extend([quote! {
-                                    pub living_absorption: super::living::Absorption,
-                                }]);
-
-                                bundle_init_fields.extend([quote! {
-                                    living_absorption: Default::default(),
-                                }]);
-
-                                bundle_fields.extend([quote! {
-                                    pub living_attributes: super::attributes::EntityAttributes,
-                                }]);
-
-                                // Get the default values of the attributes.
-                                let mut attribute_default_values = TokenStream::new();
-
-                                if let Some(attributes) = &entity.attributes {
-                                    for attribute in attributes {
-                                        let name = ident(attribute.name.to_pascal_case());
-                                        let base_value = attribute.base_value;
-                                        attribute_default_values.extend([quote! {
-                                            .with_attribute_and_value(
-                                                super::EntityAttribute::#name,
-                                                #base_value,
-                                            )
-                                        }]);
-                                    }
-                                }
-
-                                bundle_init_fields.extend([quote! {
-                                    living_attributes: super::attributes::EntityAttributes::new() #attribute_default_values,
-                                }]);
-
-                                bundle_fields.extend([quote! {
-                                    pub living_attributes_tracker: super::attributes::TrackedEntityAttributes,
-                                }]);
-                                bundle_init_fields.extend([quote! {
-                                    living_attributes_tracker: Default::default(),
-                                }]);
-
-                                bundle_fields.extend([quote! {
-                                    pub living_active_status_effects: super::active_status_effects::ActiveStatusEffects,
-                                }]);
-                                bundle_init_fields.extend([quote! {
-                                    living_active_status_effects: Default::default(),
-                                }]);
-                            }
-                            "PlayerEntity" => {
-                                bundle_fields.extend([quote! {
-                                    pub player_food: super::player::Food,
-                                    pub player_saturation: super::player::Saturation,
-                                }]);
-
-                                bundle_init_fields.extend([quote! {
-                                    player_food: Default::default(),
-                                    player_saturation: Default::default(),
-                                }]);
-                            }
-                            _ => {}
-                        }
-                    }
-                    MarkerOrField::Field { entity_name, field } => {
-                        let snake_field_name = field.name.to_snake_case();
-                        let pascal_field_name = field.name.to_pascal_case();
-                        let pascal_field_name_ident = ident(&pascal_field_name);
-                        let stripped_entity_name = strip_entity_suffix(entity_name);
-                        let stripped_snake_entity_name = stripped_entity_name.to_snake_case();
-                        let stripped_snake_entity_name_ident = ident(&stripped_snake_entity_name);
-
-                        let field_name_ident =
-                            ident(format!("{stripped_snake_entity_name}_{snake_field_name}"));
-
-                        bundle_fields.extend([quote! {
-                            pub #field_name_ident: super::#stripped_snake_entity_name_ident::#pascal_field_name_ident,
-                        }]);
-
-                        bundle_init_fields.extend([quote! {
-                            #field_name_ident: Default::default(),
-                        }]);
-                    }
+                for attribute in attributes {
+                    let name = ident(attribute.name.to_pascal_case());
+                    let base_value = attribute.base_value;
+                    attribute_default_values.extend([quote! {
+                        .with_attribute_and_value(
+                            super::EntityAttribute::#name,
+                            #base_value,
+                        )
+                    }]);
                 }
+
+                requires.push(quote! {
+                    super::attributes::EntityAttributes =
+                        super::attributes::EntityAttributes::new() #attribute_default_values
+                });
             }
-
-            bundle_fields.extend([quote! {
-                pub kind: super::EntityKind,
-                pub id: super::EntityId,
-                pub uuid: super::UniqueId,
-                pub layer: super::EntityLayerId,
-                pub old_layer: super::OldEntityLayerId,
-                pub position: super::Position,
-                pub old_position: super::OldPosition,
-                pub look: super::Look,
-                pub head_yaw: super::HeadYaw,
-                pub on_ground: super::OnGround,
-                pub velocity: super::Velocity,
-                pub statuses: super::EntityStatuses,
-                pub animations: super::EntityAnimations,
-                pub object_data: super::ObjectData,
-                pub tracked_data: super::tracked_data::TrackedData,
-            }]);
-
-            bundle_init_fields.extend([quote! {
-                kind: super::EntityKind::#stripped_shouty_entity_name_ident,
-                id: Default::default(),
-                uuid: Default::default(),
-                layer: Default::default(),
-                old_layer: Default::default(),
-                position: Default::default(),
-                old_position: Default::default(),
-                look: Default::default(),
-                head_yaw: Default::default(),
-                on_ground: Default::default(),
-                velocity: Default::default(),
-                statuses: Default::default(),
-                animations: Default::default(),
-                object_data: Default::default(),
-                tracked_data: Default::default(),
-            }]);
-
-            let bundle_name_ident = ident(format!("{entity_name}Bundle"));
-            let bundle_doc = format!(
-                "The bundle of components for spawning `{stripped_snake_entity_name}` entities."
-            );
-
-            module_body.extend([quote! {
-                #[doc = #bundle_doc]
-                #[derive(bevy_ecs::bundle::Bundle, Debug)]
-                pub struct #bundle_name_ident {
-                    #bundle_fields
-                }
-
-                impl Default for #bundle_name_ident {
-                    fn default() -> Self {
-                        Self {
-                            #bundle_init_fields
-                        }
-                    }
-                }
-            }]);
         }
 
         for field in &entity.fields {
@@ -659,6 +545,8 @@ fn build_entities() -> anyhow::Result<TokenStream> {
                     }
                 }
             }]);
+
+            requires.push(quote!(#pascal_field_name_ident));
 
             let system_name_ident = ident(format!(
                 "update_{stripped_snake_entity_name}_{snake_field_name}"
@@ -694,11 +582,36 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             }]);
         }
 
+        match entity_name.as_str() {
+            "LivingEntity" => {
+                requires.push(quote! {
+                    Absorption,
+                    super::attributes::EntityAttributes,
+                    super::attributes::TrackedEntityAttributes,
+                    super::active_status_effects::ActiveStatusEffects
+                });
+            }
+            "PlayerEntity" => {
+                requires.push(quote! {
+                    Food,
+                    Saturation
+                });
+            }
+            _ => {}
+        }
+
         let marker_doc = format!("Marker component for `{stripped_snake_entity_name}` entities.");
+
+        let require_attr = if requires.is_empty() {
+            quote!()
+        } else {
+            quote!(#[require(#(#requires),*)])
+        };
 
         module_body.extend([quote! {
             #[doc = #marker_doc]
             #[derive(bevy_ecs::component::Component, Copy, Clone, Default, Debug)]
+            #require_attr
             pub struct #entity_name_ident;
         }]);
 
@@ -868,42 +781,6 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             )*
         }
     })
-}
-
-enum MarkerOrField<'a> {
-    Marker {
-        entity_name: &'a str,
-    },
-    Field {
-        entity_name: &'a str,
-        field: &'a Field,
-    },
-}
-
-fn collect_bundle_fields<'a>(
-    mut entity_name: &'a str,
-    entities: &'a Entities,
-) -> Vec<MarkerOrField<'a>> {
-    let mut res = vec![];
-
-    loop {
-        let e = &entities[entity_name];
-
-        res.push(MarkerOrField::Marker { entity_name });
-        res.extend(
-            e.fields
-                .iter()
-                .map(|field| MarkerOrField::Field { entity_name, field }),
-        );
-
-        if let Some(parent) = &e.parent {
-            entity_name = parent;
-        } else {
-            break;
-        }
-    }
-
-    res
 }
 
 fn strip_entity_suffix(string: &str) -> String {

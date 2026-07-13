@@ -35,7 +35,7 @@ Write your answer here.
 
 ## What You Did
 
-Describe how you arrived at the problem. If you can, provide a minimal reproducible example in the details below. For details on how to create a playground, see [the "playgrounds" section in the contributing guidelines](https://github.com/valence-rs/valence/blob/main/CONTRIBUTING.md#playgrounds)
+Describe how you arrived at the problem. If you can, provide a minimal reproducible example in the details below. For details on how to create a playground, see [the "playgrounds" section in the contributing guidelines](https://github.com/ChunkEdge/ChunkEdge/blob/main/CONTRIBUTING.md#playgrounds)
 
 <details>
 

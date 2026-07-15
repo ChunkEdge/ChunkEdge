@@ -89,8 +89,6 @@ jobs:
       matrix:
         platform: [windows-latest, macos-latest, ubuntu-latest]
         style: [default]
-        rust:
-          - stable
         include:
           - style: default
             flags: ""

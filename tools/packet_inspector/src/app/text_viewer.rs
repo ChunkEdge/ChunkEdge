@@ -43,7 +43,7 @@ impl View for TextView {
 
 // From: https://github.com/emilk/egui/blob/master/crates/egui_demo_lib/src/syntax_highlighting.rs
 
-use egui::text::LayoutJob;
+use egui::text::{ByteIndex, LayoutJob};
 
 /// View some code with syntax highlighting and selection.
 pub(crate) fn code_view_ui(ui: &mut egui::Ui, mut code: &str) {
@@ -74,7 +74,7 @@ pub(crate) fn highlight(
     code: &str,
     language: &str,
 ) -> LayoutJob {
-    type HighlightCache = egui::util::cache::FrameCache<LayoutJob, Highlighter>;
+    type HighlightCache = egui::cache::FrameCache<LayoutJob, Highlighter>;
 
     ctx.memory_mut(|mem| {
         mem.caches
@@ -240,7 +240,7 @@ impl Default for Highlighter {
     }
 }
 
-impl egui::util::cache::ComputerMut<(&CodeTheme, &str, &str), LayoutJob> for Highlighter {
+impl egui::cache::ComputerMut<(&CodeTheme, &str, &str), LayoutJob> for Highlighter {
     fn compute(&mut self, (theme, code, lang): (&CodeTheme, &str, &str)) -> LayoutJob {
         self.highlight(theme, code, lang)
     }
@@ -313,11 +313,11 @@ impl Highlighter {
     }
 }
 
-fn as_byte_range(whole: &str, range: &str) -> std::ops::Range<usize> {
+fn as_byte_range(whole: &str, range: &str) -> std::ops::Range<ByteIndex> {
     let whole_start = whole.as_ptr() as usize;
     let range_start = range.as_ptr() as usize;
     assert!(whole_start <= range_start);
     assert!(range_start + range.len() <= whole_start + whole.len());
     let offset = range_start - whole_start;
-    offset..(offset + range.len())
+    ByteIndex::from(offset)..ByteIndex::from(offset + range.len())
 }

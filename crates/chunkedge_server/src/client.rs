@@ -421,6 +421,8 @@ pub struct DisconnectClient {
 }
 
 impl Command for DisconnectClient {
+    type Out = ();
+
     fn apply(self, world: &mut World) {
         if let Ok(mut entity) = world.get_entity_mut(self.client) {
             if let Some(mut client) = entity.get_mut::<Client>() {

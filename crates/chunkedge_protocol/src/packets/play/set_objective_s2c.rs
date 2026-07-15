@@ -35,7 +35,7 @@ pub enum ObjectiveRenderType {
     /// Display the value as hearts.
     Hearts,
 }
-#[derive(Clone, PartialEq, Debug, Encode, Decode, Component)]
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub enum NumberFormat<'a> {
     Blank,
     Styled { styling: Compound },

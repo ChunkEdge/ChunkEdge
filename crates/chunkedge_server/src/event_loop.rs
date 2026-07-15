@@ -113,7 +113,7 @@ fn run_event_loop(
 ) {
     debug_assert!(check_again.is_empty());
 
-    let (mut clients, mut message_writer, mut commands) = state.get_mut(world);
+    let (mut clients, mut message_writer, mut commands) = state.get_mut(world).unwrap();
 
     for (entity, mut client) in &mut clients {
         match client.connection_mut().try_recv() {
@@ -144,7 +144,7 @@ fn run_event_loop(
     run_event_loop_schedules(world);
 
     while !check_again.is_empty() {
-        let (mut clients, mut message_writer, mut commands) = state.get_mut(world);
+        let (mut clients, mut message_writer, mut commands) = state.get_mut(world).unwrap();
 
         check_again.retain_mut(|(entity, remaining)| {
             debug_assert!(*remaining > 0);

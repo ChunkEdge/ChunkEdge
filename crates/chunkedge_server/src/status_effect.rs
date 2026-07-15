@@ -50,7 +50,7 @@ fn update_active_status_effects(
     world: &mut World,
     state: &mut SystemState<Query<&mut ActiveStatusEffects>>,
 ) {
-    let mut query = state.get_mut(world);
+    let mut query = state.get_mut(world).unwrap();
     for mut active_status_effects in &mut query {
         active_status_effects.increment_active_ticks();
     }

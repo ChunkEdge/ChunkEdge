@@ -9,6 +9,7 @@ use chunkedge_generated::registry_id::RegistryId;
 use chunkedge_ident::{Ident, IdentError};
 use chunkedge_nbt::compound::NetworkCompound;
 use chunkedge_nbt::Compound;
+use chunkedge_protocol_macros::debug_decode;
 use chunkedge_text::color::RgbColor;
 use indexmap::IndexMap;
 use uuid::Uuid;
@@ -27,6 +28,7 @@ impl<T: Encode> Encode for Option<T> {
     }
 }
 
+#[debug_decode]
 impl<'a, T: Decode<'a>> Decode<'a> for Option<T> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         Ok(if bool::decode(r)? {
@@ -43,6 +45,7 @@ impl Encode for Uuid {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for Uuid {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         u128::decode(r).map(Uuid::from_u128)
@@ -55,6 +58,7 @@ impl Encode for Compound {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for Compound {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         // Check for null compound.
@@ -75,6 +79,7 @@ impl Encode for NetworkCompound {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for NetworkCompound {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(NetworkCompound {
@@ -89,6 +94,7 @@ impl<S: Encode> Encode for Ident<S> {
     }
 }
 
+#[debug_decode]
 impl<'a, S> Decode<'a> for Ident<S>
 where
     S: Decode<'a>,
@@ -105,6 +111,7 @@ impl Encode for BlockState {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for BlockState {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let id = VarInt::decode(r)?.0;
@@ -120,6 +127,7 @@ impl Encode for BlockKind {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for BlockKind {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let id = VarInt::decode(r)?.0;
@@ -135,6 +143,7 @@ impl Encode for BlockEntityKind {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for BlockEntityKind {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let id = VarInt::decode(r)?;
@@ -148,6 +157,7 @@ impl Encode for ItemKind {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for ItemKind {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let id = VarInt::decode(r)?.0;
@@ -163,6 +173,7 @@ impl Encode for RegistryId {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for RegistryId {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let id = VarInt::decode(r)?;
@@ -176,6 +187,7 @@ impl Encode for EntityAttributeOperation {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for EntityAttributeOperation {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         match VarInt::decode(r)?.0 {
@@ -194,6 +206,7 @@ impl Encode for EntityAttribute {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for EntityAttribute {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let id = VarInt::decode(r)?.0;
@@ -207,6 +220,7 @@ impl Encode for RgbColor {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for RgbColor {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let color = u32::decode(r)?;
@@ -225,6 +239,7 @@ impl<K: Encode, V: Encode> Encode for IndexMap<K, V> {
     }
 }
 
+#[debug_decode]
 impl<'a, K: Decode<'a> + Hash + Eq, V: Decode<'a>> Decode<'a> for IndexMap<K, V> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let len = VarInt::decode(r)?.0 as usize;

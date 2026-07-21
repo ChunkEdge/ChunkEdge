@@ -739,7 +739,7 @@ pub struct EulerAngle {
     pub roll: f32,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 struct OptionalInt(Option<i32>);
 
 impl Encode for OptionalInt {
@@ -765,7 +765,7 @@ impl Decode<'_> for OptionalInt {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 struct OptionalBlockState(Option<chunkedge_protocol::BlockState>);
 
 impl Encode for OptionalBlockState {

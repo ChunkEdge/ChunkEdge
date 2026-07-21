@@ -166,7 +166,7 @@ pub trait Encode {
 ///
 /// [macro]: chunkedge_protocol_macros::Decode
 /// [`VarInt`]: var_int::VarInt
-pub trait Decode<'a>: Sized {
+pub trait Decode<'a>: Sized + std::fmt::Debug {
     /// Reads this object from the provided byte slice.
     ///
     /// Implementations of `Decode` are expected to shrink the slice from the

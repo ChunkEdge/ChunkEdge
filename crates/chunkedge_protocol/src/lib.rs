@@ -6,6 +6,8 @@
 pub mod __private {
     pub use anyhow::{anyhow, bail, ensure, Context, Result};
 
+    #[cfg(any(feature = "debug-packets", feature = "debug-packets-on-error"))]
+    pub use crate::debug;
     pub use crate::Packet;
 }
 
@@ -15,6 +17,8 @@ mod biome_pos;
 pub mod block_pos;
 pub mod chunk_pos;
 pub mod chunk_section_pos;
+#[cfg(any(feature = "debug-packets", feature = "debug-packets-on-error"))]
+pub mod debug;
 pub mod decode;
 mod difficulty;
 mod direction;

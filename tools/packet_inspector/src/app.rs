@@ -172,13 +172,15 @@ fn handle_events(state: Arc<RwLock<SharedState>>) {
                         while let Ok(packet) = receiver.recv_async().await {
                             let state = state.read().unwrap();
                             state.packets.write().unwrap().push(packet.clone());
-                            if let Err(e) = utils::packet_to_string(&packet) {
-                                println!("Could not decode {}. Err: {:#?}", packet.name, e);
-                                state
-                                    .failed_packets
-                                    .write()
-                                    .unwrap()
-                                    .push((packet, state.packets.read().unwrap().len() - 1));
+                            if state.packet_filter.get(&packet).unwrap_or(true) {
+                                if let Err(e) = utils::packet_to_string(&packet) {
+                                    println!("Could not decode {}. Err: {:#?}", packet.name, e);
+                                    state
+                                        .failed_packets
+                                        .write()
+                                        .unwrap()
+                                        .push((packet, state.packets.read().unwrap().len() - 1));
+                                }
                             }
                             state.send_event(Event::PacketReceived);
                         }

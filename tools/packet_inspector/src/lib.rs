@@ -322,11 +322,6 @@ fn extrapolate_packet<'a, P>(packet: &'a PacketFrame) -> Option<P>
 where
     P: ChunkEdgePacket + Decode<'a> + Clone,
 {
-    if packet.id != P::ID {
-        return None;
-    }
-
-    let mut r = &packet.body[..];
-    let packet = P::decode(&mut r).ok()?;
+    let packet = packet.decode::<P>().ok()?;
     Some(packet)
 }

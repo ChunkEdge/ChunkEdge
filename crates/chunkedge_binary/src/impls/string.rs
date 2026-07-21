@@ -3,6 +3,7 @@ use std::io::Write;
 use anyhow::{ensure, Context};
 use chunkedge_nbt::compound::NetworkCompound;
 use chunkedge_nbt::serde::ser::CompoundSerializer;
+use chunkedge_protocol_macros::debug_decode;
 use chunkedge_text::{JsonText, Text};
 use serde::de::IntoDeserializer;
 use serde::{Deserialize, Serialize};
@@ -32,12 +33,14 @@ impl<const MAX_CHARS: usize> Encode for Bounded<&'_ str, MAX_CHARS> {
     }
 }
 
+#[debug_decode]
 impl<'a> Decode<'a> for &'a str {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         Ok(Bounded::<_, DEFAULT_MAX_STRING_CHARS>::decode(r)?.0)
     }
 }
 
+#[debug_decode]
 impl<'a, const MAX_CHARS: usize> Decode<'a> for Bounded<&'a str, MAX_CHARS> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         let len = VarInt::decode(r)?.0;
@@ -76,30 +79,35 @@ impl<const MAX_CHARS: usize> Encode for Bounded<String, MAX_CHARS> {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for String {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(<&str>::decode(r)?.into())
     }
 }
 
+#[debug_decode]
 impl<const MAX_CHARS: usize> Decode<'_> for Bounded<String, MAX_CHARS> {
     fn decode(r: &mut &'_ [u8]) -> anyhow::Result<Self> {
         Ok(Bounded(Bounded::<&str, MAX_CHARS>::decode(r)?.0.into()))
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for Box<str> {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(<&str>::decode(r)?.into())
     }
 }
 
+#[debug_decode]
 impl<const MAX_CHARS: usize> Decode<'_> for Bounded<Box<str>, MAX_CHARS> {
     fn decode(r: &mut &'_ [u8]) -> anyhow::Result<Self> {
         Ok(Bounded(Bounded::<&str, MAX_CHARS>::decode(r)?.0.into()))
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for Text {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let c = NetworkCompound::decode(r)
@@ -127,6 +135,7 @@ impl Encode for JsonText {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for JsonText {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let str = Bounded::<&str, MAX_TEXT_CHARS>::decode(r)?.0;

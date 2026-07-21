@@ -13,7 +13,7 @@ pub struct Compound<S = String> {
 }
 
 /// A wrapper around Compound that encodes and decodes as network NBT
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct NetworkCompound<S = String> {
     pub compound: Compound<S>,
 }

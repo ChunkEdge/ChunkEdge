@@ -173,7 +173,7 @@ fn write_transformer(packets: &[Packet]) -> anyhow::Result<()> {
 
                 match_arms.extend(quote! {
                     chunkedge_protocol::packets::#lowercase_state::#name::ID => {
-                        Ok(format!("{:#?}", chunkedge_protocol::packets::#lowercase_state::#name::decode(&mut data)?))
+                        chunkedge_protocol::packets::#lowercase_state::#name::decode(&mut data).map(|p| format!("{p:#?}"))
                     }
                 });
             }
@@ -210,9 +210,12 @@ fn write_transformer(packets: &[Packet]) -> anyhow::Result<()> {
             let bytes = packet.data.as_ref().unwrap();
             let mut data = &bytes.clone()[..];
 
-            match packet.side {
+            debug::enable_packet_recording(packet.name, packet.id, data);
+            let res = match packet.side {
                 #generated
-            }
+            };
+            debug::dump_packet_trace(res.is_err());
+            Ok(res?)
         }
     };
 

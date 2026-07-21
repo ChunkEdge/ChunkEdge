@@ -2,6 +2,7 @@ use std::io::Write;
 
 use anyhow::bail;
 use byteorder::ReadBytesExt;
+use chunkedge_protocol_macros::debug_decode;
 use derive_more::{From, Into};
 use serde::{Deserialize, Serialize};
 
@@ -120,6 +121,7 @@ impl Encode for VarLong {
     }
 }
 
+#[debug_decode]
 impl Decode<'_> for VarLong {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         let mut val = 0;

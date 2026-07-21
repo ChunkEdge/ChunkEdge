@@ -48,7 +48,7 @@ fn load_icon() -> IconData {
 }
 pub(crate) mod utils {
     use chunkedge_binary::Decode;
-    use chunkedge_protocol::Packet;
+    use chunkedge_protocol::{debug, Packet};
     use packet_inspector::Packet as ProxyPacket;
 
     include!(concat!(env!("OUT_DIR"), "/packet_to_string.rs"));

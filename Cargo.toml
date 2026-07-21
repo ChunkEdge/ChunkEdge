@@ -43,6 +43,8 @@ world_border = ["dep:chunkedge_world_border"]
 command = ["dep:chunkedge_command", "dep:chunkedge_command_macros"]
 weather = ["dep:chunkedge_weather"]
 testing = []
+debug-packets = ["chunkedge_server/debug-packets"]
+debug-packets-on-error = ["chunkedge_server/debug-packets-on-error"]
 
 [dependencies]
 anyhow.workspace = true
@@ -80,6 +82,8 @@ anyhow.workspace = true
 clap.workspace = true
 divan.workspace = true
 flume.workspace = true
+chunkedge_protocol_macros.workspace = true
+chunkedge_protocol.workspace = true
 noise.workspace = true   # For the terrain example.
 tracing.workspace = true
 

@@ -1,19 +1,64 @@
 use std::collections::BTreeSet;
 
 use bevy_ecs::world::EntityWorldMut;
+use chunkedge_ident::ident;
+use chunkedge_registry::{BiomeRegistry, DimensionTypeRegistry};
+use chunkedge_server::ChunkPos;
 
-use crate::client::{ViewDistance, VisibleEntityLayers};
+use crate::client::{ViewDistance, VisibleChunkLayer, VisibleEntityLayers};
 use crate::entity::cow::CowEntity;
 use crate::entity::{EntityLayerId, Position};
 use crate::layer::chunk::UnloadedChunk;
 use crate::layer::{ChunkLayer, EntityLayer};
 use crate::protocol::packets::play::{
     AddEntityS2c, BlockEntityDataS2c, ForgetLevelChunkS2c, LevelChunkWithLightS2c,
-    MoveEntityPosS2c, RemoveEntitiesS2c, SectionBlocksUpdateS2c,
+    MoveEntityPosS2c, RemoveEntitiesS2c, RespawnS2c, SectionBlocksUpdateS2c,
 };
 use crate::protocol::Packet;
 use crate::testing::ScenarioSingleClient;
 use crate::{BlockState, ChunkView, Despawned, Server};
+
+#[test]
+fn chunk_layer_switching() {
+    let ScenarioSingleClient {
+        mut app,
+        client: client_ent,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    let mut chunk_layer = ChunkLayer::new(
+        ident!("overworld"),
+        app.world().resource::<DimensionTypeRegistry>(),
+        app.world().resource::<BiomeRegistry>(),
+        app.world().resource::<Server>(),
+    );
+    chunk_layer.insert_chunk(ChunkPos::new(0, 0), UnloadedChunk::default());
+    let entity_layer = EntityLayer::new(app.world().resource::<Server>());
+    let dest_layer = app.world_mut().spawn((chunk_layer, entity_layer)).id();
+
+    // Let the destination layer initialize, then discard the join traffic.
+    app.update();
+    helper.collect_received();
+
+    // Move the client into the destination layer.
+    let mut client = app.world_mut().entity_mut(client_ent);
+    client.get_mut::<EntityLayerId>().unwrap().0 = dest_layer;
+    client.get_mut::<VisibleChunkLayer>().unwrap().0 = dest_layer;
+    let mut vel = client.get_mut::<VisibleEntityLayers>().unwrap();
+    vel.0.clear();
+    vel.0.insert(dest_layer);
+
+    app.update();
+
+    let recvd = helper.collect_received();
+
+    // The respawn packet clears the client's chunk cache, so it must be sent
+    // before the new chunks are sent.
+    recvd.assert_count::<RespawnS2c>(1);
+    recvd.assert_count::<LevelChunkWithLightS2c>(1);
+    recvd.assert_order::<(RespawnS2c, LevelChunkWithLightS2c)>();
+}
 
 #[test]
 fn block_create_destroy() {

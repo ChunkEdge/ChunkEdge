@@ -712,7 +712,7 @@ impl TriggerArea {
         self.contains(pos.into())
     }
 
-    fn iter_block_pos(&self) -> impl Iterator<Item = BlockPos> {
+    fn iter_block_pos(&self) -> impl Iterator<Item = BlockPos> + use<> {
         let min = BlockPos::new(
             self.a.x.min(self.b.x),
             self.a.y.min(self.b.y),

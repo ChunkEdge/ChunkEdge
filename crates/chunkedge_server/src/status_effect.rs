@@ -6,13 +6,13 @@ use chunkedge_entity::active_status_effects::{ActiveStatusEffect, ActiveStatusEf
 use chunkedge_entity::entity::Flags;
 use chunkedge_entity::living::PotionSwirlsAmbient;
 use chunkedge_protocol::packets::play::{
-    update_mob_effect_s2c, RemoveMobEffectS2c, UpdateMobEffectS2c,
+    RemoveMobEffectS2c, UpdateMobEffectS2c, update_mob_effect_s2c,
 };
 use chunkedge_protocol::status_effects::StatusEffect;
 use chunkedge_protocol::{VarInt, WritePacket};
 
-use crate::client::Client;
 use crate::EventLoopPostUpdate;
+use crate::client::Client;
 
 /// Message for when a status effect is added to an entity or the amplifier or
 /// duration of an existing status effect is changed.
@@ -133,7 +133,7 @@ fn set_swirl(
     active_status_effects: &ActiveStatusEffects,
     swirl_ambient: &mut Option<Mut<'_, PotionSwirlsAmbient>>,
 ) {
-    if let Some(ref mut swirl_ambient) = swirl_ambient {
+    if let Some(swirl_ambient) = swirl_ambient {
         swirl_ambient.0 = active_status_effects
             .get_current_effects()
             .iter()

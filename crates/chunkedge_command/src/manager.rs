@@ -6,14 +6,14 @@ use bevy_ecs::prelude::{
     Added, Changed, Commands, DetectChanges, IntoScheduleConfigs, Message, MessageReader,
     MessageWriter, Mut, Or, Query, Res,
 };
+use chunkedge_server::EventLoopPreUpdate;
 use chunkedge_server::client::{Client, SpawnClientsSet};
 use chunkedge_server::event_loop::PacketMessage;
+use chunkedge_server::protocol::WritePacket;
 use chunkedge_server::protocol::packets::play::commands_s2c::NodeData;
 use chunkedge_server::protocol::packets::play::{
     ChatCommandC2s, ChatCommandSignedC2s, CommandsS2c,
 };
-use chunkedge_server::protocol::WritePacket;
-use chunkedge_server::EventLoopPreUpdate;
 use petgraph::graph::NodeIndex;
 use petgraph::prelude::EdgeRef;
 use petgraph::{Direction, Graph};
@@ -148,7 +148,7 @@ fn update_client_command_tree(
     scope_registry: Res<CommandScopeRegistry>,
     updated_clients: &mut Vec<(Mut<Client>, &CommandScopes)>,
 ) {
-    for (ref mut client, client_scopes) in updated_clients {
+    for (client, client_scopes) in updated_clients {
         let time = std::time::Instant::now();
 
         let old_graph = &command_registry.graph;

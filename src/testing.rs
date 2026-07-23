@@ -302,7 +302,7 @@ impl PacketFrames {
         }
     }
 
-    pub fn debug_order<L: PacketList>(&self) -> impl std::fmt::Debug {
+    pub fn debug_order<L: PacketList>(&self) -> impl std::fmt::Debug + use<L> {
         self.0
             .iter()
             .filter_map(|f| L::packets().iter().find(|(id, _)| f.id == *id).copied())

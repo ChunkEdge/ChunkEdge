@@ -170,7 +170,7 @@ fn apply_potion_attribute(
 
     // not quite how vanilla does it, but it's close enough
     if attr.attribute == EntityAttribute::MaxHealth {
-        if let Some(ref mut health) = health {
+        if let Some(health) = health {
             health.0 = health.0.min(
                 attributes
                     .get_compute_value(EntityAttribute::MaxHealth)
@@ -189,7 +189,7 @@ fn remove_potion_attribute(
     attributes.remove_modifier(attr.attribute, name);
 
     if attr.attribute == EntityAttribute::MaxHealth {
-        if let Some(ref mut health) = health {
+        if let Some(health) = health {
             health.0 = health.0.min(
                 attributes
                     .get_compute_value(EntityAttribute::MaxHealth)

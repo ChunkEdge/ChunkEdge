@@ -4,8 +4,8 @@ use proc_macro::TokenStream as StdTokenStream;
 use proc_macro2::TokenStream;
 use quote::ToTokens;
 use syn::{
-    parse_quote, Attribute, GenericParam, Generics, Lifetime, LifetimeParam, LitInt, Result,
-    Variant,
+    Attribute, GenericParam, Generics, Lifetime, LifetimeParam, LitInt, Result, Variant,
+    parse_quote,
 };
 
 mod decode;

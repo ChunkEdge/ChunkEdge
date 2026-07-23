@@ -8,8 +8,8 @@ use chunkedge::protocol::packets::play::level_chunk_with_light_s2c::{HeightMap, 
 use chunkedge::protocol::packets::play::{AddEntityS2c, LevelChunkWithLightS2c, TabListS2c};
 use chunkedge::protocol::{ByteAngle, FixedArray, IntoTextComponent, VarInt, VariableBitSet};
 use chunkedge::text::IntoText;
-use chunkedge_server::protocol::Velocity;
 use chunkedge_server::CompressionThreshold;
+use chunkedge_server::protocol::Velocity;
 use divan::Bencher;
 
 pub(crate) fn setup<'a>() -> (

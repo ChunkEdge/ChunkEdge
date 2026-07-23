@@ -1,7 +1,7 @@
 use std::hint::black_box;
 
-use chunkedge::block::{BlockKind, BlockState, PropName, PropValue};
 use chunkedge::ItemKind;
+use chunkedge::block::{BlockKind, BlockState, PropName, PropValue};
 use divan::Bencher;
 
 #[divan::bench]

@@ -1,7 +1,7 @@
 use chunkedge_server::entity::living::Health;
 use chunkedge_server::entity::player::{Food, Saturation};
-use chunkedge_server::protocol::packets::play::SetHealthS2c;
 use chunkedge_server::protocol::VarInt;
+use chunkedge_server::protocol::packets::play::SetHealthS2c;
 
 use crate::testing::ScenarioSingleClient;
 

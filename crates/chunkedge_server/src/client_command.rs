@@ -1,9 +1,9 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_entity::entity::Flags;
-use chunkedge_entity::{entity, Pose};
-pub use chunkedge_protocol::packets::play::player_command_c2s::PlayerCommand;
+use chunkedge_entity::{Pose, entity};
 use chunkedge_protocol::packets::play::PlayerCommandC2s;
+pub use chunkedge_protocol::packets::play::player_command_c2s::PlayerCommand;
 
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 

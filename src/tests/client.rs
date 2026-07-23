@@ -1,14 +1,14 @@
 use chunkedge_server::protocol::movement_flags::MovementFlags;
 
 use crate::abilities::PlayerAbilitiesFlags;
-use crate::layer::chunk::UnloadedChunk;
 use crate::layer::ChunkLayer;
+use crate::layer::chunk::UnloadedChunk;
 use crate::math::DVec3;
 use crate::protocol::packets::play::{
     AcceptTeleportationC2s, MoveEntityPosS2c, MovePlayerPosRotC2s, PlayerPositionS2c,
     SetEntityDataS2c,
 };
-use crate::testing::{create_mock_client, ScenarioSingleClient};
+use crate::testing::{ScenarioSingleClient, create_mock_client};
 use crate::{ChunkPos, GameMode};
 
 #[test]

@@ -4,8 +4,8 @@ use std::io::Write;
 use chunkedge_binary::{Decode, Encode};
 use chunkedge_ident::Ident;
 
-use crate::sound::SoundCategory;
 use crate::Packet;
+use crate::sound::SoundCategory;
 
 #[derive(Clone, PartialEq, Debug, Packet)]
 pub struct StopSoundS2c<'a> {

@@ -7,7 +7,7 @@ use bytes::{BufMut, BytesMut};
 use chunkedge_binary::{Encode, VarInt};
 use tracing::warn;
 
-use crate::{CompressionThreshold, Packet, MAX_PACKET_SIZE};
+use crate::{CompressionThreshold, MAX_PACKET_SIZE, Packet};
 
 /// The AES block cipher with a 128 bit key, using the CFB-8 mode of
 /// operation.
@@ -71,8 +71,8 @@ impl PacketEncoder {
         if self.threshold.0 >= 0 {
             use std::io::Read;
 
-            use flate2::bufread::ZlibEncoder;
             use flate2::Compression;
+            use flate2::bufread::ZlibEncoder;
 
             if data_len >= self.threshold.0 as usize {
                 let mut z = ZlibEncoder::new(&self.buf[start_len..], Compression::new(4));
@@ -332,8 +332,8 @@ where
 {
     use std::io::Read;
 
-    use flate2::bufread::ZlibEncoder;
     use flate2::Compression;
+    use flate2::bufread::ZlibEncoder;
 
     let start_len = buf.len();
 

@@ -2,10 +2,10 @@ use std::borrow::Cow;
 
 use bevy_ecs::prelude::{Bundle, Component};
 use chunkedge_entity::EntityLayerId;
+use chunkedge_server::protocol::IntoTextComponent;
 use chunkedge_server::protocol::packets::play::boss_event_s2c::{
     BossBarAction, BossBarColor, BossBarDivision, BossBarFlags,
 };
-use chunkedge_server::protocol::IntoTextComponent;
 use chunkedge_server::{Text, UniqueId};
 use derive_more::{Deref, DerefMut};
 

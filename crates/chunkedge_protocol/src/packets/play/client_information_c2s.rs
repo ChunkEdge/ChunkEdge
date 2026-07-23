@@ -1,8 +1,8 @@
 use bitfield_struct::bitfield;
 use chunkedge_binary::{Bounded, Decode, Encode};
 
-use crate::packets::configuration::client_information_c2s::ParticleMode;
 use crate::Packet;
+use crate::packets::configuration::client_information_c2s::ParticleMode;
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct ClientInformationC2s<'a> {

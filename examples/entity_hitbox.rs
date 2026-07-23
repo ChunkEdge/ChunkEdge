@@ -10,7 +10,7 @@ use chunkedge::entity::sheep::SheepEntity;
 use chunkedge::entity::warden::WardenEntity;
 use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::zombie_horse::ZombieHorseEntity;
-use chunkedge::entity::{entity, Pose};
+use chunkedge::entity::{Pose, entity};
 use chunkedge::prelude::*;
 use entity::NameVisible;
 use rand::RngExt;

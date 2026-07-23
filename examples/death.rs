@@ -90,9 +90,10 @@ fn init_clients(
 fn squat_and_die(mut clients: Query<&mut Client>, mut messages: MessageReader<SneakMessage>) {
     for message in messages.read() {
         if message.state == SneakState::Start
-            && let Ok(mut client) = clients.get_mut(message.client) {
-                client.kill("Squatted too hard.");
-            }
+            && let Ok(mut client) = clients.get_mut(message.client)
+        {
+            client.kill("Squatted too hard.");
+        }
     }
 }
 

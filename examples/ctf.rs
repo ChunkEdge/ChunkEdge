@@ -13,7 +13,7 @@ use chunkedge::interact_block::InteractBlockMessage;
 use chunkedge::inventory::HeldItem;
 use chunkedge::log::debug;
 use chunkedge::math::{Aabb, Vec3Swizzles};
-use chunkedge::nbt::{compound, List};
+use chunkedge::nbt::{List, compound};
 use chunkedge::prelude::*;
 use chunkedge::scoreboard::*;
 use chunkedge::status::RequestRespawnMessage;
@@ -537,9 +537,10 @@ fn place_blocks(
 
         // Can't place block if there's already a block there
         if let Some(existing_block) = layer.block(real_pos)
-            && existing_block.state != BlockState::AIR {
-                continue;
-            }
+            && existing_block.state != BlockState::AIR
+        {
+            continue;
+        }
 
         // Can't place the block if it would intersect the player's hitbox
         if hitbox.intersects_strict(Aabb::new(

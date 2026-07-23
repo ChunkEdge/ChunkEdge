@@ -7,14 +7,14 @@ use chunkedge_item::ItemComponent;
 use chunkedge_server::protocol::IntoTextComponent;
 
 use crate::inventory::{
-    convert_to_player_slot_id, ClickMode, ClientInventoryState, CursorItem, DropItemStackMessage,
-    HeldItem, Inventory, InventoryKind, OpenInventory, SlotChange,
+    ClickMode, ClientInventoryState, CursorItem, DropItemStackMessage, HeldItem, Inventory,
+    InventoryKind, OpenInventory, SlotChange, convert_to_player_slot_id,
 };
+use crate::protocol::VarInt;
 use crate::protocol::packets::play::{
     ContainerClickC2s, ContainerCloseS2c, ContainerSetContentS2c, ContainerSetSlotS2c,
     OpenScreenS2c, SetCarriedItemC2s, SetCreativeModeSlotC2s,
 };
-use crate::protocol::VarInt;
 use crate::testing::{PacketFrames, ScenarioSingleClient};
 use crate::{GameMode, ItemKind, ItemStack};
 
@@ -484,11 +484,13 @@ fn test_should_modify_open_inventory_click_slot() {
         slot_idx: 20,
         button: 0,
         mode: ClickMode::Click,
-        slot_changes: vec![SlotChange {
-            idx: 20,
-            stack: ItemStack::EMPTY,
-        }
-        .into()]
+        slot_changes: vec![
+            SlotChange {
+                idx: 20,
+                stack: ItemStack::EMPTY,
+            }
+            .into(),
+        ]
         .into(),
         carried_item: ItemStack::new(ItemKind::Diamond, 2)
             .with_components(vec![
@@ -636,11 +638,13 @@ fn test_prevent_modify_open_inventory_click_slot_readonly_inventory() {
         // as you cant even select an item (so its on your cursor),
         // this is also why 2 resyncs are sent, see below.
         mode: ClickMode::Click,
-        slot_changes: vec![SlotChange {
-            idx: 20,
-            stack: ItemStack::EMPTY,
-        }
-        .into()]
+        slot_changes: vec![
+            SlotChange {
+                idx: 20,
+                stack: ItemStack::EMPTY,
+            }
+            .into(),
+        ]
         .into(),
         carried_item: ItemStack::new(ItemKind::Diamond, 2)
             .with_components(vec![
@@ -1473,7 +1477,7 @@ fn should_send_cursor_item_change_when_modified_on_the_server() {
 
 mod dropping_items {
     use super::*;
-    use crate::inventory::{convert_to_player_slot_id, PlayerAction};
+    use crate::inventory::{PlayerAction, convert_to_player_slot_id};
     use crate::protocol::packets::play::PlayerActionC2s;
     use crate::{BlockPos, Direction};
 
@@ -1891,17 +1895,19 @@ mod dropping_items {
             button: 0,
             mode: ClickMode::DropKey,
             state_id: VarInt(state_id),
-            slot_changes: vec![SlotChange {
-                idx: 40,
-                stack: ItemStack::new(ItemKind::IronIngot, 31).with_components(vec![
-                    ItemComponent::CustomName("Custom Iron".into_text_component()),
-                    ItemComponent::Lore(vec![
-                        "Other Lore Line 1.".into_text_component(),
-                        "Other Lore Line 2.".into_text_component(),
+            slot_changes: vec![
+                SlotChange {
+                    idx: 40,
+                    stack: ItemStack::new(ItemKind::IronIngot, 31).with_components(vec![
+                        ItemComponent::CustomName("Custom Iron".into_text_component()),
+                        ItemComponent::Lore(vec![
+                            "Other Lore Line 1.".into_text_component(),
+                            "Other Lore Line 2.".into_text_component(),
+                        ]),
                     ]),
-                ]),
-            }
-            .into()]
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         });
@@ -1974,17 +1980,19 @@ mod dropping_items {
             button: 0,
             mode: ClickMode::DropKey,
             state_id: VarInt(state_id),
-            slot_changes: vec![SlotChange {
-                idx: 40,
-                stack: ItemStack::new(ItemKind::IronIngot, 31).with_components(vec![
-                    ItemComponent::CustomName("Custom Iron".into_text_component()),
-                    ItemComponent::Lore(vec![
-                        "Other Lore Line 1.".into_text_component(),
-                        "Other Lore Line 2.".into_text_component(),
+            slot_changes: vec![
+                SlotChange {
+                    idx: 40,
+                    stack: ItemStack::new(ItemKind::IronIngot, 31).with_components(vec![
+                        ItemComponent::CustomName("Custom Iron".into_text_component()),
+                        ItemComponent::Lore(vec![
+                            "Other Lore Line 1.".into_text_component(),
+                            "Other Lore Line 2.".into_text_component(),
+                        ]),
                     ]),
-                ]),
-            }
-            .into()]
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         });
@@ -2062,11 +2070,13 @@ mod dropping_items {
             button: 1, // pressing control
             mode: ClickMode::DropKey,
             state_id: VarInt(state_id),
-            slot_changes: vec![SlotChange {
-                idx: 40,
-                stack: ItemStack::EMPTY,
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 40,
+                    stack: ItemStack::EMPTY,
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         });
@@ -2139,11 +2149,13 @@ mod dropping_items {
             button: 1, // pressing control
             mode: ClickMode::DropKey,
             state_id: VarInt(state_id),
-            slot_changes: vec![SlotChange {
-                idx: 40,
-                stack: ItemStack::EMPTY,
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 40,
+                    stack: ItemStack::EMPTY,
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         });
@@ -2229,17 +2241,19 @@ mod dropping_items {
             slot_idx: 50, // not pressing control
             button: 0,
             mode: ClickMode::DropKey,
-            slot_changes: vec![SlotChange {
-                idx: 50,
-                stack: ItemStack::new(ItemKind::IronIngot, 31).with_components(vec![
-                    ItemComponent::CustomName("Custom Iron".into_text_component()),
-                    ItemComponent::Lore(vec![
-                        "Other Lore Line 1.".into_text_component(),
-                        "Other Lore Line 2.".into_text_component(),
+            slot_changes: vec![
+                SlotChange {
+                    idx: 50,
+                    stack: ItemStack::new(ItemKind::IronIngot, 31).with_components(vec![
+                        ItemComponent::CustomName("Custom Iron".into_text_component()),
+                        ItemComponent::Lore(vec![
+                            "Other Lore Line 1.".into_text_component(),
+                            "Other Lore Line 2.".into_text_component(),
+                        ]),
                     ]),
-                ]),
-            }
-            .into()]
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         });
@@ -2334,11 +2348,13 @@ mod dropping_items {
             slot_idx: 50, // not pressing control
             button: 0,
             mode: ClickMode::DropKey,
-            slot_changes: vec![SlotChange {
-                idx: 50,
-                stack: ItemStack::new(ItemKind::IronIngot, 31),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 50,
+                    stack: ItemStack::new(ItemKind::IronIngot, 31),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         });
@@ -2420,11 +2436,13 @@ fn should_drop_item_stack_player_open_inventory_with_dropkey() {
         slot_idx: 50, // pressing control, the whole stack is dropped
         button: 1,
         mode: ClickMode::DropKey,
-        slot_changes: vec![SlotChange {
-            idx: 50,
-            stack: ItemStack::EMPTY,
-        }
-        .into()]
+        slot_changes: vec![
+            SlotChange {
+                idx: 50,
+                stack: ItemStack::EMPTY,
+            }
+            .into(),
+        ]
         .into(),
         carried_item: ItemStack::EMPTY.into(),
     });
@@ -2631,11 +2649,13 @@ fn dragging_items_left_click_no_remainder() {
         slot_idx: 9,
         button: 0,
         mode: ClickMode::Click,
-        slot_changes: vec![SlotChange {
-            idx: 9,
-            stack: ItemStack::EMPTY,
-        }
-        .into()]
+        slot_changes: vec![
+            SlotChange {
+                idx: 9,
+                stack: ItemStack::EMPTY,
+            }
+            .into(),
+        ]
         .into(),
         carried_item: item_stack.clone().into(),
     };
@@ -2839,11 +2859,13 @@ fn dragging_items_left_click_with_remainder() {
         slot_idx: 9,
         button: 0,
         mode: ClickMode::Click,
-        slot_changes: vec![SlotChange {
-            idx: 9,
-            stack: ItemStack::EMPTY,
-        }
-        .into()]
+        slot_changes: vec![
+            SlotChange {
+                idx: 9,
+                stack: ItemStack::EMPTY,
+            }
+            .into(),
+        ]
         .into(),
         carried_item: item_stack.clone().into(),
     };

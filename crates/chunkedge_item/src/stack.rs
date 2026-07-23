@@ -4,9 +4,9 @@ use std::io::Write;
 use chunkedge_binary::{Encode, VarInt};
 use chunkedge_generated::item::ItemKind;
 
+use crate::NUM_ITEM_COMPONENTS;
 use crate::components::{ItemComponent, Patchable};
 use crate::vanilla_components::ItemKindExt;
-use crate::NUM_ITEM_COMPONENTS;
 
 /// A stack of items in an inventory.
 #[derive(Clone, PartialEq)]

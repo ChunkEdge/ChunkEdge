@@ -8,9 +8,9 @@ mod inventory_sync;
 use chunkedge_server::client::{Client, FlushPacketsSet, LoadEntityForClientMessage};
 use chunkedge_server::entity::living::LivingEntity;
 use chunkedge_server::entity::{EntityId, EntityLayerId, Position};
-use chunkedge_server::protocol::packets::play::set_equipment_s2c::{EquipmentEntry, EquipmentSlot};
-use chunkedge_server::protocol::packets::play::SetEquipmentS2c;
 use chunkedge_server::protocol::WritePacket;
+use chunkedge_server::protocol::packets::play::SetEquipmentS2c;
+use chunkedge_server::protocol::packets::play::set_equipment_s2c::{EquipmentEntry, EquipmentSlot};
 use chunkedge_server::{EntityLayer, ItemStack, Layer};
 pub use inventory_sync::EquipmentInventorySync;
 

@@ -10,11 +10,11 @@ use crate::entity::cow::CowEntity;
 use crate::entity::{EntityLayerId, Position};
 use crate::layer::chunk::UnloadedChunk;
 use crate::layer::{ChunkLayer, EntityLayer};
+use crate::protocol::Packet;
 use crate::protocol::packets::play::{
     AddEntityS2c, BlockEntityDataS2c, ForgetLevelChunkS2c, LevelChunkWithLightS2c,
     MoveEntityPosS2c, RemoveEntitiesS2c, RespawnS2c, SectionBlocksUpdateS2c,
 };
-use crate::protocol::Packet;
 use crate::testing::ScenarioSingleClient;
 use crate::{BlockState, ChunkView, Despawned, Server};
 
@@ -318,12 +318,13 @@ fn entity_layer_switching() {
     };
 
     // Remove the original layer from the visible layer set.
-    assert!(app
-        .world_mut()
-        .get_mut::<VisibleEntityLayers>(client_ent)
-        .unwrap()
-        .0
-        .remove(&l1));
+    assert!(
+        app.world_mut()
+            .get_mut::<VisibleEntityLayers>(client_ent)
+            .unwrap()
+            .0
+            .remove(&l1)
+    );
 
     app.update(); // Tick.
 

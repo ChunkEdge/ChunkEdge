@@ -10,8 +10,8 @@ use anyhow::bail;
 use bytes::{BufMut, BytesMut};
 use chunkedge_binary::{Decode, Encode};
 use chunkedge_protocol::decode::PacketFrame;
-use chunkedge_protocol::packets::handshake::intention_c2s::HandShakeIntent;
 use chunkedge_protocol::packets::handshake::IntentionC2s;
+use chunkedge_protocol::packets::handshake::intention_c2s::HandShakeIntent;
 use chunkedge_protocol::packets::login::{
     HelloS2c, LoginAcknowledgedC2s, LoginCompressionS2c, LoginDisconnectS2c,
 };
@@ -205,13 +205,14 @@ impl Proxy {
                     .await?;
 
                 if state == PacketState::Handshake
-                    && let Some(handshake) = extrapolate_packet::<IntentionC2s>(&packet) {
-                        *state_lock.write().await = match handshake.intent {
-                            HandShakeIntent::Status => PacketState::Status,
-                            HandShakeIntent::Login => PacketState::Login,
-                            HandShakeIntent::Transfer => panic!("transfer intent is not supported"),
-                        };
-                    }
+                    && let Some(handshake) = extrapolate_packet::<IntentionC2s>(&packet)
+                {
+                    *state_lock.write().await = match handshake.intent {
+                        HandShakeIntent::Status => PacketState::Status,
+                        HandShakeIntent::Login => PacketState::Login,
+                        HandShakeIntent::Transfer => panic!("transfer intent is not supported"),
+                    };
+                }
                 if state == PacketState::Login
                     && extrapolate_packet::<LoginAcknowledgedC2s>(&packet).is_some()
                 {
@@ -302,9 +303,10 @@ impl Proxy {
                 client_writer.send_packet_raw(&packet).await?;
 
                 if state == PacketState::Login
-                    && let Some(LoginCompressionS2c { threshold }) = extrapolate_packet(&packet) {
-                        *threshold_lock.write().await = CompressionThreshold(threshold.0);
-                    }
+                    && let Some(LoginCompressionS2c { threshold }) = extrapolate_packet(&packet)
+                {
+                    *threshold_lock.write().await = CompressionThreshold(threshold.0);
+                }
             }
         });
 

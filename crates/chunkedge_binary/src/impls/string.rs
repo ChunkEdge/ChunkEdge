@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use anyhow::{ensure, Context};
+use anyhow::{Context, ensure};
 use chunkedge_nbt::compound::NetworkCompound;
 use chunkedge_nbt::serde::ser::CompoundSerializer;
 use chunkedge_text::{JsonText, Text};

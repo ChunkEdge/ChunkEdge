@@ -4,7 +4,7 @@
 /// Used only by macros. Not public API.
 #[doc(hidden)]
 pub mod __private {
-    pub use anyhow::{anyhow, bail, ensure, Context, Result};
+    pub use anyhow::{Context, Result, anyhow, bail, ensure};
 
     pub use crate::Packet;
 }
@@ -38,10 +38,10 @@ pub use block_pos::BlockPos;
 pub use bytes;
 pub use chunk_pos::ChunkPos;
 pub use chunk_section_pos::ChunkSectionPos;
+use chunkedge_binary::Encode;
 pub use chunkedge_binary::array::FixedArray;
 pub use chunkedge_binary::bit_set::{FixedBitSet, VariableBitSet};
 pub use chunkedge_binary::byte_angle::ByteAngle;
-use chunkedge_binary::Encode;
 pub use chunkedge_binary::{
     IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
 };
@@ -160,12 +160,12 @@ mod tests {
     use chunkedge_protocol_macros::Packet;
 
     use super::*;
+    use crate::Ident;
     use crate::block_pos::BlockPos;
     use crate::decode::PacketDecoder;
     use crate::encode::PacketEncoder;
     use crate::hand::Hand;
     use crate::text::{IntoText, Text};
-    use crate::Ident;
 
     #[derive(Encode, Decode, Packet, Debug)]
     #[packet(id = 1, side = PacketSide::Clientbound)]

@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use chunkedge_binary::{cautious_capacity, Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Encode, VarInt, cautious_capacity};
 use chunkedge_generated::item::ItemKind;
 
 use crate::components::{BlockPredicate, ExactComponentMatcher, ItemComponent, Patchable};

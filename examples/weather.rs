@@ -2,7 +2,7 @@ use std::f64::consts::TAU;
 
 use chunkedge::prelude::*;
 use chunkedge::weather::{Rain, Thunder, WeatherBundle};
-use chunkedge_server::nbt::{compound, List};
+use chunkedge_server::nbt::{List, compound};
 
 pub fn main() {
     App::new()

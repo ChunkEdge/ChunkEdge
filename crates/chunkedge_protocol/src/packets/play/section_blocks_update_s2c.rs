@@ -4,8 +4,8 @@ use std::io::Write;
 use bitfield_struct::bitfield;
 use chunkedge_binary::{Decode, Encode, VarLong};
 
-use crate::chunk_section_pos::ChunkSectionPos;
 use crate::Packet;
+use crate::chunk_section_pos::ChunkSectionPos;
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct SectionBlocksUpdateS2c<'a> {

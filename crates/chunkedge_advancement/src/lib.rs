@@ -14,14 +14,14 @@ use chunkedge_binary::{Encode, RawBytes};
 use chunkedge_generated::packet_id;
 use chunkedge_server::client::{Client, FlushPacketsSet, SpawnClientsSet};
 use chunkedge_server::protocol::packets::play::{
-    update_advancements_s2c as packet, SelectAdvancementsTabS2c,
+    SelectAdvancementsTabS2c, update_advancements_s2c as packet,
 };
 use chunkedge_server::protocol::{
-    anyhow, IntoTextComponent, Packet, PacketSide, PacketState, VarInt, WritePacket,
+    IntoTextComponent, Packet, PacketSide, PacketState, VarInt, WritePacket, anyhow,
 };
 use chunkedge_server::{Ident, ItemStack, Text};
 use derive_more::{Deref, DerefMut};
-use message::{handle_advancement_tab_change, AdvancementTabChangeMessage};
+use message::{AdvancementTabChangeMessage, handle_advancement_tab_change};
 use rustc_hash::FxHashMap;
 
 pub struct AdvancementPlugin;

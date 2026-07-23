@@ -1,7 +1,7 @@
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, TokenTree};
 use quote::{format_ident, quote};
-use syn::{parse_macro_input, Attribute, Data, DeriveInput, Error, Expr, Fields, Meta, Result};
+use syn::{Attribute, Data, DeriveInput, Error, Expr, Fields, Meta, Result, parse_macro_input};
 
 #[proc_macro_derive(Command, attributes(command, scopes, paths))]
 pub fn derive_command(input: TokenStream) -> TokenStream {

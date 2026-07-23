@@ -23,7 +23,7 @@ pub use var_long::VarLong;
 
 #[doc(hidden)]
 pub mod __private {
-    pub use anyhow::{anyhow, bail, ensure, Context, Result};
+    pub use anyhow::{Context, Result, anyhow, bail, ensure};
 
     pub use crate::{Decode, Encode, VarInt};
 }

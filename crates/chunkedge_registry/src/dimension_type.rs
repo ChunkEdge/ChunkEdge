@@ -10,7 +10,7 @@ use std::ops::{Deref, DerefMut};
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge_ident::{ident, Ident};
+use chunkedge_ident::{Ident, ident};
 use chunkedge_nbt::serde::ser::CompoundSerializer;
 use serde::{Deserialize, Serialize};
 use tracing::error;

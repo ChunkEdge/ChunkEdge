@@ -7,7 +7,7 @@ use bytes::{BufMut, BytesMut};
 use chunkedge_binary::Encode;
 use chunkedge_protocol::decode::{PacketDecoder, PacketFrame};
 use chunkedge_protocol::encode::PacketEncoder;
-use chunkedge_protocol::{CompressionThreshold, VarInt, MAX_PACKET_SIZE};
+use chunkedge_protocol::{CompressionThreshold, MAX_PACKET_SIZE, VarInt};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio::sync::RwLock;
@@ -75,8 +75,8 @@ impl PacketIoWriter {
             if uncompressed_packet_length >= threshold.0 as usize {
                 use std::io::Read;
 
-                use flate2::bufread::ZlibEncoder;
                 use flate2::Compression;
+                use flate2::bufread::ZlibEncoder;
 
                 let mut z = ZlibEncoder::new(&uncompressed_packet[..], Compression::new(4));
                 let mut compressed = Vec::new();

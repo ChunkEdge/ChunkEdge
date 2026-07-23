@@ -150,9 +150,5 @@ fn packet_for_viewer<'a>(
 }
 
 fn rewrite_self(id: i32, viewer_id: i32) -> i32 {
-    if id == viewer_id {
-        0
-    } else {
-        id
-    }
+    if id == viewer_id { 0 } else { id }
 }

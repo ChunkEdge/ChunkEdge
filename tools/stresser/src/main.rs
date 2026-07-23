@@ -22,7 +22,7 @@ use std::sync::Arc;
 
 use args::StresserArgs;
 use clap::Parser;
-use stresser::{make_session, SessionParams};
+use stresser::{SessionParams, make_session};
 use tokio::sync::Semaphore;
 
 mod args;

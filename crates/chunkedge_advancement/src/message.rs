@@ -1,7 +1,7 @@
 use bevy_ecs::prelude::*;
+use chunkedge_server::Ident;
 use chunkedge_server::event_loop::PacketMessage;
 use chunkedge_server::protocol::packets::play::SeenAdvancementsC2s;
-use chunkedge_server::Ident;
 
 /// This message sends when the client changes or closes advancement's tab.
 #[derive(Message, Clone, PartialEq, Eq, Debug)]

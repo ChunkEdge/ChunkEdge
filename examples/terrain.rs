@@ -1,7 +1,7 @@
 #![allow(clippy::type_complexity)]
 
-use std::collections::hash_map::Entry;
 use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 use std::sync::Arc;
 use std::thread;
 use std::time::SystemTime;

@@ -11,7 +11,7 @@ use command::handler::CommandResultMessage;
 use command::parsers::entity_selector::{EntitySelector, EntitySelectors};
 use command::parsers::{CommandArg, GreedyString, QuotableString};
 use command::scopes::CommandScopes;
-use command::{parsers, AddCommand, Command, CommandScopeRegistry, ModifierValue};
+use command::{AddCommand, Command, CommandScopeRegistry, ModifierValue, parsers};
 use command_macros::Command;
 use parsers::{Vec2 as Vec2Parser, Vec3 as Vec3Parser};
 use rand::prelude::IteratorRandom;

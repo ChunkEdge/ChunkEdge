@@ -1,5 +1,5 @@
-use crate::protocol::packets::play::game_event_s2c::GameEventKind;
 use crate::protocol::packets::play::GameEventS2c;
+use crate::protocol::packets::play::game_event_s2c::GameEventKind;
 use crate::testing::*;
 use crate::weather::{Rain, Thunder, WeatherBundle};
 

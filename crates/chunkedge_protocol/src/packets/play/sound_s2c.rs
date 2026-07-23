@@ -1,8 +1,8 @@
 use chunkedge_binary::{Decode, Encode};
 use chunkedge_math::IVec3;
 
-use crate::sound::{SoundCategory, SoundId};
 use crate::Packet;
+use crate::sound::{SoundCategory, SoundId};
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct SoundS2c {

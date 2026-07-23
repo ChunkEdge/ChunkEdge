@@ -1,8 +1,8 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_entity::EntityManager;
-pub use chunkedge_protocol::packets::play::interact_c2s::EntityInteraction;
 use chunkedge_protocol::packets::play::InteractC2s;
+pub use chunkedge_protocol::packets::play::interact_c2s::EntityInteraction;
 
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 

@@ -6,10 +6,10 @@ use chunkedge_server::client::{
     Client, OldViewDistance, OldVisibleEntityLayers, ViewDistance, VisibleEntityLayers,
 };
 use chunkedge_server::layer::UpdateLayersPreClientSet;
+use chunkedge_server::protocol::packets::play::BossEventS2c;
 pub use chunkedge_server::protocol::packets::play::boss_event_s2c::{
     BossBarAction, BossBarColor, BossBarDivision, BossBarFlags,
 };
-use chunkedge_server::protocol::packets::play::BossEventS2c;
 use chunkedge_server::protocol::{IntoTextComponent, WritePacket};
 use chunkedge_server::{ChunkView, Despawned, EntityLayer, Layer, UniqueId};
 

@@ -822,9 +822,10 @@ fn update_cursor_item(
 fn handle_close_handled_screen(mut packets: MessageReader<PacketMessage>, mut commands: Commands) {
     for packet in packets.read() {
         if packet.decode::<ContainerCloseC2s>().is_some()
-            && let Ok(mut entity) = commands.get_entity(packet.client) {
-                entity.remove::<OpenInventory>();
-            }
+            && let Ok(mut entity) = commands.get_entity(packet.client)
+        {
+            entity.remove::<OpenInventory>();
+        }
     }
 }
 
@@ -1488,23 +1489,24 @@ fn handle_update_selected_slot(
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<SetCarriedItemC2s>()
-            && let Ok(mut mut_held) = clients.get_mut(packet.client) {
-                // We bypass the change detection here because the server listens for changes
-                // of `HeldItem` in order to send the update to the client.
-                // This is not required here because the update is coming from the client.
-                let held = mut_held.bypass_change_detection();
-                if pkt.slot > 8 {
-                    // The client is trying to interact with a slot that does not exist, ignore.
-                    continue;
-                }
-
-                held.set_hotbar_idx(pkt.slot as u8);
-
-                messages.write(UpdateSelectedSlotMessage {
-                    client: packet.client,
-                    slot: pkt.slot as u8,
-                });
+            && let Ok(mut mut_held) = clients.get_mut(packet.client)
+        {
+            // We bypass the change detection here because the server listens for changes
+            // of `HeldItem` in order to send the update to the client.
+            // This is not required here because the update is coming from the client.
+            let held = mut_held.bypass_change_detection();
+            if pkt.slot > 8 {
+                // The client is trying to interact with a slot that does not exist, ignore.
+                continue;
             }
+
+            held.set_hotbar_idx(pkt.slot as u8);
+
+            messages.write(UpdateSelectedSlotMessage {
+                client: packet.client,
+                slot: pkt.slot as u8,
+            });
+        }
     }
 }
 

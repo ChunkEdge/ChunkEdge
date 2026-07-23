@@ -136,7 +136,7 @@ impl Decode<'_> for VarLong {
 
 #[cfg(test)]
 mod tests {
-    use rand::{rng, RngExt};
+    use rand::{RngExt, rng};
 
     use super::*;
 

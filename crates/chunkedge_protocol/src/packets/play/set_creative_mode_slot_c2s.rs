@@ -1,5 +1,5 @@
 use chunkedge_binary::{Decode, Encode};
-use chunkedge_item::{decode_item_stack_recursive, ItemStack};
+use chunkedge_item::{ItemStack, decode_item_stack_recursive};
 
 use crate::Packet;
 

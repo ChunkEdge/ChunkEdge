@@ -37,8 +37,8 @@ fn handle_client_settings(
     )>,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<ClientInformationC2s>() {
-            if let Ok((mut view_dist, mut settings, mut model_parts, mut main_arm)) =
+        if let Some(pkt) = packet.decode::<ClientInformationC2s>()
+            && let Ok((mut view_dist, mut settings, mut model_parts, mut main_arm)) =
                 clients.get_mut(packet.client)
             {
                 // TODO: set a server max view distance
@@ -54,6 +54,5 @@ fn handle_client_settings(
                 model_parts.set_if_neq(PlayerModelParts(u8::from(pkt.displayed_skin_parts) as i8));
                 main_arm.set_if_neq(player::MainArm(pkt.main_arm as i8));
             }
-        }
     }
 }

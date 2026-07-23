@@ -151,8 +151,8 @@ fn update_server_player_abilities(
     mut client_query: Query<&mut PlayerAbilitiesFlags>,
 ) {
     for packets in packet_messages.read() {
-        if let Some(pkt) = packets.decode::<PlayerAbilitiesC2s>() {
-            if let Ok(mut mut_flags) = client_query.get_mut(packets.client) {
+        if let Some(pkt) = packets.decode::<PlayerAbilitiesC2s>()
+            && let Ok(mut mut_flags) = client_query.get_mut(packets.client) {
                 let flags = mut_flags.bypass_change_detection();
                 match pkt {
                     PlayerAbilitiesC2s::StartFlying => {
@@ -169,6 +169,5 @@ fn update_server_player_abilities(
                     }
                 }
             }
-        }
     }
 }

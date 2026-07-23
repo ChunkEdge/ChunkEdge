@@ -536,11 +536,10 @@ fn place_blocks(
         }
 
         // Can't place block if there's already a block there
-        if let Some(existing_block) = layer.block(real_pos) {
-            if existing_block.state != BlockState::AIR {
+        if let Some(existing_block) = layer.block(real_pos)
+            && existing_block.state != BlockState::AIR {
                 continue;
             }
-        }
 
         // Can't place the block if it would intersect the player's hitbox
         if hitbox.intersects_strict(Aabb::new(

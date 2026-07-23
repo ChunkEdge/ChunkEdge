@@ -53,23 +53,21 @@ fn init_weather_on_layer_join(
 ) {
     for (mut client, visible_chunk_layer) in &mut clients {
         if let Ok((rain, thunder)) = layers.get(visible_chunk_layer.0) {
-            if let Some(rain) = rain {
-                if rain.0 != 0.0 {
+            if let Some(rain) = rain
+                && rain.0 != 0.0 {
                     client.write_packet(&GameEventS2c {
                         kind: GameEventKind::RainLevelChange,
                         value: rain.0,
                     });
                 }
-            }
 
-            if let Some(thunder) = thunder {
-                if thunder.0 != 0.0 {
+            if let Some(thunder) = thunder
+                && thunder.0 != 0.0 {
                     client.write_packet(&GameEventS2c {
                         kind: GameEventKind::ThunderLevelChange,
                         value: thunder.0,
                     });
                 }
-            }
         }
     }
 }

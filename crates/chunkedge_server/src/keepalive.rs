@@ -97,8 +97,8 @@ fn handle_keepalive_response(
     mut commands: Commands,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<KeepAliveC2s>() {
-            if let Ok((entity, mut state, mut ping)) = clients.get_mut(packet.client) {
+        if let Some(pkt) = packet.decode::<KeepAliveC2s>()
+            && let Ok((entity, mut state, mut ping)) = clients.get_mut(packet.client) {
                 if state.got_keepalive {
                     warn!("unexpected keepalive from client {entity:?}");
                     commands.entity(entity).remove::<Client>();
@@ -113,6 +113,5 @@ fn handle_keepalive_response(
                     ping.0 = state.last_send.elapsed().as_millis() as i32;
                 }
             }
-        }
     }
 }

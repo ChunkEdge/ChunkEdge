@@ -44,12 +44,10 @@ pub(crate) fn stop_interaction(
     mut packets: MessageReader<PacketMessage>,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<PlayerActionC2s>() {
-            if pkt.action == PlayerAction::ReleaseUseItem {
-                if let Ok(mut flags) = clients.get_mut(packet.client) {
+        if let Some(pkt) = packet.decode::<PlayerActionC2s>()
+            && pkt.action == PlayerAction::ReleaseUseItem
+                && let Ok(mut flags) = clients.get_mut(packet.client) {
                     flags.set_using_item(false);
                 }
-            }
-        }
     }
 }

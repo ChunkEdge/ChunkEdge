@@ -368,11 +368,10 @@ impl<O: Bounded3D + Send + Sync> SpatialIndex for Bvh<O> {
             direction: Vec3<f64>,
             f: &mut impl FnMut(RaycastHit<O>) -> bool,
         ) {
-            if let Some(hit) = hit {
-                if hit.near <= near {
+            if let Some(hit) = hit
+                && hit.near <= near {
                     return;
                 }
-            }
 
             match node {
                 Node::Internal(int) => {

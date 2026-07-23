@@ -422,8 +422,8 @@ pub struct DisconnectClient {
 
 impl Command for DisconnectClient {
     fn apply(self, world: &mut World) {
-        if let Ok(mut entity) = world.get_entity_mut(self.client) {
-            if let Some(mut client) = entity.get_mut::<Client>() {
+        if let Ok(mut entity) = world.get_entity_mut(self.client)
+            && let Some(mut client) = entity.get_mut::<Client>() {
                 client.write_packet(&DisconnectS2c {
                     reason: self.reason.into_cow_text_component(),
                 });
@@ -432,7 +432,6 @@ impl Command for DisconnectClient {
                 // time to be sent.
                 entity.insert(Despawned);
             }
-        }
     }
 }
 
@@ -842,8 +841,8 @@ fn handle_layer_messages(
                                 while let Ok(u64) = bytes.read_u64::<NativeEndian>() {
                                     let entity = Entity::from_bits(u64);
 
-                                    if self_entity != entity {
-                                        if let Ok((init, old_pos)) = entities.get(entity) {
+                                    if self_entity != entity
+                                        && let Ok((init, old_pos)) = entities.get(entity) {
                                             remove_buf.send_and_clear(&mut *client);
 
                                             // Spawn at the entity's old position since we may get a
@@ -851,7 +850,6 @@ fn handle_layer_messages(
                                             // iteration of the loop.
                                             init.write_init_packets(old_pos.get(), &mut *client);
                                         }
-                                    }
                                 }
                             }
                         }
@@ -864,8 +862,8 @@ fn handle_layer_messages(
                                 while let Ok(u64) = bytes.read_u64::<NativeEndian>() {
                                     let entity = Entity::from_bits(u64);
 
-                                    if self_entity != entity {
-                                        if let Ok((init, old_pos)) = entities.get(entity) {
+                                    if self_entity != entity
+                                        && let Ok((init, old_pos)) = entities.get(entity) {
                                             remove_buf.send_and_clear(&mut *client);
 
                                             // Spawn at the entity's old position since we may get a
@@ -873,7 +871,6 @@ fn handle_layer_messages(
                                             // iteration of the loop.
                                             init.write_init_packets(old_pos.get(), &mut *client);
                                         }
-                                    }
                                 }
                             }
                         }
@@ -1025,8 +1022,8 @@ pub(crate) fn update_view_and_layers(
                     if let Ok(layer) = entity_layers.get(layer) {
                         for pos in old_view.iter() {
                             for entity in layer.entities_at(pos) {
-                                if self_entity != entity {
-                                    if let Ok(id) = entity_ids.get(entity) {
+                                if self_entity != entity
+                                    && let Ok(id) = entity_ids.get(entity) {
                                         tx.send(ChannelMessage::UnloadEntity(
                                             UnloadEntityForClientMessage {
                                                 client: self_entity,
@@ -1037,7 +1034,6 @@ pub(crate) fn update_view_and_layers(
 
                                         remove_buf.push(id.get());
                                     }
-                                }
                             }
                         }
                     }
@@ -1050,8 +1046,8 @@ pub(crate) fn update_view_and_layers(
                     if let Ok(layer) = entity_layers.get(layer) {
                         for pos in view.iter() {
                             for entity in layer.entities_at(pos) {
-                                if self_entity != entity {
-                                    if let Ok((init, pos)) = entity_init.get(entity) {
+                                if self_entity != entity
+                                    && let Ok((init, pos)) = entity_init.get(entity) {
                                         tx.send(ChannelMessage::LoadEntity(
                                             LoadEntityForClientMessage {
                                                 client: self_entity,
@@ -1062,7 +1058,6 @@ pub(crate) fn update_view_and_layers(
 
                                         init.write_init_packets(pos.get(), &mut *client);
                                     }
-                                }
                             }
                         }
                     }
@@ -1078,8 +1073,8 @@ pub(crate) fn update_view_and_layers(
                         if let Ok(layer) = entity_layers.get(layer) {
                             for pos in old_view.iter() {
                                 for entity in layer.entities_at(pos) {
-                                    if self_entity != entity {
-                                        if let Ok(id) = entity_ids.get(entity) {
+                                    if self_entity != entity
+                                        && let Ok(id) = entity_ids.get(entity) {
                                             tx.send(ChannelMessage::UnloadEntity(
                                                 UnloadEntityForClientMessage {
                                                     client: self_entity,
@@ -1090,7 +1085,6 @@ pub(crate) fn update_view_and_layers(
 
                                             remove_buf.push(id.get());
                                         }
-                                    }
                                 }
                             }
                         }
@@ -1106,8 +1100,8 @@ pub(crate) fn update_view_and_layers(
                         if let Ok(layer) = entity_layers.get(layer) {
                             for pos in old_view.iter() {
                                 for entity in layer.entities_at(pos) {
-                                    if self_entity != entity {
-                                        if let Ok((init, pos)) = entity_init.get(entity) {
+                                    if self_entity != entity
+                                        && let Ok((init, pos)) = entity_init.get(entity) {
                                             tx.send(ChannelMessage::LoadEntity(
                                                 LoadEntityForClientMessage {
                                                     client: self_entity,
@@ -1118,7 +1112,6 @@ pub(crate) fn update_view_and_layers(
 
                                             init.write_init_packets(pos.get(), &mut *client);
                                         }
-                                    }
                                 }
                             }
                         }
@@ -1156,8 +1149,8 @@ pub(crate) fn update_view_and_layers(
                         if let Ok(layer) = entity_layers.get(layer) {
                             for pos in old_view.diff(view) {
                                 for entity in layer.entities_at(pos) {
-                                    if self_entity != entity {
-                                        if let Ok(id) = entity_ids.get(entity) {
+                                    if self_entity != entity
+                                        && let Ok(id) = entity_ids.get(entity) {
                                             tx.send(ChannelMessage::UnloadEntity(
                                                 UnloadEntityForClientMessage {
                                                     client: self_entity,
@@ -1168,7 +1161,6 @@ pub(crate) fn update_view_and_layers(
 
                                             remove_buf.push(id.get());
                                         }
-                                    }
                                 }
                             }
                         }
@@ -1179,8 +1171,8 @@ pub(crate) fn update_view_and_layers(
                         if let Ok(layer) = entity_layers.get(layer) {
                             for pos in view.diff(old_view) {
                                 for entity in layer.entities_at(pos) {
-                                    if self_entity != entity {
-                                        if let Ok((init, pos)) = entity_init.get(entity) {
+                                    if self_entity != entity
+                                        && let Ok((init, pos)) = entity_init.get(entity) {
                                             tx.send(ChannelMessage::LoadEntity(
                                                 LoadEntityForClientMessage {
                                                     client: self_entity,
@@ -1191,7 +1183,6 @@ pub(crate) fn update_view_and_layers(
 
                                             init.write_init_packets(pos.get(), &mut *client);
                                         }
-                                    }
                                 }
                             }
                         }

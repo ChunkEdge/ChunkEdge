@@ -211,10 +211,10 @@ impl JavaString {
     /// points.
     #[inline]
     #[must_use]
-    pub unsafe fn into_string_unchecked(self) -> String {
+    pub unsafe fn into_string_unchecked(self) -> String { unsafe {
         // SAFETY: preconditions checked by caller
         String::from_utf8_unchecked(self.vec)
-    }
+    }}
 
     /// See [`String::push_str`].
     #[inline]

@@ -122,11 +122,10 @@ async fn handle_connection(
     if let Err(e) = handle_handshake(shared, io, remote_addr, world_state).await {
         // EOF can happen if the client disconnects while joining, which isn't
         // very erroneous.
-        if let Some(e) = e.downcast_ref::<io::Error>() {
-            if e.kind() == io::ErrorKind::UnexpectedEof {
+        if let Some(e) = e.downcast_ref::<io::Error>()
+            && e.kind() == io::ErrorKind::UnexpectedEof {
                 return;
             }
-        }
         warn!("connection ended with error: {e:#}");
     }
 }

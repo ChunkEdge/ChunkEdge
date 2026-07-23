@@ -204,15 +204,14 @@ impl Proxy {
                     )
                     .await?;
 
-                if state == PacketState::Handshake {
-                    if let Some(handshake) = extrapolate_packet::<IntentionC2s>(&packet) {
+                if state == PacketState::Handshake
+                    && let Some(handshake) = extrapolate_packet::<IntentionC2s>(&packet) {
                         *state_lock.write().await = match handshake.intent {
                             HandShakeIntent::Status => PacketState::Status,
                             HandShakeIntent::Login => PacketState::Login,
                             HandShakeIntent::Transfer => panic!("transfer intent is not supported"),
                         };
                     }
-                }
                 if state == PacketState::Login
                     && extrapolate_packet::<LoginAcknowledgedC2s>(&packet).is_some()
                 {
@@ -302,11 +301,10 @@ impl Proxy {
 
                 client_writer.send_packet_raw(&packet).await?;
 
-                if state == PacketState::Login {
-                    if let Some(LoginCompressionS2c { threshold }) = extrapolate_packet(&packet) {
+                if state == PacketState::Login
+                    && let Some(LoginCompressionS2c { threshold }) = extrapolate_packet(&packet) {
                         *threshold_lock.write().await = CompressionThreshold(threshold.0);
                     }
-                }
             }
         });
 

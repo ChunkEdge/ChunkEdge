@@ -151,8 +151,7 @@ fn manage_blocks(mut clients: Query<(&mut Client, &Position, &mut GameState, &mu
             .blocks
             .iter()
             .position(|block| *block == pos_under_player)
-        {
-            if index > 0 {
+            && index > 0 {
                 let power_result = 2_f32.powf((state.combo as f32) / 45.0);
                 let max_time_taken = (1000_f32 * (index as f32) / power_result) as u128;
 
@@ -183,7 +182,6 @@ fn manage_blocks(mut clients: Query<(&mut Client, &Position, &mut GameState, &mu
                 client.set_title("");
                 client.set_subtitle(state.score.to_string().color(Color::LIGHT_PURPLE).bold());
             }
-        }
     }
 }
 

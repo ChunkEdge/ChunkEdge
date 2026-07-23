@@ -121,8 +121,8 @@ fn handle_teleport_confirmations(
     mut commands: Commands,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<AcceptTeleportationC2s>() {
-            if let Ok(mut state) = clients.get_mut(packet.client) {
+        if let Some(pkt) = packet.decode::<AcceptTeleportationC2s>()
+            && let Ok(mut state) = clients.get_mut(packet.client) {
                 if state.pending_teleports == 0 {
                     warn!(
                         "unexpected teleport confirmation from client {:?}",
@@ -146,6 +146,5 @@ fn handle_teleport_confirmations(
                     commands.entity(packet.client).remove::<Client>();
                 }
             }
-        }
     }
 }

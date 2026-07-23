@@ -821,11 +821,10 @@ fn update_cursor_item(
 /// Handles clients telling the server that they are closing an inventory.
 fn handle_close_handled_screen(mut packets: MessageReader<PacketMessage>, mut commands: Commands) {
     for packet in packets.read() {
-        if packet.decode::<ContainerCloseC2s>().is_some() {
-            if let Ok(mut entity) = commands.get_entity(packet.client) {
+        if packet.decode::<ContainerCloseC2s>().is_some()
+            && let Ok(mut entity) = commands.get_entity(packet.client) {
                 entity.remove::<OpenInventory>();
             }
-        }
     }
 }
 
@@ -1488,8 +1487,8 @@ fn handle_update_selected_slot(
     mut messages: MessageWriter<UpdateSelectedSlotMessage>,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<SetCarriedItemC2s>() {
-            if let Ok(mut mut_held) = clients.get_mut(packet.client) {
+        if let Some(pkt) = packet.decode::<SetCarriedItemC2s>()
+            && let Ok(mut mut_held) = clients.get_mut(packet.client) {
                 // We bypass the change detection here because the server listens for changes
                 // of `HeldItem` in order to send the update to the client.
                 // This is not required here because the update is coming from the client.
@@ -1506,7 +1505,6 @@ fn handle_update_selected_slot(
                     slot: pkt.slot as u8,
                 });
             }
-        }
     }
 }
 

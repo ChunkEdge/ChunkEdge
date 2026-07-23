@@ -57,13 +57,12 @@ where
         f(&mut self.staging)?;
         let end = self.staging.len();
 
-        if let Some((m, range)) = self.global.last_mut() {
-            if msg == *m {
+        if let Some((m, range)) = self.global.last_mut()
+            && msg == *m {
                 // Extend the existing message.
                 range.end = end as u32;
                 return Ok(());
             }
-        }
 
         self.global.push((msg, start as u32..end as u32));
 
@@ -82,13 +81,12 @@ where
         f(&mut self.staging)?;
         let end = self.staging.len();
 
-        if let Some((m, range)) = self.local.last_mut() {
-            if msg == *m {
+        if let Some((m, range)) = self.local.last_mut()
+            && msg == *m {
                 // Extend the existing message.
                 range.end = end as u32;
                 return Ok(());
             }
-        }
 
         self.local.push((msg, start as u32..end as u32));
 

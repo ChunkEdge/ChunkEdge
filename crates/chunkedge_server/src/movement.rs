@@ -150,8 +150,8 @@ fn handle_client_movement(
                     &mut movement_messages,
                 );
             }
-        } else if let Some(pkt) = packet.decode::<MoveVehicleC2s>() {
-            if let Ok((pos, look, head_yaw, on_ground, teleport_state)) =
+        } else if let Some(pkt) = packet.decode::<MoveVehicleC2s>()
+            && let Ok((pos, look, head_yaw, on_ground, teleport_state)) =
                 clients.get_mut(packet.client)
             {
                 let mov = MovementMessage {
@@ -177,7 +177,6 @@ fn handle_client_movement(
                     &mut movement_messages,
                 );
             }
-        }
     }
 }
 

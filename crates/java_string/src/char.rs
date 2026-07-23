@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter, Write};
 use std::hash::{Hash, Hasher};
-use std::iter::{once, FusedIterator, Once};
+use std::iter::{FusedIterator, Once, once};
 use std::ops::Range;
 use std::str::FromStr;
 
@@ -75,8 +75,10 @@ impl JavaCodePoint {
     #[inline]
     #[must_use]
     pub const unsafe fn from_u32_unchecked(i: u32) -> JavaCodePoint {
-        // SAFETY: the caller checks that the argument can be represented by this type
-        std::mem::transmute(i)
+        unsafe {
+            // SAFETY: the caller checks that the argument can be represented by this type
+            std::mem::transmute(i)
+        }
     }
 
     /// Converts a `char` to a code point.
@@ -133,7 +135,10 @@ impl JavaCodePoint {
     #[inline]
     #[must_use]
     pub unsafe fn as_char_unchecked(self) -> char {
-        char::from_u32_unchecked(self.as_u32())
+        unsafe {
+            // SAFETY: the caller checks that this code point is not a surrogate code point.
+            char::from_u32_unchecked(self.as_u32())
+        }
     }
 
     /// See [`char::encode_utf16`]

@@ -276,13 +276,13 @@ impl JavaCodePoint {
         unsafe {
             // SAFETY: all characters specified are in ascii range
             match self.as_u32() {
-                NULL => CharEscapeIter::new([b'\\', b'0']),
-                TAB => CharEscapeIter::new([b'\\', b't']),
-                CARRIAGE_RETURN => CharEscapeIter::new([b'\\', b'r']),
-                LINE_FEED => CharEscapeIter::new([b'\\', b'n']),
-                SINGLE_QUOTE if args.escape_single_quote => CharEscapeIter::new([b'\\', b'\'']),
-                DOUBLE_QUOTE if args.escape_double_quote => CharEscapeIter::new([b'\\', b'"']),
-                BACKSLASH => CharEscapeIter::new([b'\\', b'\\']),
+                NULL => CharEscapeIter::new(*b"\\0"),
+                TAB => CharEscapeIter::new(*b"\\t"),
+                CARRIAGE_RETURN => CharEscapeIter::new(*b"\\r"),
+                LINE_FEED => CharEscapeIter::new(*b"\\n"),
+                SINGLE_QUOTE if args.escape_single_quote => CharEscapeIter::new(*b"\\'"),
+                DOUBLE_QUOTE if args.escape_double_quote => CharEscapeIter::new(*b"\\\""),
+                BACKSLASH => CharEscapeIter::new(*b"\\\\"),
                 _ if self.is_printable() => {
                     // SAFETY: surrogate code points are not printable
                     CharEscapeIter::printable(self.as_char_unchecked())
@@ -336,12 +336,12 @@ impl JavaCodePoint {
         unsafe {
             // SAFETY: all characters specified are in ascii range
             match self.as_u32() {
-                TAB => CharEscapeIter::new([b'\\', b't']),
-                CARRIAGE_RETURN => CharEscapeIter::new([b'\\', b'r']),
-                LINE_FEED => CharEscapeIter::new([b'\\', b'n']),
-                SINGLE_QUOTE => CharEscapeIter::new([b'\\', b'\'']),
-                DOUBLE_QUOTE => CharEscapeIter::new([b'\\', b'"']),
-                BACKSLASH => CharEscapeIter::new([b'\\', b'\\']),
+                TAB => CharEscapeIter::new(*b"\\t"),
+                CARRIAGE_RETURN => CharEscapeIter::new(*b"\\r"),
+                LINE_FEED => CharEscapeIter::new(*b"\\n"),
+                SINGLE_QUOTE => CharEscapeIter::new(*b"\\'"),
+                DOUBLE_QUOTE => CharEscapeIter::new(*b"\\\""),
+                BACKSLASH => CharEscapeIter::new(*b"\\\\"),
                 0x20..=0x7e => CharEscapeIter::new([self.as_u32() as u8]),
                 _ => self.escape_unicode(),
             }

@@ -81,7 +81,7 @@ fn draw_packet_widget(ui: &mut Ui, packet: &Packet, selected: bool) -> Response 
             rect,
             0.0,
             fill,
-            Stroke::new(1.0, Rgba::BLACK),
+            Stroke::new(1.0_f32, Rgba::BLACK),
             StrokeKind::Inside,
         );
 

@@ -419,7 +419,7 @@ fn handle_test_command(
         let client = &mut clients.get_mut(message.executor).unwrap();
         client.send_chat_message(format!(
             "Test command executed with data:\n {:#?}",
-            &message.result
+            message.result
         ));
     }
 }
@@ -432,7 +432,7 @@ fn handle_complex_command(
         let client = &mut clients.get_mut(message.executor).unwrap();
         client.send_chat_message(format!(
             "complex command executed with data:\n {:#?}\n and with the modifiers:\n {:#?}",
-            &message.result, &message.modifiers
+            message.result, message.modifiers
         ));
     }
 }
@@ -445,7 +445,7 @@ fn handle_struct_command(
         let client = &mut clients.get_mut(message.executor).unwrap();
         client.send_chat_message(format!(
             "Struct command executed with data:\n {:#?}",
-            &message.result
+            message.result
         ));
     }
 }
@@ -476,7 +476,7 @@ fn handle_gamemode_command(
                 *game_mode = game_mode_to_set;
                 client.send_chat_message(format!(
                     "Gamemode command executor -> self executed with data:\n {:#?}",
-                    &message.result
+                    message.result
                 ));
             }
             Some(selector) => match selector {
@@ -487,7 +487,7 @@ fn handle_gamemode_command(
                             client.send_chat_message(format!(
                                 "Gamemode command executor -> all entities executed with data:\n \
                                  {:#?}",
-                                &message.result
+                                message.result
                             ));
                         }
                     }
@@ -510,7 +510,7 @@ fn handle_gamemode_command(
                                 client.send_chat_message(format!(
                                     "Gamemode command executor -> single player executed with \
                                      data:\n {:#?}",
-                                    &message.result
+                                    message.result
                                 ));
                             }
                         }
@@ -521,7 +521,7 @@ fn handle_gamemode_command(
                             client.send_chat_message(format!(
                                 "Gamemode command executor -> all entities executed with data:\n \
                                  {:#?}",
-                                &message.result
+                                message.result
                             ));
                         }
                     }
@@ -531,7 +531,7 @@ fn handle_gamemode_command(
                         *game_mode = game_mode_to_set;
                         client.send_chat_message(format!(
                             "Gamemode command executor -> self executed with data:\n {:#?}",
-                            &message.result
+                            message.result
                         ));
                     }
                     EntitySelectors::NearestPlayer => {
@@ -561,7 +561,7 @@ fn handle_gamemode_command(
                                 client.send_chat_message(format!(
                                     "Gamemode command executor -> single player executed with \
                                      data:\n {:#?}",
-                                    &message.result
+                                    message.result
                                 ));
                             }
                         }
@@ -585,7 +585,7 @@ fn handle_gamemode_command(
                                 client.send_chat_message(format!(
                                     "Gamemode command executor -> single player executed with \
                                      data:\n {:#?}",
-                                    &message.result
+                                    message.result
                                 ));
                             }
                         }

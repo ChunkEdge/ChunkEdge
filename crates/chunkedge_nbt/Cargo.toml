@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 keywords = ["nbt", "minecraft", "serialization"]
 categories = ["data-structures", "game-development"]
-rust-version = "1.78.0"
+rust-version = "1.85.0"
 
 [package.metadata.docs.rs]
 all-features = true

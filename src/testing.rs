@@ -1,10 +1,11 @@
 use std::collections::VecDeque;
 use std::net::{IpAddr, Ipv4Addr};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, Once};
 use std::time::{Duration, Instant};
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use bevy_log::LogPlugin;
 use bytes::{Buf, BufMut, BytesMut};
 use chunkedge_binary::{Decode, Encode};
 use chunkedge_ident::ident;
@@ -19,6 +20,34 @@ use chunkedge_server::{ChunkLayer, EntityLayer, Server, ServerSettings};
 use uuid::Uuid;
 
 use crate::DefaultPlugins;
+
+/// Add plugins to `app` with [`NetworkPlugin`] disabled.
+///
+/// Also, for tests usually run in the same context, the
+/// logger and the subscriber in [`LogPlugin`] should only
+/// be initialized once. So only the first test executing
+/// this will have [`LogPlugin`] enabled. Other tests will
+/// have [`LogPlugin`] disabled.
+pub fn add_plugins(app: &mut App) {
+    static ONCE: Once = Once::new();
+    let mut is_first = false;
+
+    ONCE.call_once(|| {
+        is_first = true;
+    });
+
+    let plugins = if is_first {
+        DefaultPlugins.build().disable::<NetworkPlugin>()
+    } else {
+        DefaultPlugins
+            .build()
+            .disable::<NetworkPlugin>()
+            .disable::<LogPlugin>()
+    };
+
+    app.add_plugins(plugins);
+}
+
 pub struct ScenarioSingleClient {
     /// The new bevy application.
     pub app: App,
@@ -44,8 +73,9 @@ impl ScenarioSingleClient {
         .insert_resource(ServerSettings {
             compression_threshold: Default::default(),
             ..Default::default()
-        })
-        .add_plugins(DefaultPlugins.build().disable::<NetworkPlugin>());
+        });
+
+        add_plugins(&mut app);
 
         app.update(); // Initialize plugins.
 

@@ -6,12 +6,11 @@ use chunkedge::keepalive::KeepaliveSettings;
 use chunkedge::layer::LayerBundle;
 use chunkedge::layer::chunk::UnloadedChunk;
 use chunkedge::math::DVec3;
-use chunkedge::network::NetworkPlugin;
 use chunkedge::protocol::movement_flags::MovementFlags;
 use chunkedge::protocol::packets::play::{MovePlayerPosRotC2s, SwingC2s};
 use chunkedge::registry::{BiomeRegistry, DimensionTypeRegistry};
-use chunkedge::testing::create_mock_client;
-use chunkedge::{ChunkPos, DefaultPlugins, Hand, Server, ServerSettings, ident};
+use chunkedge::testing::{self, create_mock_client};
+use chunkedge::{ChunkPos, Hand, Server, ServerSettings, ident};
 use chunkedge_server::CompressionThreshold;
 use divan::Bencher;
 use rand::RngExt;
@@ -38,7 +37,7 @@ fn run_many_players(bencher: Bencher, client_count: usize, view_dist: u8, world_
         period: Duration::MAX,
     });
 
-    app.add_plugins(DefaultPlugins.build().disable::<NetworkPlugin>());
+    testing::add_plugins(&mut app);
 
     app.update(); // Initialize plugins.
 

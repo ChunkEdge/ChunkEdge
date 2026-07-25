@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_ident::Ident;
-use chunkedge_nbt::{compound, Compound, List, Value};
+use chunkedge_nbt::{Compound, List, Value, compound};
 use tracing::error;
 
 use crate::RegistrySet;

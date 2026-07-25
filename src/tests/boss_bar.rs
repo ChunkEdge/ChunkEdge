@@ -2,14 +2,14 @@ use chunkedge_boss_bar::{
     BossBarBundle, BossBarColor, BossBarDivision, BossBarFlags, BossBarHealth, BossBarStyle,
     BossBarTitle,
 };
+use chunkedge_server::Despawned;
 use chunkedge_server::client::VisibleEntityLayers;
 use chunkedge_server::entity::EntityLayerId;
 use chunkedge_server::protocol::packets::play::BossEventS2c;
 use chunkedge_server::text::IntoText;
-use chunkedge_server::Despawned;
 
-use crate::testing::ScenarioSingleClient;
 use crate::Text;
+use crate::testing::ScenarioSingleClient;
 
 #[test]
 fn test_initialize_on_join() {

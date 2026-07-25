@@ -27,10 +27,10 @@ impl View for FailedPackets {
             .stick_to_bottom(!state.update_scroll)
             .show(ui, |ui| {
                 for (packet, i) in packets.iter() {
-                    if let Some(filtered) = state.packet_filter.get(packet) {
-                        if !filtered {
-                            continue;
-                        }
+                    if let Some(filtered) = state.packet_filter.get(packet)
+                        && !filtered
+                    {
+                        continue;
                     }
 
                     let selected = {
@@ -81,7 +81,7 @@ fn draw_packet_widget(ui: &mut Ui, packet: &Packet, selected: bool) -> Response 
             rect,
             0.0,
             fill,
-            Stroke::new(1.0, Rgba::BLACK),
+            Stroke::new(1.0_f32, Rgba::BLACK),
             StrokeKind::Inside,
         );
 

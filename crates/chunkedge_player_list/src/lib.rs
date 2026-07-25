@@ -9,7 +9,7 @@ use chunkedge_server::keepalive::Ping;
 use chunkedge_server::layer::UpdateLayersPreClientSet;
 use chunkedge_server::protocol::encode::PacketWriter;
 use chunkedge_server::protocol::packets::play::{
-    player_info_update_s2c as packet, PlayerInfoRemoveS2c, PlayerInfoUpdateS2c, TabListS2c,
+    PlayerInfoRemoveS2c, PlayerInfoUpdateS2c, TabListS2c, player_info_update_s2c as packet,
 };
 use chunkedge_server::protocol::{IntoTextComponent, WritePacket};
 use chunkedge_server::text::IntoText;

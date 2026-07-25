@@ -1,12 +1,12 @@
 use chunkedge_scoreboard::*;
 
+use crate::Server;
 use crate::client::VisibleEntityLayers;
 use crate::entity::EntityLayerId;
 use crate::layer::EntityLayer;
 use crate::protocol::packets::play::{SetDisplayObjectiveS2c, SetObjectiveS2c, SetScoreS2c};
 use crate::testing::ScenarioSingleClient;
 use crate::text::IntoText;
-use crate::Server;
 
 #[test]
 fn show_scoreboard_when_added_to_layer() {

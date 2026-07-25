@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter, Write};
 use std::hash::{Hash, Hasher};
-use std::iter::{once, FusedIterator, Once};
+use std::iter::{FusedIterator, Once, once};
 use std::ops::Range;
 use std::str::FromStr;
 
@@ -75,8 +75,10 @@ impl JavaCodePoint {
     #[inline]
     #[must_use]
     pub const unsafe fn from_u32_unchecked(i: u32) -> JavaCodePoint {
-        // SAFETY: the caller checks that the argument can be represented by this type
-        std::mem::transmute(i)
+        unsafe {
+            // SAFETY: the caller checks that the argument can be represented by this type
+            std::mem::transmute(i)
+        }
     }
 
     /// Converts a `char` to a code point.
@@ -133,7 +135,10 @@ impl JavaCodePoint {
     #[inline]
     #[must_use]
     pub unsafe fn as_char_unchecked(self) -> char {
-        char::from_u32_unchecked(self.as_u32())
+        unsafe {
+            // SAFETY: the caller checks that this code point is not a surrogate code point.
+            char::from_u32_unchecked(self.as_u32())
+        }
     }
 
     /// See [`char::encode_utf16`]
@@ -276,13 +281,13 @@ impl JavaCodePoint {
         unsafe {
             // SAFETY: all characters specified are in ascii range
             match self.as_u32() {
-                NULL => CharEscapeIter::new([b'\\', b'0']),
-                TAB => CharEscapeIter::new([b'\\', b't']),
-                CARRIAGE_RETURN => CharEscapeIter::new([b'\\', b'r']),
-                LINE_FEED => CharEscapeIter::new([b'\\', b'n']),
-                SINGLE_QUOTE if args.escape_single_quote => CharEscapeIter::new([b'\\', b'\'']),
-                DOUBLE_QUOTE if args.escape_double_quote => CharEscapeIter::new([b'\\', b'"']),
-                BACKSLASH => CharEscapeIter::new([b'\\', b'\\']),
+                NULL => CharEscapeIter::new(*b"\\0"),
+                TAB => CharEscapeIter::new(*b"\\t"),
+                CARRIAGE_RETURN => CharEscapeIter::new(*b"\\r"),
+                LINE_FEED => CharEscapeIter::new(*b"\\n"),
+                SINGLE_QUOTE if args.escape_single_quote => CharEscapeIter::new(*b"\\'"),
+                DOUBLE_QUOTE if args.escape_double_quote => CharEscapeIter::new(*b"\\\""),
+                BACKSLASH => CharEscapeIter::new(*b"\\\\"),
                 _ if self.is_printable() => {
                     // SAFETY: surrogate code points are not printable
                     CharEscapeIter::printable(self.as_char_unchecked())
@@ -336,12 +341,12 @@ impl JavaCodePoint {
         unsafe {
             // SAFETY: all characters specified are in ascii range
             match self.as_u32() {
-                TAB => CharEscapeIter::new([b'\\', b't']),
-                CARRIAGE_RETURN => CharEscapeIter::new([b'\\', b'r']),
-                LINE_FEED => CharEscapeIter::new([b'\\', b'n']),
-                SINGLE_QUOTE => CharEscapeIter::new([b'\\', b'\'']),
-                DOUBLE_QUOTE => CharEscapeIter::new([b'\\', b'"']),
-                BACKSLASH => CharEscapeIter::new([b'\\', b'\\']),
+                TAB => CharEscapeIter::new(*b"\\t"),
+                CARRIAGE_RETURN => CharEscapeIter::new(*b"\\r"),
+                LINE_FEED => CharEscapeIter::new(*b"\\n"),
+                SINGLE_QUOTE => CharEscapeIter::new(*b"\\'"),
+                DOUBLE_QUOTE => CharEscapeIter::new(*b"\\\""),
+                BACKSLASH => CharEscapeIter::new(*b"\\\\"),
                 0x20..=0x7e => CharEscapeIter::new([self.as_u32() as u8]),
                 _ => self.escape_unicode(),
             }

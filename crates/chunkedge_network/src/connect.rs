@@ -5,10 +5,11 @@ use std::io;
 use std::net::SocketAddr;
 use std::time::Duration;
 
-use anyhow::{bail, ensure, Context};
+use anyhow::{Context, bail, ensure};
 use base64::prelude::*;
 use chunkedge_binary::{Bounded, Decode, RawBytes};
 use chunkedge_lang::keys;
+use chunkedge_protocol::JsonText;
 use chunkedge_protocol::packets::configuration::select_known_packs_s2c::KnownPack;
 use chunkedge_protocol::packets::configuration::{
     ClientInformationC2s, CustomPayloadC2s, CustomPayloadS2c, FinishConfigurationC2s,
@@ -20,11 +21,10 @@ use chunkedge_protocol::packets::status::{
     PingRequestC2s, PongResponseS2c, StatusRequestC2s, StatusResponseS2c,
 };
 use chunkedge_protocol::profile::Property;
-use chunkedge_protocol::JsonText;
 use chunkedge_server::client::Properties;
 use chunkedge_server::nbt::serde::ser::CompoundSerializer;
-use chunkedge_server::protocol::packets::handshake::intention_c2s::HandShakeIntent;
 use chunkedge_server::protocol::packets::handshake::IntentionC2s;
+use chunkedge_server::protocol::packets::handshake::intention_c2s::HandShakeIntent;
 use chunkedge_server::protocol::packets::login::{
     CustomQueryAnswerC2s, CustomQueryS2c, HelloC2s, HelloS2c, KeyC2s, LoginCompressionS2c,
     LoginDisconnectS2c,
@@ -32,14 +32,14 @@ use chunkedge_server::protocol::packets::login::{
 use chunkedge_server::protocol::{PacketDecoder, PacketEncoder, VarInt};
 use chunkedge_server::registry::{BiomeRegistry, DimensionTypeRegistry, RegistryCodec};
 use chunkedge_server::text::{Color, IntoText};
-use chunkedge_server::{ident, Ident, Text, MINECRAFT_VERSION, PROTOCOL_VERSION};
+use chunkedge_server::{Ident, MINECRAFT_VERSION, PROTOCOL_VERSION, Text, ident};
 use hmac::digest::Update;
 use hmac::{Hmac, KeyInit, Mac};
 use num_bigint::BigInt;
 use reqwest::StatusCode;
 use rsa::Pkcs1v15Encrypt;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use sha1::Sha1;
 use sha2::{Digest, Sha256};
 use tokio::net::{TcpListener, TcpStream};
@@ -122,10 +122,10 @@ async fn handle_connection(
     if let Err(e) = handle_handshake(shared, io, remote_addr, world_state).await {
         // EOF can happen if the client disconnects while joining, which isn't
         // very erroneous.
-        if let Some(e) = e.downcast_ref::<io::Error>() {
-            if e.kind() == io::ErrorKind::UnexpectedEof {
-                return;
-            }
+        if let Some(e) = e.downcast_ref::<io::Error>()
+            && e.kind() == io::ErrorKind::UnexpectedEof
+        {
+            return;
         }
         warn!("connection ended with error: {e:#}");
     }

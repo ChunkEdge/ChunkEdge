@@ -2,10 +2,10 @@
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_protocol::IntoTextComponent;
 use chunkedge_protocol::encode::WritePacket;
 use chunkedge_protocol::packets::play::{ChatC2s, SystemChatS2c};
 use chunkedge_protocol::text::IntoText;
-use chunkedge_protocol::IntoTextComponent;
 
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 

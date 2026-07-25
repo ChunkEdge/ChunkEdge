@@ -7,7 +7,7 @@ use rayon::iter::{
 };
 use vek::{Aabb, Vec3};
 
-use crate::{ray_box_intersect, Bounded3D, RaycastHit, SpatialIndex};
+use crate::{Bounded3D, RaycastHit, SpatialIndex, ray_box_intersect};
 
 #[derive(Clone, Debug)]
 pub struct Bvh<T> {
@@ -368,10 +368,10 @@ impl<O: Bounded3D + Send + Sync> SpatialIndex for Bvh<O> {
             direction: Vec3<f64>,
             f: &mut impl FnMut(RaycastHit<O>) -> bool,
         ) {
-            if let Some(hit) = hit {
-                if hit.near <= near {
-                    return;
-                }
+            if let Some(hit) = hit
+                && hit.near <= near
+            {
+                return;
             }
 
             match node {

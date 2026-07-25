@@ -6,8 +6,8 @@ use chunkedge_server::block::{PropName, PropValue};
 use chunkedge_server::layer::chunk::{Chunk, UnloadedChunk};
 use chunkedge_server::nbt::{Compound, List, Value};
 use chunkedge_server::protocol::BlockKind;
-use chunkedge_server::registry::biome::BiomeId;
 use chunkedge_server::registry::BiomeRegistry;
+use chunkedge_server::registry::biome::BiomeId;
 use chunkedge_server::{ChunkPos, Ident};
 use thiserror::Error;
 

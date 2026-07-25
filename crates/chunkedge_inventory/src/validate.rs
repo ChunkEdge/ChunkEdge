@@ -1,8 +1,8 @@
-use chunkedge_server::protocol::anyhow::{self, ensure};
-use chunkedge_server::protocol::packets::play::container_click_c2s::{ClickMode, SlotChange};
-use chunkedge_server::protocol::packets::play::ContainerClickC2s;
-use chunkedge_server::protocol::VarInt;
 use chunkedge_server::ItemStack;
+use chunkedge_server::protocol::VarInt;
+use chunkedge_server::protocol::anyhow::{self, ensure};
+use chunkedge_server::protocol::packets::play::ContainerClickC2s;
+use chunkedge_server::protocol::packets::play::container_click_c2s::{ClickMode, SlotChange};
 
 use crate::player_inventory::PlayerInventory;
 use crate::validate::anyhow::bail;
@@ -729,11 +729,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::EMPTY,
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::EMPTY,
+                }
+                .into(),
+            ]
             .into(),
             carried_item: inventory.slot(0).clone().into(),
         };
@@ -755,11 +757,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::new(ItemKind::Diamond, 20),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::new(ItemKind::Diamond, 20),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         };
@@ -769,11 +773,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::new(ItemKind::Diamond, 30),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::new(ItemKind::Diamond, 30),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         };
@@ -797,11 +803,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::new(ItemKind::Diamond, 64),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::new(ItemKind::Diamond, 64),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::new(ItemKind::Diamond, 20).into(),
         };
@@ -822,11 +830,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::new(ItemKind::Diamond, 2),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::new(ItemKind::Diamond, 2),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::new(ItemKind::IronIngot, 2).into(),
         };
@@ -848,11 +858,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::new(ItemKind::Diamond, 22),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::new(ItemKind::Diamond, 22),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         };
@@ -862,11 +874,13 @@ mod tests {
             mode: ClickMode::Click,
             state_id: VarInt(0),
             slot_idx: 0,
-            slot_changes: vec![SlotChange {
-                idx: 0,
-                stack: ItemStack::new(ItemKind::Diamond, 32),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 0,
+                    stack: ItemStack::new(ItemKind::Diamond, 32),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::EMPTY.into(),
         };
@@ -959,11 +973,13 @@ mod tests {
                 mode: ClickMode::Click,
                 state_id: VarInt(0),
                 slot_idx: 9,
-                slot_changes: vec![SlotChange {
-                    idx: 9,
-                    stack: ItemStack::EMPTY,
-                }
-                .into()]
+                slot_changes: vec![
+                    SlotChange {
+                        idx: 9,
+                        stack: ItemStack::EMPTY,
+                    }
+                    .into(),
+                ]
                 .into(),
                 carried_item: ItemStack::new(ItemKind::GoldIngot, 2).into(),
             },
@@ -973,11 +989,13 @@ mod tests {
                 mode: ClickMode::DropKey,
                 state_id: VarInt(0),
                 slot_idx: 9,
-                slot_changes: vec![SlotChange {
-                    idx: 9,
-                    stack: ItemStack::new(ItemKind::GoldIngot, 1),
-                }
-                .into()]
+                slot_changes: vec![
+                    SlotChange {
+                        idx: 9,
+                        stack: ItemStack::new(ItemKind::GoldIngot, 1),
+                    }
+                    .into(),
+                ]
                 .into(),
                 carried_item: ItemStack::EMPTY.into(),
             },
@@ -1040,11 +1058,13 @@ mod tests {
             slot_idx: 9,
             button: 0,
             mode: ClickMode::Click,
-            slot_changes: vec![SlotChange {
-                idx: 9,
-                stack: ItemStack::EMPTY,
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 9,
+                    stack: ItemStack::EMPTY,
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::new(ItemKind::Apple, 100).into(),
         };
@@ -1064,11 +1084,13 @@ mod tests {
             slot_idx: 9,
             button: 0,
             mode: ClickMode::Click,
-            slot_changes: vec![SlotChange {
-                idx: 9,
-                stack: ItemStack::new(ItemKind::Apple, 64),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 9,
+                    stack: ItemStack::new(ItemKind::Apple, 64),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: ItemStack::new(ItemKind::Apple, 36).into(),
         };
@@ -1195,11 +1217,13 @@ mod tests {
             slot_idx: 36,
             button: 0,
             mode: ClickMode::Click,
-            slot_changes: vec![SlotChange {
-                idx: 36,
-                stack: probe_a.clone(),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 36,
+                    stack: probe_a.clone(),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: probe_b.clone().into(),
         };
@@ -1249,11 +1273,13 @@ mod tests {
             slot_idx: 36,
             button: 0,
             mode: ClickMode::Click,
-            slot_changes: vec![SlotChange {
-                idx: 36,
-                stack: probe_a.clone(),
-            }
-            .into()]
+            slot_changes: vec![
+                SlotChange {
+                    idx: 36,
+                    stack: probe_a.clone(),
+                }
+                .into(),
+            ]
             .into(),
             carried_item: probe_b.clone().into(),
         };

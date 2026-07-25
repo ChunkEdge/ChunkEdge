@@ -46,7 +46,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
         .map(|sound| {
             // TODO: put the full resource identifier in the extracted JSON.
             let path_name = &sound.name;
-            let ident_name = format!("minecraft:{}", &sound.name);
+            let ident_name = format!("minecraft:{}", sound.name);
 
             let name = ident(path_name.to_pascal_case());
             quote! {

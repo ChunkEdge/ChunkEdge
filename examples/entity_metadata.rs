@@ -9,10 +9,10 @@ use chunkedge::entity::player::PlayerEntity;
 use chunkedge::entity::warden::WardenEntity;
 use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::{
-    entity, CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, PaintingVariantDefinition,
-    Pose,
+    CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, PaintingVariantDefinition, Pose,
+    entity,
 };
-use chunkedge::nbt::{compound, List};
+use chunkedge::nbt::{List, compound};
 use chunkedge::player_list::{Listed, PlayerListEntryBundle};
 use chunkedge::prelude::*;
 use chunkedge::protocol::IdOr;

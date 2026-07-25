@@ -4,7 +4,7 @@ use std::fmt;
 use std::fmt::Display;
 use std::iter::FusedIterator;
 
-use chunkedge_ident::{ident, Ident};
+use chunkedge_ident::{Ident, ident};
 
 use crate::item::ItemKind;
 

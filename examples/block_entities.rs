@@ -2,7 +2,7 @@
 
 use chunkedge::interact_block::InteractBlockMessage;
 use chunkedge::message::ChatReceivedMessage;
-use chunkedge::nbt::{compound, List};
+use chunkedge::nbt::{List, compound};
 use chunkedge::prelude::*;
 
 const FLOOR_Y: i32 = 64;

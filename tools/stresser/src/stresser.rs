@@ -3,15 +3,15 @@ use std::net::SocketAddr;
 
 use anyhow::bail;
 use chunkedge_protocol::movement_flags::MovementFlags;
-use chunkedge_protocol::packets::handshake::intention_c2s::HandShakeIntent;
 use chunkedge_protocol::packets::handshake::IntentionC2s;
+use chunkedge_protocol::packets::handshake::intention_c2s::HandShakeIntent;
 use chunkedge_protocol::packets::login::{HelloC2s, HelloS2c, LoginCompressionS2c};
 use chunkedge_protocol::packets::play::{
     AcceptTeleportationC2s, KeepAliveC2s, KeepAliveS2c, LoginS2c, MovePlayerPosC2s,
     PlayerPositionS2c,
 };
 use chunkedge_protocol::{
-    CompressionThreshold, Packet, PacketDecoder, PacketEncoder, VarInt, PROTOCOL_VERSION,
+    CompressionThreshold, PROTOCOL_VERSION, Packet, PacketDecoder, PacketEncoder, VarInt,
 };
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;

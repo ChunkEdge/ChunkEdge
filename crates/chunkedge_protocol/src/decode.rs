@@ -1,12 +1,12 @@
 #[cfg(feature = "encryption")]
 use aes::cipher::KeyIvInit;
-use anyhow::{bail, ensure, Context};
+use anyhow::{Context, bail, ensure};
 use bytes::{Buf, BytesMut};
 use chunkedge_binary::{Decode, VarInt, VarIntDecodeError};
 
 #[cfg(feature = "compression")]
 use crate::CompressionThreshold;
-use crate::{Packet, MAX_PACKET_SIZE};
+use crate::{MAX_PACKET_SIZE, Packet};
 
 /// The AES block cipher with a 128 bit key, using the CFB-8 mode of
 /// operation.
@@ -277,8 +277,8 @@ mod tests {
         use std::io::Read;
 
         use chunkedge_binary::Encode;
-        use flate2::bufread::ZlibEncoder;
         use flate2::Compression;
+        use flate2::bufread::ZlibEncoder;
 
         let threshold = 3;
         let mut decoder = PacketDecoder::new();

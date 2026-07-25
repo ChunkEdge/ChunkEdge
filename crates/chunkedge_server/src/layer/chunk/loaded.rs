@@ -17,13 +17,13 @@ use chunkedge_protocol::packets::play::{
 use chunkedge_protocol::{
     BlockPos, BlockState, ChunkPos, ChunkSectionPos, FixedArray, VariableBitSet,
 };
-use chunkedge_registry::biome::BiomeId;
 use chunkedge_registry::RegistryIdx;
+use chunkedge_registry::biome::BiomeId;
 use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
 
 use super::chunk::{
-    bit_width, check_biome_oob, check_block_oob, check_section_oob, BiomeContainer,
-    BlockStateContainer, Chunk, SECTION_BLOCK_COUNT,
+    BiomeContainer, BlockStateContainer, Chunk, SECTION_BLOCK_COUNT, bit_width, check_biome_oob,
+    check_block_oob, check_section_oob,
 };
 use super::paletted_container::PalettedContainer;
 use super::unloaded::{self, UnloadedChunk};

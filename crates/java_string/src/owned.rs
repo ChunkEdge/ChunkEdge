@@ -212,8 +212,10 @@ impl JavaString {
     #[inline]
     #[must_use]
     pub unsafe fn into_string_unchecked(self) -> String {
-        // SAFETY: preconditions checked by caller
-        String::from_utf8_unchecked(self.vec)
+        unsafe {
+            // SAFETY: preconditions checked by caller
+            String::from_utf8_unchecked(self.vec)
+        }
     }
 
     /// See [`String::push_str`].

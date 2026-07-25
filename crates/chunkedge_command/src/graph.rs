@@ -73,9 +73,9 @@
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
-use chunkedge_server::protocol::packets::play::commands_s2c::{Node, NodeData, Parser, StringArg};
-use chunkedge_server::protocol::packets::play::CommandsS2c;
 use chunkedge_server::protocol::VarInt;
+use chunkedge_server::protocol::packets::play::CommandsS2c;
+use chunkedge_server::protocol::packets::play::commands_s2c::{Node, NodeData, Parser, StringArg};
 use petgraph::dot::Dot;
 use petgraph::prelude::*;
 

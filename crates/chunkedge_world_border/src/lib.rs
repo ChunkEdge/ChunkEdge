@@ -3,11 +3,11 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_server::client::{Client, UpdateClientsSet, VisibleChunkLayer};
+use chunkedge_server::protocol::WritePacket;
 use chunkedge_server::protocol::packets::play::{
     InitializeBorderS2c, SetBorderCenterS2c, SetBorderLerpSizeS2c, SetBorderSizeS2c,
     SetBorderWarningDelayS2c, SetBorderWarningDistanceS2c,
 };
-use chunkedge_server::protocol::WritePacket;
 use chunkedge_server::{ChunkLayer, Server};
 use derive_more::{Deref, DerefMut};
 

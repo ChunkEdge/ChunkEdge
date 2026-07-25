@@ -8,8 +8,8 @@ const SPAWN_Y: i32 = 64;
 
 use chunkedge::interact_item::InteractItemMessage;
 use chunkedge::prelude::*;
-use chunkedge::protocol::sound::SoundCategory;
 use chunkedge::protocol::Sound;
+use chunkedge::protocol::sound::SoundCategory;
 use chunkedge_inventory::HeldItem;
 use item_menu::{ItemMenu, ItemMenuPlugin, MenuItemSelectMessage};
 

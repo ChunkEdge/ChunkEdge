@@ -2,12 +2,12 @@
 
 use std::net::SocketAddr;
 
+use chunkedge::MINECRAFT_VERSION;
 use chunkedge::network::{
-    async_trait, BroadcastToLan, CleanupFn, ConnectionMode, HandshakeData, PlayerSampleEntry,
-    ServerListPing,
+    BroadcastToLan, CleanupFn, ConnectionMode, HandshakeData, PlayerSampleEntry, ServerListPing,
+    async_trait,
 };
 use chunkedge::prelude::*;
-use chunkedge::MINECRAFT_VERSION;
 use rand::RngExt;
 
 pub fn main() {

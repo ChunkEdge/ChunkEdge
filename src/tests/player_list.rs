@@ -1,7 +1,7 @@
+use crate::ChunkLayer;
 use crate::layer::chunk::UnloadedChunk;
 use crate::protocol::packets::play::{AddEntityS2c, PlayerInfoUpdateS2c};
-use crate::testing::{create_mock_client, ScenarioSingleClient};
-use crate::ChunkLayer;
+use crate::testing::{ScenarioSingleClient, create_mock_client};
 
 #[test]
 fn player_list_arrives_before_player_spawn() {

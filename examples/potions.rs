@@ -8,8 +8,8 @@ use chunkedge_server::entity::attributes::{EntityAttribute, EntityAttributes};
 use chunkedge_server::entity::entity::Flags;
 use chunkedge_server::entity::living::{Absorption, Health};
 use chunkedge_server::status_effect::{StatusEffectAddedMessage, StatusEffectRemovedMessage};
-use rand::seq::IndexedRandom;
 use rand::RngExt;
+use rand::seq::IndexedRandom;
 
 const SPAWN_Y: i32 = 64;
 
@@ -139,14 +139,14 @@ pub fn add_potion_effect(
 ) {
     let mut rng = rand::rng();
     for message in messages.read() {
-        if message.state == SneakState::Start {
-            if let Ok(mut status) = clients.get_mut(message.client) {
-                status.apply(
-                    ActiveStatusEffect::from_effect(*StatusEffect::ALL.choose(&mut rng).unwrap())
-                        .with_duration(rng.random_range(10..1000))
-                        .with_amplifier(rng.random_range(0..5)),
-                );
-            }
+        if message.state == SneakState::Start
+            && let Ok(mut status) = clients.get_mut(message.client)
+        {
+            status.apply(
+                ActiveStatusEffect::from_effect(*StatusEffect::ALL.choose(&mut rng).unwrap())
+                    .with_duration(rng.random_range(10..1000))
+                    .with_amplifier(rng.random_range(0..5)),
+            );
         }
     }
 }
@@ -169,14 +169,14 @@ fn apply_potion_attribute(
     attributes.set_modifier(attr.attribute, name, amount, attr.operation);
 
     // not quite how vanilla does it, but it's close enough
-    if attr.attribute == EntityAttribute::MaxHealth {
-        if let Some(ref mut health) = health {
-            health.0 = health.0.min(
-                attributes
-                    .get_compute_value(EntityAttribute::MaxHealth)
-                    .unwrap_or(0.0) as f32,
-            );
-        }
+    if attr.attribute == EntityAttribute::MaxHealth
+        && let Some(health) = health
+    {
+        health.0 = health.0.min(
+            attributes
+                .get_compute_value(EntityAttribute::MaxHealth)
+                .unwrap_or(0.0) as f32,
+        );
     }
 }
 
@@ -188,14 +188,14 @@ fn remove_potion_attribute(
 ) {
     attributes.remove_modifier(attr.attribute, name);
 
-    if attr.attribute == EntityAttribute::MaxHealth {
-        if let Some(ref mut health) = health {
-            health.0 = health.0.min(
-                attributes
-                    .get_compute_value(EntityAttribute::MaxHealth)
-                    .unwrap_or(0.0) as f32,
-            );
-        }
+    if attr.attribute == EntityAttribute::MaxHealth
+        && let Some(health) = health
+    {
+        health.0 = health.0.min(
+            attributes
+                .get_compute_value(EntityAttribute::MaxHealth)
+                .unwrap_or(0.0) as f32,
+        );
     }
 }
 
@@ -307,32 +307,32 @@ pub fn handle_status_effect_update(
                 StatusEffect::Regeneration => {
                     let i = 50 >> effect.amplifier().min(31);
 
-                    if i == 0 || effect.active_ticks() % i == 0 {
-                        if let Some(ref mut health) = health {
-                            health.0 = (health.0 + 1.0).min(
-                                attributes
-                                    .get_compute_value(EntityAttribute::MaxHealth)
-                                    .unwrap_or(0.0) as f32,
-                            );
-                        }
+                    if (i == 0 || effect.active_ticks() % i == 0)
+                        && let Some(ref mut health) = health
+                    {
+                        health.0 = (health.0 + 1.0).min(
+                            attributes
+                                .get_compute_value(EntityAttribute::MaxHealth)
+                                .unwrap_or(0.0) as f32,
+                        );
                     }
                 }
                 StatusEffect::Poison => {
                     let i = 25 >> effect.amplifier().min(31);
 
-                    if i == 0 || effect.active_ticks() % i == 0 {
-                        if let Some(ref mut health) = health {
-                            health.0 = (health.0 - 1.0).max(1.0);
-                        }
+                    if (i == 0 || effect.active_ticks() % i == 0)
+                        && let Some(ref mut health) = health
+                    {
+                        health.0 = (health.0 - 1.0).max(1.0);
                     }
                 }
                 StatusEffect::Wither => {
                     let i = 40 >> effect.amplifier().min(31);
 
-                    if i == 0 || effect.active_ticks() % i == 0 {
-                        if let Some(ref mut health) = health {
-                            health.0 = (health.0 - 1.0).max(0.0);
-                        }
+                    if (i == 0 || effect.active_ticks() % i == 0)
+                        && let Some(ref mut health) = health
+                    {
+                        health.0 = (health.0 - 1.0).max(0.0);
                     }
                 }
                 _ => {}

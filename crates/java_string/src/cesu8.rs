@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use crate::validations::{utf8_char_width, CONT_MASK, TAG_CONT};
+use crate::validations::{CONT_MASK, TAG_CONT, utf8_char_width};
 use crate::{JavaStr, JavaString, Utf8Error};
 
 impl JavaStr {

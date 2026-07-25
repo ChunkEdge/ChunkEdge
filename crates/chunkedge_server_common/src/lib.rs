@@ -6,8 +6,8 @@ mod uuid;
 use std::num::NonZeroU32;
 use std::time::{Duration, Instant};
 
-use bevy_app::prelude::*;
 use bevy_app::PluginsState;
+use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_protocol::CompressionThreshold;
 pub use despawn::*;

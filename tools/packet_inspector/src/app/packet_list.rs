@@ -99,10 +99,10 @@ fn draw_packet_list(state: &mut SharedState, ui: &mut Ui) {
         .stick_to_bottom(!state.update_scroll)
         .show(ui, |ui| {
             for (i, packet) in packets.iter().enumerate() {
-                if let Some(filtered) = state.packet_filter.get(packet) {
-                    if !filtered {
-                        continue;
-                    }
+                if let Some(filtered) = state.packet_filter.get(packet)
+                    && !filtered
+                {
+                    continue;
                 }
 
                 let selected = {
@@ -153,7 +153,7 @@ fn draw_packet_widget(ui: &mut Ui, packet: &Packet, selected: bool) -> Response 
             rect,
             0.0,
             fill,
-            Stroke::new(1.0, Rgba::BLACK),
+            Stroke::new(1.0_f32, Rgba::BLACK),
             StrokeKind::Inside,
         );
 
@@ -270,7 +270,7 @@ pub(crate) fn get_triangle(direction: PacketSide, outer_rect: &Rect) -> PathShap
         ],
     };
 
-    let mut shape = PathShape::closed_line(points, Stroke::new(2.0, color));
+    let mut shape = PathShape::closed_line(points, Stroke::new(2.0_f32, color));
     shape.fill = color.into();
 
     shape

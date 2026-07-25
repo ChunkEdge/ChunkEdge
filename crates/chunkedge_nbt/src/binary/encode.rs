@@ -179,7 +179,7 @@ impl<W: Write> EncodeState<W> {
                 return Err(Error::new_owned(format!(
                     "byte array of length {} exceeds maximum of i32::MAX",
                     bytes.len(),
-                )))
+                )));
             }
         }
 
@@ -194,7 +194,7 @@ impl<W: Write> EncodeState<W> {
             Err(_) => {
                 return Err(Error::new_owned(format!(
                     "string of length {len} exceeds maximum of u16::MAX"
-                )))
+                )));
             }
         }
 
@@ -223,7 +223,7 @@ impl<W: Write> EncodeState<W> {
                         return Err(Error::new_owned(format!(
                             "byte list of length {} exceeds maximum of i32::MAX",
                             v.len(),
-                        )))
+                        )));
                     }
                 }
 
@@ -260,7 +260,7 @@ impl<W: Write> EncodeState<W> {
                     "{} list of length {} exceeds maximum of i32::MAX",
                     list.len(),
                     elem_type.name()
-                )))
+                )));
             }
         }
 
@@ -292,7 +292,7 @@ impl<W: Write> EncodeState<W> {
                 return Err(Error::new_owned(format!(
                     "int array of length {} exceeds maximum of i32::MAX",
                     ia.len(),
-                )))
+                )));
             }
         }
 
@@ -310,7 +310,7 @@ impl<W: Write> EncodeState<W> {
                 return Err(Error::new_owned(format!(
                     "long array of length {} exceeds maximum of i32::MAX",
                     la.len(),
-                )))
+                )));
             }
         }
 

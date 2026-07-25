@@ -33,9 +33,9 @@ pub use chunkedge_entity as entity;
 pub use chunkedge_nbt as nbt;
 pub use chunkedge_protocol as protocol;
 pub use chunkedge_protocol::{
-    block, ident, math, text, uuid, BiomePos, BlockPos, BlockState, ChunkPos, CompressionThreshold,
-    Difficulty, Direction, GameMode, Hand, Ident, ItemKind, ItemStack, Text, MINECRAFT_VERSION,
-    PROTOCOL_VERSION,
+    BiomePos, BlockPos, BlockState, ChunkPos, CompressionThreshold, Difficulty, Direction,
+    GameMode, Hand, Ident, ItemKind, ItemStack, MINECRAFT_VERSION, PROTOCOL_VERSION, Text, block,
+    ident, math, text, uuid,
 };
 pub use chunkedge_registry as registry;
 pub use chunkedge_server_common::*;

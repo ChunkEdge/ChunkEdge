@@ -2,12 +2,12 @@ use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_entity::{Look, Position, Velocity};
 use chunkedge_math::DVec3;
+use chunkedge_protocol::WritePacket;
 use chunkedge_protocol::packets::play::player_position_s2c::TeleportRelativeFlags;
 use chunkedge_protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
-use chunkedge_protocol::WritePacket;
 use tracing::warn;
 
-use crate::client::{update_view_and_layers, Client, UpdateClientsSet};
+use crate::client::{Client, UpdateClientsSet, update_view_and_layers};
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 use crate::spawn::update_respawn_position;
 
@@ -121,30 +121,30 @@ fn handle_teleport_confirmations(
     mut commands: Commands,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<AcceptTeleportationC2s>() {
-            if let Ok(mut state) = clients.get_mut(packet.client) {
-                if state.pending_teleports == 0 {
-                    warn!(
-                        "unexpected teleport confirmation from client {:?}",
-                        packet.client
-                    );
-                    commands.entity(packet.client).remove::<Client>();
-                }
+        if let Some(pkt) = packet.decode::<AcceptTeleportationC2s>()
+            && let Ok(mut state) = clients.get_mut(packet.client)
+        {
+            if state.pending_teleports == 0 {
+                warn!(
+                    "unexpected teleport confirmation from client {:?}",
+                    packet.client
+                );
+                commands.entity(packet.client).remove::<Client>();
+            }
 
-                let got = pkt.teleport_id.0 as u32;
-                let expected = state
-                    .teleport_id_counter
-                    .wrapping_sub(state.pending_teleports);
+            let got = pkt.teleport_id.0 as u32;
+            let expected = state
+                .teleport_id_counter
+                .wrapping_sub(state.pending_teleports);
 
-                if got == expected {
-                    state.pending_teleports -= 1;
-                } else {
-                    warn!(
-                        "unexpected teleport ID for client {:?} (expected {expected}, got {got}",
-                        packet.client
-                    );
-                    commands.entity(packet.client).remove::<Client>();
-                }
+            if got == expected {
+                state.pending_teleports -= 1;
+            } else {
+                warn!(
+                    "unexpected teleport ID for client {:?} (expected {expected}, got {got}",
+                    packet.client
+                );
+                commands.entity(packet.client).remove::<Client>();
             }
         }
     }

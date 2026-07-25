@@ -1,7 +1,7 @@
 use chunkedge_binary::{Decode, Encode, VarInt};
 
-use crate::sound::{SoundCategory, SoundId};
 use crate::Packet;
+use crate::sound::{SoundCategory, SoundId};
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct SoundEntityS2c {
     pub id: SoundId,

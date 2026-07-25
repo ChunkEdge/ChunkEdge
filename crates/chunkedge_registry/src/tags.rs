@@ -3,8 +3,8 @@ use std::borrow::Cow;
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_protocol::encode::{PacketWriter, WritePacket};
-pub use chunkedge_protocol::packets::play::update_tags_s2c::RegistryMap;
 use chunkedge_protocol::packets::play::UpdateTagsS2c;
+pub use chunkedge_protocol::packets::play::update_tags_s2c::RegistryMap;
 use chunkedge_server_common::Server;
 
 use crate::RegistrySet;

@@ -76,10 +76,12 @@ impl JavaStr {
     #[inline]
     #[must_use]
     pub const unsafe fn from_semi_utf8_unchecked(v: &[u8]) -> &JavaStr {
-        // SAFETY: the caller must guarantee that the bytes `v` are valid UTF-8, minus
-        // the absence of surrogate chars. Also relies on `&JavaStr` and `&[u8]`
-        // having the same layout.
-        std::mem::transmute(v)
+        unsafe {
+            // SAFETY: the caller must guarantee that the bytes `v` are valid UTF-8, minus
+            // the absence of surrogate chars. Also relies on `&JavaStr` and `&[u8]`
+            // having the same layout.
+            std::mem::transmute(v)
+        }
     }
 
     /// # Safety
@@ -89,8 +91,10 @@ impl JavaStr {
     #[inline]
     #[must_use]
     pub const unsafe fn from_semi_utf8_unchecked_mut(v: &mut [u8]) -> &mut JavaStr {
-        // SAFETY: see from_semi_utf8_unchecked
-        std::mem::transmute(v)
+        unsafe {
+            // SAFETY: see from_semi_utf8_unchecked
+            std::mem::transmute(v)
+        }
     }
 
     #[inline]
@@ -180,7 +184,10 @@ impl JavaStr {
     #[inline]
     #[must_use]
     pub const unsafe fn as_str_unchecked(&self) -> &str {
-        std::str::from_utf8_unchecked(self.as_bytes())
+        unsafe {
+            // SAFETY: the caller must guarantee that the bytes `self` are valid UTF-8
+            std::str::from_utf8_unchecked(self.as_bytes())
+        }
     }
 
     /// Converts this `&JavaStr` to a `Cow<str>`, replacing surrogate code
@@ -2416,12 +2423,12 @@ unsafe impl JavaStrSliceIndex for RangeInclusive<usize> {
 
     #[inline]
     unsafe fn get_unchecked(self, slice: *const JavaStr) -> *const JavaStr {
-        into_slice_range(self).get_unchecked(slice)
+        unsafe { into_slice_range(self).get_unchecked(slice) }
     }
 
     #[inline]
     unsafe fn get_unchecked_mut(self, slice: *mut JavaStr) -> *mut JavaStr {
-        into_slice_range(self).get_unchecked_mut(slice)
+        unsafe { into_slice_range(self).get_unchecked_mut(slice) }
     }
 }
 
@@ -2438,11 +2445,11 @@ unsafe impl JavaStrSliceIndex for RangeToInclusive<usize> {
 
     #[inline]
     unsafe fn get_unchecked(self, slice: *const JavaStr) -> *const JavaStr {
-        (0..=self.end).get_unchecked(slice)
+        unsafe { (0..=self.end).get_unchecked(slice) }
     }
 
     #[inline]
     unsafe fn get_unchecked_mut(self, slice: *mut JavaStr) -> *mut JavaStr {
-        (0..=self.end).get_unchecked_mut(slice)
+        unsafe { (0..=self.end).get_unchecked_mut(slice) }
     }
 }

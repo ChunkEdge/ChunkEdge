@@ -66,7 +66,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
         .iter()
         .map(|effect| {
             let path_name = &effect.name;
-            let ident_name = format!("minecraft:{}", &effect.name);
+            let ident_name = format!("minecraft:{}", effect.name);
 
             let name = ident(path_name.to_pascal_case());
             quote! {

@@ -6,8 +6,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use chunkedge::prelude::*;
 use chunkedge::protocol::sound::{Sound, SoundCategory};
 use chunkedge::spawn::IsFlat;
-use rand::seq::IndexedRandom;
 use rand::RngExt;
+use rand::seq::IndexedRandom;
 
 const START_POS: BlockPos = BlockPos::new(0, 100, 0);
 const VIEW_DIST: u8 = 10;
@@ -151,38 +151,37 @@ fn manage_blocks(mut clients: Query<(&mut Client, &Position, &mut GameState, &mu
             .blocks
             .iter()
             .position(|block| *block == pos_under_player)
+            && index > 0
         {
-            if index > 0 {
-                let power_result = 2_f32.powf((state.combo as f32) / 45.0);
-                let max_time_taken = (1000_f32 * (index as f32) / power_result) as u128;
+            let power_result = 2_f32.powf((state.combo as f32) / 45.0);
+            let max_time_taken = (1000_f32 * (index as f32) / power_result) as u128;
 
-                let current_time_millis = SystemTime::now()
-                    .duration_since(UNIX_EPOCH)
-                    .unwrap()
-                    .as_millis();
+            let current_time_millis = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_millis();
 
-                if current_time_millis - state.last_block_timestamp < max_time_taken {
-                    state.combo += index as u32
-                } else {
-                    state.combo = 0
-                }
-
-                for _ in 0..index {
-                    generate_next_block(&mut state, &mut layer, true)
-                }
-
-                let pitch = 0.9 + ((state.combo as f32) - 1.0) * 0.05;
-                client.play_sound(
-                    Sound::BlockNoteBlockBass,
-                    SoundCategory::Master,
-                    pos.0,
-                    1.0,
-                    pitch,
-                );
-
-                client.set_title("");
-                client.set_subtitle(state.score.to_string().color(Color::LIGHT_PURPLE).bold());
+            if current_time_millis - state.last_block_timestamp < max_time_taken {
+                state.combo += index as u32
+            } else {
+                state.combo = 0
             }
+
+            for _ in 0..index {
+                generate_next_block(&mut state, &mut layer, true)
+            }
+
+            let pitch = 0.9 + ((state.combo as f32) - 1.0) * 0.05;
+            client.play_sound(
+                Sound::BlockNoteBlockBass,
+                SoundCategory::Master,
+                pos.0,
+                1.0,
+                pitch,
+            );
+
+            client.set_title("");
+            client.set_subtitle(state.score.to_string().color(Color::LIGHT_PURPLE).bold());
         }
     }
 }

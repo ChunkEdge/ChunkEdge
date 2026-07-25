@@ -11,8 +11,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 pub use bevy::*;
 use bitfield_struct::bitfield;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
-use chunkedge_nbt::binary::{FromModifiedUtf8, ToModifiedUtf8};
 use chunkedge_nbt::Compound;
+use chunkedge_nbt::binary::{FromModifiedUtf8, ToModifiedUtf8};
 use flate2::bufread::{GzDecoder, ZlibDecoder};
 use flate2::write::{GzEncoder, ZlibEncoder};
 use lru::LruCache;
@@ -282,7 +282,7 @@ impl RegionFolder {
         fn region_chunks(
             this: &mut RegionFolder,
             pos: Result<(i32, i32), RegionError>,
-        ) -> impl Iterator<Item = Result<(i32, i32), RegionError>> {
+        ) -> std::vec::IntoIter<Result<(i32, i32), RegionError>> {
             let positions = match pos {
                 Ok((region_x, region_z)) => {
                     match RegionFolder::region(

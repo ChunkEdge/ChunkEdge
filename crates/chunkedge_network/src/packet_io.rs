@@ -16,7 +16,7 @@ use tokio::sync::Semaphore;
 use tokio::task::JoinHandle;
 use tracing::{debug, warn};
 
-use crate::byte_channel::{byte_channel, ByteSender, TrySendError};
+use crate::byte_channel::{ByteSender, TrySendError, byte_channel};
 use crate::{CleanupOnDrop, NewClientInfo};
 
 pub(crate) struct PacketIo {

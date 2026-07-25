@@ -1,9 +1,9 @@
+use chunkedge_protocol::IntoTextComponent;
 use chunkedge_protocol::encode::WritePacket;
 use chunkedge_protocol::packets::play::{
     ClearTitlesS2c, SetActionBarTextS2c, SetSubtitleTextS2c, SetTitleTextS2c, SetTitlesAnimationS2c,
 };
 use chunkedge_protocol::text::IntoText;
-use chunkedge_protocol::IntoTextComponent;
 
 pub trait SetTitle {
     /// Displays a title to a client.

@@ -16,8 +16,8 @@ pub use biome::BiomeRegistry;
 use chunkedge_ident::Ident;
 pub use codec::RegistryCodec;
 pub use dimension_type::DimensionTypeRegistry;
-use indexmap::map::Entry;
 use indexmap::IndexMap;
+use indexmap::map::Entry;
 pub use tags::TagsRegistry;
 
 pub struct RegistryPlugin;

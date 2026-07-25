@@ -1,7 +1,7 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::spanned::Spanned;
-use syn::{parse2, parse_quote, Data, DeriveInput, Error, Fields, Result};
+use syn::{Data, DeriveInput, Error, Fields, Result, parse_quote, parse2};
 
 use crate::{add_trait_bounds, decode_split_for_impl, pair_variants_with_discriminants};
 

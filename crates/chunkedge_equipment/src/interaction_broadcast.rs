@@ -1,9 +1,9 @@
 use chunkedge_inventory::{HeldItem, Inventory, PlayerAction};
+use chunkedge_server::ItemKind;
 use chunkedge_server::entity::living::LivingFlags;
 use chunkedge_server::event_loop::PacketMessage;
 use chunkedge_server::interact_item::InteractItemMessage;
 use chunkedge_server::protocol::packets::play::PlayerActionC2s;
-use chunkedge_server::ItemKind;
 
 use super::*;
 
@@ -44,12 +44,11 @@ pub(crate) fn stop_interaction(
     mut packets: MessageReader<PacketMessage>,
 ) {
     for packet in packets.read() {
-        if let Some(pkt) = packet.decode::<PlayerActionC2s>() {
-            if pkt.action == PlayerAction::ReleaseUseItem {
-                if let Ok(mut flags) = clients.get_mut(packet.client) {
-                    flags.set_using_item(false);
-                }
-            }
+        if let Some(pkt) = packet.decode::<PlayerActionC2s>()
+            && pkt.action == PlayerAction::ReleaseUseItem
+            && let Ok(mut flags) = clients.get_mut(packet.client)
+        {
+            flags.set_using_item(false);
         }
     }
 }

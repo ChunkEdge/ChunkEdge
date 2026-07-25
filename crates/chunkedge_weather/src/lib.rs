@@ -2,11 +2,11 @@
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge_server::client::{Client, FlushPacketsSet, UpdateClientsSet, VisibleChunkLayer};
-use chunkedge_server::protocol::packets::play::game_event_s2c::GameEventKind;
-use chunkedge_server::protocol::packets::play::GameEventS2c;
-use chunkedge_server::protocol::WritePacket;
 use chunkedge_server::ChunkLayer;
+use chunkedge_server::client::{Client, FlushPacketsSet, UpdateClientsSet, VisibleChunkLayer};
+use chunkedge_server::protocol::WritePacket;
+use chunkedge_server::protocol::packets::play::GameEventS2c;
+use chunkedge_server::protocol::packets::play::game_event_s2c::GameEventKind;
 use derive_more::{Deref, DerefMut};
 
 pub struct WeatherPlugin;
@@ -53,22 +53,22 @@ fn init_weather_on_layer_join(
 ) {
     for (mut client, visible_chunk_layer) in &mut clients {
         if let Ok((rain, thunder)) = layers.get(visible_chunk_layer.0) {
-            if let Some(rain) = rain {
-                if rain.0 != 0.0 {
-                    client.write_packet(&GameEventS2c {
-                        kind: GameEventKind::RainLevelChange,
-                        value: rain.0,
-                    });
-                }
+            if let Some(rain) = rain
+                && rain.0 != 0.0
+            {
+                client.write_packet(&GameEventS2c {
+                    kind: GameEventKind::RainLevelChange,
+                    value: rain.0,
+                });
             }
 
-            if let Some(thunder) = thunder {
-                if thunder.0 != 0.0 {
-                    client.write_packet(&GameEventS2c {
-                        kind: GameEventKind::ThunderLevelChange,
-                        value: thunder.0,
-                    });
-                }
+            if let Some(thunder) = thunder
+                && thunder.0 != 0.0
+            {
+                client.write_packet(&GameEventS2c {
+                    kind: GameEventKind::ThunderLevelChange,
+                    value: thunder.0,
+                });
             }
         }
     }

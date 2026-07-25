@@ -1,7 +1,7 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge_protocol::packets::play::EntityEventS2c;
 use chunkedge_protocol::WritePacket;
+use chunkedge_protocol::packets::play::EntityEventS2c;
 use derive_more::Deref;
 
 use crate::client::{Client, UpdateClientsSet};

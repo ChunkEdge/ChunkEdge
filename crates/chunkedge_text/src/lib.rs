@@ -9,7 +9,7 @@ use chunkedge_ident::Ident;
 use chunkedge_nbt::serde::ser::CompoundSerializer;
 use chunkedge_nbt::{Compound, Value};
 use serde::de::Visitor;
-use serde::{de, Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, de};
 use uuid::Uuid;
 
 pub mod color;

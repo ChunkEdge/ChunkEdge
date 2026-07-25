@@ -5,7 +5,7 @@ use chunkedge_protocol::packets::play::{PlayerAbilitiesC2s, PlayerAbilitiesS2c};
 use chunkedge_protocol::{GameMode, WritePacket};
 use derive_more::{Deref, DerefMut};
 
-use crate::client::{update_game_mode, Client, UpdateClientsSet};
+use crate::client::{Client, UpdateClientsSet, update_game_mode};
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 /// [`Component`] that stores the player's flying speed ability.
@@ -151,22 +151,22 @@ fn update_server_player_abilities(
     mut client_query: Query<&mut PlayerAbilitiesFlags>,
 ) {
     for packets in packet_messages.read() {
-        if let Some(pkt) = packets.decode::<PlayerAbilitiesC2s>() {
-            if let Ok(mut mut_flags) = client_query.get_mut(packets.client) {
-                let flags = mut_flags.bypass_change_detection();
-                match pkt {
-                    PlayerAbilitiesC2s::StartFlying => {
-                        flags.set_flying(true);
-                        player_start_flying_message_writer.write(PlayerStartFlyingMessage {
-                            client: packets.client,
-                        });
-                    }
-                    PlayerAbilitiesC2s::StopFlying => {
-                        flags.set_flying(false);
-                        player_stop_flying_message_writer.write(PlayerStopFlyingMessage {
-                            client: packets.client,
-                        });
-                    }
+        if let Some(pkt) = packets.decode::<PlayerAbilitiesC2s>()
+            && let Ok(mut mut_flags) = client_query.get_mut(packets.client)
+        {
+            let flags = mut_flags.bypass_change_detection();
+            match pkt {
+                PlayerAbilitiesC2s::StartFlying => {
+                    flags.set_flying(true);
+                    player_start_flying_message_writer.write(PlayerStartFlyingMessage {
+                        client: packets.client,
+                    });
+                }
+                PlayerAbilitiesC2s::StopFlying => {
+                    flags.set_flying(false);
+                    player_stop_flying_message_writer.write(PlayerStopFlyingMessage {
+                        client: packets.client,
+                    });
                 }
             }
         }

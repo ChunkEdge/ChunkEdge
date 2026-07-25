@@ -95,15 +95,15 @@ fn prompt_on_punch(
     mut messages: MessageReader<InteractEntityMessage>,
 ) {
     for message in messages.read() {
-        if let Ok(mut client) = clients.get_mut(message.client) {
-            if message.interact == EntityInteraction::Attack {
-                client.set_resource_pack(
-                    "https://github.com/ChunkEdge/ChunkEdge/raw/main/assets/example_pack.zip",
-                    "d7c6108849fb190ec2a49f2d38b7f1f897d9ce9f",
-                    false,
-                    None,
-                );
-            }
+        if let Ok(mut client) = clients.get_mut(message.client)
+            && message.interact == EntityInteraction::Attack
+        {
+            client.set_resource_pack(
+                "https://github.com/ChunkEdge/ChunkEdge/raw/main/assets/example_pack.zip",
+                "d7c6108849fb190ec2a49f2d38b7f1f897d9ce9f",
+                false,
+                None,
+            );
         };
     }
 }

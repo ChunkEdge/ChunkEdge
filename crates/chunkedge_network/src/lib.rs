@@ -8,8 +8,8 @@ mod packet_io;
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4};
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
 
 use anyhow::Context;
@@ -17,26 +17,26 @@ pub use async_trait::async_trait;
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use bevy_ecs::system::SystemParam;
+use chunkedge_protocol::VarInt;
 use chunkedge_protocol::packets::configuration::client_information_c2s::ParticleMode;
 use chunkedge_protocol::packets::play::client_information_c2s::{
     ChatMode, DisplayedSkinParts, MainArm,
 };
 use chunkedge_protocol::text::IntoText;
-use chunkedge_protocol::VarInt;
 use chunkedge_server::client::{ClientBundle, ClientBundleArgs, Properties, SpawnClientsSet};
 use chunkedge_server::registry::biome::{Biome, BiomeId};
 use chunkedge_server::registry::dimension_type::{DimensionType, DimensionTypeId};
 use chunkedge_server::registry::{BiomeRegistry, DimensionTypeRegistry, Registry, TagsRegistry};
 use chunkedge_server::{
-    CompressionThreshold, Ident, Server, Text, MINECRAFT_VERSION, PROTOCOL_VERSION,
+    CompressionThreshold, Ident, MINECRAFT_VERSION, PROTOCOL_VERSION, Server, Text,
 };
-use connect::do_accept_loop;
 pub use connect::HandshakeData;
+use connect::do_accept_loop;
 use flume::{Receiver, Sender};
 pub use legacy_ping::{ServerListLegacyPingPayload, ServerListLegacyPingResponse};
+use rsa::RsaPrivateKey;
 use rsa::rand_core::OsRng;
 use rsa::traits::PublicKeyParts;
-use rsa::RsaPrivateKey;
 use serde::Serialize;
 use tokio::net::UdpSocket;
 use tokio::runtime::{Handle, Runtime};
@@ -526,9 +526,13 @@ pub trait NetworkCallbacks: Send + Sync + 'static {
                 prevent_proxy_connections: true,
             })
         {
-            format!("https://sessionserver.mojang.com/session/minecraft/hasJoined?username={username}&serverId={auth_digest}&ip={player_ip}")
+            format!(
+                "https://sessionserver.mojang.com/session/minecraft/hasJoined?username={username}&serverId={auth_digest}&ip={player_ip}"
+            )
         } else {
-            format!("https://sessionserver.mojang.com/session/minecraft/hasJoined?username={username}&serverId={auth_digest}")
+            format!(
+                "https://sessionserver.mojang.com/session/minecraft/hasJoined?username={username}&serverId={auth_digest}"
+            )
         }
     }
 }

@@ -41,7 +41,7 @@ fn handle_custom_payload(
             messages.write(CustomPayloadMessage {
                 client: packet.client,
                 channel: pkt.channel.into(),
-                data: pkt.data.0 .0.into(),
+                data: pkt.data.0.0.into(),
             });
         }
     }

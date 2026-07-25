@@ -1,10 +1,10 @@
 #![allow(clippy::type_complexity)]
 
+use chunkedge::BiomePos;
 use chunkedge::prelude::*;
 use chunkedge::registry::biome::BiomeEffects;
-use chunkedge::BiomePos;
-use rand::seq::IteratorRandom;
 use rand::RngExt;
+use rand::seq::IteratorRandom;
 
 const SPAWN_Y: i32 = 0;
 const SIZE: i32 = 5;

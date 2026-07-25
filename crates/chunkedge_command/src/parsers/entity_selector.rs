@@ -40,7 +40,7 @@ impl CommandArg for EntitySelector {
                             return Err(CommandArgParseError::InvalidArgument {
                                 expected: "entity selector".to_owned(),
                                 got: c.to_string(),
-                            })
+                            });
                         }
                     }
                     if input.peek() != Some('[') {
@@ -71,7 +71,7 @@ impl CommandArg for EntitySelector {
                 _ => {
                     return Ok(EntitySelector::SimpleSelector(
                         EntitySelectors::SinglePlayer(String::parse_arg(input)?),
-                    ))
+                    ));
                 }
             }
         }

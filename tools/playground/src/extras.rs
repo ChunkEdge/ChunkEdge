@@ -10,14 +10,14 @@ pub(crate) fn toggle_gamemode_on_sneak(
     mut messages: MessageReader<SneakMessage>,
 ) {
     for message in messages.read() {
-        if message.state == SneakState::Start {
-            if let Ok(mut mode) = clients.get_mut(message.client) {
-                *mode = match *mode {
-                    GameMode::Survival => GameMode::Creative,
-                    GameMode::Creative => GameMode::Survival,
-                    _ => GameMode::Creative,
-                };
-            }
+        if message.state == SneakState::Start
+            && let Ok(mut mode) = clients.get_mut(message.client)
+        {
+            *mode = match *mode {
+                GameMode::Survival => GameMode::Creative,
+                GameMode::Creative => GameMode::Survival,
+                _ => GameMode::Creative,
+            };
         }
     }
 }

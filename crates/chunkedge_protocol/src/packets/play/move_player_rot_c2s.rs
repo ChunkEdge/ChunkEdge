@@ -1,7 +1,7 @@
 use chunkedge_binary::{Decode, Encode};
 
-use crate::movement_flags::MovementFlags;
 use crate::Packet;
+use crate::movement_flags::MovementFlags;
 
 #[derive(Copy, Clone, Debug, Encode, Decode, Packet)]
 pub struct MovePlayerRotC2s {

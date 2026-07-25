@@ -202,10 +202,12 @@ mod tests {
         let result = ItemStack::decode(&mut slice);
 
         assert!(result.is_err());
-        assert!(result
-            .unwrap_err()
-            .to_string()
-            .contains("recursion limit exceeded"));
+        assert!(
+            result
+                .unwrap_err()
+                .to_string()
+                .contains("recursion limit exceeded")
+        );
     }
 
     // --- HashedItemStack Tests ---

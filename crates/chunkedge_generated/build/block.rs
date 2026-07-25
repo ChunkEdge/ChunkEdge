@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use chunkedge_build_utils::{ident, rerun_if_changed};
 use heck::{ToPascalCase, ToShoutySnakeCase};
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 use serde::Deserialize;
 
 #[derive(Deserialize, Clone, Debug)]

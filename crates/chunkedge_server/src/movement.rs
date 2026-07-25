@@ -150,33 +150,32 @@ fn handle_client_movement(
                     &mut movement_messages,
                 );
             }
-        } else if let Some(pkt) = packet.decode::<MoveVehicleC2s>() {
-            if let Ok((pos, look, head_yaw, on_ground, teleport_state)) =
+        } else if let Some(pkt) = packet.decode::<MoveVehicleC2s>()
+            && let Ok((pos, look, head_yaw, on_ground, teleport_state)) =
                 clients.get_mut(packet.client)
-            {
-                let mov = MovementMessage {
-                    client: packet.client,
-                    position: pkt.position,
-                    old_position: pos.0,
-                    look: Look {
-                        yaw: pkt.yaw,
-                        pitch: pkt.pitch,
-                    },
-                    old_look: *look,
-                    on_ground: on_ground.0,
-                    old_on_ground: on_ground.0,
-                };
+        {
+            let mov = MovementMessage {
+                client: packet.client,
+                position: pkt.position,
+                old_position: pos.0,
+                look: Look {
+                    yaw: pkt.yaw,
+                    pitch: pkt.pitch,
+                },
+                old_look: *look,
+                on_ground: on_ground.0,
+                old_on_ground: on_ground.0,
+            };
 
-                handle(
-                    mov,
-                    pos,
-                    look,
-                    head_yaw,
-                    on_ground,
-                    teleport_state,
-                    &mut movement_messages,
-                );
-            }
+            handle(
+                mov,
+                pos,
+                look,
+                head_yaw,
+                on_ground,
+                teleport_state,
+                &mut movement_messages,
+            );
         }
     }
 }

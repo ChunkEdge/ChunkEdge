@@ -1,5 +1,5 @@
-use std::collections::hash_map::Entry;
 use std::collections::BTreeSet;
+use std::collections::hash_map::Entry;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
@@ -388,19 +388,19 @@ fn change_entity_positions(
             if let Ok(old_layer) = layers.get_mut(layer_id.0) {
                 let old_layer = old_layer.into_inner();
 
-                if let Entry::Occupied(mut old_cell) = old_layer.entities.entry(old_chunk_pos) {
-                    if old_cell.get_mut().remove(&entity) {
-                        old_layer.messages.send_local_infallible(
-                            LocalMsg::DespawnEntity {
-                                pos: old_chunk_pos,
-                                dest_layer: Entity::PLACEHOLDER,
-                            },
-                            |b| b.extend_from_slice(&entity_id.get().to_ne_bytes()),
-                        );
+                if let Entry::Occupied(mut old_cell) = old_layer.entities.entry(old_chunk_pos)
+                    && old_cell.get_mut().remove(&entity)
+                {
+                    old_layer.messages.send_local_infallible(
+                        LocalMsg::DespawnEntity {
+                            pos: old_chunk_pos,
+                            dest_layer: Entity::PLACEHOLDER,
+                        },
+                        |b| b.extend_from_slice(&entity_id.get().to_ne_bytes()),
+                    );
 
-                        if old_cell.get().is_empty() {
-                            old_cell.remove();
-                        }
+                    if old_cell.get().is_empty() {
+                        old_cell.remove();
                     }
                 }
             }
@@ -411,49 +411,49 @@ fn change_entity_positions(
             if let Ok(old_layer) = layers.get_mut(old_layer_id.get()) {
                 let old_layer = old_layer.into_inner();
 
-                if let Entry::Occupied(mut old_cell) = old_layer.entities.entry(old_chunk_pos) {
-                    if old_cell.get_mut().remove(&entity) {
-                        old_layer.messages.send_local_infallible(
-                            LocalMsg::DespawnEntity {
-                                pos: old_chunk_pos,
-                                dest_layer: layer_id.0,
-                            },
-                            |b| b.extend_from_slice(&entity_id.get().to_ne_bytes()),
-                        );
+                if let Entry::Occupied(mut old_cell) = old_layer.entities.entry(old_chunk_pos)
+                    && old_cell.get_mut().remove(&entity)
+                {
+                    old_layer.messages.send_local_infallible(
+                        LocalMsg::DespawnEntity {
+                            pos: old_chunk_pos,
+                            dest_layer: layer_id.0,
+                        },
+                        |b| b.extend_from_slice(&entity_id.get().to_ne_bytes()),
+                    );
 
-                        if old_cell.get().is_empty() {
-                            old_cell.remove();
-                        }
+                    if old_cell.get().is_empty() {
+                        old_cell.remove();
                     }
                 }
             }
 
-            if let Ok(mut layer) = layers.get_mut(layer_id.0) {
-                if layer.entities.entry(chunk_pos).or_default().insert(entity) {
-                    layer.messages.send_local_infallible(
-                        LocalMsg::SpawnEntity {
-                            pos: chunk_pos,
-                            src_layer: old_layer_id.get(),
-                        },
-                        |b| b.extend_from_slice(&entity.to_bits().to_ne_bytes()),
-                    );
-                }
+            if let Ok(mut layer) = layers.get_mut(layer_id.0)
+                && layer.entities.entry(chunk_pos).or_default().insert(entity)
+            {
+                layer.messages.send_local_infallible(
+                    LocalMsg::SpawnEntity {
+                        pos: chunk_pos,
+                        src_layer: old_layer_id.get(),
+                    },
+                    |b| b.extend_from_slice(&entity.to_bits().to_ne_bytes()),
+                );
             }
         } else if chunk_pos != old_chunk_pos {
             // Entity changed their chunk position without changing layers. Remove it from
             // old cell and insert it in the new cell.
 
             if let Ok(mut layer) = layers.get_mut(layer_id.0) {
-                if let Entry::Occupied(mut old_cell) = layer.entities.entry(old_chunk_pos) {
-                    if old_cell.get_mut().remove(&entity) {
-                        layer.messages.send_local_infallible(
-                            LocalMsg::DespawnEntityTransition {
-                                pos: old_chunk_pos,
-                                dest_pos: chunk_pos,
-                            },
-                            |b| b.extend_from_slice(&entity_id.get().to_ne_bytes()),
-                        );
-                    }
+                if let Entry::Occupied(mut old_cell) = layer.entities.entry(old_chunk_pos)
+                    && old_cell.get_mut().remove(&entity)
+                {
+                    layer.messages.send_local_infallible(
+                        LocalMsg::DespawnEntityTransition {
+                            pos: old_chunk_pos,
+                            dest_pos: chunk_pos,
+                        },
+                        |b| b.extend_from_slice(&entity_id.get().to_ne_bytes()),
+                    );
                 }
 
                 if layer.entities.entry(chunk_pos).or_default().insert(entity) {

@@ -5,7 +5,7 @@ use chunkedge_build_utils::{ident, rerun_if_changed, write_generated_file};
 use heck::{ToPascalCase, ToShoutySnakeCase, ToSnakeCase};
 use proc_macro2::TokenStream;
 use quote::quote;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[path = "build/entity_enums.rs"]
 mod entity_enums;
@@ -34,6 +34,11 @@ struct EntityTypes {
 }
 
 #[derive(Deserialize)]
+struct TrackedDataHandlers {
+    tracked_data_handler: BTreeMap<String, u8>,
+}
+
+#[derive(Deserialize)]
 struct PaintingVariants {
     painting_variant: BTreeMap<String, i32>,
 }
@@ -58,14 +63,14 @@ struct Attribute {
     base_value: f64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(untagged)]
 enum PaintingVariantValue {
     Identifier(String),
     Inline(PaintingVariantInline),
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 struct PaintingVariantInline {
     width: i32,
     height: i32,
@@ -74,7 +79,7 @@ struct PaintingVariantInline {
     author: Option<String>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(tag = "type", content = "default_value", rename_all = "snake_case")]
 #[allow(dead_code)]
 enum Value {
@@ -141,7 +146,7 @@ enum Value {
     HumanoidArm(String),
 }
 
-#[derive(Deserialize, Debug, Clone, Copy)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 struct BlockPos {
     x: i32,
     y: i32,
@@ -149,52 +154,32 @@ struct BlockPos {
 }
 
 impl Value {
-    fn type_id(&self) -> u8 {
-        match self {
-            Value::Byte(_) => 0,
-            Value::Integer(_) => 1,
-            Value::Long(_) => 2,
-            Value::Float(_) => 3,
-            Value::String(_) => 4,
-            Value::TextComponent(_) => 5,
-            Value::OptionalTextComponent(_) => 6,
-            Value::ItemStack(_) => 7,
-            Value::Boolean(_) => 8,
-            Value::Rotation { .. } => 9,
-            Value::BlockPos(_) => 10,
-            Value::OptionalBlockPos(_) => 11,
-            Value::Facing(_) => 12,
-            Value::LazyEntityReference(_) => 13,
-            Value::BlockState(_) => 14,
-            Value::OptionalBlockState(_) => 15,
-            Value::Particle(_) => 16,
-            Value::ParticleList(_) => 17,
-            Value::VillagerData { .. } => 18,
-            Value::OptionalInt(_) => 19,
-            Value::EntityPose(_) => 20,
-            Value::CatVariant(_) => 21,
-            Value::CatSoundVariant(_) => 22,
-            Value::CowVariant(_) => 23,
-            Value::CowSoundVariant(_) => 24,
-            Value::WolfVariant(_) => 25,
-            Value::WolfSoundVariant(_) => 26,
-            Value::FrogVariant(_) => 27,
-            Value::PigVariant(_) => 28,
-            Value::PigSoundVariant(_) => 29,
-            Value::ChickenVariant(_) => 30,
-            Value::ChickenSoundVariant(_) => 31,
-            Value::ZombieNautilusVariant(_) => 32,
-            Value::OptionalGlobalPos(_) => 33,
-            Value::PaintingVariant(_) => 34,
-            Value::SnifferState(_) => 35,
-            Value::ArmadilloState(_) => 36,
-            Value::CopperGolemState(_) => 37,
-            Value::WeatheringCopperState(_) => 38,
-            Value::Vector3f { .. } => 39,
-            Value::Quaternionf { .. } => 40,
-            Value::ResolvableProfile(_) => 41,
-            Value::HumanoidArm(_) => 42,
-        }
+    fn type_id(&self, handlers: &BTreeMap<String, u8>) -> anyhow::Result<u8> {
+        let value = serde_json::to_value(self).context("failed to serialize tracked-data value")?;
+        let name = value["type"]
+            .as_str()
+            .context("serialized tracked-data value has no type")?;
+
+        // The extracted entity field tags predate these handler names. We keep those
+        // tags for compatibility with entities.json and translate only the exceptions.
+        let name = match name {
+            "integer" => "int",
+            "text_component" => "component",
+            "optional_text_component" => "optional_component",
+            "rotation" => "rotations",
+            "facing" => "direction",
+            "lazy_entity_reference" => "optional_living_entity_reference",
+            "particle_list" => "particles",
+            "optional_int" => "optional_unsigned_int",
+            "entity_pose" => "pose",
+            "vector3f" => "vector3",
+            "quaternionf" => "quaternion",
+            name => name,
+        };
+        handlers
+            .get(name)
+            .copied()
+            .with_context(|| format!("missing tracked-data handler {name} in misc.json"))
     }
 
     fn field_type(&self) -> TokenStream {
@@ -687,9 +672,13 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
 }
 
 fn build_entities() -> anyhow::Result<TokenStream> {
-    let entity_types = serde_json::from_str::<EntityTypes>(include_str!("extracted/misc.json"))
+    let misc = include_str!("extracted/misc.json");
+    let entity_types = serde_json::from_str::<EntityTypes>(misc)
         .context("failed to deserialize misc.json")?
         .entity_type;
+    let handlers = serde_json::from_str::<TrackedDataHandlers>(misc)
+        .context("failed to deserialize tracked-data handlers from misc.json")?
+        .tracked_data_handler;
 
     let entities: Entities =
         serde_json::from_str::<Entities>(include_str!("extracted/entities.json"))
@@ -828,7 +817,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             system_names.push(quote!(#system_name_ident));
 
             let data_index = field.index;
-            let data_type = field.default_value.type_id();
+            let data_type = field.default_value.type_id(&handlers)?;
             let encodable_expr = field.default_value.encodable_expr(quote!(value.0));
 
             systems.extend([quote! {

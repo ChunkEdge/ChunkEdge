@@ -7,6 +7,9 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use serde::Deserialize;
 
+#[path = "build/entity_enums.rs"]
+mod entity_enums;
+
 #[derive(Deserialize, Clone, Debug)]
 struct Entity {
     #[serde(rename = "type")]
@@ -326,7 +329,7 @@ impl Value {
                 quote!(None)
             }
             Value::EntityPose(p) => {
-                let variant = ident(p.to_pascal_case());
+                let variant = ident(entity_enums::variant_name("entity_pose", p));
                 quote!(crate::Pose::#variant)
             }
             Value::CatVariant(c) => {
@@ -493,6 +496,7 @@ pub fn main() -> anyhow::Result<()> {
     ]);
 
     write_generated_file(build_entities()?, "entity.rs")?;
+    write_generated_file(entity_enums::build()?, "entity_enums.rs")?;
     write_generated_file(build_painting_kind()?, "painting_kind.rs")?;
     write_generated_file(build_entity_hitbox_defaults()?, "entity_hitbox_defaults.rs")?;
 

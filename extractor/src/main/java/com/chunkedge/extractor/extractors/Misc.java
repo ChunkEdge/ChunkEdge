@@ -16,9 +16,12 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityEvent;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.animal.armadillo.Armadillo;
+import net.minecraft.world.entity.animal.golem.CopperGolemState;
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
+import net.minecraft.world.level.block.WeatheringCopper;
 
 public class Misc implements Main.Extractor {
 
@@ -211,6 +214,27 @@ public class Misc implements Main.Extractor {
         }
         miscJson.add("armadillo_state", armadilloStateJson);
 
+        // Both stream codecs map through their private id fields.
+        miscJson.add(
+            "copper_golem_state",
+            enumIdsFromField(CopperGolemState.values(), "id")
+        );
+
+        // WeatherState's stream codec maps through Enum.ordinal().
+        var weatheringCopperStateJson = new JsonObject();
+        for (var state : WeatheringCopper.WeatherState.values()) {
+            weatheringCopperStateJson.addProperty(
+                state.name().toLowerCase(Locale.ROOT),
+                state.ordinal()
+            );
+        }
+        miscJson.add("weathering_copper_state", weatheringCopperStateJson);
+
+        miscJson.add(
+            "humanoid_arm",
+            enumIdsFromField(HumanoidArm.values(), "id")
+        );
+
         var trackedDataHandlerJson = new JsonObject();
         for (
             var field : EntityDataSerializers.class.getDeclaredFields()
@@ -229,6 +253,22 @@ public class Misc implements Main.Extractor {
         miscJson.add("tracked_data_handler", trackedDataHandlerJson);
 
         return miscJson;
+    }
+
+    private static JsonObject enumIdsFromField(
+        Enum<?>[] values,
+        String fieldName
+    ) throws ReflectiveOperationException {
+        var json = new JsonObject();
+        var field = values[0].getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        for (var value : values) {
+            json.addProperty(
+                value.name().toLowerCase(Locale.ROOT),
+                field.getInt(value)
+            );
+        }
+        return json;
     }
 
     private static <T> JsonObject dynamicVariants(Registry<T> registry) {

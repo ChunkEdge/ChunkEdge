@@ -27,6 +27,7 @@ use tracked_data::TrackedData;
 use crate::attributes::TrackedEntityAttributes;
 
 include!(concat!(env!("OUT_DIR"), "/entity.rs"));
+include!(concat!(env!("OUT_DIR"), "/painting_kind.rs"));
 
 pub struct EntityPlugin;
 
@@ -633,128 +634,6 @@ pub enum HumanoidArm {
     #[default]
     Right,
 }
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum PaintingKind {
-    #[default]
-    Alban,
-    Aztec,
-    Aztec2,
-    Backyard,
-    Baroque,
-    Bomb,
-    Bouquet,
-    BurningSkull,
-    Bust,
-    Cavebird,
-    Changing,
-    Cotan,
-    Courbet,
-    Creebet,
-    DonkeyKong,
-    Earth,
-    Endboss,
-    Fern,
-    Fighters,
-    Finding,
-    Fire,
-    Graham,
-    Humble,
-    Kebab,
-    Lowmist,
-    Match,
-    Meditative,
-    Orb,
-    Owlemons,
-    Passage,
-    Pointer,
-    Pigscene,
-    Plant,
-    Pond,
-    Pool,
-    PrairieRide,
-    Sea,
-    Skeleton,
-    SkullAndRoses,
-    Stage,
-    Sunflowers,
-    Sunset,
-    Tides,
-    Unpacked,
-    Void,
-    Wanderer,
-    Wasteland,
-    Water,
-    Wind,
-    Wither,
-}
-
-impl PaintingKind {
-    pub const ALL: [Self; 50] = [
-        Self::Alban,
-        Self::Aztec,
-        Self::Aztec2,
-        Self::Backyard,
-        Self::Baroque,
-        Self::Bomb,
-        Self::Bouquet,
-        Self::BurningSkull,
-        Self::Bust,
-        Self::Cavebird,
-        Self::Changing,
-        Self::Cotan,
-        Self::Courbet,
-        Self::Creebet,
-        Self::DonkeyKong,
-        Self::Earth,
-        Self::Endboss,
-        Self::Fern,
-        Self::Fighters,
-        Self::Finding,
-        Self::Fire,
-        Self::Graham,
-        Self::Humble,
-        Self::Kebab,
-        Self::Lowmist,
-        Self::Match,
-        Self::Meditative,
-        Self::Orb,
-        Self::Owlemons,
-        Self::Passage,
-        Self::Pointer,
-        Self::Pigscene,
-        Self::Plant,
-        Self::Pond,
-        Self::Pool,
-        Self::PrairieRide,
-        Self::Sea,
-        Self::Skeleton,
-        Self::SkullAndRoses,
-        Self::Stage,
-        Self::Sunflowers,
-        Self::Sunset,
-        Self::Tides,
-        Self::Unpacked,
-        Self::Void,
-        Self::Wanderer,
-        Self::Wasteland,
-        Self::Water,
-        Self::Wind,
-        Self::Wither,
-    ];
-
-    pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
-        chunkedge_protocol::RegistryId::new(self as i32)
-    }
-
-    pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
-        let Ok(idx) = usize::try_from(id.id()) else {
-            return None;
-        };
-
-        Self::ALL.get(idx).copied()
-    }
-}
-
 #[derive(Clone, PartialEq, Debug)]
 pub struct PaintingVariantDefinition {
     pub width: i32,

@@ -22,6 +22,11 @@ struct EntityTypes {
     entity_type: BTreeMap<String, i32>,
 }
 
+#[derive(Deserialize)]
+struct PaintingVariants {
+    painting_variant: BTreeMap<String, i32>,
+}
+
 #[derive(Deserialize, Clone, Debug)]
 struct Field {
     name: String,
@@ -470,8 +475,63 @@ pub fn main() -> anyhow::Result<()> {
     rerun_if_changed(["extracted/misc.json", "extracted/entities.json"]);
 
     write_generated_file(build_entities()?, "entity.rs")?;
+    write_generated_file(build_painting_kind()?, "painting_kind.rs")?;
 
     Ok(())
+}
+
+fn build_painting_kind() -> anyhow::Result<TokenStream> {
+    let paintings: PaintingVariants = serde_json::from_str(include_str!("extracted/misc.json"))
+        .context("failed to deserialize painting variants from misc.json")?;
+    let mut paintings: Vec<_> = paintings.painting_variant.into_iter().collect();
+    paintings.sort_by_key(|(_, id)| *id);
+
+    for (expected, (name, id)) in paintings.iter().enumerate() {
+        anyhow::ensure!(
+            *id == expected as i32,
+            "painting variant {name} has ID {id}, expected {expected}"
+        );
+    }
+
+    let count = paintings.len();
+    let variants: Vec<_> = paintings
+        .iter()
+        .map(|(name, id)| {
+            let variant = ident(name.to_pascal_case());
+            let default = (name == "alban").then(|| quote!(#[default]));
+            quote! { #default #variant = #id, }
+        })
+        .collect();
+    let names: Vec<_> = paintings
+        .iter()
+        .map(|(name, _)| ident(name.to_pascal_case()))
+        .collect();
+
+    anyhow::ensure!(
+        paintings.iter().any(|(name, _)| name == "alban"),
+        "painting variants must contain the default alban"
+    );
+
+    Ok(quote! {
+        #[repr(i32)]
+        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
+        pub enum PaintingKind {
+            #(#variants)*
+        }
+
+        impl PaintingKind {
+            pub const ALL: [Self; #count] = [#(Self::#names,)*];
+
+            pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
+                chunkedge_protocol::RegistryId::new(self as i32)
+            }
+
+            pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
+                let idx = usize::try_from(id.id()).ok()?;
+                Self::ALL.get(idx).copied()
+            }
+        }
+    })
 }
 
 fn build_entities() -> anyhow::Result<TokenStream> {

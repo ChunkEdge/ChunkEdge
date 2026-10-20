@@ -512,6 +512,7 @@ fn painting_kind_hitbox_bounds(kind: PaintingKind) -> UVec3 {
         PaintingKind::Bouquet
         | PaintingKind::Cavebird
         | PaintingKind::Cotan
+        | PaintingKind::Dennis
         | PaintingKind::Endboss
         | PaintingKind::Fern
         | PaintingKind::Owlemons

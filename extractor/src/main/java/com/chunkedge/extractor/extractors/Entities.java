@@ -28,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
@@ -405,6 +406,16 @@ public class Entities implements Main.Extractor {
             final var entityInstance = entityType.equals(EntityTypes.PLAYER)
                 ? new DummyPlayerEntity(world, new GameProfile(UUID.randomUUID(), "cooldude"))
                 : entityType.create(world, EntitySpawnReason.COMMAND);
+
+            // The zombie villager constructor chooses a random profession.
+            // Use the unassigned profession as a stable representative default.
+            if (entityInstance instanceof ZombieVillager zombieVillager) {
+                zombieVillager.setVillagerData(
+                    zombieVillager.getVillagerData().withProfession(
+                        professionRegistry.getOrThrow(VillagerProfession.NONE)
+                    )
+                );
+            }
 
             final var dataTracker = (SynchedEntityData) dataTrackerField.get(
                 entityInstance

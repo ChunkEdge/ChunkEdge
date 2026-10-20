@@ -1,3 +1,4 @@
+use chunkedge_server::entity::EntityId;
 use chunkedge_server::entity::active_status_effects::{ActiveStatusEffect, ActiveStatusEffects};
 use chunkedge_server::protocol::VarInt;
 use chunkedge_server::protocol::packets::play::{RemoveMobEffectS2c, UpdateMobEffectS2c};
@@ -17,6 +18,7 @@ fn test_status_effects_packets() {
     // Process a tick to get past the "on join" logic.
     app.update();
     helper.clear_received();
+    let client_id = app.world().get::<EntityId>(client).unwrap().get();
 
     // Add a potion effect to the client.
     let mut effects = app
@@ -39,7 +41,7 @@ fn test_status_effects_packets() {
 
     let packet = sent_packets.first::<UpdateMobEffectS2c>();
 
-    assert_eq!(packet.entity_id, VarInt(0)); // Client entity ID is always 0
+    assert_eq!(packet.entity_id, VarInt(client_id));
     assert_eq!(
         packet.effect_id,
         i32::from(StatusEffect::BadOmen.to_raw()).into()
@@ -69,7 +71,7 @@ fn test_status_effects_packets() {
 
     let packet = sent_packets.first::<RemoveMobEffectS2c>();
 
-    assert_eq!(packet.entity_id, VarInt(0)); // Client entity ID is always 0
+    assert_eq!(packet.entity_id, VarInt(client_id));
     assert_eq!(
         packet.effect_id,
         i32::from(StatusEffect::BadOmen.to_raw()).into()

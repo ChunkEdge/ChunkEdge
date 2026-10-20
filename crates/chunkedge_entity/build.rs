@@ -76,7 +76,6 @@ enum Value {
     LazyEntityReference(Option<()>), // TODO
     BlockState(String),
     OptionalBlockState(Option<String>),
-    NbtCompound(String),
     Particle(String),
     ParticleList(Vec<String>),
     VillagerData {
@@ -88,16 +87,23 @@ enum Value {
     OptionalInt(Option<i32>),
     EntityPose(String),
     CatVariant(String),
+    CatSoundVariant(String),
     CowVariant(String),
+    CowSoundVariant(String),
     WolfVariant(String),
     WolfSoundVariant(String),
     FrogVariant(String),
     PigVariant(String),
+    PigSoundVariant(String),
     ChickenVariant(String),
+    ChickenSoundVariant(String),
+    ZombieNautilusVariant(String),
     OptionalGlobalPos(Option<()>), // TODO
     PaintingVariant(PaintingVariantValue),
     SnifferState(String),
     ArmadilloState(String),
+    CopperGolemState(String),
+    WeatheringCopperState(String),
     Vector3f {
         x: f32,
         y: f32,
@@ -109,6 +115,8 @@ enum Value {
         z: f32,
         w: f32,
     },
+    ResolvableProfile(String),
+    HumanoidArm(String),
 }
 
 #[derive(Deserialize, Debug, Clone, Copy)]
@@ -137,25 +145,33 @@ impl Value {
             Value::LazyEntityReference(_) => 13,
             Value::BlockState(_) => 14,
             Value::OptionalBlockState(_) => 15,
-            Value::NbtCompound(_) => 16,
-            Value::Particle(_) => 17,
-            Value::ParticleList(_) => 18,
-            Value::VillagerData { .. } => 19,
-            Value::OptionalInt(_) => 20,
-            Value::EntityPose(_) => 21,
-            Value::CatVariant(_) => 22,
+            Value::Particle(_) => 16,
+            Value::ParticleList(_) => 17,
+            Value::VillagerData { .. } => 18,
+            Value::OptionalInt(_) => 19,
+            Value::EntityPose(_) => 20,
+            Value::CatVariant(_) => 21,
+            Value::CatSoundVariant(_) => 22,
             Value::CowVariant(_) => 23,
-            Value::WolfVariant(_) => 24,
-            Value::WolfSoundVariant(_) => 25,
-            Value::FrogVariant(_) => 26,
-            Value::PigVariant(_) => 27,
-            Value::ChickenVariant(_) => 28,
-            Value::OptionalGlobalPos(_) => 29,
-            Value::PaintingVariant(_) => 30,
-            Value::SnifferState(_) => 31,
-            Value::ArmadilloState(_) => 32,
-            Value::Vector3f { .. } => 33,
-            Value::Quaternionf { .. } => 34,
+            Value::CowSoundVariant(_) => 24,
+            Value::WolfVariant(_) => 25,
+            Value::WolfSoundVariant(_) => 26,
+            Value::FrogVariant(_) => 27,
+            Value::PigVariant(_) => 28,
+            Value::PigSoundVariant(_) => 29,
+            Value::ChickenVariant(_) => 30,
+            Value::ChickenSoundVariant(_) => 31,
+            Value::ZombieNautilusVariant(_) => 32,
+            Value::OptionalGlobalPos(_) => 33,
+            Value::PaintingVariant(_) => 34,
+            Value::SnifferState(_) => 35,
+            Value::ArmadilloState(_) => 36,
+            Value::CopperGolemState(_) => 37,
+            Value::WeatheringCopperState(_) => 38,
+            Value::Vector3f { .. } => 39,
+            Value::Quaternionf { .. } => 40,
+            Value::ResolvableProfile(_) => 41,
+            Value::HumanoidArm(_) => 42,
         }
     }
 
@@ -177,7 +193,6 @@ impl Value {
             Value::LazyEntityReference(_) => quote!(()), // TODO
             Value::BlockState(_) => quote!(chunkedge_protocol::BlockState),
             Value::OptionalBlockState(_) => quote!(Option<chunkedge_protocol::BlockState>),
-            Value::NbtCompound(_) => quote!(chunkedge_nbt::Compound),
             Value::Particle(_) => {
                 quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle)
             }
@@ -188,18 +203,27 @@ impl Value {
             Value::OptionalInt(_) => quote!(Option<i32>),
             Value::EntityPose(_) => quote!(crate::Pose),
             Value::CatVariant(_) => quote!(crate::CatKind),
+            Value::CatSoundVariant(_) => quote!(crate::CatSoundKind),
             Value::CowVariant(_) => quote!(crate::CowKind),
+            Value::CowSoundVariant(_) => quote!(crate::CowSoundKind),
             Value::WolfVariant(_) => quote!(crate::WolfKind),
             Value::WolfSoundVariant(_) => quote!(crate::WolfSoundKind),
             Value::FrogVariant(_) => quote!(crate::FrogKind),
             Value::PigVariant(_) => quote!(crate::PigKind),
+            Value::PigSoundVariant(_) => quote!(crate::PigSoundKind),
             Value::ChickenVariant(_) => quote!(crate::ChickenKind),
+            Value::ChickenSoundVariant(_) => quote!(crate::ChickenSoundKind),
+            Value::ZombieNautilusVariant(_) => quote!(crate::ZombieNautilusKind),
             Value::OptionalGlobalPos(_) => quote!(()), // TODO
             Value::PaintingVariant(_) => {
                 quote!(chunkedge_binary::IdOr<crate::PaintingVariantDefinition>)
             }
             Value::SnifferState(_) => quote!(crate::SnifferState),
             Value::ArmadilloState(_) => quote!(crate::ArmadilloState),
+            Value::CopperGolemState(_) => quote!(crate::CopperGolemState),
+            Value::WeatheringCopperState(_) => quote!(crate::WeatheringCopperState),
+            Value::ResolvableProfile(_) => quote!(()), // TODO
+            Value::HumanoidArm(_) => quote!(crate::HumanoidArm),
             Value::Vector3f { .. } => quote!(chunkedge_math::Vec3),
             Value::Quaternionf { .. } => quote!(chunkedge_math::Quat),
         }
@@ -213,13 +237,12 @@ impl Value {
             Value::Float(f) => quote!(#f),
             Value::String(s) => quote!(#s.to_owned()),
             Value::TextComponent(txt) => {
-                assert!(txt.is_empty());
-                quote!(chunkedge_protocol::Text::default())
+                quote!(chunkedge_protocol::Text::text(#txt))
             }
-            Value::OptionalTextComponent(t) => {
-                assert!(t.is_none());
-                quote!(None)
-            }
+            Value::OptionalTextComponent(t) => match t {
+                Some(txt) => quote!(Some(chunkedge_protocol::Text::text(#txt))),
+                None => quote!(None),
+            },
             Value::ItemStack(_stack) => {
                 quote!(chunkedge_protocol::ItemStack::default())
             }
@@ -251,10 +274,6 @@ impl Value {
             Value::OptionalBlockState(bs) => {
                 assert!(bs.is_none());
                 quote!(None)
-            }
-            Value::NbtCompound(s) => {
-                assert_eq!(s, "{}");
-                quote!(chunkedge_nbt::Compound::default())
             }
             Value::Particle(p) => match p.to_pascal_case().as_str() {
                 // TODO: fix this, now an entyity has this as the default, so we need to extract
@@ -296,10 +315,20 @@ impl Value {
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::CatKind::#variant)
             }
+            Value::CatSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::CatSoundKind::#variant)
+            }
             Value::CowVariant(c) => {
                 let stripped_variant = c.trim_start_matches("minecraft");
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::CowKind::#variant)
+            }
+            Value::CowSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::CowSoundKind::#variant)
             }
             Value::WolfVariant(c) => {
                 let stripped_variant = c.trim_start_matches("minecraft");
@@ -321,10 +350,25 @@ impl Value {
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::PigKind::#variant)
             }
+            Value::PigSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::PigSoundKind::#variant)
+            }
             Value::ChickenVariant(c) => {
                 let stripped_variant = c.trim_start_matches("minecraft");
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::ChickenKind::#variant)
+            }
+            Value::ChickenSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::ChickenSoundKind::#variant)
+            }
+            Value::ZombieNautilusVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::ZombieNautilusKind::#variant)
             }
             Value::OptionalGlobalPos(gp) => {
                 assert!(gp.is_none());
@@ -375,6 +419,21 @@ impl Value {
             Value::ArmadilloState(s) => {
                 let state = ident(s.to_pascal_case());
                 quote!(crate::ArmadilloState::#state)
+            }
+            Value::CopperGolemState(s) => {
+                let state = ident(s.to_pascal_case());
+                quote!(crate::CopperGolemState::#state)
+            }
+            Value::WeatheringCopperState(s) => {
+                let state = ident(s.to_pascal_case());
+                quote!(crate::WeatheringCopperState::#state)
+            }
+            Value::ResolvableProfile(_) => {
+                quote!(()) // TODO
+            }
+            Value::HumanoidArm(s) => {
+                let arm = ident(s.to_pascal_case());
+                quote!(crate::HumanoidArm::#arm)
             }
             Value::Vector3f { x, y, z } => quote!(chunkedge_math::Vec3::new(#x, #y, #z)),
             Value::Quaternionf { x, y, z, w } => quote! {

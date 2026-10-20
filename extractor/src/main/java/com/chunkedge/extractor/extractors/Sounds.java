@@ -1,10 +1,10 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.registry.Registries;
-import com.chunkedge.extractor.Main;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class Sounds implements Main.Extractor {
 
@@ -19,12 +19,15 @@ public class Sounds implements Main.Extractor {
     public JsonElement extract() throws Exception {
         var itemsJson = new JsonArray();
 
-        for (var sound : Registries.SOUND_EVENT) {
+        for (var sound : BuiltInRegistries.SOUND_EVENT) {
             var itemJson = new JsonObject();
-            itemJson.addProperty("id", Registries.SOUND_EVENT.getRawId(sound));
+            itemJson.addProperty(
+                "id",
+                BuiltInRegistries.SOUND_EVENT.getId(sound)
+            );
             itemJson.addProperty(
                 "name",
-                Registries.SOUND_EVENT.getId(sound).getPath()
+                BuiltInRegistries.SOUND_EVENT.getKey(sound).getPath()
             );
             itemsJson.add(itemJson);
         }

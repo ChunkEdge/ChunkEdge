@@ -1,32 +1,22 @@
 package com.chunkedge.extractor.extractors;
 
-import com.google.common.collect.Lists;
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
-
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import net.minecraft.registry.CombinedDynamicRegistries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.SerializableRegistries;
-import net.minecraft.registry.ServerDynamicRegistryType;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistrySynchronization;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
-import com.chunkedge.extractor.Main;
-import com.chunkedge.extractor.RegistryKeyComparator;
+import net.minecraft.server.RegistryLayer;
 
 public class Tags implements Main.Extractor {
 
-    private final CombinedDynamicRegistries<
-        ServerDynamicRegistryType
-    > dynamicRegistryManager;
+    private final MinecraftServer server;
 
     public Tags(MinecraftServer server) {
-        this.dynamicRegistryManager = server.getCombinedDynamicRegistries();
+        this.server = server;
     }
 
     @Override
@@ -38,61 +28,74 @@ public class Tags implements Main.Extractor {
     public JsonElement extract() {
         var tagsJson = new JsonObject();
 
-        final var registryTags =
-            SerializableRegistries.streamRegistryManagerEntries(
-                this.dynamicRegistryManager
+        var registryTags = new TreeMap<String, Map<String, JsonArray>>();
+        // Dynamic (worldgen) registries that are networked, mirroring the
+        // first half of vanilla's RegistrySynchronization.networkSafeRegistries.
+        server
+            .registryAccess()
+            .registries()
+            .filter(entry ->
+                RegistrySynchronization.isNetworkable(entry.key())
             )
-                .map(registry ->
-                    Pair.of(registry.key(), serializeTags(registry.value()))
-                )
-                .filter(pair -> !(pair.getSecond()).isEmpty())
-                .collect(
-                    Collectors.toMap(
-                        Pair::getFirst,
-                        Pair::getSecond,
-                        (l, r) -> r,
-                        () -> new TreeMap<>(new RegistryKeyComparator())
-                    )
-                );
+            .forEach(entry -> {
+                var serialized = serializeTags(entry.value());
+                if (!serialized.isEmpty()) {
+                    registryTags.put(
+                        entry.key().identifier().toString(),
+                        serialized
+                    );
+                }
+            });
+        // Static registries (blocks, items, entity types, ...) are always
+        // synced wholesale, mirroring the second half of
+        // networkSafeRegistries. Without these, clients fail to resolve
+        // tag references (e.g. #minecraft:enchantable/*) inside synced
+        // registry entries and disconnect during configuration.
+        server
+            .registries()
+            .getLayer(RegistryLayer.STATIC)
+            .registries()
+            .forEach(entry -> {
+                var serialized = serializeTags(entry.value());
+                if (!serialized.isEmpty()) {
+                    registryTags.putIfAbsent(
+                        entry.key().identifier().toString(),
+                        serialized
+                    );
+                }
+            });
 
         for (var registry : registryTags.entrySet()) {
-            var registryIdent = registry.getKey().getValue().toString();
             var tagGroupTagsJson = new JsonObject();
 
             for (var tag : registry.getValue().entrySet()) {
-                var ident = tag.getKey().toString();
-                var rawIds = tag.getValue();
-                tagGroupTagsJson.add(ident, rawIds);
+                tagGroupTagsJson.add(tag.getKey(), tag.getValue());
             }
 
-            tagsJson.add(registryIdent, tagGroupTagsJson);
+            tagsJson.add(registry.getKey(), tagGroupTagsJson);
         }
 
         return tagsJson;
     }
 
-    private static <T> Map<Identifier, JsonArray> serializeTags(
+    private static <T> Map<String, JsonArray> serializeTags(
         Registry<T> registry
     ) {
-        TreeMap<Identifier, JsonArray> map = new TreeMap<>();
+        TreeMap<String, JsonArray> map = new TreeMap<>();
         registry
-                .streamTags()
-                .map(key -> Pair.of(key, registry.iterateEntries(key.getTag())))
-            .forEach(pair -> {
-                var registryEntryList = Lists.newArrayList(pair.getSecond());
-                JsonArray intList = new JsonArray(registryEntryList.size());
-                for (RegistryEntry<T> registryEntry : registryEntryList) {
-                    if (
-                        RegistryEntry.Type.REFERENCE != registryEntry.getType()
-                    ) {
+            .getTags()
+            .forEach(tag -> {
+                var holders = tag.stream().toList();
+                JsonArray intList = new JsonArray(holders.size());
+                for (var holder : holders) {
+                    if (!holder.isBound()) {
                         throw new IllegalStateException(
-                            "Can't serialize unregistered value " +
-                            registryEntry
+                            "Can't serialize unregistered value " + holder
                         );
                     }
-                    intList.add(registry.getRawId(registryEntry.value()));
+                    intList.add(registry.getId(holder.value()));
                 }
-                map.put(pair.getFirst().getTag().id(), intList);
+                map.put(tag.key().location().toString(), intList);
             });
         return map;
     }

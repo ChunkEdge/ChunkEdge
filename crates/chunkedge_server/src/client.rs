@@ -12,15 +12,14 @@ use byteorder::{NativeEndian, ReadBytesExt};
 use bytes::{Bytes, BytesMut};
 use chunkedge_binary::Encode;
 use chunkedge_entity::attributes::{EntityAttributes, TrackedEntityAttributes};
+use chunkedge_entity::avatar::{DataPlayerMainHand, DataPlayerModeCustomisation};
 use chunkedge_entity::living::Health;
-use chunkedge_entity::player::{
-    Food, MainArm as PlayerMainArm, PlayerEntity, PlayerModelParts, Saturation,
-};
-use chunkedge_entity::query::EntityInitQuery;
+use chunkedge_entity::player::{Food, PlayerEntity, Saturation};
 use chunkedge_entity::tracked_data::TrackedData;
 use chunkedge_entity::{
     ClearEntityChangesSet, EntityId, EntityLayerId, EntityStatus, OldPosition, Position, Velocity,
 };
+use chunkedge_entity::{HumanoidArm, query::EntityInitQuery};
 use chunkedge_math::{DVec3, Vec3};
 use chunkedge_protocol::encode::{PacketEncoder, WritePacket};
 use chunkedge_protocol::packets::configuration::client_information_c2s::ParticleMode;
@@ -151,8 +150,8 @@ pub struct ClientBundle {
     pub player: PlayerEntity,
     pub uuid: UniqueId,
     pub layer: EntityLayerId,
-    pub player_model_parts: PlayerModelParts,
-    pub main_arm: PlayerMainArm,
+    pub player_model_parts: DataPlayerModeCustomisation,
+    pub main_arm: DataPlayerMainHand,
 }
 
 impl ClientBundle {
@@ -162,6 +161,7 @@ impl ClientBundle {
             client: Client {
                 conn: args.conn,
                 enc: args.enc,
+                entity_id: EntityId::default(),
             },
             settings: crate::client_settings::ClientSettings {
                 locale: args.locale.into_boxed_str(),
@@ -203,8 +203,10 @@ impl ClientBundle {
             player: PlayerEntity,
             uuid: UniqueId(args.uuid),
             layer: Default::default(),
-            player_model_parts: PlayerModelParts(u8::from(args.displayed_skin_parts) as i8),
-            main_arm: PlayerMainArm(args.main_arm as i8),
+            player_model_parts: DataPlayerModeCustomisation(
+                u8::from(args.displayed_skin_parts) as i8
+            ),
+            main_arm: DataPlayerMainHand(map_main_arm(args.main_arm)),
         }
     }
 }
@@ -250,6 +252,9 @@ pub struct ClientMarker;
 pub struct Client {
     conn: Box<dyn ClientConnection>,
     pub(crate) enc: PacketEncoder,
+    /// Copy of the client's [`EntityId`] component, set at join time, so
+    /// methods on `Client` can address packets to the client's own entity.
+    pub(crate) entity_id: EntityId,
 }
 
 /// Represents the bidirectional packet channel between the server and a client
@@ -331,7 +336,7 @@ impl Client {
     /// killed the player, you should supply it as `killer`.
     pub fn kill<'a, M: IntoText<'a>>(&mut self, message: M) {
         self.write_packet(&PlayerCombatKillS2c {
-            player_id: VarInt(0),
+            player_id: VarInt(self.entity_id.get()),
             message: message.into_cow_text_component(),
         });
     }
@@ -397,7 +402,7 @@ impl Client {
     /// `velocity` is in m/s.
     pub fn set_velocity<V: Into<DVec3>>(&mut self, velocity: V) {
         self.write_packet(&SetEntityMotionS2c {
-            entity_id: VarInt(0),
+            entity_id: VarInt(self.entity_id.get()),
             velocity: Velocity(velocity.into()).to_packet_units(),
         });
     }
@@ -407,7 +412,7 @@ impl Client {
     /// The status is only visible to this client.
     pub fn trigger_status(&mut self, status: EntityStatus) {
         self.write_packet(&EntityEventS2c {
-            entity_id: 0,
+            entity_id: self.entity_id.get(),
             entity_status: status as u8,
         });
     }
@@ -449,7 +454,7 @@ impl EntityRemoveBuf {
     pub fn push(&mut self, entity_id: i32) {
         debug_assert!(
             entity_id != 0,
-            "removing entity with protocol ID 0 (which should be reserved for clients)"
+            "removing entity with protocol ID 0 (which means unassigned)"
         );
 
         self.0.push(VarInt(entity_id));
@@ -635,6 +640,14 @@ impl OldVisibleEntityLayers {
 
 /// A system for adding [`Despawned`] components to disconnected clients. This
 /// works by listening for removed [`Client`] components.
+/// Maps the protocol-level main-arm setting to the entity metadata enum.
+pub(crate) fn map_main_arm(arm: MainArm) -> HumanoidArm {
+    match arm {
+        MainArm::Left => HumanoidArm::Left,
+        MainArm::Right => HumanoidArm::Right,
+    }
+}
+
 pub fn despawn_disconnected_clients(
     mut commands: Commands,
     mut disconnected_clients: RemovedComponents<Client>,
@@ -1275,22 +1288,24 @@ fn flush_packets(
     }
 }
 
-fn init_tracked_data(mut clients: Query<(&mut Client, &TrackedData), Added<TrackedData>>) {
-    for (mut client, tracked_data) in &mut clients {
+fn init_tracked_data(
+    mut clients: Query<(&mut Client, &EntityId, &TrackedData), Added<TrackedData>>,
+) {
+    for (mut client, id, tracked_data) in &mut clients {
         if let Some(init_data) = tracked_data.init_data() {
             client.write_packet(&SetEntityDataS2c {
-                entity_id: VarInt(0),
+                entity_id: VarInt(id.get()),
                 tracked_values: init_data.into(),
             });
         }
     }
 }
 
-fn update_tracked_data(mut clients: Query<(&mut Client, &TrackedData)>) {
-    for (mut client, tracked_data) in &mut clients {
+fn update_tracked_data(mut clients: Query<(&mut Client, &EntityId, &TrackedData)>) {
+    for (mut client, id, tracked_data) in &mut clients {
         if let Some(update_data) = tracked_data.update_data() {
             client.write_packet(&SetEntityDataS2c {
-                entity_id: VarInt(0),
+                entity_id: VarInt(id.get()),
                 tracked_values: update_data.into(),
             });
         }
@@ -1298,22 +1313,24 @@ fn update_tracked_data(mut clients: Query<(&mut Client, &TrackedData)>) {
 }
 
 fn init_tracked_attributes(
-    mut clients: Query<(&mut Client, &EntityAttributes), Added<EntityAttributes>>,
+    mut clients: Query<(&mut Client, &EntityId, &EntityAttributes), Added<EntityAttributes>>,
 ) {
-    for (mut client, attributes) in &mut clients {
+    for (mut client, id, attributes) in &mut clients {
         client.write_packet(&UpdateAttributesS2c {
-            entity_id: VarInt(0),
+            entity_id: VarInt(id.get()),
             properties: attributes.to_properties(),
         });
     }
 }
 
-fn update_tracked_attributes(mut clients: Query<(&mut Client, &TrackedEntityAttributes)>) {
-    for (mut client, attributes) in &mut clients {
+fn update_tracked_attributes(
+    mut clients: Query<(&mut Client, &EntityId, &TrackedEntityAttributes)>,
+) {
+    for (mut client, id, attributes) in &mut clients {
         let properties = attributes.get_properties();
         if !properties.is_empty() {
             client.write_packet(&UpdateAttributesS2c {
-                entity_id: VarInt(0),
+                entity_id: VarInt(id.get()),
                 properties,
             });
         }

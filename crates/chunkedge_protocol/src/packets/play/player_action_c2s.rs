@@ -19,4 +19,5 @@ pub enum PlayerAction {
     DropItem,
     ReleaseUseItem,
     SwapItemWithOffhand,
+    Stab,
 }

@@ -92,6 +92,7 @@ fn handle_player_action(
                 PlayerAction::DropItem => {}
                 PlayerAction::ReleaseUseItem => {}
                 PlayerAction::SwapItemWithOffhand => {}
+                PlayerAction::Stab => {}
             }
         }
     }

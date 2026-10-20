@@ -57,16 +57,10 @@ pub struct Passengers(Vec<Entity>);
 fn send_passengers(
     vehicles: Query<(&EntityId, &Passengers, &EntityLayerId, &Position), Changed<Passengers>>,
     entity_ids: Query<&EntityId>,
-    mut clients: Query<(
-        &mut Client,
-        &EntityId,
-        &Position,
-        &ViewDistance,
-        &VisibleEntityLayers,
-    )>,
+    mut clients: Query<(&mut Client, &Position, &ViewDistance, &VisibleEntityLayers)>,
 ) {
     for (vehicle_id, passengers, layer_id, vehicle_pos) in &vehicles {
-        for (mut client, client_id, client_pos, view_distance, visible_layers) in &mut clients {
+        for (mut client, client_pos, view_distance, visible_layers) in &mut clients {
             if !visible_layers.0.contains(&layer_id.0) {
                 continue;
             }
@@ -76,8 +70,7 @@ fn send_passengers(
                 continue;
             }
 
-            client.write_packet(&packet_for_viewer(
-                client_id.get(),
+            client.write_packet(&passengers_packet(
                 vehicle_id.get(),
                 passengers,
                 &entity_ids,
@@ -110,7 +103,7 @@ fn send_empty_passengers_on_removal(
 
 fn send_passengers_on_entity_load(
     mut messages: MessageReader<LoadEntityForClientMessage>,
-    mut clients: Query<(&mut Client, &EntityId)>,
+    mut clients: Query<&mut Client>,
     vehicles: Query<(&EntityId, &Passengers)>,
     entity_ids: Query<&EntityId>,
 ) {
@@ -118,12 +111,11 @@ fn send_passengers_on_entity_load(
         let Ok((vehicle_id, passengers)) = vehicles.get(message.entity_loaded) else {
             continue;
         };
-        let Ok((mut client, client_id)) = clients.get_mut(message.client) else {
+        let Ok(mut client) = clients.get_mut(message.client) else {
             continue;
         };
 
-        client.write_packet(&packet_for_viewer(
-            client_id.get(),
+        client.write_packet(&passengers_packet(
             vehicle_id.get(),
             passengers,
             &entity_ids,
@@ -131,8 +123,7 @@ fn send_passengers_on_entity_load(
     }
 }
 
-fn packet_for_viewer<'a>(
-    viewer_id: i32,
+fn passengers_packet<'a>(
     vehicle_id: i32,
     passengers: &Passengers,
     entity_ids: &Query<&EntityId>,
@@ -140,15 +131,11 @@ fn packet_for_viewer<'a>(
     let ids: Vec<VarInt> = passengers
         .iter()
         .filter_map(|passenger| entity_ids.get(passenger).ok())
-        .map(|id| VarInt(rewrite_self(id.get(), viewer_id)))
+        .map(|id| VarInt(id.get()))
         .collect();
 
     SetPassengersS2c {
-        entity_id: VarInt(rewrite_self(vehicle_id, viewer_id)),
+        entity_id: VarInt(vehicle_id),
         passengers: Cow::Owned(ids),
     }
-}
-
-fn rewrite_self(id: i32, viewer_id: i32) -> i32 {
-    if id == viewer_id { 0 } else { id }
 }

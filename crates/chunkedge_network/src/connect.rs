@@ -334,6 +334,7 @@ async fn handle_login(
         uuid: info.uuid,
         username: info.username.as_str().into(),
         properties: Default::default(),
+        session_id: Uuid::new_v4(),
     })
     .await?;
 

@@ -428,8 +428,8 @@ fn update_item_frame_hitbox(
 
 fn update_slime_hitbox(
     mut query: Query<
-        (&mut HitboxShape, &slime::SlimeSize),
-        Or<(Changed<slime::SlimeSize>, Added<HitboxShape>)>,
+        (&mut HitboxShape, &abstract_cube_mob::SlimeSize),
+        Or<(Changed<abstract_cube_mob::SlimeSize>, Added<HitboxShape>)>,
     >,
 ) {
     for (mut hitbox, slime_size) in &mut query {

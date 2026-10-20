@@ -1,17 +1,17 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.mixin.ExposeWallBlock;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Objects;
-import net.minecraft.item.VerticallyAttachableBlockItem;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EmptyBlockView;
-import com.chunkedge.extractor.Main;
-import com.chunkedge.extractor.mixin.ExposeWallBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.world.level.EmptyBlockGetter;
 
 public class Blocks implements Main.Extractor {
 
@@ -32,39 +32,45 @@ public class Blocks implements Main.Extractor {
 
         var shapes = new LinkedHashMap<Shape, Integer>();
 
-        for (var block : Registries.BLOCK) {
+        for (var block : BuiltInRegistries.BLOCK) {
             var blockJson = new JsonObject();
-            blockJson.addProperty("id", Registries.BLOCK.getRawId(block));
+            blockJson.addProperty(
+                "id",
+                BuiltInRegistries.BLOCK.getId(block)
+            );
             blockJson.addProperty(
                 "name",
-                Registries.BLOCK.getId(block).getPath()
+                BuiltInRegistries.BLOCK.getKey(block).getPath()
             );
-            blockJson.addProperty("translation_key", block.getTranslationKey());
+            blockJson.addProperty(
+                "translation_key",
+                block.getDescriptionId()
+            );
             blockJson.addProperty(
                 "item_id",
-                Registries.ITEM.getRawId(block.asItem())
+                BuiltInRegistries.ITEM.getId(block.asItem())
             );
 
             if (
-                block.asItem() instanceof VerticallyAttachableBlockItem wsbItem
+                block.asItem() instanceof StandingAndWallBlockItem wsbItem
             ) {
                 if (wsbItem.getBlock() == block) {
                     var wallBlock = ((ExposeWallBlock) wsbItem).getWallBlock();
                     blockJson.addProperty(
                         "wall_variant_id",
-                        Registries.BLOCK.getRawId(wallBlock)
+                        BuiltInRegistries.BLOCK.getId(wallBlock)
                     );
                 }
             }
 
             var propsJson = new JsonArray();
-            for (var prop : block.getStateManager().getProperties()) {
+            for (var prop : block.getStateDefinition().getProperties()) {
                 var propJson = new JsonObject();
 
                 propJson.addProperty("name", prop.getName());
 
                 var valuesJson = new JsonArray();
-                for (var value : prop.getValues()) {
+                for (var value : prop.getPossibleValues()) {
                     valuesJson.add(value.toString().toLowerCase(Locale.ROOT));
                 }
                 propJson.add("values", valuesJson);
@@ -74,25 +80,28 @@ public class Blocks implements Main.Extractor {
             blockJson.add("properties", propsJson);
 
             var statesJson = new JsonArray();
-            for (var state : block.getStateManager().getStates()) {
+            for (var state : block.getStateDefinition().getPossibleStates()) {
                 var stateJson = new JsonObject();
                 var id = stateIdCounter;
                 stateIdCounter++;
                 stateJson.addProperty("id", id);
-                stateJson.addProperty("luminance", state.getLuminance());
-                stateJson.addProperty("opaque", state.isOpaque());
-                stateJson.addProperty("replaceable", state.isReplaceable());
+                stateJson.addProperty("luminance", state.getLightEmission());
+                stateJson.addProperty("opaque", state.isSolid());
+                stateJson.addProperty("replaceable", state.canBeReplaced());
                 // This uses a deprecated api, but minecraft uses the same deprecated api, so we use it for now
-                stateJson.addProperty("blocks_motion", state.blocksMovement());
+                stateJson.addProperty("blocks_motion", state.blocksMotion());
 
-                if (block.getDefaultState().equals(state)) {
+                if (block.defaultBlockState().equals(state)) {
                     blockJson.addProperty("default_state_id", id);
                 }
 
                 var collisionShapeIdxsJson = new JsonArray();
                 for (var box : state
-                    .getCollisionShape(EmptyBlockView.INSTANCE, BlockPos.ORIGIN)
-                    .getBoundingBoxes()) {
+                    .getCollisionShape(
+                        EmptyBlockGetter.INSTANCE,
+                        BlockPos.ZERO
+                    )
+                    .toAabbs()) {
                     var collisionShape = new Shape(
                         box.minX,
                         box.minY,
@@ -113,11 +122,15 @@ public class Blocks implements Main.Extractor {
 
                 stateJson.add("collision_shapes", collisionShapeIdxsJson);
 
-                for (var blockEntity : Registries.BLOCK_ENTITY_TYPE) {
-                    if (blockEntity.supports(state)) {
+                for (
+                    var blockEntity : BuiltInRegistries.BLOCK_ENTITY_TYPE
+                ) {
+                    if (blockEntity.isValid(state)) {
                         stateJson.addProperty(
                             "block_entity_type",
-                            Registries.BLOCK_ENTITY_TYPE.getRawId(blockEntity)
+                            BuiltInRegistries.BLOCK_ENTITY_TYPE.getId(
+                                blockEntity
+                            )
                         );
                     }
                 }
@@ -130,19 +143,23 @@ public class Blocks implements Main.Extractor {
         }
 
         var blockEntitiesJson = new JsonArray();
-        for (var blockEntity : Registries.BLOCK_ENTITY_TYPE) {
+        for (var blockEntity : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
             var blockEntityJson = new JsonObject();
             blockEntityJson.addProperty(
                 "id",
-                Registries.BLOCK_ENTITY_TYPE.getRawId(blockEntity)
+                BuiltInRegistries.BLOCK_ENTITY_TYPE.getId(blockEntity)
             );
             blockEntityJson.addProperty(
                 "ident",
-                Registries.BLOCK_ENTITY_TYPE.getId(blockEntity).toString()
+                BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(
+                    blockEntity
+                ).toString()
             );
             blockEntityJson.addProperty(
                 "name",
-                Registries.BLOCK_ENTITY_TYPE.getId(blockEntity).getPath()
+                BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(
+                    blockEntity
+                ).getPath()
             );
 
             blockEntitiesJson.add(blockEntityJson);

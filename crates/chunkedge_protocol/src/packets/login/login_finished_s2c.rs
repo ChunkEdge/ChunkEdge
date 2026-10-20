@@ -16,4 +16,6 @@ pub struct LoginFinishedS2c<'a> {
     pub uuid: Uuid,
     pub username: Bounded<&'a str, 16>,
     pub properties: Cow<'a, [Property<&'a str>]>,
+    /// Session ID added in 26.2, sent after the profile.
+    pub session_id: Uuid,
 }

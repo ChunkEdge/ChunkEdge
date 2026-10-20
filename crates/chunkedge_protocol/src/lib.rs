@@ -74,11 +74,11 @@ pub use velocity::Velocity;
 pub const MAX_PACKET_SIZE: i32 = 2_i32.pow(21) - 1; // (the maximum that can be sent in a 3-byte VarInt)
 
 /// The Minecraft protocol version this library currently targets.
-pub const PROTOCOL_VERSION: i32 = 770;
+pub const PROTOCOL_VERSION: i32 = 776;
 
 /// The stringified name of the Minecraft version this library currently
 /// targets.
-pub const MINECRAFT_VERSION: &str = "1.21.5";
+pub const MINECRAFT_VERSION: &str = "26.2";
 
 /// How large a packet should be before it is compressed by the packet encoder.
 ///

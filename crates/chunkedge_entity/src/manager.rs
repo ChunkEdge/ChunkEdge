@@ -27,7 +27,7 @@ impl EntityManager {
     pub fn next_id(&mut self) -> EntityId {
         if self.next_id.0 == 0 {
             warn!("entity ID overflow!");
-            // ID 0 is reserved for clients, so skip over it.
+            // ID 0 means "unassigned" to clients, so skip over it.
             self.next_id.0 = 1;
         }
 

@@ -1,5 +1,6 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use chunkedge_entity::EntityId;
 use chunkedge_protocol::WritePacket;
 use chunkedge_protocol::packets::play::EntityEventS2c;
 use derive_more::Deref;
@@ -28,10 +29,10 @@ impl OpLevel {
     }
 }
 
-fn update_op_level(mut clients: Query<(&mut Client, &OpLevel), Changed<OpLevel>>) {
-    for (mut client, lvl) in &mut clients.iter_mut() {
+fn update_op_level(mut clients: Query<(&mut Client, &EntityId, &OpLevel), Changed<OpLevel>>) {
+    for (mut client, id, lvl) in &mut clients.iter_mut() {
         client.write_packet(&EntityEventS2c {
-            entity_id: 0,
+            entity_id: id.get(),
             entity_status: 24 + lvl.0,
         });
     }

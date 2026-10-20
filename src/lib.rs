@@ -155,7 +155,7 @@ pub mod prelude {
         EventLoopPostUpdate, EventLoopPreUpdate, EventLoopUpdate,
     };
     pub use chunkedge_server::ident::Ident;
-    pub use chunkedge_server::interact_entity::{EntityInteraction, InteractEntityMessage};
+    pub use chunkedge_server::interact_entity::InteractEntityMessage;
     pub use chunkedge_server::layer::chunk::{
         Block, BlockRef, Chunk, ChunkLayer, LoadedChunk, UnloadedChunk,
     };

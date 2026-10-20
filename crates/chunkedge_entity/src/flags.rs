@@ -55,7 +55,7 @@ flags! {
         off_hand_active: 1,
         using_riptide: 2,
     }
-    player::PlayerModelParts {
+    avatar::DataPlayerModeCustomisation {
         cape: 0,
         jacket: 1,
         left_sleeve: 2,
@@ -64,14 +64,11 @@ flags! {
         right_pants_leg: 5,
         hat: 6,
     }
-    player::MainArm {
-        right: 0,
-    }
     armor_stand::ArmorStandFlags {
         small: 0,
-        show_arms: 1,
-        hide_base_plate: 2,
-        marker: 3,
+        show_arms: 2,
+        hide_base_plate: 3,
+        marker: 4,
     }
     mob::MobFlags {
         ai_disabled: 0,

@@ -151,7 +151,14 @@
     "translation_key": "effect.minecraft.invisibility",
     "color": 16185078,
     "instant": false,
-    "category": "BENEFICIAL"
+    "category": "BENEFICIAL",
+    "attribute_modifiers": [
+      {
+        "attribute_name": "waypoint_transmit_range",
+        "operation": 2,
+        "base_value": -1.0
+      }
+    ]
   },
   {
     "id": 14,
@@ -387,5 +394,13 @@
     "color": 9214860,
     "instant": false,
     "category": "HARMFUL"
+  },
+  {
+    "id": 39,
+    "name": "breath_of_the_nautilus",
+    "translation_key": "effect.minecraft.breath_of_the_nautilus",
+    "color": 65518,
+    "instant": false,
+    "category": "BENEFICIAL"
   }
 ]

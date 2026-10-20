@@ -13,9 +13,9 @@ pub struct AddEntityS2c {
     pub object_uuid: Uuid,
     pub kind: VarInt, // TODO: EntityKind in chunkedge_generated?
     pub position: DVec3,
+    pub velocity: Velocity,
     pub pitch: ByteAngle,
     pub yaw: ByteAngle,
     pub head_yaw: ByteAngle,
     pub data: VarInt,
-    pub velocity: Velocity,
 }

@@ -1,10 +1,10 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.registry.Registries;
-import com.chunkedge.extractor.Main;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class Effects implements Main.Extractor {
 
@@ -19,55 +19,53 @@ public class Effects implements Main.Extractor {
     public JsonElement extract() {
         var effectsJson = new JsonArray();
 
-        for (var effect : Registries.STATUS_EFFECT) {
+        for (var effect : BuiltInRegistries.MOB_EFFECT) {
             var effectJson = new JsonObject();
 
             effectJson.addProperty(
                 "id",
-                Registries.STATUS_EFFECT.getRawId(effect)
+                BuiltInRegistries.MOB_EFFECT.getId(effect)
             );
             effectJson.addProperty(
                 "name",
-                Registries.STATUS_EFFECT.getId(effect).getPath()
+                BuiltInRegistries.MOB_EFFECT.getKey(effect).getPath()
             );
             effectJson.addProperty(
                 "translation_key",
-                effect.getTranslationKey()
+                effect.getDescriptionId()
             );
             effectJson.addProperty("color", effect.getColor());
-            effectJson.addProperty("instant", effect.isInstant());
+            effectJson.addProperty("instant", effect.isInstantaneous());
             effectJson.addProperty("category", effect.getCategory().name());
 
             var attributeModifiersJson = new JsonArray();
 
-            effect.forEachAttributeModifier(
+            effect.createModifiers(
                 0,
-                (attrRegistryEntry, modifier) -> {
+                (attrHolder, modifier) -> {
                     var attributeModifierJson = new JsonObject();
 
-                    var attr = attrRegistryEntry
-                        .getKeyOrValue()
-                        .map(k -> Registries.ATTRIBUTE.get(k), v -> v);
                     attributeModifierJson.addProperty(
                         "attribute_name",
-                        attr
-                            .getTranslationKey()
+                        attrHolder
+                            .value()
+                            .getDescriptionId()
                             .replaceFirst("^attribute.name.", "")
                     );
                     attributeModifierJson.addProperty(
                         "operation",
-                        modifier.operation().getId()
+                        modifier.operation().id()
                     );
                     attributeModifierJson.addProperty(
                         "base_value",
-                        modifier.value()
+                        modifier.amount()
                     );
 
                     attributeModifiersJson.add(attributeModifierJson);
                 }
             );
 
-            if (attributeModifiersJson.size() > 0) {
+            if (!attributeModifiersJson.isEmpty()) {
                 effectJson.add("attribute_modifiers", attributeModifiersJson);
             }
 

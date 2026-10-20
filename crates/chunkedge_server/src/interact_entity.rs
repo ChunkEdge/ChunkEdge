@@ -1,8 +1,9 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_entity::EntityManager;
+use chunkedge_math::DVec3;
+use chunkedge_protocol::Hand;
 use chunkedge_protocol::packets::play::InteractC2s;
-pub use chunkedge_protocol::packets::play::interact_c2s::EntityInteraction;
 
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
@@ -22,8 +23,10 @@ pub struct InteractEntityMessage {
     pub entity: Entity,
     /// If the client was sneaking during the interaction.
     pub sneaking: bool,
-    /// The kind of interaction that occurred.
-    pub interact: EntityInteraction,
+    /// The hand used for the interaction.
+    pub hand: Hand,
+    /// The interaction target, relative to the entity.
+    pub target: DVec3,
 }
 
 fn handle_interact_entity(
@@ -42,7 +45,8 @@ fn handle_interact_entity(
                     client: packet.client,
                     entity,
                     sneaking: pkt.sneaking,
-                    interact: pkt.interact,
+                    hand: pkt.hand,
+                    target: pkt.target_vec(),
                 });
             }
         }

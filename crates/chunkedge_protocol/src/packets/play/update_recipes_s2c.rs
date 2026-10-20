@@ -29,9 +29,21 @@ pub struct StonecutterRecipe<'a> {
 pub enum SlotDisplay<'a> {
     Empty,
     AnyFuel,
+    WithAnyPotion {
+        base: Box<SlotDisplay<'a>>,
+    },
+    OnlyWithComponent {
+        base: Box<SlotDisplay<'a>>,
+        /// Raw ID in the data-component-type registry.
+        component_type: VarInt,
+    },
     Item(RegistryId),
     ItemStack(Box<ItemStack>),
     Tag(Ident<Cow<'a, str>>),
+    DyedSlotDemo {
+        dye: Box<SlotDisplay<'a>>,
+        target: Box<SlotDisplay<'a>>,
+    },
     SmithingTrim {
         base: Box<SlotDisplay<'a>>,
         material: Box<SlotDisplay<'a>>,

@@ -1,24 +1,21 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
-import com.chunkedge.extractor.Main;
+import net.minecraft.world.item.crafting.RecipeManager;
 
 public class Recipe implements Main.Extractor {
 
-    private final DynamicRegistryManager.Immutable registryManager;
-    private final ServerRecipeManager recipeManager;
+    private final MinecraftServer server;
+    private final RecipeManager recipeManager;
 
     public Recipe(MinecraftServer server) {
-        this.registryManager = server.getRegistryManager();
+        this.server = server;
         this.recipeManager = server.getRecipeManager();
     }
 
@@ -29,57 +26,54 @@ public class Recipe implements Main.Extractor {
 
     @Override
     public JsonElement extract() throws Exception {
-        Codec<net.minecraft.recipe.Recipe<?>> codec =
-            Registries.RECIPE_SERIALIZER.getCodec()
-                .dispatch(
-                    net.minecraft.recipe.Recipe::getSerializer,
-                    RecipeSerializer::codec
-                );
+        var ops = RegistryOps.create(
+            JsonOps.INSTANCE,
+            server.registryAccess()
+        );
         JsonObject json = new JsonObject();
 
         JsonObject recipesJson = new JsonObject();
         recipeManager
-            .values()
-            .forEach(entry -> {
+            .getRecipes()
+            .forEach(holder -> {
                 recipesJson.add(
-                    entry.id().getValue().getPath(),
-                    codec
-                        .encodeStart(JsonOps.INSTANCE, entry.value())
-                        .getOrThrow()
+                    holder.id().identifier().getPath(),
+                    net.minecraft.world.item.crafting.Recipe.CODEC.encodeStart(ops, holder.value()).getOrThrow()
                 );
             });
 
         JsonObject displaysJson = new JsonObject();
-        var displays = registryManager.getOrThrow(RegistryKeys.RECIPE_DISPLAY);
-        var displayCodec = displays.getCodec();
-
+        var displays = server
+            .registryAccess()
+            .lookupOrThrow(Registries.RECIPE_DISPLAY);
         displays
             .stream()
             .forEach(display -> {
                 displaysJson.addProperty(
-                    displayCodec
-                        .encodeStart(JsonOps.INSTANCE, display)
+                    displays
+                        .byNameCodec()
+                        .encodeStart(ops, display)
                         .getOrThrow()
                         .getAsString(),
-                    displays.getRawId(display)
+                    displays.getId(display)
                 );
             });
 
         JsonObject bookCategoryJson = new JsonObject();
-        var bookCategory = registryManager.getOrThrow(
-            RegistryKeys.RECIPE_BOOK_CATEGORY
-        );
-        var bookCategoryCodec = bookCategory.getEntryCodec();
+        var bookCategory = server
+            .registryAccess()
+            .lookupOrThrow(Registries.RECIPE_BOOK_CATEGORY);
 
         bookCategory
-            .streamEntries()
+            .listElements()
             .forEach(entry -> {
                 bookCategoryJson.addProperty(
-                    bookCategoryCodec
-                        .encodeStart(JsonOps.INSTANCE, entry)
+                    bookCategory
+                        .byNameCodec()
+                        .encodeStart(ops, entry.value())
                         .getOrThrow()
                         .getAsString(),
-                    bookCategory.getRawId(entry.value())
+                    bookCategory.getId(entry.value())
                 );
             });
 

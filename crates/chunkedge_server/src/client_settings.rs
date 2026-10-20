@@ -1,11 +1,11 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge_entity::player::{self, PlayerModelParts};
+use chunkedge_entity::avatar::{DataPlayerMainHand, DataPlayerModeCustomisation};
 use chunkedge_protocol::packets::configuration::client_information_c2s::ParticleMode;
 use chunkedge_protocol::packets::play::ClientInformationC2s;
 use chunkedge_protocol::packets::play::client_information_c2s::ChatMode;
 
-use crate::client::ViewDistance;
+use crate::client::{ViewDistance, map_main_arm};
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 pub struct ClientSettingsPlugin;
@@ -32,8 +32,8 @@ fn handle_client_settings(
     mut clients: Query<(
         &mut ViewDistance,
         &mut ClientSettings,
-        &mut PlayerModelParts,
-        &mut player::MainArm,
+        &mut DataPlayerModeCustomisation,
+        &mut DataPlayerMainHand,
     )>,
 ) {
     for packet in packets.read() {
@@ -51,8 +51,10 @@ fn handle_client_settings(
             settings.allow_server_listings = pkt.allow_server_listings;
             settings.particle_mode = pkt.particle_mode;
 
-            model_parts.set_if_neq(PlayerModelParts(u8::from(pkt.displayed_skin_parts) as i8));
-            main_arm.set_if_neq(player::MainArm(pkt.main_arm as i8));
+            model_parts.set_if_neq(DataPlayerModeCustomisation(
+                u8::from(pkt.displayed_skin_parts) as i8,
+            ));
+            main_arm.set_if_neq(DataPlayerMainHand(map_main_arm(pkt.main_arm)));
         }
     }
 }

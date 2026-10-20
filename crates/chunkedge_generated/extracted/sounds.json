@@ -297,6514 +297,7578 @@
   },
   {
     "id": 74,
-    "name": "item.armor.equip_netherite"
+    "name": "item.armor.equip_copper"
   },
   {
     "id": 75,
-    "name": "item.armor.equip_turtle"
+    "name": "item.armor.equip_netherite"
   },
   {
     "id": 76,
-    "name": "item.armor.equip_wolf"
+    "name": "item.armor.equip_turtle"
   },
   {
     "id": 77,
-    "name": "item.armor.unequip_wolf"
+    "name": "item.armor.equip_wolf"
   },
   {
     "id": 78,
-    "name": "entity.armor_stand.break"
+    "name": "item.armor.unequip_wolf"
   },
   {
     "id": 79,
-    "name": "entity.armor_stand.fall"
+    "name": "item.armor.equip_nautilus"
   },
   {
     "id": 80,
-    "name": "entity.armor_stand.hit"
+    "name": "item.armor.unequip_nautilus"
   },
   {
     "id": 81,
-    "name": "entity.armor_stand.place"
+    "name": "entity.armor_stand.break"
   },
   {
     "id": 82,
-    "name": "entity.arrow.hit"
+    "name": "entity.armor_stand.fall"
   },
   {
     "id": 83,
-    "name": "entity.arrow.hit_player"
+    "name": "entity.armor_stand.hit"
   },
   {
     "id": 84,
-    "name": "entity.arrow.shoot"
+    "name": "entity.armor_stand.place"
   },
   {
     "id": 85,
-    "name": "item.axe.strip"
+    "name": "entity.arrow.hit"
   },
   {
     "id": 86,
-    "name": "item.axe.scrape"
+    "name": "entity.arrow.hit_player"
   },
   {
     "id": 87,
-    "name": "item.axe.wax_off"
+    "name": "entity.arrow.shoot"
   },
   {
     "id": 88,
-    "name": "entity.axolotl.attack"
+    "name": "item.axe.strip"
   },
   {
     "id": 89,
-    "name": "entity.axolotl.death"
+    "name": "item.axe.scrape"
   },
   {
     "id": 90,
-    "name": "entity.axolotl.hurt"
+    "name": "item.axe.wax_off"
   },
   {
     "id": 91,
-    "name": "entity.axolotl.idle_air"
+    "name": "entity.axolotl.attack"
   },
   {
     "id": 92,
-    "name": "entity.axolotl.idle_water"
+    "name": "entity.axolotl.death"
   },
   {
     "id": 93,
-    "name": "entity.axolotl.splash"
+    "name": "entity.axolotl.hurt"
   },
   {
     "id": 94,
-    "name": "entity.axolotl.swim"
+    "name": "entity.axolotl.idle_air"
   },
   {
     "id": 95,
-    "name": "block.azalea.break"
+    "name": "entity.axolotl.idle_water"
   },
   {
     "id": 96,
-    "name": "block.azalea.fall"
+    "name": "entity.axolotl.splash"
   },
   {
     "id": 97,
-    "name": "block.azalea.hit"
+    "name": "entity.axolotl.swim"
   },
   {
     "id": 98,
-    "name": "block.azalea.place"
+    "name": "block.azalea.break"
   },
   {
     "id": 99,
-    "name": "block.azalea.step"
+    "name": "block.azalea.fall"
   },
   {
     "id": 100,
-    "name": "block.azalea_leaves.break"
+    "name": "block.azalea.hit"
   },
   {
     "id": 101,
-    "name": "block.azalea_leaves.fall"
+    "name": "block.azalea.place"
   },
   {
     "id": 102,
-    "name": "block.azalea_leaves.hit"
+    "name": "block.azalea.step"
   },
   {
     "id": 103,
-    "name": "block.azalea_leaves.place"
+    "name": "block.azalea_leaves.break"
   },
   {
     "id": 104,
-    "name": "block.azalea_leaves.step"
+    "name": "block.azalea_leaves.fall"
   },
   {
     "id": 105,
-    "name": "block.bamboo.break"
+    "name": "block.azalea_leaves.hit"
   },
   {
     "id": 106,
-    "name": "block.bamboo.fall"
+    "name": "block.azalea_leaves.place"
   },
   {
     "id": 107,
-    "name": "block.bamboo.hit"
+    "name": "block.azalea_leaves.step"
   },
   {
     "id": 108,
-    "name": "block.bamboo.place"
+    "name": "entity.baby_nautilus.ambient"
   },
   {
     "id": 109,
-    "name": "block.bamboo.step"
+    "name": "entity.baby_nautilus.ambient_land"
   },
   {
     "id": 110,
-    "name": "block.bamboo_sapling.break"
+    "name": "entity.baby_nautilus.death"
   },
   {
     "id": 111,
-    "name": "block.bamboo_sapling.hit"
+    "name": "entity.baby_nautilus.death_land"
   },
   {
     "id": 112,
-    "name": "block.bamboo_sapling.place"
+    "name": "entity.baby_nautilus.eat"
   },
   {
     "id": 113,
-    "name": "block.bamboo_wood.break"
+    "name": "entity.baby_nautilus.hurt"
   },
   {
     "id": 114,
-    "name": "block.bamboo_wood.fall"
+    "name": "entity.baby_nautilus.hurt_land"
   },
   {
     "id": 115,
-    "name": "block.bamboo_wood.hit"
+    "name": "entity.nautilus.riding"
   },
   {
     "id": 116,
-    "name": "block.bamboo_wood.place"
+    "name": "entity.baby_nautilus.swim"
   },
   {
     "id": 117,
-    "name": "block.bamboo_wood.step"
+    "name": "block.bamboo.break"
   },
   {
     "id": 118,
-    "name": "block.bamboo_wood_door.close"
+    "name": "block.bamboo.fall"
   },
   {
     "id": 119,
-    "name": "block.bamboo_wood_door.open"
+    "name": "block.bamboo.hit"
   },
   {
     "id": 120,
-    "name": "block.bamboo_wood_trapdoor.close"
+    "name": "block.bamboo.place"
   },
   {
     "id": 121,
-    "name": "block.bamboo_wood_trapdoor.open"
+    "name": "block.bamboo.step"
   },
   {
     "id": 122,
-    "name": "block.bamboo_wood_button.click_off"
+    "name": "block.bamboo_sapling.break"
   },
   {
     "id": 123,
-    "name": "block.bamboo_wood_button.click_on"
+    "name": "block.bamboo_sapling.hit"
   },
   {
     "id": 124,
-    "name": "block.bamboo_wood_pressure_plate.click_off"
+    "name": "block.bamboo_sapling.place"
   },
   {
     "id": 125,
-    "name": "block.bamboo_wood_pressure_plate.click_on"
+    "name": "block.bamboo_wood.break"
   },
   {
     "id": 126,
-    "name": "block.bamboo_wood_fence_gate.close"
+    "name": "block.bamboo_wood.fall"
   },
   {
     "id": 127,
-    "name": "block.bamboo_wood_fence_gate.open"
+    "name": "block.bamboo_wood.hit"
   },
   {
     "id": 128,
-    "name": "block.barrel.close"
+    "name": "block.bamboo_wood.place"
   },
   {
     "id": 129,
-    "name": "block.barrel.open"
+    "name": "block.bamboo_wood.step"
   },
   {
     "id": 130,
-    "name": "block.basalt.break"
+    "name": "block.bamboo_wood_door.close"
   },
   {
     "id": 131,
-    "name": "block.basalt.step"
+    "name": "block.bamboo_wood_door.open"
   },
   {
     "id": 132,
-    "name": "block.basalt.place"
+    "name": "block.bamboo_wood_trapdoor.close"
   },
   {
     "id": 133,
-    "name": "block.basalt.hit"
+    "name": "block.bamboo_wood_trapdoor.open"
   },
   {
     "id": 134,
-    "name": "block.basalt.fall"
+    "name": "block.bamboo_wood_button.click_off"
   },
   {
     "id": 135,
-    "name": "entity.bat.ambient"
+    "name": "block.bamboo_wood_button.click_on"
   },
   {
     "id": 136,
-    "name": "entity.bat.death"
+    "name": "block.bamboo_wood_pressure_plate.click_off"
   },
   {
     "id": 137,
-    "name": "entity.bat.hurt"
+    "name": "block.bamboo_wood_pressure_plate.click_on"
   },
   {
     "id": 138,
-    "name": "entity.bat.loop"
+    "name": "block.bamboo_wood_fence_gate.close"
   },
   {
     "id": 139,
-    "name": "entity.bat.takeoff"
+    "name": "block.bamboo_wood_fence_gate.open"
   },
   {
     "id": 140,
-    "name": "block.beacon.activate"
+    "name": "block.barrel.close"
   },
   {
     "id": 141,
-    "name": "block.beacon.ambient"
+    "name": "block.barrel.open"
   },
   {
     "id": 142,
-    "name": "block.beacon.deactivate"
+    "name": "block.basalt.break"
   },
   {
     "id": 143,
-    "name": "block.beacon.power_select"
+    "name": "block.basalt.step"
   },
   {
     "id": 144,
-    "name": "entity.bee.death"
+    "name": "block.basalt.place"
   },
   {
     "id": 145,
-    "name": "entity.bee.hurt"
+    "name": "block.basalt.hit"
   },
   {
     "id": 146,
-    "name": "entity.bee.loop_aggressive"
+    "name": "block.basalt.fall"
   },
   {
     "id": 147,
-    "name": "entity.bee.loop"
+    "name": "entity.bat.ambient"
   },
   {
     "id": 148,
-    "name": "entity.bee.sting"
+    "name": "entity.bat.death"
   },
   {
     "id": 149,
-    "name": "entity.bee.pollinate"
+    "name": "entity.bat.hurt"
   },
   {
     "id": 150,
-    "name": "block.beehive.drip"
+    "name": "entity.bat.loop"
   },
   {
     "id": 151,
-    "name": "block.beehive.enter"
+    "name": "entity.bat.takeoff"
   },
   {
     "id": 152,
-    "name": "block.beehive.exit"
+    "name": "block.beacon.activate"
   },
   {
     "id": 153,
-    "name": "block.beehive.shear"
+    "name": "block.beacon.ambient"
   },
   {
     "id": 154,
-    "name": "block.beehive.work"
+    "name": "block.beacon.deactivate"
   },
   {
     "id": 155,
-    "name": "block.bell.use"
+    "name": "block.beacon.power_select"
   },
   {
     "id": 156,
-    "name": "block.bell.resonate"
+    "name": "entity.bee.death"
   },
   {
     "id": 157,
-    "name": "block.big_dripleaf.break"
+    "name": "entity.bee.hurt"
   },
   {
     "id": 158,
-    "name": "block.big_dripleaf.fall"
+    "name": "entity.bee.loop_aggressive"
   },
   {
     "id": 159,
-    "name": "block.big_dripleaf.hit"
+    "name": "entity.bee.loop"
   },
   {
     "id": 160,
-    "name": "block.big_dripleaf.place"
+    "name": "entity.bee.sting"
   },
   {
     "id": 161,
-    "name": "block.big_dripleaf.step"
+    "name": "entity.bee.pollinate"
   },
   {
     "id": 162,
-    "name": "entity.blaze.ambient"
+    "name": "block.beehive.drip"
   },
   {
     "id": 163,
-    "name": "entity.blaze.burn"
+    "name": "block.beehive.enter"
   },
   {
     "id": 164,
-    "name": "entity.blaze.death"
+    "name": "block.beehive.exit"
   },
   {
     "id": 165,
-    "name": "entity.blaze.hurt"
+    "name": "block.beehive.shear"
   },
   {
     "id": 166,
-    "name": "entity.blaze.shoot"
+    "name": "block.beehive.work"
   },
   {
     "id": 167,
-    "name": "entity.boat.paddle_land"
+    "name": "block.bell.use"
   },
   {
     "id": 168,
-    "name": "entity.boat.paddle_water"
+    "name": "block.bell.resonate"
   },
   {
     "id": 169,
-    "name": "entity.bogged.ambient"
+    "name": "block.big_dripleaf.break"
   },
   {
     "id": 170,
-    "name": "entity.bogged.death"
+    "name": "block.big_dripleaf.fall"
   },
   {
     "id": 171,
-    "name": "entity.bogged.hurt"
+    "name": "block.big_dripleaf.hit"
   },
   {
     "id": 172,
-    "name": "entity.bogged.shear"
+    "name": "block.big_dripleaf.place"
   },
   {
     "id": 173,
-    "name": "entity.bogged.step"
+    "name": "block.big_dripleaf.step"
   },
   {
     "id": 174,
-    "name": "block.bone_block.break"
+    "name": "entity.blaze.ambient"
   },
   {
     "id": 175,
-    "name": "block.bone_block.fall"
+    "name": "entity.blaze.burn"
   },
   {
     "id": 176,
-    "name": "block.bone_block.hit"
+    "name": "entity.blaze.death"
   },
   {
     "id": 177,
-    "name": "block.bone_block.place"
+    "name": "entity.blaze.hurt"
   },
   {
     "id": 178,
-    "name": "block.bone_block.step"
+    "name": "entity.blaze.shoot"
   },
   {
     "id": 179,
-    "name": "item.bone_meal.use"
+    "name": "entity.boat.paddle_land"
   },
   {
     "id": 180,
-    "name": "item.book.page_turn"
+    "name": "entity.boat.paddle_water"
   },
   {
     "id": 181,
-    "name": "item.book.put"
+    "name": "entity.bogged.ambient"
   },
   {
     "id": 182,
-    "name": "block.blastfurnace.fire_crackle"
+    "name": "entity.bogged.death"
   },
   {
     "id": 183,
-    "name": "item.bottle.empty"
+    "name": "entity.bogged.hurt"
   },
   {
     "id": 184,
-    "name": "item.bottle.fill"
+    "name": "entity.bogged.shear"
   },
   {
     "id": 185,
-    "name": "item.bottle.fill_dragonbreath"
+    "name": "entity.bogged.step"
   },
   {
     "id": 186,
-    "name": "entity.breeze.charge"
+    "name": "block.bone_block.break"
   },
   {
     "id": 187,
-    "name": "entity.breeze.deflect"
+    "name": "block.bone_block.fall"
   },
   {
     "id": 188,
-    "name": "entity.breeze.inhale"
+    "name": "block.bone_block.hit"
   },
   {
     "id": 189,
-    "name": "entity.breeze.idle_ground"
+    "name": "block.bone_block.place"
   },
   {
     "id": 190,
-    "name": "entity.breeze.idle_air"
+    "name": "block.bone_block.step"
   },
   {
     "id": 191,
-    "name": "entity.breeze.shoot"
+    "name": "item.bone_meal.use"
   },
   {
     "id": 192,
-    "name": "entity.breeze.jump"
+    "name": "item.book.page_turn"
   },
   {
     "id": 193,
-    "name": "entity.breeze.land"
+    "name": "item.book.put"
   },
   {
     "id": 194,
-    "name": "entity.breeze.slide"
+    "name": "block.blastfurnace.fire_crackle"
   },
   {
     "id": 195,
-    "name": "entity.breeze.death"
+    "name": "item.bottle.empty"
   },
   {
     "id": 196,
-    "name": "entity.breeze.hurt"
+    "name": "item.bottle.fill"
   },
   {
     "id": 197,
-    "name": "entity.breeze.whirl"
+    "name": "item.bottle.fill_dragonbreath"
   },
   {
     "id": 198,
-    "name": "entity.breeze.wind_burst"
+    "name": "entity.breeze.charge"
   },
   {
     "id": 199,
-    "name": "block.brewing_stand.brew"
+    "name": "entity.breeze.deflect"
   },
   {
     "id": 200,
-    "name": "item.brush.brushing.generic"
+    "name": "entity.breeze.inhale"
   },
   {
     "id": 201,
-    "name": "item.brush.brushing.sand"
+    "name": "entity.breeze.idle_ground"
   },
   {
     "id": 202,
-    "name": "item.brush.brushing.gravel"
+    "name": "entity.breeze.idle_air"
   },
   {
     "id": 203,
-    "name": "item.brush.brushing.sand.complete"
+    "name": "entity.breeze.shoot"
   },
   {
     "id": 204,
-    "name": "item.brush.brushing.gravel.complete"
+    "name": "entity.breeze.jump"
   },
   {
     "id": 205,
-    "name": "block.bubble_column.bubble_pop"
+    "name": "entity.breeze.land"
   },
   {
     "id": 206,
-    "name": "block.bubble_column.upwards_ambient"
+    "name": "entity.breeze.slide"
   },
   {
     "id": 207,
-    "name": "block.bubble_column.upwards_inside"
+    "name": "entity.breeze.death"
   },
   {
     "id": 208,
-    "name": "block.bubble_column.whirlpool_ambient"
+    "name": "entity.breeze.hurt"
   },
   {
     "id": 209,
-    "name": "block.bubble_column.whirlpool_inside"
+    "name": "entity.breeze.whirl"
   },
   {
     "id": 210,
-    "name": "ui.hud.bubble_pop"
+    "name": "entity.breeze.wind_burst"
   },
   {
     "id": 211,
-    "name": "item.bucket.empty"
+    "name": "block.brewing_stand.brew"
   },
   {
     "id": 212,
-    "name": "item.bucket.empty_axolotl"
+    "name": "item.brush.brushing.generic"
   },
   {
     "id": 213,
-    "name": "item.bucket.empty_fish"
+    "name": "item.brush.brushing.sand"
   },
   {
     "id": 214,
-    "name": "item.bucket.empty_lava"
+    "name": "item.brush.brushing.gravel"
   },
   {
     "id": 215,
-    "name": "item.bucket.empty_powder_snow"
+    "name": "item.brush.brushing.sand.complete"
   },
   {
     "id": 216,
-    "name": "item.bucket.empty_tadpole"
+    "name": "item.brush.brushing.gravel.complete"
   },
   {
     "id": 217,
-    "name": "item.bucket.fill"
+    "name": "block.bubble_column.bubble_pop"
   },
   {
     "id": 218,
-    "name": "item.bucket.fill_axolotl"
+    "name": "block.bubble_column.upwards_ambient"
   },
   {
     "id": 219,
-    "name": "item.bucket.fill_fish"
+    "name": "block.bubble_column.upwards_inside"
   },
   {
     "id": 220,
-    "name": "item.bucket.fill_lava"
+    "name": "block.bubble_column.whirlpool_ambient"
   },
   {
     "id": 221,
-    "name": "item.bucket.fill_powder_snow"
+    "name": "block.bubble_column.whirlpool_inside"
   },
   {
     "id": 222,
-    "name": "item.bucket.fill_tadpole"
+    "name": "ui.hud.bubble_pop"
   },
   {
     "id": 223,
-    "name": "item.bundle.drop_contents"
+    "name": "item.bucket.empty"
   },
   {
     "id": 224,
-    "name": "item.bundle.insert"
+    "name": "item.bucket.empty_axolotl"
   },
   {
     "id": 225,
-    "name": "item.bundle.insert_fail"
+    "name": "item.bucket.empty_fish"
   },
   {
     "id": 226,
-    "name": "item.bundle.remove_one"
+    "name": "item.bucket.empty_lava"
   },
   {
     "id": 227,
-    "name": "block.cactus_flower.break"
+    "name": "item.bucket.empty_powder_snow"
   },
   {
     "id": 228,
-    "name": "block.cactus_flower.place"
+    "name": "item.bucket.empty_sulfur_cube"
   },
   {
     "id": 229,
-    "name": "block.cake.add_candle"
+    "name": "item.bucket.empty_tadpole"
   },
   {
     "id": 230,
-    "name": "block.calcite.break"
+    "name": "item.bucket.fill"
   },
   {
     "id": 231,
-    "name": "block.calcite.step"
+    "name": "item.bucket.fill_axolotl"
   },
   {
     "id": 232,
-    "name": "block.calcite.place"
+    "name": "item.bucket.fill_fish"
   },
   {
     "id": 233,
-    "name": "block.calcite.hit"
+    "name": "item.bucket.fill_lava"
   },
   {
     "id": 234,
-    "name": "block.calcite.fall"
+    "name": "item.bucket.fill_powder_snow"
   },
   {
     "id": 235,
-    "name": "entity.camel.ambient"
+    "name": "item.bucket.fill_sulfur_cube"
   },
   {
     "id": 236,
-    "name": "entity.camel.dash"
+    "name": "item.bucket.fill_tadpole"
   },
   {
     "id": 237,
-    "name": "entity.camel.dash_ready"
+    "name": "item.bundle.drop_contents"
   },
   {
     "id": 238,
-    "name": "entity.camel.death"
+    "name": "item.bundle.insert"
   },
   {
     "id": 239,
-    "name": "entity.camel.eat"
+    "name": "item.bundle.insert_fail"
   },
   {
     "id": 240,
-    "name": "entity.camel.hurt"
+    "name": "item.bundle.remove_one"
   },
   {
     "id": 241,
-    "name": "entity.camel.saddle"
+    "name": "block.cactus_flower.break"
   },
   {
     "id": 242,
-    "name": "entity.camel.sit"
+    "name": "block.cactus_flower.place"
   },
   {
     "id": 243,
-    "name": "entity.camel.stand"
+    "name": "block.cake.add_candle"
   },
   {
     "id": 244,
-    "name": "entity.camel.step"
+    "name": "block.calcite.break"
   },
   {
     "id": 245,
-    "name": "entity.camel.step_sand"
+    "name": "block.calcite.step"
   },
   {
     "id": 246,
-    "name": "block.campfire.crackle"
+    "name": "block.calcite.place"
   },
   {
     "id": 247,
-    "name": "block.candle.ambient"
+    "name": "block.calcite.hit"
   },
   {
     "id": 248,
-    "name": "block.candle.break"
+    "name": "block.calcite.fall"
   },
   {
     "id": 249,
-    "name": "block.candle.extinguish"
+    "name": "entity.camel_husk.ambient"
   },
   {
     "id": 250,
-    "name": "block.candle.fall"
+    "name": "entity.camel_husk.dash"
   },
   {
     "id": 251,
-    "name": "block.candle.hit"
+    "name": "entity.camel_husk.dash_ready"
   },
   {
     "id": 252,
-    "name": "block.candle.place"
+    "name": "entity.camel_husk.death"
   },
   {
     "id": 253,
-    "name": "block.candle.step"
+    "name": "entity.camel_husk.eat"
   },
   {
     "id": 254,
-    "name": "entity.cat.ambient"
+    "name": "entity.camel_husk.hurt"
   },
   {
     "id": 255,
-    "name": "entity.cat.stray_ambient"
+    "name": "entity.camel_husk.saddle"
   },
   {
     "id": 256,
-    "name": "entity.cat.death"
+    "name": "entity.camel_husk.sit"
   },
   {
     "id": 257,
-    "name": "entity.cat.eat"
+    "name": "entity.camel_husk.stand"
   },
   {
     "id": 258,
-    "name": "entity.cat.hiss"
+    "name": "entity.camel_husk.step"
   },
   {
     "id": 259,
-    "name": "entity.cat.beg_for_food"
+    "name": "entity.camel_husk.step_sand"
   },
   {
     "id": 260,
-    "name": "entity.cat.hurt"
+    "name": "entity.camel.ambient"
   },
   {
     "id": 261,
-    "name": "entity.cat.purr"
+    "name": "entity.camel.dash"
   },
   {
     "id": 262,
-    "name": "entity.cat.purreow"
+    "name": "entity.camel.dash_ready"
   },
   {
     "id": 263,
-    "name": "block.cave_vines.break"
+    "name": "entity.camel.death"
   },
   {
     "id": 264,
-    "name": "block.cave_vines.fall"
+    "name": "entity.camel.eat"
   },
   {
     "id": 265,
-    "name": "block.cave_vines.hit"
+    "name": "entity.camel.hurt"
   },
   {
     "id": 266,
-    "name": "block.cave_vines.place"
+    "name": "entity.camel.saddle"
   },
   {
     "id": 267,
-    "name": "block.cave_vines.step"
+    "name": "entity.camel.sit"
   },
   {
     "id": 268,
-    "name": "block.cave_vines.pick_berries"
+    "name": "entity.camel.stand"
   },
   {
     "id": 269,
-    "name": "block.chain.break"
+    "name": "entity.camel.step"
   },
   {
     "id": 270,
-    "name": "block.chain.fall"
+    "name": "entity.camel.step_sand"
   },
   {
     "id": 271,
-    "name": "block.chain.hit"
+    "name": "block.campfire.crackle"
   },
   {
     "id": 272,
-    "name": "block.chain.place"
+    "name": "block.candle.ambient"
   },
   {
     "id": 273,
-    "name": "block.chain.step"
+    "name": "block.candle.break"
   },
   {
     "id": 274,
-    "name": "block.cherry_wood.break"
+    "name": "block.candle.extinguish"
   },
   {
     "id": 275,
-    "name": "block.cherry_wood.fall"
+    "name": "block.candle.fall"
   },
   {
     "id": 276,
-    "name": "block.cherry_wood.hit"
+    "name": "block.candle.hit"
   },
   {
     "id": 277,
-    "name": "block.cherry_wood.place"
+    "name": "block.candle.place"
   },
   {
     "id": 278,
-    "name": "block.cherry_wood.step"
+    "name": "block.candle.step"
   },
   {
     "id": 279,
-    "name": "block.cherry_sapling.break"
+    "name": "entity.baby_cat.ambient"
   },
   {
     "id": 280,
-    "name": "block.cherry_sapling.fall"
+    "name": "entity.baby_cat.stray_ambient"
   },
   {
     "id": 281,
-    "name": "block.cherry_sapling.hit"
+    "name": "entity.baby_cat.death"
   },
   {
     "id": 282,
-    "name": "block.cherry_sapling.place"
+    "name": "entity.baby_cat.eat"
   },
   {
     "id": 283,
-    "name": "block.cherry_sapling.step"
+    "name": "entity.baby_cat.hiss"
   },
   {
     "id": 284,
-    "name": "block.cherry_leaves.break"
+    "name": "entity.baby_cat.beg_for_food"
   },
   {
     "id": 285,
-    "name": "block.cherry_leaves.fall"
+    "name": "entity.baby_cat.hurt"
   },
   {
     "id": 286,
-    "name": "block.cherry_leaves.hit"
+    "name": "entity.baby_cat.purr"
   },
   {
     "id": 287,
-    "name": "block.cherry_leaves.place"
+    "name": "entity.baby_cat.purreow"
   },
   {
     "id": 288,
-    "name": "block.cherry_leaves.step"
+    "name": "entity.cat.ambient"
   },
   {
     "id": 289,
-    "name": "block.cherry_wood_hanging_sign.step"
+    "name": "entity.cat.stray_ambient"
   },
   {
     "id": 290,
-    "name": "block.cherry_wood_hanging_sign.break"
+    "name": "entity.cat.hiss"
   },
   {
     "id": 291,
-    "name": "block.cherry_wood_hanging_sign.fall"
+    "name": "entity.cat.hurt"
   },
   {
     "id": 292,
-    "name": "block.cherry_wood_hanging_sign.hit"
+    "name": "entity.cat.death"
   },
   {
     "id": 293,
-    "name": "block.cherry_wood_hanging_sign.place"
+    "name": "entity.cat.eat"
   },
   {
     "id": 294,
-    "name": "block.cherry_wood_door.close"
+    "name": "entity.cat.beg_for_food"
   },
   {
     "id": 295,
-    "name": "block.cherry_wood_door.open"
+    "name": "entity.cat.purr"
   },
   {
     "id": 296,
-    "name": "block.cherry_wood_trapdoor.close"
+    "name": "entity.cat.purreow"
   },
   {
     "id": 297,
-    "name": "block.cherry_wood_trapdoor.open"
+    "name": "entity.cat_royal.ambient"
   },
   {
     "id": 298,
-    "name": "block.cherry_wood_button.click_off"
+    "name": "entity.cat_royal.stray_ambient"
   },
   {
     "id": 299,
-    "name": "block.cherry_wood_button.click_on"
+    "name": "entity.cat_royal.hiss"
   },
   {
     "id": 300,
-    "name": "block.cherry_wood_pressure_plate.click_off"
+    "name": "entity.cat_royal.hurt"
   },
   {
     "id": 301,
-    "name": "block.cherry_wood_pressure_plate.click_on"
+    "name": "entity.cat_royal.death"
   },
   {
     "id": 302,
-    "name": "block.cherry_wood_fence_gate.close"
+    "name": "entity.cat_royal.eat"
   },
   {
     "id": 303,
-    "name": "block.cherry_wood_fence_gate.open"
+    "name": "entity.cat_royal.beg_for_food"
   },
   {
     "id": 304,
-    "name": "block.chest.close"
+    "name": "entity.cat_royal.purr"
   },
   {
     "id": 305,
-    "name": "block.chest.locked"
+    "name": "entity.cat_royal.purreow"
   },
   {
     "id": 306,
-    "name": "block.chest.open"
+    "name": "block.cave_vines.break"
   },
   {
     "id": 307,
-    "name": "entity.chicken.ambient"
+    "name": "block.cave_vines.fall"
   },
   {
     "id": 308,
-    "name": "entity.chicken.death"
+    "name": "block.cave_vines.hit"
   },
   {
     "id": 309,
-    "name": "entity.chicken.egg"
+    "name": "block.cave_vines.place"
   },
   {
     "id": 310,
-    "name": "entity.chicken.hurt"
+    "name": "block.cave_vines.step"
   },
   {
     "id": 311,
-    "name": "entity.chicken.step"
+    "name": "block.cave_vines.pick_berries"
   },
   {
     "id": 312,
-    "name": "block.chiseled_bookshelf.break"
+    "name": "block.chain.break"
   },
   {
     "id": 313,
-    "name": "block.chiseled_bookshelf.fall"
+    "name": "block.chain.fall"
   },
   {
     "id": 314,
-    "name": "block.chiseled_bookshelf.hit"
+    "name": "block.chain.hit"
   },
   {
     "id": 315,
-    "name": "block.chiseled_bookshelf.insert"
+    "name": "block.chain.place"
   },
   {
     "id": 316,
-    "name": "block.chiseled_bookshelf.insert.enchanted"
+    "name": "block.chain.step"
   },
   {
     "id": 317,
-    "name": "block.chiseled_bookshelf.step"
+    "name": "block.cherry_wood.break"
   },
   {
     "id": 318,
-    "name": "block.chiseled_bookshelf.pickup"
+    "name": "block.cherry_wood.fall"
   },
   {
     "id": 319,
-    "name": "block.chiseled_bookshelf.pickup.enchanted"
+    "name": "block.cherry_wood.hit"
   },
   {
     "id": 320,
-    "name": "block.chiseled_bookshelf.place"
+    "name": "block.cherry_wood.place"
   },
   {
     "id": 321,
-    "name": "block.chorus_flower.death"
+    "name": "block.cherry_wood.step"
   },
   {
     "id": 322,
-    "name": "block.chorus_flower.grow"
+    "name": "block.cherry_sapling.break"
   },
   {
     "id": 323,
-    "name": "item.chorus_fruit.teleport"
+    "name": "block.cherry_sapling.fall"
   },
   {
     "id": 324,
-    "name": "block.cobweb.break"
+    "name": "block.cherry_sapling.hit"
   },
   {
     "id": 325,
-    "name": "block.cobweb.step"
+    "name": "block.cherry_sapling.place"
   },
   {
     "id": 326,
-    "name": "block.cobweb.place"
+    "name": "block.cherry_sapling.step"
   },
   {
     "id": 327,
-    "name": "block.cobweb.hit"
+    "name": "block.cherry_leaves.break"
   },
   {
     "id": 328,
-    "name": "block.cobweb.fall"
+    "name": "block.cherry_leaves.fall"
   },
   {
     "id": 329,
-    "name": "entity.cod.ambient"
+    "name": "block.cherry_leaves.hit"
   },
   {
     "id": 330,
-    "name": "entity.cod.death"
+    "name": "block.cherry_leaves.place"
   },
   {
     "id": 331,
-    "name": "entity.cod.flop"
+    "name": "block.cherry_leaves.step"
   },
   {
     "id": 332,
-    "name": "entity.cod.hurt"
+    "name": "block.cherry_wood_hanging_sign.step"
   },
   {
     "id": 333,
-    "name": "block.comparator.click"
+    "name": "block.cherry_wood_hanging_sign.break"
   },
   {
     "id": 334,
-    "name": "block.composter.empty"
+    "name": "block.cherry_wood_hanging_sign.fall"
   },
   {
     "id": 335,
-    "name": "block.composter.fill"
+    "name": "block.cherry_wood_hanging_sign.hit"
   },
   {
     "id": 336,
-    "name": "block.composter.fill_success"
+    "name": "block.cherry_wood_hanging_sign.place"
   },
   {
     "id": 337,
-    "name": "block.composter.ready"
+    "name": "block.cherry_wood_door.close"
   },
   {
     "id": 338,
-    "name": "block.conduit.activate"
+    "name": "block.cherry_wood_door.open"
   },
   {
     "id": 339,
-    "name": "block.conduit.ambient"
+    "name": "block.cherry_wood_trapdoor.close"
   },
   {
     "id": 340,
-    "name": "block.conduit.ambient.short"
+    "name": "block.cherry_wood_trapdoor.open"
   },
   {
     "id": 341,
-    "name": "block.conduit.attack.target"
+    "name": "block.cherry_wood_button.click_off"
   },
   {
     "id": 342,
-    "name": "block.conduit.deactivate"
+    "name": "block.cherry_wood_button.click_on"
   },
   {
     "id": 343,
-    "name": "block.copper_bulb.break"
+    "name": "block.cherry_wood_pressure_plate.click_off"
   },
   {
     "id": 344,
-    "name": "block.copper_bulb.step"
+    "name": "block.cherry_wood_pressure_plate.click_on"
   },
   {
     "id": 345,
-    "name": "block.copper_bulb.place"
+    "name": "block.cherry_wood_fence_gate.close"
   },
   {
     "id": 346,
-    "name": "block.copper_bulb.hit"
+    "name": "block.cherry_wood_fence_gate.open"
   },
   {
     "id": 347,
-    "name": "block.copper_bulb.fall"
+    "name": "block.chest.close"
   },
   {
     "id": 348,
-    "name": "block.copper_bulb.turn_on"
+    "name": "block.chest.locked"
   },
   {
     "id": 349,
-    "name": "block.copper_bulb.turn_off"
+    "name": "block.chest.open"
   },
   {
     "id": 350,
-    "name": "block.copper.break"
+    "name": "entity.baby_chicken.ambient"
   },
   {
     "id": 351,
-    "name": "block.copper.step"
+    "name": "entity.baby_chicken.death"
   },
   {
     "id": 352,
-    "name": "block.copper.place"
+    "name": "entity.chicken.egg"
   },
   {
     "id": 353,
-    "name": "block.copper.hit"
+    "name": "entity.baby_chicken.hurt"
   },
   {
     "id": 354,
-    "name": "block.copper.fall"
+    "name": "entity.chicken.step"
   },
   {
     "id": 355,
-    "name": "block.copper_door.close"
+    "name": "entity.baby_chicken.step"
   },
   {
     "id": 356,
-    "name": "block.copper_door.open"
+    "name": "entity.chicken.ambient"
   },
   {
     "id": 357,
-    "name": "block.copper_grate.break"
+    "name": "entity.chicken.hurt"
   },
   {
     "id": 358,
-    "name": "block.copper_grate.step"
+    "name": "entity.chicken.death"
   },
   {
     "id": 359,
-    "name": "block.copper_grate.place"
+    "name": "entity.chicken_picky.ambient"
   },
   {
     "id": 360,
-    "name": "block.copper_grate.hit"
+    "name": "entity.chicken_picky.hurt"
   },
   {
     "id": 361,
-    "name": "block.copper_grate.fall"
+    "name": "entity.chicken_picky.death"
   },
   {
     "id": 362,
-    "name": "block.copper_trapdoor.close"
+    "name": "block.chiseled_bookshelf.break"
   },
   {
     "id": 363,
-    "name": "block.copper_trapdoor.open"
+    "name": "block.chiseled_bookshelf.fall"
   },
   {
     "id": 364,
-    "name": "block.coral_block.break"
+    "name": "block.chiseled_bookshelf.hit"
   },
   {
     "id": 365,
-    "name": "block.coral_block.fall"
+    "name": "block.chiseled_bookshelf.insert"
   },
   {
     "id": 366,
-    "name": "block.coral_block.hit"
+    "name": "block.chiseled_bookshelf.insert.enchanted"
   },
   {
     "id": 367,
-    "name": "block.coral_block.place"
+    "name": "block.chiseled_bookshelf.step"
   },
   {
     "id": 368,
-    "name": "block.coral_block.step"
+    "name": "block.chiseled_bookshelf.pickup"
   },
   {
     "id": 369,
-    "name": "entity.cow.ambient"
+    "name": "block.chiseled_bookshelf.pickup.enchanted"
   },
   {
     "id": 370,
-    "name": "entity.cow.death"
+    "name": "block.chiseled_bookshelf.place"
   },
   {
     "id": 371,
-    "name": "entity.cow.hurt"
+    "name": "block.chorus_flower.death"
   },
   {
     "id": 372,
-    "name": "entity.cow.milk"
+    "name": "block.chorus_flower.grow"
   },
   {
     "id": 373,
-    "name": "entity.cow.step"
+    "name": "item.chorus_fruit.teleport"
   },
   {
     "id": 374,
-    "name": "block.crafter.craft"
+    "name": "block.cobweb.break"
   },
   {
     "id": 375,
-    "name": "block.crafter.fail"
+    "name": "block.cobweb.step"
   },
   {
     "id": 376,
-    "name": "entity.creaking.ambient"
+    "name": "block.cobweb.place"
   },
   {
     "id": 377,
-    "name": "entity.creaking.activate"
+    "name": "block.cobweb.hit"
   },
   {
     "id": 378,
-    "name": "entity.creaking.deactivate"
+    "name": "block.cobweb.fall"
   },
   {
     "id": 379,
-    "name": "entity.creaking.attack"
+    "name": "entity.cod.ambient"
   },
   {
     "id": 380,
-    "name": "entity.creaking.death"
+    "name": "entity.cod.death"
   },
   {
     "id": 381,
-    "name": "entity.creaking.step"
+    "name": "entity.cod.flop"
   },
   {
     "id": 382,
-    "name": "entity.creaking.freeze"
+    "name": "entity.cod.hurt"
   },
   {
     "id": 383,
-    "name": "entity.creaking.unfreeze"
+    "name": "block.comparator.click"
   },
   {
     "id": 384,
-    "name": "entity.creaking.spawn"
+    "name": "block.composter.empty"
   },
   {
     "id": 385,
-    "name": "entity.creaking.sway"
+    "name": "block.composter.fill"
   },
   {
     "id": 386,
-    "name": "entity.creaking.twitch"
+    "name": "block.composter.fill_success"
   },
   {
     "id": 387,
-    "name": "block.creaking_heart.break"
+    "name": "block.composter.ready"
   },
   {
     "id": 388,
-    "name": "block.creaking_heart.fall"
+    "name": "block.conduit.activate"
   },
   {
     "id": 389,
-    "name": "block.creaking_heart.hit"
+    "name": "block.conduit.ambient"
   },
   {
     "id": 390,
-    "name": "block.creaking_heart.hurt"
+    "name": "block.conduit.ambient.short"
   },
   {
     "id": 391,
-    "name": "block.creaking_heart.place"
+    "name": "block.conduit.attack.target"
   },
   {
     "id": 392,
-    "name": "block.creaking_heart.step"
+    "name": "block.conduit.deactivate"
   },
   {
     "id": 393,
-    "name": "block.creaking_heart.idle"
+    "name": "block.copper_bulb.break"
   },
   {
     "id": 394,
-    "name": "block.creaking_heart.spawn"
+    "name": "block.copper_bulb.step"
   },
   {
     "id": 395,
-    "name": "entity.creeper.death"
+    "name": "block.copper_bulb.place"
   },
   {
     "id": 396,
-    "name": "entity.creeper.hurt"
+    "name": "block.copper_bulb.hit"
   },
   {
     "id": 397,
-    "name": "entity.creeper.primed"
+    "name": "block.copper_bulb.fall"
   },
   {
     "id": 398,
-    "name": "block.crop.break"
+    "name": "block.copper_bulb.turn_on"
   },
   {
     "id": 399,
-    "name": "item.crop.plant"
+    "name": "block.copper_bulb.turn_off"
   },
   {
     "id": 400,
-    "name": "item.crossbow.hit"
+    "name": "block.copper.break"
   },
   {
     "id": 401,
-    "name": "item.crossbow.loading_end"
+    "name": "block.copper.step"
   },
   {
     "id": 402,
-    "name": "item.crossbow.loading_middle"
+    "name": "block.copper.place"
   },
   {
     "id": 403,
-    "name": "item.crossbow.loading_start"
+    "name": "block.copper.hit"
   },
   {
     "id": 404,
-    "name": "item.crossbow.quick_charge_1"
+    "name": "block.copper.fall"
   },
   {
     "id": 405,
-    "name": "item.crossbow.quick_charge_2"
+    "name": "block.copper_chest.close"
   },
   {
     "id": 406,
-    "name": "item.crossbow.quick_charge_3"
+    "name": "block.copper_chest.open"
   },
   {
     "id": 407,
-    "name": "item.crossbow.shoot"
+    "name": "block.copper_chest_weathered.close"
   },
   {
     "id": 408,
-    "name": "block.deadbush.idle"
+    "name": "block.copper_chest_weathered.open"
   },
   {
     "id": 409,
-    "name": "block.decorated_pot.break"
+    "name": "block.copper_chest_oxidized.close"
   },
   {
     "id": 410,
-    "name": "block.decorated_pot.fall"
+    "name": "block.copper_chest_oxidized.open"
   },
   {
     "id": 411,
-    "name": "block.decorated_pot.hit"
+    "name": "block.copper_door.close"
   },
   {
     "id": 412,
-    "name": "block.decorated_pot.insert"
+    "name": "block.copper_door.open"
   },
   {
     "id": 413,
-    "name": "block.decorated_pot.insert_fail"
+    "name": "entity.copper_golem.step"
   },
   {
     "id": 414,
-    "name": "block.decorated_pot.step"
+    "name": "entity.copper_golem.hurt"
   },
   {
     "id": 415,
-    "name": "block.decorated_pot.place"
+    "name": "entity.copper_golem.death"
   },
   {
     "id": 416,
-    "name": "block.decorated_pot.shatter"
+    "name": "entity.copper_golem_weathered.step"
   },
   {
     "id": 417,
-    "name": "block.deepslate_bricks.break"
+    "name": "entity.copper_golem_weathered.hurt"
   },
   {
     "id": 418,
-    "name": "block.deepslate_bricks.fall"
+    "name": "entity.copper_golem_weathered.death"
   },
   {
     "id": 419,
-    "name": "block.deepslate_bricks.hit"
+    "name": "entity.copper_golem_oxidized.step"
   },
   {
     "id": 420,
-    "name": "block.deepslate_bricks.place"
+    "name": "entity.copper_golem_oxidized.hurt"
   },
   {
     "id": 421,
-    "name": "block.deepslate_bricks.step"
+    "name": "entity.copper_golem_oxidized.death"
   },
   {
     "id": 422,
-    "name": "block.deepslate.break"
+    "name": "entity.copper_golem.spin"
   },
   {
     "id": 423,
-    "name": "block.deepslate.fall"
+    "name": "entity.copper_golem_weathered.spin"
   },
   {
     "id": 424,
-    "name": "block.deepslate.hit"
+    "name": "entity.copper_golem_oxidized.spin"
   },
   {
     "id": 425,
-    "name": "block.deepslate.place"
+    "name": "entity.copper_golem.no_item_get"
   },
   {
     "id": 426,
-    "name": "block.deepslate.step"
+    "name": "entity.copper_golem.no_item_no_get"
   },
   {
     "id": 427,
-    "name": "block.deepslate_tiles.break"
+    "name": "entity.copper_golem.item_drop"
   },
   {
     "id": 428,
-    "name": "block.deepslate_tiles.fall"
+    "name": "entity.copper_golem.item_no_drop"
   },
   {
     "id": 429,
-    "name": "block.deepslate_tiles.hit"
+    "name": "entity.copper_golem_become_statue"
   },
   {
     "id": 430,
-    "name": "block.deepslate_tiles.place"
+    "name": "block.copper_golem_statue.break"
   },
   {
     "id": 431,
-    "name": "block.deepslate_tiles.step"
+    "name": "block.copper_golem_statue.place"
   },
   {
     "id": 432,
-    "name": "block.dispenser.dispense"
+    "name": "block.copper_golem_statue.hit"
   },
   {
     "id": 433,
-    "name": "block.dispenser.fail"
+    "name": "block.copper_golem_statue.step"
   },
   {
     "id": 434,
-    "name": "block.dispenser.launch"
+    "name": "block.copper_golem_statue.fall"
   },
   {
     "id": 435,
-    "name": "entity.dolphin.ambient"
+    "name": "entity.copper_golem.spawn"
   },
   {
     "id": 436,
-    "name": "entity.dolphin.ambient_water"
+    "name": "entity.copper_golem.shear"
   },
   {
     "id": 437,
-    "name": "entity.dolphin.attack"
+    "name": "block.copper_grate.break"
   },
   {
     "id": 438,
-    "name": "entity.dolphin.death"
+    "name": "block.copper_grate.step"
   },
   {
     "id": 439,
-    "name": "entity.dolphin.eat"
+    "name": "block.copper_grate.place"
   },
   {
     "id": 440,
-    "name": "entity.dolphin.hurt"
+    "name": "block.copper_grate.hit"
   },
   {
     "id": 441,
-    "name": "entity.dolphin.jump"
+    "name": "block.copper_grate.fall"
   },
   {
     "id": 442,
-    "name": "entity.dolphin.play"
+    "name": "block.copper_trapdoor.close"
   },
   {
     "id": 443,
-    "name": "entity.dolphin.splash"
+    "name": "block.copper_trapdoor.open"
   },
   {
     "id": 444,
-    "name": "entity.dolphin.swim"
+    "name": "block.coral_block.break"
   },
   {
     "id": 445,
-    "name": "entity.donkey.ambient"
+    "name": "block.coral_block.fall"
   },
   {
     "id": 446,
-    "name": "entity.donkey.angry"
+    "name": "block.coral_block.hit"
   },
   {
     "id": 447,
-    "name": "entity.donkey.chest"
+    "name": "block.coral_block.place"
   },
   {
     "id": 448,
-    "name": "entity.donkey.death"
+    "name": "block.coral_block.step"
   },
   {
     "id": 449,
-    "name": "entity.donkey.eat"
+    "name": "entity.cow.milk"
   },
   {
     "id": 450,
-    "name": "entity.donkey.hurt"
+    "name": "entity.cow.ambient"
   },
   {
     "id": 451,
-    "name": "entity.donkey.jump"
+    "name": "entity.cow.hurt"
   },
   {
     "id": 452,
-    "name": "block.dripstone_block.break"
+    "name": "entity.cow.death"
   },
   {
     "id": 453,
-    "name": "block.dripstone_block.step"
+    "name": "entity.cow.step"
   },
   {
     "id": 454,
-    "name": "block.dripstone_block.place"
+    "name": "entity.cow_moody.ambient"
   },
   {
     "id": 455,
-    "name": "block.dripstone_block.hit"
+    "name": "entity.cow_moody.hurt"
   },
   {
     "id": 456,
-    "name": "block.dripstone_block.fall"
+    "name": "entity.cow_moody.death"
   },
   {
     "id": 457,
-    "name": "block.pointed_dripstone.break"
+    "name": "entity.cow_moody.step"
   },
   {
     "id": 458,
-    "name": "block.pointed_dripstone.step"
+    "name": "block.crafter.craft"
   },
   {
     "id": 459,
-    "name": "block.pointed_dripstone.place"
+    "name": "block.crafter.fail"
   },
   {
     "id": 460,
-    "name": "block.pointed_dripstone.hit"
+    "name": "entity.creaking.ambient"
   },
   {
     "id": 461,
-    "name": "block.pointed_dripstone.fall"
+    "name": "entity.creaking.activate"
   },
   {
     "id": 462,
-    "name": "block.pointed_dripstone.land"
+    "name": "entity.creaking.deactivate"
   },
   {
     "id": 463,
-    "name": "block.pointed_dripstone.drip_lava"
+    "name": "entity.creaking.attack"
   },
   {
     "id": 464,
-    "name": "block.pointed_dripstone.drip_water"
+    "name": "entity.creaking.death"
   },
   {
     "id": 465,
-    "name": "block.pointed_dripstone.drip_lava_into_cauldron"
+    "name": "entity.creaking.step"
   },
   {
     "id": 466,
-    "name": "block.pointed_dripstone.drip_water_into_cauldron"
+    "name": "entity.creaking.freeze"
   },
   {
     "id": 467,
-    "name": "block.big_dripleaf.tilt_down"
+    "name": "entity.creaking.unfreeze"
   },
   {
     "id": 468,
-    "name": "block.big_dripleaf.tilt_up"
+    "name": "entity.creaking.spawn"
   },
   {
     "id": 469,
-    "name": "entity.drowned.ambient"
+    "name": "entity.creaking.sway"
   },
   {
     "id": 470,
-    "name": "entity.drowned.ambient_water"
+    "name": "entity.creaking.twitch"
   },
   {
     "id": 471,
-    "name": "entity.drowned.death"
+    "name": "block.creaking_heart.break"
   },
   {
     "id": 472,
-    "name": "entity.drowned.death_water"
+    "name": "block.creaking_heart.fall"
   },
   {
     "id": 473,
-    "name": "entity.drowned.hurt"
+    "name": "block.creaking_heart.hit"
   },
   {
     "id": 474,
-    "name": "entity.drowned.hurt_water"
+    "name": "block.creaking_heart.hurt"
   },
   {
     "id": 475,
-    "name": "entity.drowned.shoot"
+    "name": "block.creaking_heart.place"
   },
   {
     "id": 476,
-    "name": "entity.drowned.step"
+    "name": "block.creaking_heart.step"
   },
   {
     "id": 477,
-    "name": "entity.drowned.swim"
+    "name": "block.creaking_heart.idle"
   },
   {
     "id": 478,
-    "name": "item.dye.use"
+    "name": "block.creaking_heart.spawn"
   },
   {
     "id": 479,
-    "name": "entity.egg.throw"
+    "name": "entity.creeper.death"
   },
   {
     "id": 480,
-    "name": "entity.elder_guardian.ambient"
+    "name": "entity.creeper.hurt"
   },
   {
     "id": 481,
-    "name": "entity.elder_guardian.ambient_land"
+    "name": "entity.creeper.primed"
   },
   {
     "id": 482,
-    "name": "entity.elder_guardian.curse"
+    "name": "block.crop.break"
   },
   {
     "id": 483,
-    "name": "entity.elder_guardian.death"
+    "name": "item.crop.plant"
   },
   {
     "id": 484,
-    "name": "entity.elder_guardian.death_land"
+    "name": "item.crossbow.hit"
   },
   {
     "id": 485,
-    "name": "entity.elder_guardian.flop"
+    "name": "item.crossbow.loading_end"
   },
   {
     "id": 486,
-    "name": "entity.elder_guardian.hurt"
+    "name": "item.crossbow.loading_middle"
   },
   {
     "id": 487,
-    "name": "entity.elder_guardian.hurt_land"
+    "name": "item.crossbow.loading_start"
   },
   {
     "id": 488,
-    "name": "item.elytra.flying"
+    "name": "item.crossbow.quick_charge_1"
   },
   {
     "id": 489,
-    "name": "block.enchantment_table.use"
+    "name": "item.crossbow.quick_charge_2"
   },
   {
     "id": 490,
-    "name": "block.ender_chest.close"
+    "name": "item.crossbow.quick_charge_3"
   },
   {
     "id": 491,
-    "name": "block.ender_chest.open"
+    "name": "item.crossbow.shoot"
   },
   {
     "id": 492,
-    "name": "entity.ender_dragon.ambient"
+    "name": "block.deadbush.idle"
   },
   {
     "id": 493,
-    "name": "entity.ender_dragon.death"
+    "name": "block.decorated_pot.break"
   },
   {
     "id": 494,
-    "name": "entity.dragon_fireball.explode"
+    "name": "block.decorated_pot.fall"
   },
   {
     "id": 495,
-    "name": "entity.ender_dragon.flap"
+    "name": "block.decorated_pot.hit"
   },
   {
     "id": 496,
-    "name": "entity.ender_dragon.growl"
+    "name": "block.decorated_pot.insert"
   },
   {
     "id": 497,
-    "name": "entity.ender_dragon.hurt"
+    "name": "block.decorated_pot.insert_fail"
   },
   {
     "id": 498,
-    "name": "entity.ender_dragon.shoot"
+    "name": "block.decorated_pot.step"
   },
   {
     "id": 499,
-    "name": "entity.ender_eye.death"
+    "name": "block.decorated_pot.place"
   },
   {
     "id": 500,
-    "name": "entity.ender_eye.launch"
+    "name": "block.decorated_pot.shatter"
   },
   {
     "id": 501,
-    "name": "entity.enderman.ambient"
+    "name": "block.deepslate_bricks.break"
   },
   {
     "id": 502,
-    "name": "entity.enderman.death"
+    "name": "block.deepslate_bricks.fall"
   },
   {
     "id": 503,
-    "name": "entity.enderman.hurt"
+    "name": "block.deepslate_bricks.hit"
   },
   {
     "id": 504,
-    "name": "entity.enderman.scream"
+    "name": "block.deepslate_bricks.place"
   },
   {
     "id": 505,
-    "name": "entity.enderman.stare"
+    "name": "block.deepslate_bricks.step"
   },
   {
     "id": 506,
-    "name": "entity.enderman.teleport"
+    "name": "block.deepslate.break"
   },
   {
     "id": 507,
-    "name": "entity.endermite.ambient"
+    "name": "block.deepslate.fall"
   },
   {
     "id": 508,
-    "name": "entity.endermite.death"
+    "name": "block.deepslate.hit"
   },
   {
     "id": 509,
-    "name": "entity.endermite.hurt"
+    "name": "block.deepslate.place"
   },
   {
     "id": 510,
-    "name": "entity.endermite.step"
+    "name": "block.deepslate.step"
   },
   {
     "id": 511,
-    "name": "entity.ender_pearl.throw"
+    "name": "block.deepslate_tiles.break"
   },
   {
     "id": 512,
-    "name": "block.end_gateway.spawn"
+    "name": "block.deepslate_tiles.fall"
   },
   {
     "id": 513,
-    "name": "block.end_portal_frame.fill"
+    "name": "block.deepslate_tiles.hit"
   },
   {
     "id": 514,
-    "name": "block.end_portal.spawn"
+    "name": "block.deepslate_tiles.place"
   },
   {
     "id": 515,
-    "name": "entity.evoker.ambient"
+    "name": "block.deepslate_tiles.step"
   },
   {
     "id": 516,
-    "name": "entity.evoker.cast_spell"
+    "name": "block.dispenser.dispense"
   },
   {
     "id": 517,
-    "name": "entity.evoker.celebrate"
+    "name": "block.dispenser.fail"
   },
   {
     "id": 518,
-    "name": "entity.evoker.death"
+    "name": "block.dispenser.launch"
   },
   {
     "id": 519,
-    "name": "entity.evoker_fangs.attack"
+    "name": "entity.dolphin.ambient"
   },
   {
     "id": 520,
-    "name": "entity.evoker.hurt"
+    "name": "entity.dolphin.ambient_water"
   },
   {
     "id": 521,
-    "name": "entity.evoker.prepare_attack"
+    "name": "entity.dolphin.attack"
   },
   {
     "id": 522,
-    "name": "entity.evoker.prepare_summon"
+    "name": "entity.dolphin.death"
   },
   {
     "id": 523,
-    "name": "entity.evoker.prepare_wololo"
+    "name": "entity.dolphin.eat"
   },
   {
     "id": 524,
-    "name": "entity.experience_bottle.throw"
+    "name": "entity.dolphin.hurt"
   },
   {
     "id": 525,
-    "name": "entity.experience_orb.pickup"
+    "name": "entity.dolphin.jump"
   },
   {
     "id": 526,
-    "name": "block.eyeblossom.open_long"
+    "name": "entity.dolphin.play"
   },
   {
     "id": 527,
-    "name": "block.eyeblossom.open"
+    "name": "entity.dolphin.splash"
   },
   {
     "id": 528,
-    "name": "block.eyeblossom.close_long"
+    "name": "entity.dolphin.swim"
   },
   {
     "id": 529,
-    "name": "block.eyeblossom.close"
+    "name": "entity.donkey.ambient"
   },
   {
     "id": 530,
-    "name": "block.eyeblossom.idle"
+    "name": "entity.donkey.angry"
   },
   {
     "id": 531,
-    "name": "block.fence_gate.close"
+    "name": "entity.donkey.chest"
   },
   {
     "id": 532,
-    "name": "block.fence_gate.open"
+    "name": "entity.donkey.death"
   },
   {
     "id": 533,
-    "name": "item.firecharge.use"
+    "name": "entity.donkey.eat"
   },
   {
     "id": 534,
-    "name": "block.firefly_bush.idle"
+    "name": "entity.donkey.hurt"
   },
   {
     "id": 535,
-    "name": "entity.firework_rocket.blast"
+    "name": "entity.donkey.jump"
   },
   {
     "id": 536,
-    "name": "entity.firework_rocket.blast_far"
+    "name": "block.dried_ghast.break"
   },
   {
     "id": 537,
-    "name": "entity.firework_rocket.large_blast"
+    "name": "block.dried_ghast.step"
   },
   {
     "id": 538,
-    "name": "entity.firework_rocket.large_blast_far"
+    "name": "block.dried_ghast.fall"
   },
   {
     "id": 539,
-    "name": "entity.firework_rocket.launch"
+    "name": "block.dried_ghast.ambient"
   },
   {
     "id": 540,
-    "name": "entity.firework_rocket.shoot"
+    "name": "block.dried_ghast.ambient_water"
   },
   {
     "id": 541,
-    "name": "entity.firework_rocket.twinkle"
+    "name": "block.dried_ghast.place"
   },
   {
     "id": 542,
-    "name": "entity.firework_rocket.twinkle_far"
+    "name": "block.dried_ghast.place_in_water"
   },
   {
     "id": 543,
-    "name": "block.fire.ambient"
+    "name": "block.dried_ghast.transition"
   },
   {
     "id": 544,
-    "name": "block.fire.extinguish"
+    "name": "block.dripstone_block.break"
   },
   {
     "id": 545,
-    "name": "entity.fish.swim"
+    "name": "block.dripstone_block.step"
   },
   {
     "id": 546,
-    "name": "entity.fishing_bobber.retrieve"
+    "name": "block.dripstone_block.place"
   },
   {
     "id": 547,
-    "name": "entity.fishing_bobber.splash"
+    "name": "block.dripstone_block.hit"
   },
   {
     "id": 548,
-    "name": "entity.fishing_bobber.throw"
+    "name": "block.dripstone_block.fall"
   },
   {
     "id": 549,
-    "name": "item.flintandsteel.use"
+    "name": "block.dry_grass.ambient"
   },
   {
     "id": 550,
-    "name": "block.flowering_azalea.break"
+    "name": "block.pointed_dripstone.break"
   },
   {
     "id": 551,
-    "name": "block.flowering_azalea.fall"
+    "name": "block.pointed_dripstone.step"
   },
   {
     "id": 552,
-    "name": "block.flowering_azalea.hit"
+    "name": "block.pointed_dripstone.place"
   },
   {
     "id": 553,
-    "name": "block.flowering_azalea.place"
+    "name": "block.pointed_dripstone.hit"
   },
   {
     "id": 554,
-    "name": "block.flowering_azalea.step"
+    "name": "block.pointed_dripstone.fall"
   },
   {
     "id": 555,
-    "name": "entity.fox.aggro"
+    "name": "block.pointed_dripstone.land"
   },
   {
     "id": 556,
-    "name": "entity.fox.ambient"
+    "name": "block.pointed_dripstone.drip_lava"
   },
   {
     "id": 557,
-    "name": "entity.fox.bite"
+    "name": "block.pointed_dripstone.drip_water"
   },
   {
     "id": 558,
-    "name": "entity.fox.death"
+    "name": "block.pointed_dripstone.drip_lava_into_cauldron"
   },
   {
     "id": 559,
-    "name": "entity.fox.eat"
+    "name": "block.pointed_dripstone.drip_water_into_cauldron"
   },
   {
     "id": 560,
-    "name": "entity.fox.hurt"
+    "name": "block.big_dripleaf.tilt_down"
   },
   {
     "id": 561,
-    "name": "entity.fox.screech"
+    "name": "block.big_dripleaf.tilt_up"
   },
   {
     "id": 562,
-    "name": "entity.fox.sleep"
+    "name": "entity.drowned.ambient"
   },
   {
     "id": 563,
-    "name": "entity.fox.sniff"
+    "name": "entity.drowned.ambient_water"
   },
   {
     "id": 564,
-    "name": "entity.fox.spit"
+    "name": "entity.drowned.death"
   },
   {
     "id": 565,
-    "name": "entity.fox.teleport"
+    "name": "entity.drowned.death_water"
   },
   {
     "id": 566,
-    "name": "block.suspicious_sand.break"
+    "name": "entity.drowned.hurt"
   },
   {
     "id": 567,
-    "name": "block.suspicious_sand.step"
+    "name": "entity.drowned.hurt_water"
   },
   {
     "id": 568,
-    "name": "block.suspicious_sand.place"
+    "name": "entity.drowned.shoot"
   },
   {
     "id": 569,
-    "name": "block.suspicious_sand.hit"
+    "name": "entity.drowned.step"
   },
   {
     "id": 570,
-    "name": "block.suspicious_sand.fall"
+    "name": "entity.drowned.swim"
   },
   {
     "id": 571,
-    "name": "block.suspicious_gravel.break"
+    "name": "item.dye.use"
   },
   {
     "id": 572,
-    "name": "block.suspicious_gravel.step"
+    "name": "entity.egg.throw"
   },
   {
     "id": 573,
-    "name": "block.suspicious_gravel.place"
+    "name": "entity.elder_guardian.ambient"
   },
   {
     "id": 574,
-    "name": "block.suspicious_gravel.hit"
+    "name": "entity.elder_guardian.ambient_land"
   },
   {
     "id": 575,
-    "name": "block.suspicious_gravel.fall"
+    "name": "entity.elder_guardian.curse"
   },
   {
     "id": 576,
-    "name": "block.froglight.break"
+    "name": "entity.elder_guardian.death"
   },
   {
     "id": 577,
-    "name": "block.froglight.fall"
+    "name": "entity.elder_guardian.death_land"
   },
   {
     "id": 578,
-    "name": "block.froglight.hit"
+    "name": "entity.elder_guardian.flop"
   },
   {
     "id": 579,
-    "name": "block.froglight.place"
+    "name": "entity.elder_guardian.hurt"
   },
   {
     "id": 580,
-    "name": "block.froglight.step"
+    "name": "entity.elder_guardian.hurt_land"
   },
   {
     "id": 581,
-    "name": "block.frogspawn.step"
+    "name": "item.elytra.flying"
   },
   {
     "id": 582,
-    "name": "block.frogspawn.break"
+    "name": "block.enchantment_table.use"
   },
   {
     "id": 583,
-    "name": "block.frogspawn.fall"
+    "name": "block.ender_chest.close"
   },
   {
     "id": 584,
-    "name": "block.frogspawn.hatch"
+    "name": "block.ender_chest.open"
   },
   {
     "id": 585,
-    "name": "block.frogspawn.hit"
+    "name": "entity.ender_dragon.ambient"
   },
   {
     "id": 586,
-    "name": "block.frogspawn.place"
+    "name": "entity.ender_dragon.death"
   },
   {
     "id": 587,
-    "name": "entity.frog.ambient"
+    "name": "entity.dragon_fireball.explode"
   },
   {
     "id": 588,
-    "name": "entity.frog.death"
+    "name": "entity.ender_dragon.flap"
   },
   {
     "id": 589,
-    "name": "entity.frog.eat"
+    "name": "entity.ender_dragon.growl"
   },
   {
     "id": 590,
-    "name": "entity.frog.hurt"
+    "name": "entity.ender_dragon.hurt"
   },
   {
     "id": 591,
-    "name": "entity.frog.lay_spawn"
+    "name": "entity.ender_dragon.shoot"
   },
   {
     "id": 592,
-    "name": "entity.frog.long_jump"
+    "name": "entity.ender_eye.death"
   },
   {
     "id": 593,
-    "name": "entity.frog.step"
+    "name": "entity.ender_eye.launch"
   },
   {
     "id": 594,
-    "name": "entity.frog.tongue"
+    "name": "entity.enderman.ambient"
   },
   {
     "id": 595,
-    "name": "block.roots.break"
+    "name": "entity.enderman.death"
   },
   {
     "id": 596,
-    "name": "block.roots.step"
+    "name": "entity.enderman.hurt"
   },
   {
     "id": 597,
-    "name": "block.roots.place"
+    "name": "entity.enderman.scream"
   },
   {
     "id": 598,
-    "name": "block.roots.hit"
+    "name": "entity.enderman.stare"
   },
   {
     "id": 599,
-    "name": "block.roots.fall"
+    "name": "entity.enderman.teleport"
   },
   {
     "id": 600,
-    "name": "block.furnace.fire_crackle"
+    "name": "entity.endermite.ambient"
   },
   {
     "id": 601,
-    "name": "entity.generic.big_fall"
+    "name": "entity.endermite.death"
   },
   {
     "id": 602,
-    "name": "entity.generic.burn"
+    "name": "entity.endermite.hurt"
   },
   {
     "id": 603,
-    "name": "entity.generic.death"
+    "name": "entity.endermite.step"
   },
   {
     "id": 604,
-    "name": "entity.generic.drink"
+    "name": "entity.ender_pearl.throw"
   },
   {
     "id": 605,
-    "name": "entity.generic.eat"
+    "name": "block.end_gateway.spawn"
   },
   {
     "id": 606,
-    "name": "entity.generic.explode"
+    "name": "block.end_portal_frame.fill"
   },
   {
     "id": 607,
-    "name": "entity.generic.extinguish_fire"
+    "name": "block.end_portal.spawn"
   },
   {
     "id": 608,
-    "name": "entity.generic.hurt"
+    "name": "entity.evoker.ambient"
   },
   {
     "id": 609,
-    "name": "entity.generic.small_fall"
+    "name": "entity.evoker.cast_spell"
   },
   {
     "id": 610,
-    "name": "entity.generic.splash"
+    "name": "entity.evoker.celebrate"
   },
   {
     "id": 611,
-    "name": "entity.generic.swim"
+    "name": "entity.evoker.death"
   },
   {
     "id": 612,
-    "name": "entity.ghast.ambient"
+    "name": "entity.evoker_fangs.attack"
   },
   {
     "id": 613,
-    "name": "entity.ghast.death"
+    "name": "entity.evoker.hurt"
   },
   {
     "id": 614,
-    "name": "entity.ghast.hurt"
+    "name": "entity.evoker.prepare_attack"
   },
   {
     "id": 615,
-    "name": "entity.ghast.scream"
+    "name": "entity.evoker.prepare_summon"
   },
   {
     "id": 616,
-    "name": "entity.ghast.shoot"
+    "name": "entity.evoker.prepare_wololo"
   },
   {
     "id": 617,
-    "name": "entity.ghast.warn"
+    "name": "entity.experience_bottle.throw"
   },
   {
     "id": 618,
-    "name": "block.gilded_blackstone.break"
+    "name": "entity.experience_orb.pickup"
   },
   {
     "id": 619,
-    "name": "block.gilded_blackstone.fall"
+    "name": "block.eyeblossom.open_long"
   },
   {
     "id": 620,
-    "name": "block.gilded_blackstone.hit"
+    "name": "block.eyeblossom.open"
   },
   {
     "id": 621,
-    "name": "block.gilded_blackstone.place"
+    "name": "block.eyeblossom.close_long"
   },
   {
     "id": 622,
-    "name": "block.gilded_blackstone.step"
+    "name": "block.eyeblossom.close"
   },
   {
     "id": 623,
-    "name": "block.glass.break"
+    "name": "block.eyeblossom.idle"
   },
   {
     "id": 624,
-    "name": "block.glass.fall"
+    "name": "block.fence_gate.close"
   },
   {
     "id": 625,
-    "name": "block.glass.hit"
+    "name": "block.fence_gate.open"
   },
   {
     "id": 626,
-    "name": "block.glass.place"
+    "name": "item.firecharge.use"
   },
   {
     "id": 627,
-    "name": "block.glass.step"
+    "name": "block.firefly_bush.idle"
   },
   {
     "id": 628,
-    "name": "item.glow_ink_sac.use"
+    "name": "entity.firework_rocket.blast"
   },
   {
     "id": 629,
-    "name": "entity.glow_item_frame.add_item"
+    "name": "entity.firework_rocket.blast_far"
   },
   {
     "id": 630,
-    "name": "entity.glow_item_frame.break"
+    "name": "entity.firework_rocket.large_blast"
   },
   {
     "id": 631,
-    "name": "entity.glow_item_frame.place"
+    "name": "entity.firework_rocket.large_blast_far"
   },
   {
     "id": 632,
-    "name": "entity.glow_item_frame.remove_item"
+    "name": "entity.firework_rocket.launch"
   },
   {
     "id": 633,
-    "name": "entity.glow_item_frame.rotate_item"
+    "name": "entity.firework_rocket.shoot"
   },
   {
     "id": 634,
-    "name": "entity.glow_squid.ambient"
+    "name": "entity.firework_rocket.twinkle"
   },
   {
     "id": 635,
-    "name": "entity.glow_squid.death"
+    "name": "entity.firework_rocket.twinkle_far"
   },
   {
     "id": 636,
-    "name": "entity.glow_squid.hurt"
+    "name": "block.fire.ambient"
   },
   {
     "id": 637,
-    "name": "entity.glow_squid.squirt"
+    "name": "block.fire.extinguish"
   },
   {
     "id": 638,
-    "name": "entity.goat.ambient"
+    "name": "entity.fish.swim"
   },
   {
     "id": 639,
-    "name": "entity.goat.death"
+    "name": "entity.fishing_bobber.retrieve"
   },
   {
     "id": 640,
-    "name": "entity.goat.eat"
+    "name": "entity.fishing_bobber.splash"
   },
   {
     "id": 641,
-    "name": "entity.goat.hurt"
+    "name": "entity.fishing_bobber.throw"
   },
   {
     "id": 642,
-    "name": "entity.goat.long_jump"
+    "name": "item.flintandsteel.use"
   },
   {
     "id": 643,
-    "name": "entity.goat.milk"
+    "name": "block.flowering_azalea.break"
   },
   {
     "id": 644,
-    "name": "entity.goat.prepare_ram"
+    "name": "block.flowering_azalea.fall"
   },
   {
     "id": 645,
-    "name": "entity.goat.ram_impact"
+    "name": "block.flowering_azalea.hit"
   },
   {
     "id": 646,
-    "name": "entity.goat.horn_break"
+    "name": "block.flowering_azalea.place"
   },
   {
     "id": 647,
-    "name": "entity.goat.screaming.ambient"
+    "name": "block.flowering_azalea.step"
   },
   {
     "id": 648,
-    "name": "entity.goat.screaming.death"
+    "name": "entity.fox.aggro"
   },
   {
     "id": 649,
-    "name": "entity.goat.screaming.eat"
+    "name": "entity.fox.ambient"
   },
   {
     "id": 650,
-    "name": "entity.goat.screaming.hurt"
+    "name": "entity.fox.bite"
   },
   {
     "id": 651,
-    "name": "entity.goat.screaming.long_jump"
+    "name": "entity.fox.death"
   },
   {
     "id": 652,
-    "name": "entity.goat.screaming.milk"
+    "name": "entity.fox.eat"
   },
   {
     "id": 653,
-    "name": "entity.goat.screaming.prepare_ram"
+    "name": "entity.fox.hurt"
   },
   {
     "id": 654,
-    "name": "entity.goat.screaming.ram_impact"
+    "name": "entity.fox.screech"
   },
   {
     "id": 655,
-    "name": "entity.goat.step"
+    "name": "entity.fox.sleep"
   },
   {
     "id": 656,
-    "name": "block.grass.break"
+    "name": "entity.fox.sniff"
   },
   {
     "id": 657,
-    "name": "block.grass.fall"
+    "name": "entity.fox.spit"
   },
   {
     "id": 658,
-    "name": "block.grass.hit"
+    "name": "entity.fox.teleport"
   },
   {
     "id": 659,
-    "name": "block.grass.place"
+    "name": "block.suspicious_sand.break"
   },
   {
     "id": 660,
-    "name": "block.grass.step"
+    "name": "block.suspicious_sand.step"
   },
   {
     "id": 661,
-    "name": "block.gravel.break"
+    "name": "block.suspicious_sand.place"
   },
   {
     "id": 662,
-    "name": "block.gravel.fall"
+    "name": "block.suspicious_sand.hit"
   },
   {
     "id": 663,
-    "name": "block.gravel.hit"
+    "name": "block.suspicious_sand.fall"
   },
   {
     "id": 664,
-    "name": "block.gravel.place"
+    "name": "block.suspicious_gravel.break"
   },
   {
     "id": 665,
-    "name": "block.gravel.step"
+    "name": "block.suspicious_gravel.step"
   },
   {
     "id": 666,
-    "name": "block.grindstone.use"
+    "name": "block.suspicious_gravel.place"
   },
   {
     "id": 667,
-    "name": "block.growing_plant.crop"
+    "name": "block.suspicious_gravel.hit"
   },
   {
     "id": 668,
-    "name": "entity.guardian.ambient"
+    "name": "block.suspicious_gravel.fall"
   },
   {
     "id": 669,
-    "name": "entity.guardian.ambient_land"
+    "name": "block.froglight.break"
   },
   {
     "id": 670,
-    "name": "entity.guardian.attack"
+    "name": "block.froglight.fall"
   },
   {
     "id": 671,
-    "name": "entity.guardian.death"
+    "name": "block.froglight.hit"
   },
   {
     "id": 672,
-    "name": "entity.guardian.death_land"
+    "name": "block.froglight.place"
   },
   {
     "id": 673,
-    "name": "entity.guardian.flop"
+    "name": "block.froglight.step"
   },
   {
     "id": 674,
-    "name": "entity.guardian.hurt"
+    "name": "block.frogspawn.step"
   },
   {
     "id": 675,
-    "name": "entity.guardian.hurt_land"
+    "name": "block.frogspawn.break"
   },
   {
     "id": 676,
-    "name": "block.hanging_roots.break"
+    "name": "block.frogspawn.fall"
   },
   {
     "id": 677,
-    "name": "block.hanging_roots.fall"
+    "name": "block.frogspawn.hatch"
   },
   {
     "id": 678,
-    "name": "block.hanging_roots.hit"
+    "name": "block.frogspawn.hit"
   },
   {
     "id": 679,
-    "name": "block.hanging_roots.place"
+    "name": "block.frogspawn.place"
   },
   {
     "id": 680,
-    "name": "block.hanging_roots.step"
+    "name": "entity.frog.ambient"
   },
   {
     "id": 681,
-    "name": "block.hanging_sign.step"
+    "name": "entity.frog.death"
   },
   {
     "id": 682,
-    "name": "block.hanging_sign.break"
+    "name": "entity.frog.eat"
   },
   {
     "id": 683,
-    "name": "block.hanging_sign.fall"
+    "name": "entity.frog.hurt"
   },
   {
     "id": 684,
-    "name": "block.hanging_sign.hit"
+    "name": "entity.frog.lay_spawn"
   },
   {
     "id": 685,
-    "name": "block.hanging_sign.place"
+    "name": "entity.frog.long_jump"
   },
   {
     "id": 686,
-    "name": "block.heavy_core.break"
+    "name": "entity.frog.step"
   },
   {
     "id": 687,
-    "name": "block.heavy_core.fall"
+    "name": "entity.frog.tongue"
   },
   {
     "id": 688,
-    "name": "block.heavy_core.hit"
+    "name": "block.roots.break"
   },
   {
     "id": 689,
-    "name": "block.heavy_core.place"
+    "name": "block.roots.step"
   },
   {
     "id": 690,
-    "name": "block.heavy_core.step"
+    "name": "block.roots.place"
   },
   {
     "id": 691,
-    "name": "block.nether_wood_hanging_sign.step"
+    "name": "block.roots.hit"
   },
   {
     "id": 692,
-    "name": "block.nether_wood_hanging_sign.break"
+    "name": "block.roots.fall"
   },
   {
     "id": 693,
-    "name": "block.nether_wood_hanging_sign.fall"
+    "name": "block.furnace.fire_crackle"
   },
   {
     "id": 694,
-    "name": "block.nether_wood_hanging_sign.hit"
+    "name": "entity.generic.big_fall"
   },
   {
     "id": 695,
-    "name": "block.nether_wood_hanging_sign.place"
+    "name": "entity.generic.burn"
   },
   {
     "id": 696,
-    "name": "block.bamboo_wood_hanging_sign.step"
+    "name": "entity.generic.death"
   },
   {
     "id": 697,
-    "name": "block.bamboo_wood_hanging_sign.break"
+    "name": "entity.generic.drink"
   },
   {
     "id": 698,
-    "name": "block.bamboo_wood_hanging_sign.fall"
+    "name": "entity.generic.eat"
   },
   {
     "id": 699,
-    "name": "block.bamboo_wood_hanging_sign.hit"
+    "name": "entity.generic.explode"
   },
   {
     "id": 700,
-    "name": "block.bamboo_wood_hanging_sign.place"
+    "name": "entity.generic.extinguish_fire"
   },
   {
     "id": 701,
-    "name": "block.trial_spawner.break"
+    "name": "entity.generic.hurt"
   },
   {
     "id": 702,
-    "name": "block.trial_spawner.step"
+    "name": "entity.generic.small_fall"
   },
   {
     "id": 703,
-    "name": "block.trial_spawner.place"
+    "name": "entity.generic.splash"
   },
   {
     "id": 704,
-    "name": "block.trial_spawner.hit"
+    "name": "entity.generic.swim"
   },
   {
     "id": 705,
-    "name": "block.trial_spawner.fall"
+    "name": "entity.ghast.ambient"
   },
   {
     "id": 706,
-    "name": "block.trial_spawner.spawn_mob"
+    "name": "entity.ghast.death"
   },
   {
     "id": 707,
-    "name": "block.trial_spawner.about_to_spawn_item"
+    "name": "entity.ghast.hurt"
   },
   {
     "id": 708,
-    "name": "block.trial_spawner.spawn_item"
+    "name": "entity.ghast.scream"
   },
   {
     "id": 709,
-    "name": "block.trial_spawner.spawn_item_begin"
+    "name": "entity.ghast.shoot"
   },
   {
     "id": 710,
-    "name": "block.trial_spawner.detect_player"
+    "name": "entity.ghast.warn"
   },
   {
     "id": 711,
-    "name": "block.trial_spawner.ominous_activate"
+    "name": "entity.ghastling.ambient"
   },
   {
     "id": 712,
-    "name": "block.trial_spawner.ambient"
+    "name": "entity.ghastling.death"
   },
   {
     "id": 713,
-    "name": "block.trial_spawner.ambient_ominous"
+    "name": "entity.ghastling.hurt"
   },
   {
     "id": 714,
-    "name": "block.trial_spawner.open_shutter"
+    "name": "entity.ghastling.spawn"
   },
   {
     "id": 715,
-    "name": "block.trial_spawner.close_shutter"
+    "name": "block.gilded_blackstone.break"
   },
   {
     "id": 716,
-    "name": "block.trial_spawner.eject_item"
+    "name": "block.gilded_blackstone.fall"
   },
   {
     "id": 717,
-    "name": "item.hoe.till"
+    "name": "block.gilded_blackstone.hit"
   },
   {
     "id": 718,
-    "name": "entity.hoglin.ambient"
+    "name": "block.gilded_blackstone.place"
   },
   {
     "id": 719,
-    "name": "entity.hoglin.angry"
+    "name": "block.gilded_blackstone.step"
   },
   {
     "id": 720,
-    "name": "entity.hoglin.attack"
+    "name": "block.glass.break"
   },
   {
     "id": 721,
-    "name": "entity.hoglin.converted_to_zombified"
+    "name": "block.glass.fall"
   },
   {
     "id": 722,
-    "name": "entity.hoglin.death"
+    "name": "block.glass.hit"
   },
   {
     "id": 723,
-    "name": "entity.hoglin.hurt"
+    "name": "block.glass.place"
   },
   {
     "id": 724,
-    "name": "entity.hoglin.retreat"
+    "name": "block.glass.step"
   },
   {
     "id": 725,
-    "name": "entity.hoglin.step"
+    "name": "item.glow_ink_sac.use"
   },
   {
     "id": 726,
-    "name": "block.honey_block.break"
+    "name": "entity.glow_item_frame.add_item"
   },
   {
     "id": 727,
-    "name": "block.honey_block.fall"
+    "name": "entity.glow_item_frame.break"
   },
   {
     "id": 728,
-    "name": "block.honey_block.hit"
+    "name": "entity.glow_item_frame.place"
   },
   {
     "id": 729,
-    "name": "block.honey_block.place"
+    "name": "entity.glow_item_frame.remove_item"
   },
   {
     "id": 730,
-    "name": "block.honey_block.slide"
+    "name": "entity.glow_item_frame.rotate_item"
   },
   {
     "id": 731,
-    "name": "block.honey_block.step"
+    "name": "entity.glow_squid.ambient"
   },
   {
     "id": 732,
-    "name": "item.honeycomb.wax_on"
+    "name": "entity.glow_squid.death"
   },
   {
     "id": 733,
-    "name": "item.honey_bottle.drink"
+    "name": "entity.glow_squid.hurt"
   },
   {
     "id": 734,
-    "name": "item.goat_horn.sound.0"
+    "name": "entity.glow_squid.squirt"
   },
   {
     "id": 735,
-    "name": "item.goat_horn.sound.1"
+    "name": "entity.goat.ambient"
   },
   {
     "id": 736,
-    "name": "item.goat_horn.sound.2"
+    "name": "entity.goat.death"
   },
   {
     "id": 737,
-    "name": "item.goat_horn.sound.3"
+    "name": "entity.goat.eat"
   },
   {
     "id": 738,
-    "name": "item.goat_horn.sound.4"
+    "name": "entity.goat.hurt"
   },
   {
     "id": 739,
-    "name": "item.goat_horn.sound.5"
+    "name": "entity.goat.long_jump"
   },
   {
     "id": 740,
-    "name": "item.goat_horn.sound.6"
+    "name": "entity.goat.milk"
   },
   {
     "id": 741,
-    "name": "item.goat_horn.sound.7"
+    "name": "entity.goat.prepare_ram"
   },
   {
     "id": 742,
-    "name": "entity.horse.ambient"
+    "name": "entity.goat.ram_impact"
   },
   {
     "id": 743,
-    "name": "entity.horse.angry"
+    "name": "entity.goat.horn_break"
   },
   {
     "id": 744,
-    "name": "entity.horse.armor"
+    "name": "entity.goat.screaming.ambient"
   },
   {
     "id": 745,
-    "name": "entity.horse.breathe"
+    "name": "entity.goat.screaming.death"
   },
   {
     "id": 746,
-    "name": "entity.horse.death"
+    "name": "entity.goat.screaming.eat"
   },
   {
     "id": 747,
-    "name": "entity.horse.eat"
+    "name": "entity.goat.screaming.hurt"
   },
   {
     "id": 748,
-    "name": "entity.horse.gallop"
+    "name": "entity.goat.screaming.long_jump"
   },
   {
     "id": 749,
-    "name": "entity.horse.hurt"
+    "name": "entity.goat.screaming.milk"
   },
   {
     "id": 750,
-    "name": "entity.horse.jump"
+    "name": "entity.goat.screaming.prepare_ram"
   },
   {
     "id": 751,
-    "name": "entity.horse.land"
+    "name": "entity.goat.screaming.ram_impact"
   },
   {
     "id": 752,
-    "name": "entity.horse.saddle"
+    "name": "entity.goat.step"
   },
   {
     "id": 753,
-    "name": "entity.horse.step"
+    "name": "item.golden_dandelion.use"
   },
   {
     "id": 754,
-    "name": "entity.horse.step_wood"
+    "name": "item.golden_dandelion.unuse"
   },
   {
     "id": 755,
-    "name": "entity.hostile.big_fall"
+    "name": "block.grass.break"
   },
   {
     "id": 756,
-    "name": "entity.hostile.death"
+    "name": "block.grass.fall"
   },
   {
     "id": 757,
-    "name": "entity.hostile.hurt"
+    "name": "block.grass.hit"
   },
   {
     "id": 758,
-    "name": "entity.hostile.small_fall"
+    "name": "block.grass.place"
   },
   {
     "id": 759,
-    "name": "entity.hostile.splash"
+    "name": "block.grass.step"
   },
   {
     "id": 760,
-    "name": "entity.hostile.swim"
+    "name": "block.gravel.break"
   },
   {
     "id": 761,
-    "name": "entity.husk.ambient"
+    "name": "block.gravel.fall"
   },
   {
     "id": 762,
-    "name": "entity.husk.converted_to_zombie"
+    "name": "block.gravel.hit"
   },
   {
     "id": 763,
-    "name": "entity.husk.death"
+    "name": "block.gravel.place"
   },
   {
     "id": 764,
-    "name": "entity.husk.hurt"
+    "name": "block.gravel.step"
   },
   {
     "id": 765,
-    "name": "entity.husk.step"
+    "name": "block.grindstone.use"
   },
   {
     "id": 766,
-    "name": "entity.illusioner.ambient"
+    "name": "block.growing_plant.crop"
   },
   {
     "id": 767,
-    "name": "entity.illusioner.cast_spell"
+    "name": "entity.guardian.ambient"
   },
   {
     "id": 768,
-    "name": "entity.illusioner.death"
+    "name": "entity.guardian.ambient_land"
   },
   {
     "id": 769,
-    "name": "entity.illusioner.hurt"
+    "name": "entity.guardian.attack"
   },
   {
     "id": 770,
-    "name": "entity.illusioner.mirror_move"
+    "name": "entity.guardian.death"
   },
   {
     "id": 771,
-    "name": "entity.illusioner.prepare_blindness"
+    "name": "entity.guardian.death_land"
   },
   {
     "id": 772,
-    "name": "entity.illusioner.prepare_mirror"
+    "name": "entity.guardian.flop"
   },
   {
     "id": 773,
-    "name": "item.ink_sac.use"
+    "name": "entity.guardian.hurt"
   },
   {
     "id": 774,
-    "name": "block.iron.break"
+    "name": "entity.guardian.hurt_land"
   },
   {
     "id": 775,
-    "name": "block.iron.step"
+    "name": "block.hanging_roots.break"
   },
   {
     "id": 776,
-    "name": "block.iron.place"
+    "name": "block.hanging_roots.fall"
   },
   {
     "id": 777,
-    "name": "block.iron.hit"
+    "name": "block.hanging_roots.hit"
   },
   {
     "id": 778,
-    "name": "block.iron.fall"
+    "name": "block.hanging_roots.place"
   },
   {
     "id": 779,
-    "name": "block.iron_door.close"
+    "name": "block.hanging_roots.step"
   },
   {
     "id": 780,
-    "name": "block.iron_door.open"
+    "name": "block.hanging_sign.step"
   },
   {
     "id": 781,
-    "name": "entity.iron_golem.attack"
+    "name": "block.hanging_sign.break"
   },
   {
     "id": 782,
-    "name": "entity.iron_golem.damage"
+    "name": "block.hanging_sign.fall"
   },
   {
     "id": 783,
-    "name": "entity.iron_golem.death"
+    "name": "block.hanging_sign.hit"
   },
   {
     "id": 784,
-    "name": "entity.iron_golem.hurt"
+    "name": "block.hanging_sign.place"
   },
   {
     "id": 785,
-    "name": "entity.iron_golem.repair"
+    "name": "entity.happy_ghast.ambient"
   },
   {
     "id": 786,
-    "name": "entity.iron_golem.step"
+    "name": "entity.happy_ghast.death"
   },
   {
     "id": 787,
-    "name": "block.iron_trapdoor.close"
+    "name": "entity.happy_ghast.hurt"
   },
   {
     "id": 788,
-    "name": "block.iron_trapdoor.open"
+    "name": "entity.happy_ghast.riding"
   },
   {
     "id": 789,
-    "name": "entity.item_frame.add_item"
+    "name": "block.heavy_core.break"
   },
   {
     "id": 790,
-    "name": "entity.item_frame.break"
+    "name": "block.heavy_core.fall"
   },
   {
     "id": 791,
-    "name": "entity.item_frame.place"
+    "name": "block.heavy_core.hit"
   },
   {
     "id": 792,
-    "name": "entity.item_frame.remove_item"
+    "name": "block.heavy_core.place"
   },
   {
     "id": 793,
-    "name": "entity.item_frame.rotate_item"
+    "name": "block.heavy_core.step"
   },
   {
     "id": 794,
-    "name": "entity.item.break"
+    "name": "block.nether_wood_hanging_sign.step"
   },
   {
     "id": 795,
-    "name": "entity.item.pickup"
+    "name": "block.nether_wood_hanging_sign.break"
   },
   {
     "id": 796,
-    "name": "block.ladder.break"
+    "name": "block.nether_wood_hanging_sign.fall"
   },
   {
     "id": 797,
-    "name": "block.ladder.fall"
+    "name": "block.nether_wood_hanging_sign.hit"
   },
   {
     "id": 798,
-    "name": "block.ladder.hit"
+    "name": "block.nether_wood_hanging_sign.place"
   },
   {
     "id": 799,
-    "name": "block.ladder.place"
+    "name": "block.bamboo_wood_hanging_sign.step"
   },
   {
     "id": 800,
-    "name": "block.ladder.step"
+    "name": "block.bamboo_wood_hanging_sign.break"
   },
   {
     "id": 801,
-    "name": "block.lantern.break"
+    "name": "block.bamboo_wood_hanging_sign.fall"
   },
   {
     "id": 802,
-    "name": "block.lantern.fall"
+    "name": "block.bamboo_wood_hanging_sign.hit"
   },
   {
     "id": 803,
-    "name": "block.lantern.hit"
+    "name": "block.bamboo_wood_hanging_sign.place"
   },
   {
     "id": 804,
-    "name": "block.lantern.place"
+    "name": "block.trial_spawner.break"
   },
   {
     "id": 805,
-    "name": "block.lantern.step"
+    "name": "block.trial_spawner.step"
   },
   {
     "id": 806,
-    "name": "block.large_amethyst_bud.break"
+    "name": "block.trial_spawner.place"
   },
   {
     "id": 807,
-    "name": "block.large_amethyst_bud.place"
+    "name": "block.trial_spawner.hit"
   },
   {
     "id": 808,
-    "name": "block.lava.ambient"
+    "name": "block.trial_spawner.fall"
   },
   {
     "id": 809,
-    "name": "block.lava.extinguish"
+    "name": "block.trial_spawner.spawn_mob"
   },
   {
     "id": 810,
-    "name": "block.lava.pop"
+    "name": "block.trial_spawner.about_to_spawn_item"
   },
   {
     "id": 811,
-    "name": "block.leaf_litter.break"
+    "name": "block.trial_spawner.spawn_item"
   },
   {
     "id": 812,
-    "name": "block.leaf_litter.step"
+    "name": "block.trial_spawner.spawn_item_begin"
   },
   {
     "id": 813,
-    "name": "block.leaf_litter.place"
+    "name": "block.trial_spawner.detect_player"
   },
   {
     "id": 814,
-    "name": "block.leaf_litter.hit"
+    "name": "block.trial_spawner.ominous_activate"
   },
   {
     "id": 815,
-    "name": "block.leaf_litter.fall"
+    "name": "block.trial_spawner.ambient"
   },
   {
     "id": 816,
-    "name": "entity.leash_knot.break"
+    "name": "block.trial_spawner.ambient_ominous"
   },
   {
     "id": 817,
-    "name": "entity.leash_knot.place"
+    "name": "block.trial_spawner.open_shutter"
   },
   {
     "id": 818,
-    "name": "block.lever.click"
+    "name": "block.trial_spawner.close_shutter"
   },
   {
     "id": 819,
-    "name": "entity.lightning_bolt.impact"
+    "name": "block.trial_spawner.eject_item"
   },
   {
     "id": 820,
-    "name": "entity.lightning_bolt.thunder"
+    "name": "entity.happy_ghast.equip"
   },
   {
     "id": 821,
-    "name": "entity.lingering_potion.throw"
+    "name": "entity.happy_ghast.unequip"
   },
   {
     "id": 822,
-    "name": "entity.llama.ambient"
+    "name": "entity.happy_ghast.harness_goggles_up"
   },
   {
     "id": 823,
-    "name": "entity.llama.angry"
+    "name": "entity.happy_ghast.harness_goggles_down"
   },
   {
     "id": 824,
-    "name": "entity.llama.chest"
+    "name": "item.hoe.till"
   },
   {
     "id": 825,
-    "name": "entity.llama.death"
+    "name": "entity.hoglin.ambient"
   },
   {
     "id": 826,
-    "name": "entity.llama.eat"
+    "name": "entity.hoglin.angry"
   },
   {
     "id": 827,
-    "name": "entity.llama.hurt"
+    "name": "entity.hoglin.attack"
   },
   {
     "id": 828,
-    "name": "entity.llama.spit"
+    "name": "entity.hoglin.converted_to_zombified"
   },
   {
     "id": 829,
-    "name": "entity.llama.step"
+    "name": "entity.hoglin.death"
   },
   {
     "id": 830,
-    "name": "entity.llama.swag"
+    "name": "entity.hoglin.hurt"
   },
   {
     "id": 831,
-    "name": "entity.magma_cube.death_small"
+    "name": "entity.hoglin.retreat"
   },
   {
     "id": 832,
-    "name": "block.lodestone.break"
+    "name": "entity.hoglin.step"
   },
   {
     "id": 833,
-    "name": "block.lodestone.step"
+    "name": "block.honey_block.break"
   },
   {
     "id": 834,
-    "name": "block.lodestone.place"
+    "name": "block.honey_block.fall"
   },
   {
     "id": 835,
-    "name": "block.lodestone.hit"
+    "name": "block.honey_block.hit"
   },
   {
     "id": 836,
-    "name": "block.lodestone.fall"
+    "name": "block.honey_block.place"
   },
   {
     "id": 837,
-    "name": "item.lodestone_compass.lock"
+    "name": "block.honey_block.slide"
   },
   {
     "id": 838,
-    "name": "item.mace.smash_air"
+    "name": "block.honey_block.step"
   },
   {
     "id": 839,
-    "name": "item.mace.smash_ground"
+    "name": "item.honeycomb.wax_on"
   },
   {
     "id": 840,
-    "name": "item.mace.smash_ground_heavy"
+    "name": "item.honey_bottle.drink"
   },
   {
     "id": 841,
-    "name": "entity.magma_cube.death"
+    "name": "item.goat_horn.sound.0"
   },
   {
     "id": 842,
-    "name": "entity.magma_cube.hurt"
+    "name": "item.goat_horn.sound.1"
   },
   {
     "id": 843,
-    "name": "entity.magma_cube.hurt_small"
+    "name": "item.goat_horn.sound.2"
   },
   {
     "id": 844,
-    "name": "entity.magma_cube.jump"
+    "name": "item.goat_horn.sound.3"
   },
   {
     "id": 845,
-    "name": "entity.magma_cube.squish"
+    "name": "item.goat_horn.sound.4"
   },
   {
     "id": 846,
-    "name": "entity.magma_cube.squish_small"
+    "name": "item.goat_horn.sound.5"
   },
   {
     "id": 847,
-    "name": "block.mangrove_roots.break"
+    "name": "item.goat_horn.sound.6"
   },
   {
     "id": 848,
-    "name": "block.mangrove_roots.fall"
+    "name": "item.goat_horn.sound.7"
   },
   {
     "id": 849,
-    "name": "block.mangrove_roots.hit"
+    "name": "entity.horse.ambient"
   },
   {
     "id": 850,
-    "name": "block.mangrove_roots.place"
+    "name": "entity.baby_horse.ambient"
   },
   {
     "id": 851,
-    "name": "block.mangrove_roots.step"
+    "name": "entity.horse.angry"
   },
   {
     "id": 852,
-    "name": "block.medium_amethyst_bud.break"
+    "name": "entity.baby_horse.angry"
   },
   {
     "id": 853,
-    "name": "block.medium_amethyst_bud.place"
+    "name": "entity.horse.armor"
   },
   {
     "id": 854,
-    "name": "block.metal.break"
+    "name": "item.horse_armor.unequip"
   },
   {
     "id": 855,
-    "name": "block.metal.fall"
+    "name": "entity.horse.breathe"
   },
   {
     "id": 856,
-    "name": "block.metal.hit"
+    "name": "entity.baby_horse.breathe"
   },
   {
     "id": 857,
-    "name": "block.metal.place"
+    "name": "entity.horse.death"
   },
   {
     "id": 858,
-    "name": "block.metal_pressure_plate.click_off"
+    "name": "entity.baby_horse.death"
   },
   {
     "id": 859,
-    "name": "block.metal_pressure_plate.click_on"
+    "name": "entity.horse.eat"
   },
   {
     "id": 860,
-    "name": "block.metal.step"
+    "name": "entity.baby_horse.eat"
   },
   {
     "id": 861,
-    "name": "entity.minecart.inside.underwater"
+    "name": "entity.horse.gallop"
   },
   {
     "id": 862,
-    "name": "entity.minecart.inside"
+    "name": "entity.horse.hurt"
   },
   {
     "id": 863,
-    "name": "entity.minecart.riding"
+    "name": "entity.baby_horse.hurt"
   },
   {
     "id": 864,
-    "name": "entity.mooshroom.convert"
+    "name": "entity.horse.jump"
   },
   {
     "id": 865,
-    "name": "entity.mooshroom.eat"
+    "name": "entity.horse.land"
   },
   {
     "id": 866,
-    "name": "entity.mooshroom.milk"
+    "name": "entity.baby_horse.land"
   },
   {
     "id": 867,
-    "name": "entity.mooshroom.suspicious_milk"
+    "name": "entity.horse.saddle"
   },
   {
     "id": 868,
-    "name": "entity.mooshroom.shear"
+    "name": "entity.horse.step"
   },
   {
     "id": 869,
-    "name": "block.moss_carpet.break"
+    "name": "entity.baby_horse.step"
   },
   {
     "id": 870,
-    "name": "block.moss_carpet.fall"
+    "name": "entity.horse.step_wood"
   },
   {
     "id": 871,
-    "name": "block.moss_carpet.hit"
+    "name": "entity.hostile.big_fall"
   },
   {
     "id": 872,
-    "name": "block.moss_carpet.place"
+    "name": "entity.hostile.death"
   },
   {
     "id": 873,
-    "name": "block.moss_carpet.step"
+    "name": "entity.hostile.hurt"
   },
   {
     "id": 874,
-    "name": "block.pink_petals.break"
+    "name": "entity.hostile.small_fall"
   },
   {
     "id": 875,
-    "name": "block.pink_petals.fall"
+    "name": "entity.hostile.splash"
   },
   {
     "id": 876,
-    "name": "block.pink_petals.hit"
+    "name": "entity.hostile.swim"
   },
   {
     "id": 877,
-    "name": "block.pink_petals.place"
+    "name": "entity.husk.ambient"
   },
   {
     "id": 878,
-    "name": "block.pink_petals.step"
+    "name": "entity.husk.converted_to_zombie"
   },
   {
     "id": 879,
-    "name": "block.moss.break"
+    "name": "entity.husk.death"
   },
   {
     "id": 880,
-    "name": "block.moss.fall"
+    "name": "entity.husk.hurt"
   },
   {
     "id": 881,
-    "name": "block.moss.hit"
+    "name": "entity.husk.step"
   },
   {
     "id": 882,
-    "name": "block.moss.place"
+    "name": "entity.illusioner.ambient"
   },
   {
     "id": 883,
-    "name": "block.moss.step"
+    "name": "entity.illusioner.cast_spell"
   },
   {
     "id": 884,
-    "name": "block.mud.break"
+    "name": "entity.illusioner.death"
   },
   {
     "id": 885,
-    "name": "block.mud.fall"
+    "name": "entity.illusioner.hurt"
   },
   {
     "id": 886,
-    "name": "block.mud.hit"
+    "name": "entity.illusioner.mirror_move"
   },
   {
     "id": 887,
-    "name": "block.mud.place"
+    "name": "entity.illusioner.prepare_blindness"
   },
   {
     "id": 888,
-    "name": "block.mud.step"
+    "name": "entity.illusioner.prepare_mirror"
   },
   {
     "id": 889,
-    "name": "block.mud_bricks.break"
+    "name": "item.ink_sac.use"
   },
   {
     "id": 890,
-    "name": "block.mud_bricks.fall"
+    "name": "block.iron.break"
   },
   {
     "id": 891,
-    "name": "block.mud_bricks.hit"
+    "name": "block.iron.step"
   },
   {
     "id": 892,
-    "name": "block.mud_bricks.place"
+    "name": "block.iron.place"
   },
   {
     "id": 893,
-    "name": "block.mud_bricks.step"
+    "name": "block.iron.hit"
   },
   {
     "id": 894,
-    "name": "block.muddy_mangrove_roots.break"
+    "name": "block.iron.fall"
   },
   {
     "id": 895,
-    "name": "block.muddy_mangrove_roots.fall"
+    "name": "block.iron_door.close"
   },
   {
     "id": 896,
-    "name": "block.muddy_mangrove_roots.hit"
+    "name": "block.iron_door.open"
   },
   {
     "id": 897,
-    "name": "block.muddy_mangrove_roots.place"
+    "name": "entity.iron_golem.attack"
   },
   {
     "id": 898,
-    "name": "block.muddy_mangrove_roots.step"
+    "name": "entity.iron_golem.damage"
   },
   {
     "id": 899,
-    "name": "entity.mule.ambient"
+    "name": "entity.iron_golem.death"
   },
   {
     "id": 900,
-    "name": "entity.mule.angry"
+    "name": "entity.iron_golem.hurt"
   },
   {
     "id": 901,
-    "name": "entity.mule.chest"
+    "name": "entity.iron_golem.repair"
   },
   {
     "id": 902,
-    "name": "entity.mule.death"
+    "name": "entity.iron_golem.step"
   },
   {
     "id": 903,
-    "name": "entity.mule.eat"
+    "name": "block.iron_trapdoor.close"
   },
   {
     "id": 904,
-    "name": "entity.mule.hurt"
+    "name": "block.iron_trapdoor.open"
   },
   {
     "id": 905,
-    "name": "entity.mule.jump"
+    "name": "entity.item_frame.add_item"
   },
   {
     "id": 906,
-    "name": "music.creative"
+    "name": "entity.item_frame.break"
   },
   {
     "id": 907,
-    "name": "music.credits"
+    "name": "entity.item_frame.place"
   },
   {
     "id": 908,
-    "name": "music_disc.5"
+    "name": "entity.item_frame.remove_item"
   },
   {
     "id": 909,
-    "name": "music_disc.11"
+    "name": "entity.item_frame.rotate_item"
   },
   {
     "id": 910,
-    "name": "music_disc.13"
+    "name": "entity.item.break"
   },
   {
     "id": 911,
-    "name": "music_disc.blocks"
+    "name": "entity.item.pickup"
   },
   {
     "id": 912,
-    "name": "music_disc.cat"
+    "name": "block.ladder.break"
   },
   {
     "id": 913,
-    "name": "music_disc.chirp"
+    "name": "block.ladder.fall"
   },
   {
     "id": 914,
-    "name": "music_disc.far"
+    "name": "block.ladder.hit"
   },
   {
     "id": 915,
-    "name": "music_disc.mall"
+    "name": "block.ladder.place"
   },
   {
     "id": 916,
-    "name": "music_disc.mellohi"
+    "name": "block.ladder.step"
   },
   {
     "id": 917,
-    "name": "music_disc.pigstep"
+    "name": "block.lantern.break"
   },
   {
     "id": 918,
-    "name": "music_disc.stal"
+    "name": "block.lantern.fall"
   },
   {
     "id": 919,
-    "name": "music_disc.strad"
+    "name": "block.lantern.hit"
   },
   {
     "id": 920,
-    "name": "music_disc.wait"
+    "name": "block.lantern.place"
   },
   {
     "id": 921,
-    "name": "music_disc.ward"
+    "name": "block.lantern.step"
   },
   {
     "id": 922,
-    "name": "music_disc.otherside"
+    "name": "block.large_amethyst_bud.break"
   },
   {
     "id": 923,
-    "name": "music_disc.relic"
+    "name": "block.large_amethyst_bud.place"
   },
   {
     "id": 924,
-    "name": "music_disc.creator"
+    "name": "block.lava.ambient"
   },
   {
     "id": 925,
-    "name": "music_disc.creator_music_box"
+    "name": "block.lava.extinguish"
   },
   {
     "id": 926,
-    "name": "music_disc.precipice"
+    "name": "block.lava.pop"
   },
   {
     "id": 927,
-    "name": "music.dragon"
+    "name": "block.leaf_litter.break"
   },
   {
     "id": 928,
-    "name": "music.end"
+    "name": "block.leaf_litter.step"
   },
   {
     "id": 929,
-    "name": "music.game"
+    "name": "block.leaf_litter.place"
   },
   {
     "id": 930,
-    "name": "music.menu"
+    "name": "block.leaf_litter.hit"
   },
   {
     "id": 931,
-    "name": "music.nether.basalt_deltas"
+    "name": "block.leaf_litter.fall"
   },
   {
     "id": 932,
-    "name": "music.nether.crimson_forest"
+    "name": "item.lead.untied"
   },
   {
     "id": 933,
-    "name": "music.overworld.deep_dark"
+    "name": "item.lead.tied"
   },
   {
     "id": 934,
-    "name": "music.overworld.dripstone_caves"
+    "name": "item.lead.break"
   },
   {
     "id": 935,
-    "name": "music.overworld.grove"
+    "name": "block.lever.click"
   },
   {
     "id": 936,
-    "name": "music.overworld.jagged_peaks"
+    "name": "entity.lightning_bolt.impact"
   },
   {
     "id": 937,
-    "name": "music.overworld.lush_caves"
+    "name": "entity.lightning_bolt.thunder"
   },
   {
     "id": 938,
-    "name": "music.overworld.swamp"
+    "name": "entity.lingering_potion.throw"
   },
   {
     "id": 939,
-    "name": "music.overworld.forest"
+    "name": "entity.llama.ambient"
   },
   {
     "id": 940,
-    "name": "music.overworld.old_growth_taiga"
+    "name": "entity.llama.angry"
   },
   {
     "id": 941,
-    "name": "music.overworld.meadow"
+    "name": "entity.llama.chest"
   },
   {
     "id": 942,
-    "name": "music.overworld.cherry_grove"
+    "name": "entity.llama.death"
   },
   {
     "id": 943,
-    "name": "music.nether.nether_wastes"
+    "name": "entity.llama.eat"
   },
   {
     "id": 944,
-    "name": "music.overworld.frozen_peaks"
+    "name": "entity.llama.hurt"
   },
   {
     "id": 945,
-    "name": "music.overworld.snowy_slopes"
+    "name": "entity.llama.spit"
   },
   {
     "id": 946,
-    "name": "music.nether.soul_sand_valley"
+    "name": "entity.llama.step"
   },
   {
     "id": 947,
-    "name": "music.overworld.stony_peaks"
+    "name": "entity.llama.swag"
   },
   {
     "id": 948,
-    "name": "music.nether.warped_forest"
+    "name": "item.llama_carpet.unequip"
   },
   {
     "id": 949,
-    "name": "music.overworld.flower_forest"
+    "name": "entity.magma_cube.death_small"
   },
   {
     "id": 950,
-    "name": "music.overworld.desert"
+    "name": "block.lodestone.break"
   },
   {
     "id": 951,
-    "name": "music.overworld.badlands"
+    "name": "block.lodestone.step"
   },
   {
     "id": 952,
-    "name": "music.overworld.jungle"
+    "name": "block.lodestone.place"
   },
   {
     "id": 953,
-    "name": "music.overworld.sparse_jungle"
+    "name": "block.lodestone.hit"
   },
   {
     "id": 954,
-    "name": "music.overworld.bamboo_jungle"
+    "name": "block.lodestone.fall"
   },
   {
     "id": 955,
-    "name": "music.under_water"
+    "name": "item.lodestone_compass.lock"
   },
   {
     "id": 956,
-    "name": "block.nether_bricks.break"
+    "name": "item.spear.lunge_1"
   },
   {
     "id": 957,
-    "name": "block.nether_bricks.step"
+    "name": "item.spear.lunge_2"
   },
   {
     "id": 958,
-    "name": "block.nether_bricks.place"
+    "name": "item.spear.lunge_3"
   },
   {
     "id": 959,
-    "name": "block.nether_bricks.hit"
+    "name": "item.mace.smash_air"
   },
   {
     "id": 960,
-    "name": "block.nether_bricks.fall"
+    "name": "item.mace.smash_ground"
   },
   {
     "id": 961,
-    "name": "block.nether_wart.break"
+    "name": "item.mace.smash_ground_heavy"
   },
   {
     "id": 962,
-    "name": "item.nether_wart.plant"
+    "name": "entity.magma_cube.death"
   },
   {
     "id": 963,
-    "name": "block.nether_wood.break"
+    "name": "entity.magma_cube.hurt"
   },
   {
     "id": 964,
-    "name": "block.nether_wood.fall"
+    "name": "entity.magma_cube.hurt_small"
   },
   {
     "id": 965,
-    "name": "block.nether_wood.hit"
+    "name": "entity.magma_cube.jump"
   },
   {
     "id": 966,
-    "name": "block.nether_wood.place"
+    "name": "entity.magma_cube.squish"
   },
   {
     "id": 967,
-    "name": "block.nether_wood.step"
+    "name": "entity.magma_cube.squish_small"
   },
   {
     "id": 968,
-    "name": "block.nether_wood_door.close"
+    "name": "block.mangrove_roots.break"
   },
   {
     "id": 969,
-    "name": "block.nether_wood_door.open"
+    "name": "block.mangrove_roots.fall"
   },
   {
     "id": 970,
-    "name": "block.nether_wood_trapdoor.close"
+    "name": "block.mangrove_roots.hit"
   },
   {
     "id": 971,
-    "name": "block.nether_wood_trapdoor.open"
+    "name": "block.mangrove_roots.place"
   },
   {
     "id": 972,
-    "name": "block.nether_wood_button.click_off"
+    "name": "block.mangrove_roots.step"
   },
   {
     "id": 973,
-    "name": "block.nether_wood_button.click_on"
+    "name": "block.medium_amethyst_bud.break"
   },
   {
     "id": 974,
-    "name": "block.nether_wood_pressure_plate.click_off"
+    "name": "block.medium_amethyst_bud.place"
   },
   {
     "id": 975,
-    "name": "block.nether_wood_pressure_plate.click_on"
+    "name": "block.metal.break"
   },
   {
     "id": 976,
-    "name": "block.nether_wood_fence_gate.close"
+    "name": "block.metal.fall"
   },
   {
     "id": 977,
-    "name": "block.nether_wood_fence_gate.open"
+    "name": "block.metal.hit"
   },
   {
     "id": 978,
-    "name": "intentionally_empty"
+    "name": "block.metal.place"
   },
   {
     "id": 979,
-    "name": "block.packed_mud.break"
+    "name": "block.metal_pressure_plate.click_off"
   },
   {
     "id": 980,
-    "name": "block.packed_mud.fall"
+    "name": "block.metal_pressure_plate.click_on"
   },
   {
     "id": 981,
-    "name": "block.packed_mud.hit"
+    "name": "block.metal.step"
   },
   {
     "id": 982,
-    "name": "block.packed_mud.place"
+    "name": "entity.minecart.inside.underwater"
   },
   {
     "id": 983,
-    "name": "block.packed_mud.step"
+    "name": "entity.minecart.inside"
   },
   {
     "id": 984,
-    "name": "block.stem.break"
+    "name": "entity.minecart.riding"
   },
   {
     "id": 985,
-    "name": "block.stem.step"
+    "name": "entity.mooshroom.convert"
   },
   {
     "id": 986,
-    "name": "block.stem.place"
+    "name": "entity.mooshroom.eat"
   },
   {
     "id": 987,
-    "name": "block.stem.hit"
+    "name": "entity.mooshroom.milk"
   },
   {
     "id": 988,
-    "name": "block.stem.fall"
+    "name": "entity.mooshroom.suspicious_milk"
   },
   {
     "id": 989,
-    "name": "block.nylium.break"
+    "name": "entity.mooshroom.shear"
   },
   {
     "id": 990,
-    "name": "block.nylium.step"
+    "name": "block.moss_carpet.break"
   },
   {
     "id": 991,
-    "name": "block.nylium.place"
+    "name": "block.moss_carpet.fall"
   },
   {
     "id": 992,
-    "name": "block.nylium.hit"
+    "name": "block.moss_carpet.hit"
   },
   {
     "id": 993,
-    "name": "block.nylium.fall"
+    "name": "block.moss_carpet.place"
   },
   {
     "id": 994,
-    "name": "block.nether_sprouts.break"
+    "name": "block.moss_carpet.step"
   },
   {
     "id": 995,
-    "name": "block.nether_sprouts.step"
+    "name": "block.pink_petals.break"
   },
   {
     "id": 996,
-    "name": "block.nether_sprouts.place"
+    "name": "block.pink_petals.fall"
   },
   {
     "id": 997,
-    "name": "block.nether_sprouts.hit"
+    "name": "block.pink_petals.hit"
   },
   {
     "id": 998,
-    "name": "block.nether_sprouts.fall"
+    "name": "block.pink_petals.place"
   },
   {
     "id": 999,
-    "name": "block.fungus.break"
+    "name": "block.pink_petals.step"
   },
   {
     "id": 1000,
-    "name": "block.fungus.step"
+    "name": "block.moss.break"
   },
   {
     "id": 1001,
-    "name": "block.fungus.place"
+    "name": "block.moss.fall"
   },
   {
     "id": 1002,
-    "name": "block.fungus.hit"
+    "name": "block.moss.hit"
   },
   {
     "id": 1003,
-    "name": "block.fungus.fall"
+    "name": "block.moss.place"
   },
   {
     "id": 1004,
-    "name": "block.weeping_vines.break"
+    "name": "block.moss.step"
   },
   {
     "id": 1005,
-    "name": "block.weeping_vines.step"
+    "name": "block.mud.break"
   },
   {
     "id": 1006,
-    "name": "block.weeping_vines.place"
+    "name": "block.mud.fall"
   },
   {
     "id": 1007,
-    "name": "block.weeping_vines.hit"
+    "name": "block.mud.hit"
   },
   {
     "id": 1008,
-    "name": "block.weeping_vines.fall"
+    "name": "block.mud.place"
   },
   {
     "id": 1009,
-    "name": "block.wart_block.break"
+    "name": "block.mud.step"
   },
   {
     "id": 1010,
-    "name": "block.wart_block.step"
+    "name": "block.mud_bricks.break"
   },
   {
     "id": 1011,
-    "name": "block.wart_block.place"
+    "name": "block.mud_bricks.fall"
   },
   {
     "id": 1012,
-    "name": "block.wart_block.hit"
+    "name": "block.mud_bricks.hit"
   },
   {
     "id": 1013,
-    "name": "block.wart_block.fall"
+    "name": "block.mud_bricks.place"
   },
   {
     "id": 1014,
-    "name": "block.netherite_block.break"
+    "name": "block.mud_bricks.step"
   },
   {
     "id": 1015,
-    "name": "block.netherite_block.step"
+    "name": "block.muddy_mangrove_roots.break"
   },
   {
     "id": 1016,
-    "name": "block.netherite_block.place"
+    "name": "block.muddy_mangrove_roots.fall"
   },
   {
     "id": 1017,
-    "name": "block.netherite_block.hit"
+    "name": "block.muddy_mangrove_roots.hit"
   },
   {
     "id": 1018,
-    "name": "block.netherite_block.fall"
+    "name": "block.muddy_mangrove_roots.place"
   },
   {
     "id": 1019,
-    "name": "block.netherrack.break"
+    "name": "block.muddy_mangrove_roots.step"
   },
   {
     "id": 1020,
-    "name": "block.netherrack.step"
+    "name": "entity.mule.ambient"
   },
   {
     "id": 1021,
-    "name": "block.netherrack.place"
+    "name": "entity.mule.angry"
   },
   {
     "id": 1022,
-    "name": "block.netherrack.hit"
+    "name": "entity.mule.chest"
   },
   {
     "id": 1023,
-    "name": "block.netherrack.fall"
+    "name": "entity.mule.death"
   },
   {
     "id": 1024,
-    "name": "block.note_block.basedrum"
+    "name": "entity.mule.eat"
   },
   {
     "id": 1025,
-    "name": "block.note_block.bass"
+    "name": "entity.mule.hurt"
   },
   {
     "id": 1026,
-    "name": "block.note_block.bell"
+    "name": "entity.mule.jump"
   },
   {
     "id": 1027,
-    "name": "block.note_block.chime"
+    "name": "music.creative"
   },
   {
     "id": 1028,
-    "name": "block.note_block.flute"
+    "name": "music.credits"
   },
   {
     "id": 1029,
-    "name": "block.note_block.guitar"
+    "name": "music_disc.5"
   },
   {
     "id": 1030,
-    "name": "block.note_block.harp"
+    "name": "music_disc.11"
   },
   {
     "id": 1031,
-    "name": "block.note_block.hat"
+    "name": "music_disc.13"
   },
   {
     "id": 1032,
-    "name": "block.note_block.pling"
+    "name": "music_disc.blocks"
   },
   {
     "id": 1033,
-    "name": "block.note_block.snare"
+    "name": "music_disc.bounce"
   },
   {
     "id": 1034,
-    "name": "block.note_block.xylophone"
+    "name": "music_disc.cat"
   },
   {
     "id": 1035,
-    "name": "block.note_block.iron_xylophone"
+    "name": "music_disc.chirp"
   },
   {
     "id": 1036,
-    "name": "block.note_block.cow_bell"
+    "name": "music_disc.far"
   },
   {
     "id": 1037,
-    "name": "block.note_block.didgeridoo"
+    "name": "music_disc.lava_chicken"
   },
   {
     "id": 1038,
-    "name": "block.note_block.bit"
+    "name": "music_disc.mall"
   },
   {
     "id": 1039,
-    "name": "block.note_block.banjo"
+    "name": "music_disc.mellohi"
   },
   {
     "id": 1040,
-    "name": "block.note_block.imitate.zombie"
+    "name": "music_disc.pigstep"
   },
   {
     "id": 1041,
-    "name": "block.note_block.imitate.skeleton"
+    "name": "music_disc.stal"
   },
   {
     "id": 1042,
-    "name": "block.note_block.imitate.creeper"
+    "name": "music_disc.strad"
   },
   {
     "id": 1043,
-    "name": "block.note_block.imitate.ender_dragon"
+    "name": "music_disc.wait"
   },
   {
     "id": 1044,
-    "name": "block.note_block.imitate.wither_skeleton"
+    "name": "music_disc.ward"
   },
   {
     "id": 1045,
-    "name": "block.note_block.imitate.piglin"
+    "name": "music_disc.otherside"
   },
   {
     "id": 1046,
-    "name": "entity.ocelot.hurt"
+    "name": "music_disc.relic"
   },
   {
     "id": 1047,
-    "name": "entity.ocelot.ambient"
+    "name": "music_disc.creator"
   },
   {
     "id": 1048,
-    "name": "entity.ocelot.death"
+    "name": "music_disc.creator_music_box"
   },
   {
     "id": 1049,
-    "name": "item.ominous_bottle.dispose"
+    "name": "music_disc.precipice"
   },
   {
     "id": 1050,
-    "name": "entity.painting.break"
+    "name": "music_disc.tears"
   },
   {
     "id": 1051,
-    "name": "entity.painting.place"
+    "name": "music.dragon"
   },
   {
     "id": 1052,
-    "name": "block.pale_hanging_moss.idle"
+    "name": "music.end"
   },
   {
     "id": 1053,
-    "name": "entity.panda.pre_sneeze"
+    "name": "music.game"
   },
   {
     "id": 1054,
-    "name": "entity.panda.sneeze"
+    "name": "music.menu"
   },
   {
     "id": 1055,
-    "name": "entity.panda.ambient"
+    "name": "music.nether.basalt_deltas"
   },
   {
     "id": 1056,
-    "name": "entity.panda.death"
+    "name": "music.nether.crimson_forest"
   },
   {
     "id": 1057,
-    "name": "entity.panda.eat"
+    "name": "music.overworld.deep_dark"
   },
   {
     "id": 1058,
-    "name": "entity.panda.step"
+    "name": "music.overworld.dripstone_caves"
   },
   {
     "id": 1059,
-    "name": "entity.panda.cant_breed"
+    "name": "music.overworld.grove"
   },
   {
     "id": 1060,
-    "name": "entity.panda.aggressive_ambient"
+    "name": "music.overworld.jagged_peaks"
   },
   {
     "id": 1061,
-    "name": "entity.panda.worried_ambient"
+    "name": "music.overworld.lush_caves"
   },
   {
     "id": 1062,
-    "name": "entity.panda.hurt"
+    "name": "music.overworld.swamp"
   },
   {
     "id": 1063,
-    "name": "entity.panda.bite"
+    "name": "music.overworld.forest"
   },
   {
     "id": 1064,
-    "name": "entity.parrot.ambient"
+    "name": "music.overworld.old_growth_taiga"
   },
   {
     "id": 1065,
-    "name": "entity.parrot.death"
+    "name": "music.overworld.meadow"
   },
   {
     "id": 1066,
-    "name": "entity.parrot.eat"
+    "name": "music.overworld.cherry_grove"
   },
   {
     "id": 1067,
-    "name": "entity.parrot.fly"
+    "name": "music.nether.nether_wastes"
   },
   {
     "id": 1068,
-    "name": "entity.parrot.hurt"
+    "name": "music.overworld.frozen_peaks"
   },
   {
     "id": 1069,
-    "name": "entity.parrot.imitate.blaze"
+    "name": "music.overworld.snowy_slopes"
   },
   {
     "id": 1070,
-    "name": "entity.parrot.imitate.bogged"
+    "name": "music.nether.soul_sand_valley"
   },
   {
     "id": 1071,
-    "name": "entity.parrot.imitate.breeze"
+    "name": "music.overworld.stony_peaks"
   },
   {
     "id": 1072,
-    "name": "entity.parrot.imitate.creaking"
+    "name": "music.nether.warped_forest"
   },
   {
     "id": 1073,
-    "name": "entity.parrot.imitate.creeper"
+    "name": "music.overworld.flower_forest"
   },
   {
     "id": 1074,
-    "name": "entity.parrot.imitate.drowned"
+    "name": "music.overworld.desert"
   },
   {
     "id": 1075,
-    "name": "entity.parrot.imitate.elder_guardian"
+    "name": "music.overworld.badlands"
   },
   {
     "id": 1076,
-    "name": "entity.parrot.imitate.ender_dragon"
+    "name": "music.overworld.jungle"
   },
   {
     "id": 1077,
-    "name": "entity.parrot.imitate.endermite"
+    "name": "music.overworld.sparse_jungle"
   },
   {
     "id": 1078,
-    "name": "entity.parrot.imitate.evoker"
+    "name": "music.overworld.bamboo_jungle"
   },
   {
     "id": 1079,
-    "name": "entity.parrot.imitate.ghast"
+    "name": "music.overworld.sulfur_caves"
   },
   {
     "id": 1080,
-    "name": "entity.parrot.imitate.guardian"
+    "name": "music.under_water"
   },
   {
     "id": 1081,
-    "name": "entity.parrot.imitate.hoglin"
+    "name": "entity.nautilus.ambient"
   },
   {
     "id": 1082,
-    "name": "entity.parrot.imitate.husk"
+    "name": "entity.nautilus.ambient_land"
   },
   {
     "id": 1083,
-    "name": "entity.parrot.imitate.illusioner"
+    "name": "entity.nautilus.dash"
   },
   {
     "id": 1084,
-    "name": "entity.parrot.imitate.magma_cube"
+    "name": "entity.nautilus.dash_land"
   },
   {
     "id": 1085,
-    "name": "entity.parrot.imitate.phantom"
+    "name": "entity.nautilus.dash_ready"
   },
   {
     "id": 1086,
-    "name": "entity.parrot.imitate.piglin"
+    "name": "entity.nautilus.dash_ready_land"
   },
   {
     "id": 1087,
-    "name": "entity.parrot.imitate.piglin_brute"
+    "name": "entity.nautilus.death"
   },
   {
     "id": 1088,
-    "name": "entity.parrot.imitate.pillager"
+    "name": "entity.nautilus.death_land"
   },
   {
     "id": 1089,
-    "name": "entity.parrot.imitate.ravager"
+    "name": "entity.nautilus.eat"
   },
   {
     "id": 1090,
-    "name": "entity.parrot.imitate.shulker"
+    "name": "entity.nautilus.hurt"
   },
   {
     "id": 1091,
-    "name": "entity.parrot.imitate.silverfish"
+    "name": "entity.nautilus.hurt_land"
   },
   {
     "id": 1092,
-    "name": "entity.parrot.imitate.skeleton"
+    "name": "entity.nautilus.swim"
   },
   {
     "id": 1093,
-    "name": "entity.parrot.imitate.slime"
+    "name": "block.nether_bricks.break"
   },
   {
     "id": 1094,
-    "name": "entity.parrot.imitate.spider"
+    "name": "block.nether_bricks.step"
   },
   {
     "id": 1095,
-    "name": "entity.parrot.imitate.stray"
+    "name": "block.nether_bricks.place"
   },
   {
     "id": 1096,
-    "name": "entity.parrot.imitate.vex"
+    "name": "block.nether_bricks.hit"
   },
   {
     "id": 1097,
-    "name": "entity.parrot.imitate.vindicator"
+    "name": "block.nether_bricks.fall"
   },
   {
     "id": 1098,
-    "name": "entity.parrot.imitate.warden"
+    "name": "block.nether_wart.break"
   },
   {
     "id": 1099,
-    "name": "entity.parrot.imitate.witch"
+    "name": "item.nether_wart.plant"
   },
   {
     "id": 1100,
-    "name": "entity.parrot.imitate.wither"
+    "name": "block.nether_wood.break"
   },
   {
     "id": 1101,
-    "name": "entity.parrot.imitate.wither_skeleton"
+    "name": "block.nether_wood.fall"
   },
   {
     "id": 1102,
-    "name": "entity.parrot.imitate.zoglin"
+    "name": "block.nether_wood.hit"
   },
   {
     "id": 1103,
-    "name": "entity.parrot.imitate.zombie"
+    "name": "block.nether_wood.place"
   },
   {
     "id": 1104,
-    "name": "entity.parrot.imitate.zombie_villager"
+    "name": "block.nether_wood.step"
   },
   {
     "id": 1105,
-    "name": "entity.parrot.step"
+    "name": "block.nether_wood_door.close"
   },
   {
     "id": 1106,
-    "name": "entity.phantom.ambient"
+    "name": "block.nether_wood_door.open"
   },
   {
     "id": 1107,
-    "name": "entity.phantom.bite"
+    "name": "block.nether_wood_trapdoor.close"
   },
   {
     "id": 1108,
-    "name": "entity.phantom.death"
+    "name": "block.nether_wood_trapdoor.open"
   },
   {
     "id": 1109,
-    "name": "entity.phantom.flap"
+    "name": "block.nether_wood_button.click_off"
   },
   {
     "id": 1110,
-    "name": "entity.phantom.hurt"
+    "name": "block.nether_wood_button.click_on"
   },
   {
     "id": 1111,
-    "name": "entity.phantom.swoop"
+    "name": "block.nether_wood_pressure_plate.click_off"
   },
   {
     "id": 1112,
-    "name": "entity.pig.ambient"
+    "name": "block.nether_wood_pressure_plate.click_on"
   },
   {
     "id": 1113,
-    "name": "entity.pig.death"
+    "name": "block.nether_wood_fence_gate.close"
   },
   {
     "id": 1114,
-    "name": "entity.pig.hurt"
+    "name": "block.nether_wood_fence_gate.open"
   },
   {
     "id": 1115,
-    "name": "entity.pig.saddle"
+    "name": "intentionally_empty"
   },
   {
     "id": 1116,
-    "name": "entity.pig.step"
+    "name": "block.packed_mud.break"
   },
   {
     "id": 1117,
-    "name": "entity.piglin.admiring_item"
+    "name": "block.packed_mud.fall"
   },
   {
     "id": 1118,
-    "name": "entity.piglin.ambient"
+    "name": "block.packed_mud.hit"
   },
   {
     "id": 1119,
-    "name": "entity.piglin.angry"
+    "name": "block.packed_mud.place"
   },
   {
     "id": 1120,
-    "name": "entity.piglin.celebrate"
+    "name": "block.packed_mud.step"
   },
   {
     "id": 1121,
-    "name": "entity.piglin.death"
+    "name": "block.stem.break"
   },
   {
     "id": 1122,
-    "name": "entity.piglin.jealous"
+    "name": "block.stem.step"
   },
   {
     "id": 1123,
-    "name": "entity.piglin.hurt"
+    "name": "block.stem.place"
   },
   {
     "id": 1124,
-    "name": "entity.piglin.retreat"
+    "name": "block.stem.hit"
   },
   {
     "id": 1125,
-    "name": "entity.piglin.step"
+    "name": "block.stem.fall"
   },
   {
     "id": 1126,
-    "name": "entity.piglin.converted_to_zombified"
+    "name": "block.nylium.break"
   },
   {
     "id": 1127,
-    "name": "entity.piglin_brute.ambient"
+    "name": "block.nylium.step"
   },
   {
     "id": 1128,
-    "name": "entity.piglin_brute.angry"
+    "name": "block.nylium.place"
   },
   {
     "id": 1129,
-    "name": "entity.piglin_brute.death"
+    "name": "block.nylium.hit"
   },
   {
     "id": 1130,
-    "name": "entity.piglin_brute.hurt"
+    "name": "block.nylium.fall"
   },
   {
     "id": 1131,
-    "name": "entity.piglin_brute.step"
+    "name": "block.nether_sprouts.break"
   },
   {
     "id": 1132,
-    "name": "entity.piglin_brute.converted_to_zombified"
+    "name": "block.nether_sprouts.step"
   },
   {
     "id": 1133,
-    "name": "entity.pillager.ambient"
+    "name": "block.nether_sprouts.place"
   },
   {
     "id": 1134,
-    "name": "entity.pillager.celebrate"
+    "name": "block.nether_sprouts.hit"
   },
   {
     "id": 1135,
-    "name": "entity.pillager.death"
+    "name": "block.nether_sprouts.fall"
   },
   {
     "id": 1136,
-    "name": "entity.pillager.hurt"
+    "name": "block.fungus.break"
   },
   {
     "id": 1137,
-    "name": "block.piston.contract"
+    "name": "block.fungus.step"
   },
   {
     "id": 1138,
-    "name": "block.piston.extend"
+    "name": "block.fungus.place"
   },
   {
     "id": 1139,
-    "name": "entity.player.attack.crit"
+    "name": "block.fungus.hit"
   },
   {
     "id": 1140,
-    "name": "entity.player.attack.knockback"
+    "name": "block.fungus.fall"
   },
   {
     "id": 1141,
-    "name": "entity.player.attack.nodamage"
+    "name": "block.weeping_vines.break"
   },
   {
     "id": 1142,
-    "name": "entity.player.attack.strong"
+    "name": "block.weeping_vines.step"
   },
   {
     "id": 1143,
-    "name": "entity.player.attack.sweep"
+    "name": "block.weeping_vines.place"
   },
   {
     "id": 1144,
-    "name": "entity.player.attack.weak"
+    "name": "block.weeping_vines.hit"
   },
   {
     "id": 1145,
-    "name": "entity.player.big_fall"
+    "name": "block.weeping_vines.fall"
   },
   {
     "id": 1146,
-    "name": "entity.player.breath"
+    "name": "block.wart_block.break"
   },
   {
     "id": 1147,
-    "name": "entity.player.burp"
+    "name": "block.wart_block.step"
   },
   {
     "id": 1148,
-    "name": "entity.player.death"
+    "name": "block.wart_block.place"
   },
   {
     "id": 1149,
-    "name": "entity.player.hurt"
+    "name": "block.wart_block.hit"
   },
   {
     "id": 1150,
-    "name": "entity.player.hurt_drown"
+    "name": "block.wart_block.fall"
   },
   {
     "id": 1151,
-    "name": "entity.player.hurt_freeze"
+    "name": "block.netherite_block.break"
   },
   {
     "id": 1152,
-    "name": "entity.player.hurt_on_fire"
+    "name": "block.netherite_block.step"
   },
   {
     "id": 1153,
-    "name": "entity.player.hurt_sweet_berry_bush"
+    "name": "block.netherite_block.place"
   },
   {
     "id": 1154,
-    "name": "entity.player.levelup"
+    "name": "block.netherite_block.hit"
   },
   {
     "id": 1155,
-    "name": "entity.player.small_fall"
+    "name": "block.netherite_block.fall"
   },
   {
     "id": 1156,
-    "name": "entity.player.splash"
+    "name": "block.netherrack.break"
   },
   {
     "id": 1157,
-    "name": "entity.player.splash.high_speed"
+    "name": "block.netherrack.step"
   },
   {
     "id": 1158,
-    "name": "entity.player.swim"
+    "name": "block.netherrack.place"
   },
   {
     "id": 1159,
-    "name": "entity.player.teleport"
+    "name": "block.netherrack.hit"
   },
   {
     "id": 1160,
-    "name": "entity.polar_bear.ambient"
+    "name": "block.netherrack.fall"
   },
   {
     "id": 1161,
-    "name": "entity.polar_bear.ambient_baby"
+    "name": "block.note_block.basedrum"
   },
   {
     "id": 1162,
-    "name": "entity.polar_bear.death"
+    "name": "block.note_block.bass"
   },
   {
     "id": 1163,
-    "name": "entity.polar_bear.hurt"
+    "name": "block.note_block.bell"
   },
   {
     "id": 1164,
-    "name": "entity.polar_bear.step"
+    "name": "block.note_block.chime"
   },
   {
     "id": 1165,
-    "name": "entity.polar_bear.warning"
+    "name": "block.note_block.flute"
   },
   {
     "id": 1166,
-    "name": "block.polished_deepslate.break"
+    "name": "block.note_block.guitar"
   },
   {
     "id": 1167,
-    "name": "block.polished_deepslate.fall"
+    "name": "block.note_block.harp"
   },
   {
     "id": 1168,
-    "name": "block.polished_deepslate.hit"
+    "name": "block.note_block.hat"
   },
   {
     "id": 1169,
-    "name": "block.polished_deepslate.place"
+    "name": "block.note_block.pling"
   },
   {
     "id": 1170,
-    "name": "block.polished_deepslate.step"
+    "name": "block.note_block.snare"
   },
   {
     "id": 1171,
-    "name": "block.portal.ambient"
+    "name": "block.note_block.trumpet"
   },
   {
     "id": 1172,
-    "name": "block.portal.travel"
+    "name": "block.note_block.trumpet_exposed"
   },
   {
     "id": 1173,
-    "name": "block.portal.trigger"
+    "name": "block.note_block.trumpet_oxidized"
   },
   {
     "id": 1174,
-    "name": "block.powder_snow.break"
+    "name": "block.note_block.trumpet_weathered"
   },
   {
     "id": 1175,
-    "name": "block.powder_snow.fall"
+    "name": "block.note_block.xylophone"
   },
   {
     "id": 1176,
-    "name": "block.powder_snow.hit"
+    "name": "block.note_block.iron_xylophone"
   },
   {
     "id": 1177,
-    "name": "block.powder_snow.place"
+    "name": "block.note_block.cow_bell"
   },
   {
     "id": 1178,
-    "name": "block.powder_snow.step"
+    "name": "block.note_block.didgeridoo"
   },
   {
     "id": 1179,
-    "name": "entity.puffer_fish.ambient"
+    "name": "block.note_block.bit"
   },
   {
     "id": 1180,
-    "name": "entity.puffer_fish.blow_out"
+    "name": "block.note_block.banjo"
   },
   {
     "id": 1181,
-    "name": "entity.puffer_fish.blow_up"
+    "name": "block.note_block.imitate.zombie"
   },
   {
     "id": 1182,
-    "name": "entity.puffer_fish.death"
+    "name": "block.note_block.imitate.skeleton"
   },
   {
     "id": 1183,
-    "name": "entity.puffer_fish.flop"
+    "name": "block.note_block.imitate.creeper"
   },
   {
     "id": 1184,
-    "name": "entity.puffer_fish.hurt"
+    "name": "block.note_block.imitate.ender_dragon"
   },
   {
     "id": 1185,
-    "name": "entity.puffer_fish.sting"
+    "name": "block.note_block.imitate.wither_skeleton"
   },
   {
     "id": 1186,
-    "name": "block.pumpkin.carve"
+    "name": "block.note_block.imitate.piglin"
   },
   {
     "id": 1187,
-    "name": "entity.rabbit.ambient"
+    "name": "entity.ocelot.hurt"
   },
   {
     "id": 1188,
-    "name": "entity.rabbit.attack"
+    "name": "entity.ocelot.ambient"
   },
   {
     "id": 1189,
-    "name": "entity.rabbit.death"
+    "name": "entity.ocelot.death"
   },
   {
     "id": 1190,
-    "name": "entity.rabbit.hurt"
+    "name": "item.ominous_bottle.dispose"
   },
   {
     "id": 1191,
-    "name": "entity.rabbit.jump"
+    "name": "entity.painting.break"
   },
   {
     "id": 1192,
-    "name": "event.raid.horn"
+    "name": "entity.painting.place"
   },
   {
     "id": 1193,
-    "name": "entity.ravager.ambient"
+    "name": "block.pale_hanging_moss.idle"
   },
   {
     "id": 1194,
-    "name": "entity.ravager.attack"
+    "name": "entity.panda.pre_sneeze"
   },
   {
     "id": 1195,
-    "name": "entity.ravager.celebrate"
+    "name": "entity.panda.sneeze"
   },
   {
     "id": 1196,
-    "name": "entity.ravager.death"
+    "name": "entity.panda.ambient"
   },
   {
     "id": 1197,
-    "name": "entity.ravager.hurt"
+    "name": "entity.panda.death"
   },
   {
     "id": 1198,
-    "name": "entity.ravager.step"
+    "name": "entity.panda.eat"
   },
   {
     "id": 1199,
-    "name": "entity.ravager.stunned"
+    "name": "entity.panda.step"
   },
   {
     "id": 1200,
-    "name": "entity.ravager.roar"
+    "name": "entity.panda.cant_breed"
   },
   {
     "id": 1201,
-    "name": "block.nether_gold_ore.break"
+    "name": "entity.panda.aggressive_ambient"
   },
   {
     "id": 1202,
-    "name": "block.nether_gold_ore.fall"
+    "name": "entity.panda.worried_ambient"
   },
   {
     "id": 1203,
-    "name": "block.nether_gold_ore.hit"
+    "name": "entity.panda.hurt"
   },
   {
     "id": 1204,
-    "name": "block.nether_gold_ore.place"
+    "name": "entity.panda.bite"
   },
   {
     "id": 1205,
-    "name": "block.nether_gold_ore.step"
+    "name": "entity.parched.ambient"
   },
   {
     "id": 1206,
-    "name": "block.nether_ore.break"
+    "name": "entity.parched.death"
   },
   {
     "id": 1207,
-    "name": "block.nether_ore.fall"
+    "name": "entity.parched.hurt"
   },
   {
     "id": 1208,
-    "name": "block.nether_ore.hit"
+    "name": "entity.parched.step"
   },
   {
     "id": 1209,
-    "name": "block.nether_ore.place"
+    "name": "entity.parrot.ambient"
   },
   {
     "id": 1210,
-    "name": "block.nether_ore.step"
+    "name": "entity.parrot.death"
   },
   {
     "id": 1211,
-    "name": "block.redstone_torch.burnout"
+    "name": "entity.parrot.eat"
   },
   {
     "id": 1212,
-    "name": "block.respawn_anchor.ambient"
+    "name": "entity.parrot.fly"
   },
   {
     "id": 1213,
-    "name": "block.respawn_anchor.charge"
+    "name": "entity.parrot.hurt"
   },
   {
     "id": 1214,
-    "name": "block.respawn_anchor.deplete"
+    "name": "entity.parrot.imitate.blaze"
   },
   {
     "id": 1215,
-    "name": "block.respawn_anchor.set_spawn"
+    "name": "entity.parrot.imitate.bogged"
   },
   {
     "id": 1216,
-    "name": "block.rooted_dirt.break"
+    "name": "entity.parrot.imitate.breeze"
   },
   {
     "id": 1217,
-    "name": "block.rooted_dirt.fall"
+    "name": "entity.parrot.imitate.camel_husk"
   },
   {
     "id": 1218,
-    "name": "block.rooted_dirt.hit"
+    "name": "entity.parrot.imitate.creaking"
   },
   {
     "id": 1219,
-    "name": "block.rooted_dirt.place"
+    "name": "entity.parrot.imitate.creeper"
   },
   {
     "id": 1220,
-    "name": "block.rooted_dirt.step"
+    "name": "entity.parrot.imitate.drowned"
   },
   {
     "id": 1221,
-    "name": "entity.salmon.ambient"
+    "name": "entity.parrot.imitate.elder_guardian"
   },
   {
     "id": 1222,
-    "name": "entity.salmon.death"
+    "name": "entity.parrot.imitate.ender_dragon"
   },
   {
     "id": 1223,
-    "name": "entity.salmon.flop"
+    "name": "entity.parrot.imitate.endermite"
   },
   {
     "id": 1224,
-    "name": "entity.salmon.hurt"
+    "name": "entity.parrot.imitate.evoker"
   },
   {
     "id": 1225,
-    "name": "block.sand.break"
+    "name": "entity.parrot.imitate.ghast"
   },
   {
     "id": 1226,
-    "name": "block.sand.fall"
+    "name": "entity.parrot.imitate.guardian"
   },
   {
     "id": 1227,
-    "name": "block.sand.hit"
+    "name": "entity.parrot.imitate.hoglin"
   },
   {
     "id": 1228,
-    "name": "block.sand.place"
+    "name": "entity.parrot.imitate.husk"
   },
   {
     "id": 1229,
-    "name": "block.sand.step"
+    "name": "entity.parrot.imitate.illusioner"
   },
   {
     "id": 1230,
-    "name": "block.sand.idle"
+    "name": "entity.parrot.imitate.magma_cube"
   },
   {
     "id": 1231,
-    "name": "block.sand.wind"
+    "name": "entity.parrot.imitate.phantom"
   },
   {
     "id": 1232,
-    "name": "block.scaffolding.break"
+    "name": "entity.parrot.imitate.parched"
   },
   {
     "id": 1233,
-    "name": "block.scaffolding.fall"
+    "name": "entity.parrot.imitate.piglin"
   },
   {
     "id": 1234,
-    "name": "block.scaffolding.hit"
+    "name": "entity.parrot.imitate.piglin_brute"
   },
   {
     "id": 1235,
-    "name": "block.scaffolding.place"
+    "name": "entity.parrot.imitate.pillager"
   },
   {
     "id": 1236,
-    "name": "block.scaffolding.step"
+    "name": "entity.parrot.imitate.ravager"
   },
   {
     "id": 1237,
-    "name": "block.sculk.spread"
+    "name": "entity.parrot.imitate.shulker"
   },
   {
     "id": 1238,
-    "name": "block.sculk.charge"
+    "name": "entity.parrot.imitate.silverfish"
   },
   {
     "id": 1239,
-    "name": "block.sculk.break"
+    "name": "entity.parrot.imitate.skeleton"
   },
   {
     "id": 1240,
-    "name": "block.sculk.fall"
+    "name": "entity.parrot.imitate.slime"
   },
   {
     "id": 1241,
-    "name": "block.sculk.hit"
+    "name": "entity.parrot.imitate.spider"
   },
   {
     "id": 1242,
-    "name": "block.sculk.place"
+    "name": "entity.parrot.imitate.stray"
   },
   {
     "id": 1243,
-    "name": "block.sculk.step"
+    "name": "entity.parrot.imitate.vex"
   },
   {
     "id": 1244,
-    "name": "block.sculk_catalyst.bloom"
+    "name": "entity.parrot.imitate.vindicator"
   },
   {
     "id": 1245,
-    "name": "block.sculk_catalyst.break"
+    "name": "entity.parrot.imitate.warden"
   },
   {
     "id": 1246,
-    "name": "block.sculk_catalyst.fall"
+    "name": "entity.parrot.imitate.witch"
   },
   {
     "id": 1247,
-    "name": "block.sculk_catalyst.hit"
+    "name": "entity.parrot.imitate.wither"
   },
   {
     "id": 1248,
-    "name": "block.sculk_catalyst.place"
+    "name": "entity.parrot.imitate.wither_skeleton"
   },
   {
     "id": 1249,
-    "name": "block.sculk_catalyst.step"
+    "name": "entity.parrot.imitate.zoglin"
   },
   {
     "id": 1250,
-    "name": "block.sculk_sensor.clicking"
+    "name": "entity.parrot.imitate.zombie"
   },
   {
     "id": 1251,
-    "name": "block.sculk_sensor.clicking_stop"
+    "name": "entity.parrot.imitate.zombie_horse"
   },
   {
     "id": 1252,
-    "name": "block.sculk_sensor.break"
+    "name": "entity.parrot.imitate.zombie_nautilus"
   },
   {
     "id": 1253,
-    "name": "block.sculk_sensor.fall"
+    "name": "entity.parrot.imitate.zombie_villager"
   },
   {
     "id": 1254,
-    "name": "block.sculk_sensor.hit"
+    "name": "entity.parrot.step"
   },
   {
     "id": 1255,
-    "name": "block.sculk_sensor.place"
+    "name": "entity.phantom.ambient"
   },
   {
     "id": 1256,
-    "name": "block.sculk_sensor.step"
+    "name": "entity.phantom.bite"
   },
   {
     "id": 1257,
-    "name": "block.sculk_shrieker.break"
+    "name": "entity.phantom.death"
   },
   {
     "id": 1258,
-    "name": "block.sculk_shrieker.fall"
+    "name": "entity.phantom.flap"
   },
   {
     "id": 1259,
-    "name": "block.sculk_shrieker.hit"
+    "name": "entity.phantom.hurt"
   },
   {
     "id": 1260,
-    "name": "block.sculk_shrieker.place"
+    "name": "entity.phantom.swoop"
   },
   {
     "id": 1261,
-    "name": "block.sculk_shrieker.shriek"
+    "name": "entity.pig.saddle"
   },
   {
     "id": 1262,
-    "name": "block.sculk_shrieker.step"
+    "name": "entity.pig.step"
   },
   {
     "id": 1263,
-    "name": "block.sculk_vein.break"
+    "name": "entity.baby_pig.step"
   },
   {
     "id": 1264,
-    "name": "block.sculk_vein.fall"
+    "name": "entity.baby_pig.ambient"
   },
   {
     "id": 1265,
-    "name": "block.sculk_vein.hit"
+    "name": "entity.baby_pig.eat"
   },
   {
     "id": 1266,
-    "name": "block.sculk_vein.place"
+    "name": "entity.baby_pig.hurt"
   },
   {
     "id": 1267,
-    "name": "block.sculk_vein.step"
+    "name": "entity.baby_pig.death"
   },
   {
     "id": 1268,
-    "name": "entity.sheep.ambient"
+    "name": "entity.pig.ambient"
   },
   {
     "id": 1269,
-    "name": "entity.sheep.death"
+    "name": "entity.pig.hurt"
   },
   {
     "id": 1270,
-    "name": "entity.sheep.hurt"
+    "name": "entity.pig.death"
   },
   {
     "id": 1271,
-    "name": "entity.sheep.shear"
+    "name": "entity.pig.eat"
   },
   {
     "id": 1272,
-    "name": "entity.sheep.step"
+    "name": "entity.pig_mini.ambient"
   },
   {
     "id": 1273,
-    "name": "item.shield.block"
+    "name": "entity.pig_mini.hurt"
   },
   {
     "id": 1274,
-    "name": "item.shield.break"
+    "name": "entity.pig_mini.death"
   },
   {
     "id": 1275,
-    "name": "block.shroomlight.break"
+    "name": "entity.pig_mini.eat"
   },
   {
     "id": 1276,
-    "name": "block.shroomlight.step"
+    "name": "entity.pig_big.ambient"
   },
   {
     "id": 1277,
-    "name": "block.shroomlight.place"
+    "name": "entity.pig_big.hurt"
   },
   {
     "id": 1278,
-    "name": "block.shroomlight.hit"
+    "name": "entity.pig_big.death"
   },
   {
     "id": 1279,
-    "name": "block.shroomlight.fall"
+    "name": "entity.pig_big.eat"
   },
   {
     "id": 1280,
-    "name": "item.shovel.flatten"
+    "name": "entity.piglin.admiring_item"
   },
   {
     "id": 1281,
-    "name": "entity.shulker.ambient"
+    "name": "entity.piglin.ambient"
   },
   {
     "id": 1282,
-    "name": "block.shulker_box.close"
+    "name": "entity.piglin.angry"
   },
   {
     "id": 1283,
-    "name": "block.shulker_box.open"
+    "name": "entity.piglin.celebrate"
   },
   {
     "id": 1284,
-    "name": "entity.shulker_bullet.hit"
+    "name": "entity.piglin.death"
   },
   {
     "id": 1285,
-    "name": "entity.shulker_bullet.hurt"
+    "name": "entity.piglin.jealous"
   },
   {
     "id": 1286,
-    "name": "entity.shulker.close"
+    "name": "entity.piglin.hurt"
   },
   {
     "id": 1287,
-    "name": "entity.shulker.death"
+    "name": "entity.piglin.retreat"
   },
   {
     "id": 1288,
-    "name": "entity.shulker.hurt"
+    "name": "entity.piglin.step"
   },
   {
     "id": 1289,
-    "name": "entity.shulker.hurt_closed"
+    "name": "entity.piglin.converted_to_zombified"
   },
   {
     "id": 1290,
-    "name": "entity.shulker.open"
+    "name": "entity.piglin_brute.ambient"
   },
   {
     "id": 1291,
-    "name": "entity.shulker.shoot"
+    "name": "entity.piglin_brute.angry"
   },
   {
     "id": 1292,
-    "name": "entity.shulker.teleport"
+    "name": "entity.piglin_brute.death"
   },
   {
     "id": 1293,
-    "name": "entity.silverfish.ambient"
+    "name": "entity.piglin_brute.hurt"
   },
   {
     "id": 1294,
-    "name": "entity.silverfish.death"
+    "name": "entity.piglin_brute.step"
   },
   {
     "id": 1295,
-    "name": "entity.silverfish.hurt"
+    "name": "entity.piglin_brute.converted_to_zombified"
   },
   {
     "id": 1296,
-    "name": "entity.silverfish.step"
+    "name": "entity.pillager.ambient"
   },
   {
     "id": 1297,
-    "name": "entity.skeleton.ambient"
+    "name": "entity.pillager.celebrate"
   },
   {
     "id": 1298,
-    "name": "entity.skeleton.converted_to_stray"
+    "name": "entity.pillager.death"
   },
   {
     "id": 1299,
-    "name": "entity.skeleton.death"
+    "name": "entity.pillager.hurt"
   },
   {
     "id": 1300,
-    "name": "entity.skeleton_horse.ambient"
+    "name": "block.piston.contract"
   },
   {
     "id": 1301,
-    "name": "entity.skeleton_horse.death"
+    "name": "block.piston.extend"
   },
   {
     "id": 1302,
-    "name": "entity.skeleton_horse.hurt"
+    "name": "entity.player.attack.crit"
   },
   {
     "id": 1303,
-    "name": "entity.skeleton_horse.swim"
+    "name": "entity.player.attack.knockback"
   },
   {
     "id": 1304,
-    "name": "entity.skeleton_horse.ambient_water"
+    "name": "entity.player.attack.nodamage"
   },
   {
     "id": 1305,
-    "name": "entity.skeleton_horse.gallop_water"
+    "name": "entity.player.attack.strong"
   },
   {
     "id": 1306,
-    "name": "entity.skeleton_horse.jump_water"
+    "name": "entity.player.attack.sweep"
   },
   {
     "id": 1307,
-    "name": "entity.skeleton_horse.step_water"
+    "name": "entity.player.attack.weak"
   },
   {
     "id": 1308,
-    "name": "entity.skeleton.hurt"
+    "name": "entity.player.big_fall"
   },
   {
     "id": 1309,
-    "name": "entity.skeleton.shoot"
+    "name": "entity.player.breath"
   },
   {
     "id": 1310,
-    "name": "entity.skeleton.step"
+    "name": "entity.player.burp"
   },
   {
     "id": 1311,
-    "name": "entity.slime.attack"
+    "name": "entity.player.death"
   },
   {
     "id": 1312,
-    "name": "entity.slime.death"
+    "name": "entity.player.hurt"
   },
   {
     "id": 1313,
-    "name": "entity.slime.hurt"
+    "name": "entity.player.hurt_drown"
   },
   {
     "id": 1314,
-    "name": "entity.slime.jump"
+    "name": "entity.player.hurt_freeze"
   },
   {
     "id": 1315,
-    "name": "entity.slime.squish"
+    "name": "entity.player.hurt_on_fire"
   },
   {
     "id": 1316,
-    "name": "block.slime_block.break"
+    "name": "entity.player.hurt_sweet_berry_bush"
   },
   {
     "id": 1317,
-    "name": "block.slime_block.fall"
+    "name": "entity.player.levelup"
   },
   {
     "id": 1318,
-    "name": "block.slime_block.hit"
+    "name": "entity.player.small_fall"
   },
   {
     "id": 1319,
-    "name": "block.slime_block.place"
+    "name": "entity.player.splash"
   },
   {
     "id": 1320,
-    "name": "block.slime_block.step"
+    "name": "entity.player.splash.high_speed"
   },
   {
     "id": 1321,
-    "name": "block.small_amethyst_bud.break"
+    "name": "entity.player.swim"
   },
   {
     "id": 1322,
-    "name": "block.small_amethyst_bud.place"
+    "name": "entity.player.teleport"
   },
   {
     "id": 1323,
-    "name": "block.small_dripleaf.break"
+    "name": "entity.polar_bear.ambient"
   },
   {
     "id": 1324,
-    "name": "block.small_dripleaf.fall"
+    "name": "entity.polar_bear.ambient_baby"
   },
   {
     "id": 1325,
-    "name": "block.small_dripleaf.hit"
+    "name": "entity.polar_bear.death"
   },
   {
     "id": 1326,
-    "name": "block.small_dripleaf.place"
+    "name": "entity.polar_bear.hurt"
   },
   {
     "id": 1327,
-    "name": "block.small_dripleaf.step"
+    "name": "entity.polar_bear.step"
   },
   {
     "id": 1328,
-    "name": "block.soul_sand.break"
+    "name": "entity.polar_bear.warning"
   },
   {
     "id": 1329,
-    "name": "block.soul_sand.step"
+    "name": "block.polished_deepslate.break"
   },
   {
     "id": 1330,
-    "name": "block.soul_sand.place"
+    "name": "block.polished_deepslate.fall"
   },
   {
     "id": 1331,
-    "name": "block.soul_sand.hit"
+    "name": "block.polished_deepslate.hit"
   },
   {
     "id": 1332,
-    "name": "block.soul_sand.fall"
+    "name": "block.polished_deepslate.place"
   },
   {
     "id": 1333,
-    "name": "block.soul_soil.break"
+    "name": "block.polished_deepslate.step"
   },
   {
     "id": 1334,
-    "name": "block.soul_soil.step"
+    "name": "block.portal.ambient"
   },
   {
     "id": 1335,
-    "name": "block.soul_soil.place"
+    "name": "block.portal.travel"
   },
   {
     "id": 1336,
-    "name": "block.soul_soil.hit"
+    "name": "block.portal.trigger"
   },
   {
     "id": 1337,
-    "name": "block.soul_soil.fall"
+    "name": "block.powder_snow.break"
   },
   {
     "id": 1338,
-    "name": "particle.soul_escape"
+    "name": "block.powder_snow.fall"
   },
   {
     "id": 1339,
-    "name": "block.spawner.break"
+    "name": "block.powder_snow.hit"
   },
   {
     "id": 1340,
-    "name": "block.spawner.fall"
+    "name": "block.powder_snow.place"
   },
   {
     "id": 1341,
-    "name": "block.spawner.hit"
+    "name": "block.powder_snow.step"
   },
   {
     "id": 1342,
-    "name": "block.spawner.place"
+    "name": "entity.puffer_fish.blow_out"
   },
   {
     "id": 1343,
-    "name": "block.spawner.step"
+    "name": "entity.puffer_fish.blow_up"
   },
   {
     "id": 1344,
-    "name": "block.resin.break"
+    "name": "entity.puffer_fish.death"
   },
   {
     "id": 1345,
-    "name": "block.resin.fall"
+    "name": "entity.puffer_fish.flop"
   },
   {
     "id": 1346,
-    "name": "block.resin.place"
+    "name": "entity.puffer_fish.hurt"
   },
   {
     "id": 1347,
-    "name": "block.resin.step"
+    "name": "entity.puffer_fish.sting"
   },
   {
     "id": 1348,
-    "name": "block.resin_bricks.break"
+    "name": "block.pumpkin.carve"
   },
   {
     "id": 1349,
-    "name": "block.resin_bricks.fall"
+    "name": "entity.rabbit.ambient"
   },
   {
     "id": 1350,
-    "name": "block.resin_bricks.hit"
+    "name": "entity.rabbit.attack"
   },
   {
     "id": 1351,
-    "name": "block.resin_bricks.place"
+    "name": "entity.rabbit.death"
   },
   {
     "id": 1352,
-    "name": "block.resin_bricks.step"
+    "name": "entity.rabbit.hurt"
   },
   {
     "id": 1353,
-    "name": "block.spore_blossom.break"
+    "name": "entity.rabbit.jump"
   },
   {
     "id": 1354,
-    "name": "block.spore_blossom.fall"
+    "name": "event.raid.horn"
   },
   {
     "id": 1355,
-    "name": "block.spore_blossom.hit"
+    "name": "entity.ravager.ambient"
   },
   {
     "id": 1356,
-    "name": "block.spore_blossom.place"
+    "name": "entity.ravager.attack"
   },
   {
     "id": 1357,
-    "name": "block.spore_blossom.step"
+    "name": "entity.ravager.celebrate"
   },
   {
     "id": 1358,
-    "name": "entity.strider.ambient"
+    "name": "entity.ravager.death"
   },
   {
     "id": 1359,
-    "name": "entity.strider.happy"
+    "name": "entity.ravager.hurt"
   },
   {
     "id": 1360,
-    "name": "entity.strider.retreat"
+    "name": "entity.ravager.step"
   },
   {
     "id": 1361,
-    "name": "entity.strider.death"
+    "name": "entity.ravager.stunned"
   },
   {
     "id": 1362,
-    "name": "entity.strider.hurt"
+    "name": "entity.ravager.roar"
   },
   {
     "id": 1363,
-    "name": "entity.strider.step"
+    "name": "block.nether_gold_ore.break"
   },
   {
     "id": 1364,
-    "name": "entity.strider.step_lava"
+    "name": "block.nether_gold_ore.fall"
   },
   {
     "id": 1365,
-    "name": "entity.strider.eat"
+    "name": "block.nether_gold_ore.hit"
   },
   {
     "id": 1366,
-    "name": "entity.strider.saddle"
+    "name": "block.nether_gold_ore.place"
   },
   {
     "id": 1367,
-    "name": "entity.slime.death_small"
+    "name": "block.nether_gold_ore.step"
   },
   {
     "id": 1368,
-    "name": "entity.slime.hurt_small"
+    "name": "block.nether_ore.break"
   },
   {
     "id": 1369,
-    "name": "entity.slime.jump_small"
+    "name": "block.nether_ore.fall"
   },
   {
     "id": 1370,
-    "name": "entity.slime.squish_small"
+    "name": "block.nether_ore.hit"
   },
   {
     "id": 1371,
-    "name": "block.smithing_table.use"
+    "name": "block.nether_ore.place"
   },
   {
     "id": 1372,
-    "name": "block.smoker.smoke"
+    "name": "block.nether_ore.step"
   },
   {
     "id": 1373,
-    "name": "entity.sniffer.step"
+    "name": "block.redstone_torch.burnout"
   },
   {
     "id": 1374,
-    "name": "entity.sniffer.eat"
+    "name": "block.resin.break"
   },
   {
     "id": 1375,
-    "name": "entity.sniffer.idle"
+    "name": "block.resin.fall"
   },
   {
     "id": 1376,
-    "name": "entity.sniffer.hurt"
+    "name": "block.resin.place"
   },
   {
     "id": 1377,
-    "name": "entity.sniffer.death"
+    "name": "block.resin.step"
   },
   {
     "id": 1378,
-    "name": "entity.sniffer.drop_seed"
+    "name": "block.resin_bricks.break"
   },
   {
     "id": 1379,
-    "name": "entity.sniffer.scenting"
+    "name": "block.resin_bricks.fall"
   },
   {
     "id": 1380,
-    "name": "entity.sniffer.sniffing"
+    "name": "block.resin_bricks.hit"
   },
   {
     "id": 1381,
-    "name": "entity.sniffer.searching"
+    "name": "block.resin_bricks.place"
   },
   {
     "id": 1382,
-    "name": "entity.sniffer.digging"
+    "name": "block.resin_bricks.step"
   },
   {
     "id": 1383,
-    "name": "entity.sniffer.digging_stop"
+    "name": "block.respawn_anchor.ambient"
   },
   {
     "id": 1384,
-    "name": "entity.sniffer.happy"
+    "name": "block.respawn_anchor.charge"
   },
   {
     "id": 1385,
-    "name": "block.sniffer_egg.plop"
+    "name": "block.respawn_anchor.deplete"
   },
   {
     "id": 1386,
-    "name": "block.sniffer_egg.crack"
+    "name": "block.respawn_anchor.set_spawn"
   },
   {
     "id": 1387,
-    "name": "block.sniffer_egg.hatch"
+    "name": "block.rooted_dirt.break"
   },
   {
     "id": 1388,
-    "name": "entity.snowball.throw"
+    "name": "block.rooted_dirt.fall"
   },
   {
     "id": 1389,
-    "name": "block.snow.break"
+    "name": "block.rooted_dirt.hit"
   },
   {
     "id": 1390,
-    "name": "block.snow.fall"
+    "name": "block.rooted_dirt.place"
   },
   {
     "id": 1391,
-    "name": "entity.snow_golem.ambient"
+    "name": "block.rooted_dirt.step"
   },
   {
     "id": 1392,
-    "name": "entity.snow_golem.death"
+    "name": "entity.salmon.ambient"
   },
   {
     "id": 1393,
-    "name": "entity.snow_golem.hurt"
+    "name": "entity.salmon.death"
   },
   {
     "id": 1394,
-    "name": "entity.snow_golem.shoot"
+    "name": "entity.salmon.flop"
   },
   {
     "id": 1395,
-    "name": "entity.snow_golem.shear"
+    "name": "entity.salmon.hurt"
   },
   {
     "id": 1396,
-    "name": "block.snow.hit"
+    "name": "block.sand.break"
   },
   {
     "id": 1397,
-    "name": "block.snow.place"
+    "name": "block.sand.fall"
   },
   {
     "id": 1398,
-    "name": "block.snow.step"
+    "name": "block.sand.hit"
   },
   {
     "id": 1399,
-    "name": "entity.spider.ambient"
+    "name": "block.sand.place"
   },
   {
     "id": 1400,
-    "name": "entity.spider.death"
+    "name": "block.sand.step"
   },
   {
     "id": 1401,
-    "name": "entity.spider.hurt"
+    "name": "block.sand.idle"
   },
   {
     "id": 1402,
-    "name": "entity.spider.step"
+    "name": "block.scaffolding.break"
   },
   {
     "id": 1403,
-    "name": "entity.splash_potion.break"
+    "name": "block.scaffolding.fall"
   },
   {
     "id": 1404,
-    "name": "entity.splash_potion.throw"
+    "name": "block.scaffolding.hit"
   },
   {
     "id": 1405,
-    "name": "block.sponge.break"
+    "name": "block.scaffolding.place"
   },
   {
     "id": 1406,
-    "name": "block.sponge.fall"
+    "name": "block.scaffolding.step"
   },
   {
     "id": 1407,
-    "name": "block.sponge.hit"
+    "name": "block.sculk.spread"
   },
   {
     "id": 1408,
-    "name": "block.sponge.place"
+    "name": "block.sculk.charge"
   },
   {
     "id": 1409,
-    "name": "block.sponge.step"
+    "name": "block.sculk.break"
   },
   {
     "id": 1410,
-    "name": "block.sponge.absorb"
+    "name": "block.sculk.fall"
   },
   {
     "id": 1411,
-    "name": "item.spyglass.use"
+    "name": "block.sculk.hit"
   },
   {
     "id": 1412,
-    "name": "item.spyglass.stop_using"
+    "name": "block.sculk.place"
   },
   {
     "id": 1413,
-    "name": "entity.squid.ambient"
+    "name": "block.sculk.step"
   },
   {
     "id": 1414,
-    "name": "entity.squid.death"
+    "name": "block.sculk_catalyst.bloom"
   },
   {
     "id": 1415,
-    "name": "entity.squid.hurt"
+    "name": "block.sculk_catalyst.break"
   },
   {
     "id": 1416,
-    "name": "entity.squid.squirt"
+    "name": "block.sculk_catalyst.fall"
   },
   {
     "id": 1417,
-    "name": "block.stone.break"
+    "name": "block.sculk_catalyst.hit"
   },
   {
     "id": 1418,
-    "name": "block.stone_button.click_off"
+    "name": "block.sculk_catalyst.place"
   },
   {
     "id": 1419,
-    "name": "block.stone_button.click_on"
+    "name": "block.sculk_catalyst.step"
   },
   {
     "id": 1420,
-    "name": "block.stone.fall"
+    "name": "block.sculk_sensor.clicking"
   },
   {
     "id": 1421,
-    "name": "block.stone.hit"
+    "name": "block.sculk_sensor.clicking_stop"
   },
   {
     "id": 1422,
-    "name": "block.stone.place"
+    "name": "block.sculk_sensor.break"
   },
   {
     "id": 1423,
-    "name": "block.stone_pressure_plate.click_off"
+    "name": "block.sculk_sensor.fall"
   },
   {
     "id": 1424,
-    "name": "block.stone_pressure_plate.click_on"
+    "name": "block.sculk_sensor.hit"
   },
   {
     "id": 1425,
-    "name": "block.stone.step"
+    "name": "block.sculk_sensor.place"
   },
   {
     "id": 1426,
-    "name": "entity.stray.ambient"
+    "name": "block.sculk_sensor.step"
   },
   {
     "id": 1427,
-    "name": "entity.stray.death"
+    "name": "block.sculk_shrieker.break"
   },
   {
     "id": 1428,
-    "name": "entity.stray.hurt"
+    "name": "block.sculk_shrieker.fall"
   },
   {
     "id": 1429,
-    "name": "entity.stray.step"
+    "name": "block.sculk_shrieker.hit"
   },
   {
     "id": 1430,
-    "name": "block.sweet_berry_bush.break"
+    "name": "block.sculk_shrieker.place"
   },
   {
     "id": 1431,
-    "name": "block.sweet_berry_bush.place"
+    "name": "block.sculk_shrieker.shriek"
   },
   {
     "id": 1432,
-    "name": "block.sweet_berry_bush.pick_berries"
+    "name": "block.sculk_shrieker.step"
   },
   {
     "id": 1433,
-    "name": "entity.tadpole.death"
+    "name": "block.sculk_vein.break"
   },
   {
     "id": 1434,
-    "name": "entity.tadpole.flop"
+    "name": "block.sculk_vein.fall"
   },
   {
     "id": 1435,
-    "name": "entity.tadpole.grow_up"
+    "name": "block.sculk_vein.hit"
   },
   {
     "id": 1436,
-    "name": "entity.tadpole.hurt"
+    "name": "block.sculk_vein.place"
   },
   {
     "id": 1437,
-    "name": "enchant.thorns.hit"
+    "name": "block.sculk_vein.step"
   },
   {
     "id": 1438,
-    "name": "entity.tnt.primed"
+    "name": "entity.sheep.ambient"
   },
   {
     "id": 1439,
-    "name": "item.totem.use"
+    "name": "entity.sheep.death"
   },
   {
     "id": 1440,
-    "name": "item.trident.hit"
+    "name": "entity.sheep.hurt"
   },
   {
     "id": 1441,
-    "name": "item.trident.hit_ground"
+    "name": "entity.sheep.shear"
   },
   {
     "id": 1442,
-    "name": "item.trident.return"
+    "name": "entity.sheep.step"
   },
   {
     "id": 1443,
-    "name": "item.trident.riptide_1"
+    "name": "item.shears.snip"
   },
   {
     "id": 1444,
-    "name": "item.trident.riptide_2"
+    "name": "block.shelf.activate"
   },
   {
     "id": 1445,
-    "name": "item.trident.riptide_3"
+    "name": "block.shelf.break"
   },
   {
     "id": 1446,
-    "name": "item.trident.throw"
+    "name": "block.shelf.deactivate"
   },
   {
     "id": 1447,
-    "name": "item.trident.thunder"
+    "name": "block.shelf.fall"
   },
   {
     "id": 1448,
-    "name": "block.tripwire.attach"
+    "name": "block.shelf.hit"
   },
   {
     "id": 1449,
-    "name": "block.tripwire.click_off"
+    "name": "block.shelf.multi_swap"
   },
   {
     "id": 1450,
-    "name": "block.tripwire.click_on"
+    "name": "block.shelf.place"
   },
   {
     "id": 1451,
-    "name": "block.tripwire.detach"
+    "name": "block.shelf.place_item"
   },
   {
     "id": 1452,
-    "name": "entity.tropical_fish.ambient"
+    "name": "block.shelf.single_swap"
   },
   {
     "id": 1453,
-    "name": "entity.tropical_fish.death"
+    "name": "block.shelf.step"
   },
   {
     "id": 1454,
-    "name": "entity.tropical_fish.flop"
+    "name": "block.shelf.take_item"
   },
   {
     "id": 1455,
-    "name": "entity.tropical_fish.hurt"
+    "name": "item.shield.block"
   },
   {
     "id": 1456,
-    "name": "block.tuff.break"
+    "name": "item.shield.break"
   },
   {
     "id": 1457,
-    "name": "block.tuff.step"
+    "name": "block.shroomlight.break"
   },
   {
     "id": 1458,
-    "name": "block.tuff.place"
+    "name": "block.shroomlight.step"
   },
   {
     "id": 1459,
-    "name": "block.tuff.hit"
+    "name": "block.shroomlight.place"
   },
   {
     "id": 1460,
-    "name": "block.tuff.fall"
+    "name": "block.shroomlight.hit"
   },
   {
     "id": 1461,
-    "name": "block.tuff_bricks.break"
+    "name": "block.shroomlight.fall"
   },
   {
     "id": 1462,
-    "name": "block.tuff_bricks.fall"
+    "name": "item.shovel.flatten"
   },
   {
     "id": 1463,
-    "name": "block.tuff_bricks.hit"
+    "name": "entity.shulker.ambient"
   },
   {
     "id": 1464,
-    "name": "block.tuff_bricks.place"
+    "name": "block.shulker_box.close"
   },
   {
     "id": 1465,
-    "name": "block.tuff_bricks.step"
+    "name": "block.shulker_box.open"
   },
   {
     "id": 1466,
-    "name": "block.polished_tuff.break"
+    "name": "entity.shulker_bullet.hit"
   },
   {
     "id": 1467,
-    "name": "block.polished_tuff.fall"
+    "name": "entity.shulker_bullet.hurt"
   },
   {
     "id": 1468,
-    "name": "block.polished_tuff.hit"
+    "name": "entity.shulker.close"
   },
   {
     "id": 1469,
-    "name": "block.polished_tuff.place"
+    "name": "entity.shulker.death"
   },
   {
     "id": 1470,
-    "name": "block.polished_tuff.step"
+    "name": "entity.shulker.hurt"
   },
   {
     "id": 1471,
-    "name": "entity.turtle.ambient_land"
+    "name": "entity.shulker.hurt_closed"
   },
   {
     "id": 1472,
-    "name": "entity.turtle.death"
+    "name": "entity.shulker.open"
   },
   {
     "id": 1473,
-    "name": "entity.turtle.death_baby"
+    "name": "entity.shulker.shoot"
   },
   {
     "id": 1474,
-    "name": "entity.turtle.egg_break"
+    "name": "entity.shulker.teleport"
   },
   {
     "id": 1475,
-    "name": "entity.turtle.egg_crack"
+    "name": "entity.silverfish.ambient"
   },
   {
     "id": 1476,
-    "name": "entity.turtle.egg_hatch"
+    "name": "entity.silverfish.death"
   },
   {
     "id": 1477,
-    "name": "entity.turtle.hurt"
+    "name": "entity.silverfish.hurt"
   },
   {
     "id": 1478,
-    "name": "entity.turtle.hurt_baby"
+    "name": "entity.silverfish.step"
   },
   {
     "id": 1479,
-    "name": "entity.turtle.lay_egg"
+    "name": "entity.skeleton.ambient"
   },
   {
     "id": 1480,
-    "name": "entity.turtle.shamble"
+    "name": "entity.skeleton.converted_to_stray"
   },
   {
     "id": 1481,
-    "name": "entity.turtle.shamble_baby"
+    "name": "entity.skeleton.death"
   },
   {
     "id": 1482,
-    "name": "entity.turtle.swim"
+    "name": "entity.skeleton_horse.ambient"
   },
   {
     "id": 1483,
-    "name": "ui.button.click"
+    "name": "entity.skeleton_horse.death"
   },
   {
     "id": 1484,
-    "name": "ui.loom.select_pattern"
+    "name": "entity.skeleton_horse.hurt"
   },
   {
     "id": 1485,
-    "name": "ui.loom.take_result"
+    "name": "entity.skeleton_horse.swim"
   },
   {
     "id": 1486,
-    "name": "ui.cartography_table.take_result"
+    "name": "entity.skeleton_horse.ambient_water"
   },
   {
     "id": 1487,
-    "name": "ui.stonecutter.take_result"
+    "name": "entity.skeleton_horse.gallop_water"
   },
   {
     "id": 1488,
-    "name": "ui.stonecutter.select_recipe"
+    "name": "entity.skeleton_horse.jump_water"
   },
   {
     "id": 1489,
-    "name": "ui.toast.challenge_complete"
+    "name": "entity.skeleton_horse.step_water"
   },
   {
     "id": 1490,
-    "name": "ui.toast.in"
+    "name": "entity.skeleton.hurt"
   },
   {
     "id": 1491,
-    "name": "ui.toast.out"
+    "name": "entity.skeleton.shoot"
   },
   {
     "id": 1492,
-    "name": "block.vault.activate"
+    "name": "entity.skeleton.step"
   },
   {
     "id": 1493,
-    "name": "block.vault.ambient"
+    "name": "entity.slime.attack"
   },
   {
     "id": 1494,
-    "name": "block.vault.break"
+    "name": "entity.slime.death"
   },
   {
     "id": 1495,
-    "name": "block.vault.close_shutter"
+    "name": "entity.slime.hurt"
   },
   {
     "id": 1496,
-    "name": "block.vault.deactivate"
+    "name": "entity.slime.jump"
   },
   {
     "id": 1497,
-    "name": "block.vault.eject_item"
+    "name": "entity.slime.squish"
   },
   {
     "id": 1498,
-    "name": "block.vault.reject_rewarded_player"
+    "name": "block.slime_block.break"
   },
   {
     "id": 1499,
-    "name": "block.vault.fall"
+    "name": "block.slime_block.fall"
   },
   {
     "id": 1500,
-    "name": "block.vault.hit"
+    "name": "block.slime_block.hit"
   },
   {
     "id": 1501,
-    "name": "block.vault.insert_item"
+    "name": "block.slime_block.place"
   },
   {
     "id": 1502,
-    "name": "block.vault.insert_item_fail"
+    "name": "block.slime_block.step"
   },
   {
     "id": 1503,
-    "name": "block.vault.open_shutter"
+    "name": "block.small_amethyst_bud.break"
   },
   {
     "id": 1504,
-    "name": "block.vault.place"
+    "name": "block.small_amethyst_bud.place"
   },
   {
     "id": 1505,
-    "name": "block.vault.step"
+    "name": "block.small_dripleaf.break"
   },
   {
     "id": 1506,
-    "name": "entity.vex.ambient"
+    "name": "block.small_dripleaf.fall"
   },
   {
     "id": 1507,
-    "name": "entity.vex.charge"
+    "name": "block.small_dripleaf.hit"
   },
   {
     "id": 1508,
-    "name": "entity.vex.death"
+    "name": "block.small_dripleaf.place"
   },
   {
     "id": 1509,
-    "name": "entity.vex.hurt"
+    "name": "block.small_dripleaf.step"
   },
   {
     "id": 1510,
-    "name": "entity.villager.ambient"
+    "name": "block.soul_sand.break"
   },
   {
     "id": 1511,
-    "name": "entity.villager.celebrate"
+    "name": "block.soul_sand.step"
   },
   {
     "id": 1512,
-    "name": "entity.villager.death"
+    "name": "block.soul_sand.place"
   },
   {
     "id": 1513,
-    "name": "entity.villager.hurt"
+    "name": "block.soul_sand.hit"
   },
   {
     "id": 1514,
-    "name": "entity.villager.no"
+    "name": "block.soul_sand.fall"
   },
   {
     "id": 1515,
-    "name": "entity.villager.trade"
+    "name": "block.soul_soil.break"
   },
   {
     "id": 1516,
-    "name": "entity.villager.yes"
+    "name": "block.soul_soil.step"
   },
   {
     "id": 1517,
-    "name": "entity.villager.work_armorer"
+    "name": "block.soul_soil.place"
   },
   {
     "id": 1518,
-    "name": "entity.villager.work_butcher"
+    "name": "block.soul_soil.hit"
   },
   {
     "id": 1519,
-    "name": "entity.villager.work_cartographer"
+    "name": "block.soul_soil.fall"
   },
   {
     "id": 1520,
-    "name": "entity.villager.work_cleric"
+    "name": "particle.soul_escape"
   },
   {
     "id": 1521,
-    "name": "entity.villager.work_farmer"
+    "name": "block.spawner.break"
   },
   {
     "id": 1522,
-    "name": "entity.villager.work_fisherman"
+    "name": "block.spawner.fall"
   },
   {
     "id": 1523,
-    "name": "entity.villager.work_fletcher"
+    "name": "block.spawner.hit"
   },
   {
     "id": 1524,
-    "name": "entity.villager.work_leatherworker"
+    "name": "block.spawner.place"
   },
   {
     "id": 1525,
-    "name": "entity.villager.work_librarian"
+    "name": "block.spawner.step"
   },
   {
     "id": 1526,
-    "name": "entity.villager.work_mason"
+    "name": "item.spear.use"
   },
   {
     "id": 1527,
-    "name": "entity.villager.work_shepherd"
+    "name": "item.spear.hit"
   },
   {
     "id": 1528,
-    "name": "entity.villager.work_toolsmith"
+    "name": "item.spear.attack"
   },
   {
     "id": 1529,
-    "name": "entity.villager.work_weaponsmith"
+    "name": "item.spear_wood.use"
   },
   {
     "id": 1530,
-    "name": "entity.vindicator.ambient"
+    "name": "item.spear_wood.hit"
   },
   {
     "id": 1531,
-    "name": "entity.vindicator.celebrate"
+    "name": "item.spear_wood.attack"
   },
   {
     "id": 1532,
-    "name": "entity.vindicator.death"
+    "name": "block.spore_blossom.break"
   },
   {
     "id": 1533,
-    "name": "entity.vindicator.hurt"
+    "name": "block.spore_blossom.fall"
   },
   {
     "id": 1534,
-    "name": "block.vine.break"
+    "name": "block.spore_blossom.hit"
   },
   {
     "id": 1535,
-    "name": "block.vine.fall"
+    "name": "block.spore_blossom.place"
   },
   {
     "id": 1536,
-    "name": "block.vine.hit"
+    "name": "block.spore_blossom.step"
   },
   {
     "id": 1537,
-    "name": "block.vine.place"
+    "name": "entity.strider.ambient"
   },
   {
     "id": 1538,
-    "name": "block.vine.step"
+    "name": "entity.strider.happy"
   },
   {
     "id": 1539,
-    "name": "block.lily_pad.place"
+    "name": "entity.strider.retreat"
   },
   {
     "id": 1540,
-    "name": "entity.wandering_trader.ambient"
+    "name": "entity.strider.death"
   },
   {
     "id": 1541,
-    "name": "entity.wandering_trader.death"
+    "name": "entity.strider.hurt"
   },
   {
     "id": 1542,
-    "name": "entity.wandering_trader.disappeared"
+    "name": "entity.strider.step"
   },
   {
     "id": 1543,
-    "name": "entity.wandering_trader.drink_milk"
+    "name": "entity.strider.step_lava"
   },
   {
     "id": 1544,
-    "name": "entity.wandering_trader.drink_potion"
+    "name": "entity.strider.eat"
   },
   {
     "id": 1545,
-    "name": "entity.wandering_trader.hurt"
+    "name": "entity.strider.saddle"
   },
   {
     "id": 1546,
-    "name": "entity.wandering_trader.no"
+    "name": "entity.slime.death_small"
   },
   {
     "id": 1547,
-    "name": "entity.wandering_trader.reappeared"
+    "name": "entity.slime.hurt_small"
   },
   {
     "id": 1548,
-    "name": "entity.wandering_trader.trade"
+    "name": "entity.slime.jump_small"
   },
   {
     "id": 1549,
-    "name": "entity.wandering_trader.yes"
+    "name": "entity.slime.squish_small"
   },
   {
     "id": 1550,
-    "name": "entity.warden.agitated"
+    "name": "block.smithing_table.use"
   },
   {
     "id": 1551,
-    "name": "entity.warden.ambient"
+    "name": "block.smoker.smoke"
   },
   {
     "id": 1552,
-    "name": "entity.warden.angry"
+    "name": "entity.sniffer.step"
   },
   {
     "id": 1553,
-    "name": "entity.warden.attack_impact"
+    "name": "entity.sniffer.eat"
   },
   {
     "id": 1554,
-    "name": "entity.warden.death"
+    "name": "entity.sniffer.idle"
   },
   {
     "id": 1555,
-    "name": "entity.warden.dig"
+    "name": "entity.sniffer.hurt"
   },
   {
     "id": 1556,
-    "name": "entity.warden.emerge"
+    "name": "entity.sniffer.death"
   },
   {
     "id": 1557,
-    "name": "entity.warden.heartbeat"
+    "name": "entity.sniffer.drop_seed"
   },
   {
     "id": 1558,
-    "name": "entity.warden.hurt"
+    "name": "entity.sniffer.scenting"
   },
   {
     "id": 1559,
-    "name": "entity.warden.listening"
+    "name": "entity.sniffer.sniffing"
   },
   {
     "id": 1560,
-    "name": "entity.warden.listening_angry"
+    "name": "entity.sniffer.searching"
   },
   {
     "id": 1561,
-    "name": "entity.warden.nearby_close"
+    "name": "entity.sniffer.digging"
   },
   {
     "id": 1562,
-    "name": "entity.warden.nearby_closer"
+    "name": "entity.sniffer.digging_stop"
   },
   {
     "id": 1563,
-    "name": "entity.warden.nearby_closest"
+    "name": "entity.sniffer.happy"
   },
   {
     "id": 1564,
-    "name": "entity.warden.roar"
+    "name": "block.sniffer_egg.plop"
   },
   {
     "id": 1565,
-    "name": "entity.warden.sniff"
+    "name": "block.sniffer_egg.crack"
   },
   {
     "id": 1566,
-    "name": "entity.warden.sonic_boom"
+    "name": "block.sniffer_egg.hatch"
   },
   {
     "id": 1567,
-    "name": "entity.warden.sonic_charge"
+    "name": "entity.snowball.throw"
   },
   {
     "id": 1568,
-    "name": "entity.warden.step"
+    "name": "block.snow.break"
   },
   {
     "id": 1569,
-    "name": "entity.warden.tendril_clicks"
+    "name": "block.snow.fall"
   },
   {
     "id": 1570,
-    "name": "block.hanging_sign.waxed_interact_fail"
+    "name": "entity.snow_golem.ambient"
   },
   {
     "id": 1571,
-    "name": "block.sign.waxed_interact_fail"
+    "name": "entity.snow_golem.death"
   },
   {
     "id": 1572,
-    "name": "block.water.ambient"
+    "name": "entity.snow_golem.hurt"
   },
   {
     "id": 1573,
-    "name": "weather.rain"
+    "name": "entity.snow_golem.shoot"
   },
   {
     "id": 1574,
-    "name": "weather.rain.above"
+    "name": "entity.snow_golem.shear"
   },
   {
     "id": 1575,
-    "name": "block.wet_grass.break"
+    "name": "block.snow.hit"
   },
   {
     "id": 1576,
-    "name": "block.wet_grass.fall"
+    "name": "block.snow.place"
   },
   {
     "id": 1577,
-    "name": "block.wet_grass.hit"
+    "name": "block.snow.step"
   },
   {
     "id": 1578,
-    "name": "block.wet_grass.place"
+    "name": "entity.spider.ambient"
   },
   {
     "id": 1579,
-    "name": "block.wet_grass.step"
+    "name": "entity.spider.death"
   },
   {
     "id": 1580,
-    "name": "block.wet_sponge.break"
+    "name": "entity.spider.hurt"
   },
   {
     "id": 1581,
-    "name": "block.wet_sponge.dries"
+    "name": "entity.spider.step"
   },
   {
     "id": 1582,
-    "name": "block.wet_sponge.fall"
+    "name": "entity.splash_potion.break"
   },
   {
     "id": 1583,
-    "name": "block.wet_sponge.hit"
+    "name": "entity.splash_potion.throw"
   },
   {
     "id": 1584,
-    "name": "block.wet_sponge.place"
+    "name": "block.sponge.break"
   },
   {
     "id": 1585,
-    "name": "block.wet_sponge.step"
+    "name": "block.sponge.fall"
   },
   {
     "id": 1586,
-    "name": "entity.wind_charge.wind_burst"
+    "name": "block.sponge.hit"
   },
   {
     "id": 1587,
-    "name": "entity.wind_charge.throw"
+    "name": "block.sponge.place"
   },
   {
     "id": 1588,
-    "name": "entity.witch.ambient"
+    "name": "block.sponge.step"
   },
   {
     "id": 1589,
-    "name": "entity.witch.celebrate"
+    "name": "block.sponge.absorb"
   },
   {
     "id": 1590,
-    "name": "entity.witch.death"
+    "name": "item.spyglass.use"
   },
   {
     "id": 1591,
-    "name": "entity.witch.drink"
+    "name": "item.spyglass.stop_using"
   },
   {
     "id": 1592,
-    "name": "entity.witch.hurt"
+    "name": "entity.squid.ambient"
   },
   {
     "id": 1593,
-    "name": "entity.witch.throw"
+    "name": "entity.squid.death"
   },
   {
     "id": 1594,
-    "name": "entity.wither.ambient"
+    "name": "entity.squid.hurt"
   },
   {
     "id": 1595,
-    "name": "entity.wither.break_block"
+    "name": "entity.squid.squirt"
   },
   {
     "id": 1596,
-    "name": "entity.wither.death"
+    "name": "block.stone.break"
   },
   {
     "id": 1597,
-    "name": "entity.wither.hurt"
+    "name": "block.stone_button.click_off"
   },
   {
     "id": 1598,
-    "name": "entity.wither.shoot"
+    "name": "block.stone_button.click_on"
   },
   {
     "id": 1599,
-    "name": "entity.wither_skeleton.ambient"
+    "name": "block.stone.fall"
   },
   {
     "id": 1600,
-    "name": "entity.wither_skeleton.death"
+    "name": "block.stone.hit"
   },
   {
     "id": 1601,
-    "name": "entity.wither_skeleton.hurt"
+    "name": "block.stone.place"
   },
   {
     "id": 1602,
-    "name": "entity.wither_skeleton.step"
+    "name": "block.stone_pressure_plate.click_off"
   },
   {
     "id": 1603,
-    "name": "entity.wither.spawn"
+    "name": "block.stone_pressure_plate.click_on"
   },
   {
     "id": 1604,
-    "name": "item.wolf_armor.break"
+    "name": "block.stone.step"
   },
   {
     "id": 1605,
-    "name": "item.wolf_armor.crack"
+    "name": "entity.stray.ambient"
   },
   {
     "id": 1606,
-    "name": "item.wolf_armor.damage"
+    "name": "entity.stray.death"
   },
   {
     "id": 1607,
-    "name": "item.wolf_armor.repair"
+    "name": "entity.stray.hurt"
   },
   {
     "id": 1608,
-    "name": "entity.wolf.shake"
+    "name": "entity.stray.step"
   },
   {
     "id": 1609,
-    "name": "entity.wolf.step"
+    "name": "block.sulfur_spike.break"
   },
   {
     "id": 1610,
-    "name": "entity.wolf.ambient"
+    "name": "block.sulfur_spike.step"
   },
   {
     "id": 1611,
-    "name": "entity.wolf.death"
+    "name": "block.sulfur_spike.place"
   },
   {
     "id": 1612,
-    "name": "entity.wolf.growl"
+    "name": "block.sulfur_spike.hit"
   },
   {
     "id": 1613,
-    "name": "entity.wolf.hurt"
+    "name": "block.sulfur_spike.fall"
   },
   {
     "id": 1614,
-    "name": "entity.wolf.pant"
+    "name": "block.sulfur_spike.land"
   },
   {
     "id": 1615,
-    "name": "entity.wolf.whine"
+    "name": "block.sweet_berry_bush.break"
   },
   {
     "id": 1616,
-    "name": "entity.wolf_puglin.ambient"
+    "name": "block.sweet_berry_bush.place"
   },
   {
     "id": 1617,
-    "name": "entity.wolf_puglin.death"
+    "name": "block.sweet_berry_bush.pick_berries"
   },
   {
     "id": 1618,
-    "name": "entity.wolf_puglin.growl"
+    "name": "entity.tadpole.death"
   },
   {
     "id": 1619,
-    "name": "entity.wolf_puglin.hurt"
+    "name": "entity.tadpole.flop"
   },
   {
     "id": 1620,
-    "name": "entity.wolf_puglin.pant"
+    "name": "entity.tadpole.grow_up"
   },
   {
     "id": 1621,
-    "name": "entity.wolf_puglin.whine"
+    "name": "entity.tadpole.hurt"
   },
   {
     "id": 1622,
-    "name": "entity.wolf_sad.ambient"
+    "name": "enchant.thorns.hit"
   },
   {
     "id": 1623,
-    "name": "entity.wolf_sad.death"
+    "name": "entity.tnt.primed"
   },
   {
     "id": 1624,
-    "name": "entity.wolf_sad.growl"
+    "name": "item.totem.use"
   },
   {
     "id": 1625,
-    "name": "entity.wolf_sad.hurt"
+    "name": "item.trident.hit"
   },
   {
     "id": 1626,
-    "name": "entity.wolf_sad.pant"
+    "name": "item.trident.hit_ground"
   },
   {
     "id": 1627,
-    "name": "entity.wolf_sad.whine"
+    "name": "item.trident.return"
   },
   {
     "id": 1628,
-    "name": "entity.wolf_angry.ambient"
+    "name": "item.trident.riptide_1"
   },
   {
     "id": 1629,
-    "name": "entity.wolf_angry.death"
+    "name": "item.trident.riptide_2"
   },
   {
     "id": 1630,
-    "name": "entity.wolf_angry.growl"
+    "name": "item.trident.riptide_3"
   },
   {
     "id": 1631,
-    "name": "entity.wolf_angry.hurt"
+    "name": "item.trident.throw"
   },
   {
     "id": 1632,
-    "name": "entity.wolf_angry.pant"
+    "name": "item.trident.thunder"
   },
   {
     "id": 1633,
-    "name": "entity.wolf_angry.whine"
+    "name": "block.tripwire.attach"
   },
   {
     "id": 1634,
-    "name": "entity.wolf_grumpy.ambient"
+    "name": "block.tripwire.click_off"
   },
   {
     "id": 1635,
-    "name": "entity.wolf_grumpy.death"
+    "name": "block.tripwire.click_on"
   },
   {
     "id": 1636,
-    "name": "entity.wolf_grumpy.growl"
+    "name": "block.tripwire.detach"
   },
   {
     "id": 1637,
-    "name": "entity.wolf_grumpy.hurt"
+    "name": "entity.tropical_fish.ambient"
   },
   {
     "id": 1638,
-    "name": "entity.wolf_grumpy.pant"
+    "name": "entity.tropical_fish.death"
   },
   {
     "id": 1639,
-    "name": "entity.wolf_grumpy.whine"
+    "name": "entity.tropical_fish.flop"
   },
   {
     "id": 1640,
-    "name": "entity.wolf_big.ambient"
+    "name": "entity.tropical_fish.hurt"
   },
   {
     "id": 1641,
-    "name": "entity.wolf_big.death"
+    "name": "block.tuff.break"
   },
   {
     "id": 1642,
-    "name": "entity.wolf_big.growl"
+    "name": "block.tuff.step"
   },
   {
     "id": 1643,
-    "name": "entity.wolf_big.hurt"
+    "name": "block.tuff.place"
   },
   {
     "id": 1644,
-    "name": "entity.wolf_big.pant"
+    "name": "block.tuff.hit"
   },
   {
     "id": 1645,
-    "name": "entity.wolf_big.whine"
+    "name": "block.tuff.fall"
   },
   {
     "id": 1646,
-    "name": "entity.wolf_cute.ambient"
+    "name": "block.tuff_bricks.break"
   },
   {
     "id": 1647,
-    "name": "entity.wolf_cute.death"
+    "name": "block.tuff_bricks.fall"
   },
   {
     "id": 1648,
-    "name": "entity.wolf_cute.growl"
+    "name": "block.tuff_bricks.hit"
   },
   {
     "id": 1649,
-    "name": "entity.wolf_cute.hurt"
+    "name": "block.tuff_bricks.place"
   },
   {
     "id": 1650,
-    "name": "entity.wolf_cute.pant"
+    "name": "block.tuff_bricks.step"
   },
   {
     "id": 1651,
-    "name": "entity.wolf_cute.whine"
+    "name": "block.polished_tuff.break"
   },
   {
     "id": 1652,
-    "name": "block.wooden_door.close"
+    "name": "block.polished_tuff.fall"
   },
   {
     "id": 1653,
-    "name": "block.wooden_door.open"
+    "name": "block.polished_tuff.hit"
   },
   {
     "id": 1654,
-    "name": "block.wooden_trapdoor.close"
+    "name": "block.polished_tuff.place"
   },
   {
     "id": 1655,
-    "name": "block.wooden_trapdoor.open"
+    "name": "block.polished_tuff.step"
   },
   {
     "id": 1656,
-    "name": "block.wooden_button.click_off"
+    "name": "entity.turtle.ambient_land"
   },
   {
     "id": 1657,
-    "name": "block.wooden_button.click_on"
+    "name": "entity.turtle.death"
   },
   {
     "id": 1658,
-    "name": "block.wooden_pressure_plate.click_off"
+    "name": "entity.turtle.death_baby"
   },
   {
     "id": 1659,
-    "name": "block.wooden_pressure_plate.click_on"
+    "name": "entity.turtle.egg_break"
   },
   {
     "id": 1660,
-    "name": "block.wood.break"
+    "name": "entity.turtle.egg_crack"
   },
   {
     "id": 1661,
-    "name": "block.wood.fall"
+    "name": "entity.turtle.egg_hatch"
   },
   {
     "id": 1662,
-    "name": "block.wood.hit"
+    "name": "entity.turtle.hurt"
   },
   {
     "id": 1663,
-    "name": "block.wood.place"
+    "name": "entity.turtle.hurt_baby"
   },
   {
     "id": 1664,
-    "name": "block.wood.step"
+    "name": "entity.turtle.lay_egg"
   },
   {
     "id": 1665,
-    "name": "block.wool.break"
+    "name": "entity.turtle.shamble"
   },
   {
     "id": 1666,
-    "name": "block.wool.fall"
+    "name": "entity.turtle.shamble_baby"
   },
   {
     "id": 1667,
-    "name": "block.wool.hit"
+    "name": "entity.turtle.swim"
   },
   {
     "id": 1668,
-    "name": "block.wool.place"
+    "name": "ui.button.click"
   },
   {
     "id": 1669,
-    "name": "block.wool.step"
+    "name": "ui.loom.select_pattern"
   },
   {
     "id": 1670,
-    "name": "entity.zoglin.ambient"
+    "name": "ui.loom.take_result"
   },
   {
     "id": 1671,
-    "name": "entity.zoglin.angry"
+    "name": "ui.cartography_table.take_result"
   },
   {
     "id": 1672,
-    "name": "entity.zoglin.attack"
+    "name": "ui.stonecutter.take_result"
   },
   {
     "id": 1673,
-    "name": "entity.zoglin.death"
+    "name": "ui.stonecutter.select_recipe"
   },
   {
     "id": 1674,
-    "name": "entity.zoglin.hurt"
+    "name": "ui.toast.challenge_complete"
   },
   {
     "id": 1675,
-    "name": "entity.zoglin.step"
+    "name": "ui.toast.in"
   },
   {
     "id": 1676,
-    "name": "entity.zombie.ambient"
+    "name": "ui.toast.out"
   },
   {
     "id": 1677,
-    "name": "entity.zombie.attack_wooden_door"
+    "name": "block.vault.activate"
   },
   {
     "id": 1678,
-    "name": "entity.zombie.attack_iron_door"
+    "name": "block.vault.ambient"
   },
   {
     "id": 1679,
-    "name": "entity.zombie.break_wooden_door"
+    "name": "block.vault.break"
   },
   {
     "id": 1680,
-    "name": "entity.zombie.converted_to_drowned"
+    "name": "block.vault.close_shutter"
   },
   {
     "id": 1681,
-    "name": "entity.zombie.death"
+    "name": "block.vault.deactivate"
   },
   {
     "id": 1682,
-    "name": "entity.zombie.destroy_egg"
+    "name": "block.vault.eject_item"
   },
   {
     "id": 1683,
-    "name": "entity.zombie_horse.ambient"
+    "name": "block.vault.reject_rewarded_player"
   },
   {
     "id": 1684,
-    "name": "entity.zombie_horse.death"
+    "name": "block.vault.fall"
   },
   {
     "id": 1685,
-    "name": "entity.zombie_horse.hurt"
+    "name": "block.vault.hit"
   },
   {
     "id": 1686,
-    "name": "entity.zombie.hurt"
+    "name": "block.vault.insert_item"
   },
   {
     "id": 1687,
-    "name": "entity.zombie.infect"
+    "name": "block.vault.insert_item_fail"
   },
   {
     "id": 1688,
-    "name": "entity.zombified_piglin.ambient"
+    "name": "block.vault.open_shutter"
   },
   {
     "id": 1689,
-    "name": "entity.zombified_piglin.angry"
+    "name": "block.vault.place"
   },
   {
     "id": 1690,
-    "name": "entity.zombified_piglin.death"
+    "name": "block.vault.step"
   },
   {
     "id": 1691,
-    "name": "entity.zombified_piglin.hurt"
+    "name": "entity.vex.ambient"
   },
   {
     "id": 1692,
-    "name": "entity.zombie.step"
+    "name": "entity.vex.charge"
   },
   {
     "id": 1693,
-    "name": "entity.zombie_villager.ambient"
+    "name": "entity.vex.death"
   },
   {
     "id": 1694,
-    "name": "entity.zombie_villager.converted"
+    "name": "entity.vex.hurt"
   },
   {
     "id": 1695,
-    "name": "entity.zombie_villager.cure"
+    "name": "entity.villager.ambient"
   },
   {
     "id": 1696,
-    "name": "entity.zombie_villager.death"
+    "name": "entity.villager.celebrate"
   },
   {
     "id": 1697,
-    "name": "entity.zombie_villager.hurt"
+    "name": "entity.villager.death"
   },
   {
     "id": 1698,
-    "name": "entity.zombie_villager.step"
+    "name": "entity.villager.hurt"
   },
   {
     "id": 1699,
-    "name": "event.mob_effect.bad_omen"
+    "name": "entity.villager.no"
   },
   {
     "id": 1700,
-    "name": "event.mob_effect.trial_omen"
+    "name": "entity.villager.trade"
   },
   {
     "id": 1701,
+    "name": "entity.villager.yes"
+  },
+  {
+    "id": 1702,
+    "name": "entity.villager.work_armorer"
+  },
+  {
+    "id": 1703,
+    "name": "entity.villager.work_butcher"
+  },
+  {
+    "id": 1704,
+    "name": "entity.villager.work_cartographer"
+  },
+  {
+    "id": 1705,
+    "name": "entity.villager.work_cleric"
+  },
+  {
+    "id": 1706,
+    "name": "entity.villager.work_farmer"
+  },
+  {
+    "id": 1707,
+    "name": "entity.villager.work_fisherman"
+  },
+  {
+    "id": 1708,
+    "name": "entity.villager.work_fletcher"
+  },
+  {
+    "id": 1709,
+    "name": "entity.villager.work_leatherworker"
+  },
+  {
+    "id": 1710,
+    "name": "entity.villager.work_librarian"
+  },
+  {
+    "id": 1711,
+    "name": "entity.villager.work_mason"
+  },
+  {
+    "id": 1712,
+    "name": "entity.villager.work_shepherd"
+  },
+  {
+    "id": 1713,
+    "name": "entity.villager.work_toolsmith"
+  },
+  {
+    "id": 1714,
+    "name": "entity.villager.work_weaponsmith"
+  },
+  {
+    "id": 1715,
+    "name": "entity.vindicator.ambient"
+  },
+  {
+    "id": 1716,
+    "name": "entity.vindicator.celebrate"
+  },
+  {
+    "id": 1717,
+    "name": "entity.vindicator.death"
+  },
+  {
+    "id": 1718,
+    "name": "entity.vindicator.hurt"
+  },
+  {
+    "id": 1719,
+    "name": "block.vine.break"
+  },
+  {
+    "id": 1720,
+    "name": "block.vine.fall"
+  },
+  {
+    "id": 1721,
+    "name": "block.vine.hit"
+  },
+  {
+    "id": 1722,
+    "name": "block.vine.place"
+  },
+  {
+    "id": 1723,
+    "name": "block.vine.step"
+  },
+  {
+    "id": 1724,
+    "name": "block.lily_pad.place"
+  },
+  {
+    "id": 1725,
+    "name": "entity.wandering_trader.ambient"
+  },
+  {
+    "id": 1726,
+    "name": "entity.wandering_trader.death"
+  },
+  {
+    "id": 1727,
+    "name": "entity.wandering_trader.disappeared"
+  },
+  {
+    "id": 1728,
+    "name": "entity.wandering_trader.drink_milk"
+  },
+  {
+    "id": 1729,
+    "name": "entity.wandering_trader.drink_potion"
+  },
+  {
+    "id": 1730,
+    "name": "entity.wandering_trader.hurt"
+  },
+  {
+    "id": 1731,
+    "name": "entity.wandering_trader.no"
+  },
+  {
+    "id": 1732,
+    "name": "entity.wandering_trader.reappeared"
+  },
+  {
+    "id": 1733,
+    "name": "entity.wandering_trader.trade"
+  },
+  {
+    "id": 1734,
+    "name": "entity.wandering_trader.yes"
+  },
+  {
+    "id": 1735,
+    "name": "entity.warden.agitated"
+  },
+  {
+    "id": 1736,
+    "name": "entity.warden.ambient"
+  },
+  {
+    "id": 1737,
+    "name": "entity.warden.angry"
+  },
+  {
+    "id": 1738,
+    "name": "entity.warden.attack_impact"
+  },
+  {
+    "id": 1739,
+    "name": "entity.warden.death"
+  },
+  {
+    "id": 1740,
+    "name": "entity.warden.dig"
+  },
+  {
+    "id": 1741,
+    "name": "entity.warden.emerge"
+  },
+  {
+    "id": 1742,
+    "name": "entity.warden.heartbeat"
+  },
+  {
+    "id": 1743,
+    "name": "entity.warden.hurt"
+  },
+  {
+    "id": 1744,
+    "name": "entity.warden.listening"
+  },
+  {
+    "id": 1745,
+    "name": "entity.warden.listening_angry"
+  },
+  {
+    "id": 1746,
+    "name": "entity.warden.nearby_close"
+  },
+  {
+    "id": 1747,
+    "name": "entity.warden.nearby_closer"
+  },
+  {
+    "id": 1748,
+    "name": "entity.warden.nearby_closest"
+  },
+  {
+    "id": 1749,
+    "name": "entity.warden.roar"
+  },
+  {
+    "id": 1750,
+    "name": "entity.warden.sniff"
+  },
+  {
+    "id": 1751,
+    "name": "entity.warden.sonic_boom"
+  },
+  {
+    "id": 1752,
+    "name": "entity.warden.sonic_charge"
+  },
+  {
+    "id": 1753,
+    "name": "entity.warden.step"
+  },
+  {
+    "id": 1754,
+    "name": "entity.warden.tendril_clicks"
+  },
+  {
+    "id": 1755,
+    "name": "block.hanging_sign.waxed_interact_fail"
+  },
+  {
+    "id": 1756,
+    "name": "block.sign.waxed_interact_fail"
+  },
+  {
+    "id": 1757,
+    "name": "block.water.ambient"
+  },
+  {
+    "id": 1758,
+    "name": "weather.end_flash"
+  },
+  {
+    "id": 1759,
+    "name": "weather.rain"
+  },
+  {
+    "id": 1760,
+    "name": "weather.rain.above"
+  },
+  {
+    "id": 1761,
+    "name": "block.wet_grass.break"
+  },
+  {
+    "id": 1762,
+    "name": "block.wet_grass.fall"
+  },
+  {
+    "id": 1763,
+    "name": "block.wet_grass.hit"
+  },
+  {
+    "id": 1764,
+    "name": "block.wet_grass.place"
+  },
+  {
+    "id": 1765,
+    "name": "block.wet_grass.step"
+  },
+  {
+    "id": 1766,
+    "name": "block.wet_sponge.break"
+  },
+  {
+    "id": 1767,
+    "name": "block.wet_sponge.dries"
+  },
+  {
+    "id": 1768,
+    "name": "block.wet_sponge.fall"
+  },
+  {
+    "id": 1769,
+    "name": "block.wet_sponge.hit"
+  },
+  {
+    "id": 1770,
+    "name": "block.wet_sponge.place"
+  },
+  {
+    "id": 1771,
+    "name": "block.wet_sponge.step"
+  },
+  {
+    "id": 1772,
+    "name": "entity.wind_charge.wind_burst"
+  },
+  {
+    "id": 1773,
+    "name": "entity.wind_charge.throw"
+  },
+  {
+    "id": 1774,
+    "name": "entity.witch.ambient"
+  },
+  {
+    "id": 1775,
+    "name": "entity.witch.celebrate"
+  },
+  {
+    "id": 1776,
+    "name": "entity.witch.death"
+  },
+  {
+    "id": 1777,
+    "name": "entity.witch.drink"
+  },
+  {
+    "id": 1778,
+    "name": "entity.witch.hurt"
+  },
+  {
+    "id": 1779,
+    "name": "entity.witch.throw"
+  },
+  {
+    "id": 1780,
+    "name": "entity.wither.ambient"
+  },
+  {
+    "id": 1781,
+    "name": "entity.wither.break_block"
+  },
+  {
+    "id": 1782,
+    "name": "entity.wither.death"
+  },
+  {
+    "id": 1783,
+    "name": "entity.wither.hurt"
+  },
+  {
+    "id": 1784,
+    "name": "entity.wither.shoot"
+  },
+  {
+    "id": 1785,
+    "name": "entity.wither_skeleton.ambient"
+  },
+  {
+    "id": 1786,
+    "name": "entity.wither_skeleton.death"
+  },
+  {
+    "id": 1787,
+    "name": "entity.wither_skeleton.hurt"
+  },
+  {
+    "id": 1788,
+    "name": "entity.wither_skeleton.step"
+  },
+  {
+    "id": 1789,
+    "name": "entity.wither.spawn"
+  },
+  {
+    "id": 1790,
+    "name": "item.wolf_armor.break"
+  },
+  {
+    "id": 1791,
+    "name": "entity.baby_wolf.ambient"
+  },
+  {
+    "id": 1792,
+    "name": "item.wolf_armor.crack"
+  },
+  {
+    "id": 1793,
+    "name": "item.wolf_armor.damage"
+  },
+  {
+    "id": 1794,
+    "name": "item.wolf_armor.repair"
+  },
+  {
+    "id": 1795,
+    "name": "entity.baby_wolf.death"
+  },
+  {
+    "id": 1796,
+    "name": "entity.baby_wolf.growl"
+  },
+  {
+    "id": 1797,
+    "name": "entity.baby_wolf.hurt"
+  },
+  {
+    "id": 1798,
+    "name": "entity.baby_wolf.pant"
+  },
+  {
+    "id": 1799,
+    "name": "entity.wolf.shake"
+  },
+  {
+    "id": 1800,
+    "name": "entity.wolf.step"
+  },
+  {
+    "id": 1801,
+    "name": "entity.baby_wolf.step"
+  },
+  {
+    "id": 1802,
+    "name": "entity.baby_wolf.whine"
+  },
+  {
+    "id": 1803,
+    "name": "entity.wolf.ambient"
+  },
+  {
+    "id": 1804,
+    "name": "entity.wolf.death"
+  },
+  {
+    "id": 1805,
+    "name": "entity.wolf.growl"
+  },
+  {
+    "id": 1806,
+    "name": "entity.wolf.hurt"
+  },
+  {
+    "id": 1807,
+    "name": "entity.wolf.pant"
+  },
+  {
+    "id": 1808,
+    "name": "entity.wolf.whine"
+  },
+  {
+    "id": 1809,
+    "name": "entity.wolf_puglin.ambient"
+  },
+  {
+    "id": 1810,
+    "name": "entity.wolf_puglin.death"
+  },
+  {
+    "id": 1811,
+    "name": "entity.wolf_puglin.growl"
+  },
+  {
+    "id": 1812,
+    "name": "entity.wolf_puglin.hurt"
+  },
+  {
+    "id": 1813,
+    "name": "entity.wolf_puglin.pant"
+  },
+  {
+    "id": 1814,
+    "name": "entity.wolf_puglin.whine"
+  },
+  {
+    "id": 1815,
+    "name": "entity.wolf_sad.ambient"
+  },
+  {
+    "id": 1816,
+    "name": "entity.wolf_sad.death"
+  },
+  {
+    "id": 1817,
+    "name": "entity.wolf_sad.growl"
+  },
+  {
+    "id": 1818,
+    "name": "entity.wolf_sad.hurt"
+  },
+  {
+    "id": 1819,
+    "name": "entity.wolf_sad.pant"
+  },
+  {
+    "id": 1820,
+    "name": "entity.wolf_sad.whine"
+  },
+  {
+    "id": 1821,
+    "name": "entity.wolf_angry.ambient"
+  },
+  {
+    "id": 1822,
+    "name": "entity.wolf_angry.death"
+  },
+  {
+    "id": 1823,
+    "name": "entity.wolf_angry.growl"
+  },
+  {
+    "id": 1824,
+    "name": "entity.wolf_angry.hurt"
+  },
+  {
+    "id": 1825,
+    "name": "entity.wolf_angry.pant"
+  },
+  {
+    "id": 1826,
+    "name": "entity.wolf_angry.whine"
+  },
+  {
+    "id": 1827,
+    "name": "entity.wolf_grumpy.ambient"
+  },
+  {
+    "id": 1828,
+    "name": "entity.wolf_grumpy.death"
+  },
+  {
+    "id": 1829,
+    "name": "entity.wolf_grumpy.growl"
+  },
+  {
+    "id": 1830,
+    "name": "entity.wolf_grumpy.hurt"
+  },
+  {
+    "id": 1831,
+    "name": "entity.wolf_grumpy.pant"
+  },
+  {
+    "id": 1832,
+    "name": "entity.wolf_grumpy.whine"
+  },
+  {
+    "id": 1833,
+    "name": "entity.wolf_big.ambient"
+  },
+  {
+    "id": 1834,
+    "name": "entity.wolf_big.death"
+  },
+  {
+    "id": 1835,
+    "name": "entity.wolf_big.growl"
+  },
+  {
+    "id": 1836,
+    "name": "entity.wolf_big.hurt"
+  },
+  {
+    "id": 1837,
+    "name": "entity.wolf_big.pant"
+  },
+  {
+    "id": 1838,
+    "name": "entity.wolf_big.whine"
+  },
+  {
+    "id": 1839,
+    "name": "entity.wolf_cute.ambient"
+  },
+  {
+    "id": 1840,
+    "name": "entity.wolf_cute.death"
+  },
+  {
+    "id": 1841,
+    "name": "entity.wolf_cute.growl"
+  },
+  {
+    "id": 1842,
+    "name": "entity.wolf_cute.hurt"
+  },
+  {
+    "id": 1843,
+    "name": "entity.wolf_cute.pant"
+  },
+  {
+    "id": 1844,
+    "name": "entity.wolf_cute.whine"
+  },
+  {
+    "id": 1845,
+    "name": "block.wooden_door.close"
+  },
+  {
+    "id": 1846,
+    "name": "block.wooden_door.open"
+  },
+  {
+    "id": 1847,
+    "name": "block.wooden_trapdoor.close"
+  },
+  {
+    "id": 1848,
+    "name": "block.wooden_trapdoor.open"
+  },
+  {
+    "id": 1849,
+    "name": "block.wooden_button.click_off"
+  },
+  {
+    "id": 1850,
+    "name": "block.wooden_button.click_on"
+  },
+  {
+    "id": 1851,
+    "name": "block.wooden_pressure_plate.click_off"
+  },
+  {
+    "id": 1852,
+    "name": "block.wooden_pressure_plate.click_on"
+  },
+  {
+    "id": 1853,
+    "name": "block.wood.break"
+  },
+  {
+    "id": 1854,
+    "name": "block.wood.fall"
+  },
+  {
+    "id": 1855,
+    "name": "block.wood.hit"
+  },
+  {
+    "id": 1856,
+    "name": "block.wood.place"
+  },
+  {
+    "id": 1857,
+    "name": "block.wood.step"
+  },
+  {
+    "id": 1858,
+    "name": "block.wool.break"
+  },
+  {
+    "id": 1859,
+    "name": "block.wool.fall"
+  },
+  {
+    "id": 1860,
+    "name": "block.wool.hit"
+  },
+  {
+    "id": 1861,
+    "name": "block.wool.place"
+  },
+  {
+    "id": 1862,
+    "name": "block.wool.step"
+  },
+  {
+    "id": 1863,
+    "name": "entity.zoglin.ambient"
+  },
+  {
+    "id": 1864,
+    "name": "entity.zoglin.angry"
+  },
+  {
+    "id": 1865,
+    "name": "entity.zoglin.attack"
+  },
+  {
+    "id": 1866,
+    "name": "entity.zoglin.death"
+  },
+  {
+    "id": 1867,
+    "name": "entity.zoglin.hurt"
+  },
+  {
+    "id": 1868,
+    "name": "entity.zoglin.step"
+  },
+  {
+    "id": 1869,
+    "name": "entity.zombie.ambient"
+  },
+  {
+    "id": 1870,
+    "name": "entity.zombie.attack_wooden_door"
+  },
+  {
+    "id": 1871,
+    "name": "entity.zombie.attack_iron_door"
+  },
+  {
+    "id": 1872,
+    "name": "entity.zombie.break_wooden_door"
+  },
+  {
+    "id": 1873,
+    "name": "entity.zombie.converted_to_drowned"
+  },
+  {
+    "id": 1874,
+    "name": "entity.zombie.death"
+  },
+  {
+    "id": 1875,
+    "name": "entity.zombie.destroy_egg"
+  },
+  {
+    "id": 1876,
+    "name": "entity.zombie_horse.ambient"
+  },
+  {
+    "id": 1877,
+    "name": "entity.zombie_horse.angry"
+  },
+  {
+    "id": 1878,
+    "name": "entity.zombie_horse.death"
+  },
+  {
+    "id": 1879,
+    "name": "entity.zombie_horse.eat"
+  },
+  {
+    "id": 1880,
+    "name": "entity.zombie_horse.hurt"
+  },
+  {
+    "id": 1881,
+    "name": "entity.zombie.hurt"
+  },
+  {
+    "id": 1882,
+    "name": "entity.zombie.infect"
+  },
+  {
+    "id": 1883,
+    "name": "entity.zombie_nautilus.ambient"
+  },
+  {
+    "id": 1884,
+    "name": "entity.zombie_nautilus.ambient_land"
+  },
+  {
+    "id": 1885,
+    "name": "entity.zombie_nautilus.dash"
+  },
+  {
+    "id": 1886,
+    "name": "entity.zombie_nautilus.dash_land"
+  },
+  {
+    "id": 1887,
+    "name": "entity.zombie_nautilus.dash_ready"
+  },
+  {
+    "id": 1888,
+    "name": "entity.zombie_nautilus.dash_ready_land"
+  },
+  {
+    "id": 1889,
+    "name": "entity.zombie_nautilus.death"
+  },
+  {
+    "id": 1890,
+    "name": "entity.zombie_nautilus.death_land"
+  },
+  {
+    "id": 1891,
+    "name": "entity.zombie_nautilus.eat"
+  },
+  {
+    "id": 1892,
+    "name": "entity.zombie_nautilus.hurt"
+  },
+  {
+    "id": 1893,
+    "name": "entity.zombie_nautilus.hurt_land"
+  },
+  {
+    "id": 1894,
+    "name": "entity.zombie_nautilus.swim"
+  },
+  {
+    "id": 1895,
+    "name": "entity.zombified_piglin.ambient"
+  },
+  {
+    "id": 1896,
+    "name": "entity.zombified_piglin.angry"
+  },
+  {
+    "id": 1897,
+    "name": "entity.zombified_piglin.death"
+  },
+  {
+    "id": 1898,
+    "name": "entity.zombified_piglin.hurt"
+  },
+  {
+    "id": 1899,
+    "name": "entity.zombie.step"
+  },
+  {
+    "id": 1900,
+    "name": "entity.zombie_villager.ambient"
+  },
+  {
+    "id": 1901,
+    "name": "entity.zombie_villager.converted"
+  },
+  {
+    "id": 1902,
+    "name": "entity.zombie_villager.cure"
+  },
+  {
+    "id": 1903,
+    "name": "entity.zombie_villager.death"
+  },
+  {
+    "id": 1904,
+    "name": "entity.zombie_villager.hurt"
+  },
+  {
+    "id": 1905,
+    "name": "entity.zombie_villager.step"
+  },
+  {
+    "id": 1906,
+    "name": "event.mob_effect.bad_omen"
+  },
+  {
+    "id": 1907,
+    "name": "event.mob_effect.trial_omen"
+  },
+  {
+    "id": 1908,
     "name": "event.mob_effect.raid_omen"
+  },
+  {
+    "id": 1909,
+    "name": "item.saddle.unequip"
+  },
+  {
+    "id": 1910,
+    "name": "item.nautilus_saddle_underwater_equip"
+  },
+  {
+    "id": 1911,
+    "name": "item.nautilus_saddle_equip"
+  },
+  {
+    "id": 1912,
+    "name": "block.sulfur.break"
+  },
+  {
+    "id": 1913,
+    "name": "block.sulfur.step"
+  },
+  {
+    "id": 1914,
+    "name": "block.sulfur.place"
+  },
+  {
+    "id": 1915,
+    "name": "block.sulfur.hit"
+  },
+  {
+    "id": 1916,
+    "name": "block.sulfur.fall"
+  },
+  {
+    "id": 1917,
+    "name": "block.potent_sulfur.break"
+  },
+  {
+    "id": 1918,
+    "name": "block.potent_sulfur.step"
+  },
+  {
+    "id": 1919,
+    "name": "block.potent_sulfur.place"
+  },
+  {
+    "id": 1920,
+    "name": "block.potent_sulfur.hit"
+  },
+  {
+    "id": 1921,
+    "name": "block.potent_sulfur.fall"
+  },
+  {
+    "id": 1922,
+    "name": "block.potent_sulfur.geyser_eruption"
+  },
+  {
+    "id": 1923,
+    "name": "block.potent_sulfur.geyser_eruption_active"
+  },
+  {
+    "id": 1924,
+    "name": "block.potent_sulfur.geyser_continuous_eruption"
+  },
+  {
+    "id": 1925,
+    "name": "block.potent_sulfur.geyser_continuous_eruption_active"
+  },
+  {
+    "id": 1926,
+    "name": "block.cinnabar.break"
+  },
+  {
+    "id": 1927,
+    "name": "block.cinnabar.step"
+  },
+  {
+    "id": 1928,
+    "name": "block.cinnabar.place"
+  },
+  {
+    "id": 1929,
+    "name": "block.cinnabar.hit"
+  },
+  {
+    "id": 1930,
+    "name": "block.cinnabar.fall"
+  },
+  {
+    "id": 1931,
+    "name": "entity.sulfur_cube.absorb"
+  },
+  {
+    "id": 1932,
+    "name": "entity.sulfur_cube.bounce"
+  },
+  {
+    "id": 1933,
+    "name": "entity.sulfur_cube.death"
+  },
+  {
+    "id": 1934,
+    "name": "entity.sulfur_cube.eject"
+  },
+  {
+    "id": 1935,
+    "name": "entity.sulfur_cube.hurt"
+  },
+  {
+    "id": 1936,
+    "name": "entity.sulfur_cube.jump"
+  },
+  {
+    "id": 1937,
+    "name": "entity.sulfur_cube.regular.hit"
+  },
+  {
+    "id": 1938,
+    "name": "entity.sulfur_cube.regular.push"
+  },
+  {
+    "id": 1939,
+    "name": "entity.sulfur_cube.bouncy.hit"
+  },
+  {
+    "id": 1940,
+    "name": "entity.sulfur_cube.bouncy.push"
+  },
+  {
+    "id": 1941,
+    "name": "entity.sulfur_cube.slow_bouncy.hit"
+  },
+  {
+    "id": 1942,
+    "name": "entity.sulfur_cube.slow_bouncy.push"
+  },
+  {
+    "id": 1943,
+    "name": "entity.sulfur_cube.slow_flat.hit"
+  },
+  {
+    "id": 1944,
+    "name": "entity.sulfur_cube.slow_flat.push"
+  },
+  {
+    "id": 1945,
+    "name": "entity.sulfur_cube.fast_flat.hit"
+  },
+  {
+    "id": 1946,
+    "name": "entity.sulfur_cube.fast_flat.push"
+  },
+  {
+    "id": 1947,
+    "name": "entity.sulfur_cube.light.hit"
+  },
+  {
+    "id": 1948,
+    "name": "entity.sulfur_cube.light.push"
+  },
+  {
+    "id": 1949,
+    "name": "entity.sulfur_cube.fast_sliding.hit"
+  },
+  {
+    "id": 1950,
+    "name": "entity.sulfur_cube.fast_sliding.push"
+  },
+  {
+    "id": 1951,
+    "name": "entity.sulfur_cube.slow_sliding.hit"
+  },
+  {
+    "id": 1952,
+    "name": "entity.sulfur_cube.slow_sliding.push"
+  },
+  {
+    "id": 1953,
+    "name": "entity.sulfur_cube.sticky.hit"
+  },
+  {
+    "id": 1954,
+    "name": "entity.sulfur_cube.sticky.push"
+  },
+  {
+    "id": 1955,
+    "name": "entity.sulfur_cube.high_resistance.hit"
+  },
+  {
+    "id": 1956,
+    "name": "entity.sulfur_cube.high_resistance.push"
+  },
+  {
+    "id": 1957,
+    "name": "entity.sulfur_cube.explosive.hit"
+  },
+  {
+    "id": 1958,
+    "name": "entity.sulfur_cube.explosive.push"
+  },
+  {
+    "id": 1959,
+    "name": "entity.sulfur_cube.hot.hit"
+  },
+  {
+    "id": 1960,
+    "name": "entity.sulfur_cube.hot.push"
+  },
+  {
+    "id": 1961,
+    "name": "entity.sulfur_cube.squish"
+  },
+  {
+    "id": 1962,
+    "name": "block.potent_sulfur.noxious_gas"
+  },
+  {
+    "id": 1963,
+    "name": "entity.small_sulfur_cube.death"
+  },
+  {
+    "id": 1964,
+    "name": "entity.small_sulfur_cube.hurt"
+  },
+  {
+    "id": 1965,
+    "name": "entity.small_sulfur_cube.jump"
+  },
+  {
+    "id": 1966,
+    "name": "entity.small_sulfur_cube.squish"
+  },
+  {
+    "id": 1967,
+    "name": "entity.small_sulfur_cube.eat"
   }
 ]

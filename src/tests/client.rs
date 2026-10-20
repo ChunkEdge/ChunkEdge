@@ -1,12 +1,15 @@
 use chunkedge_server::protocol::movement_flags::MovementFlags;
 
 use crate::abilities::PlayerAbilitiesFlags;
+use crate::client::Client;
+use crate::entity::EntityId;
 use crate::layer::ChunkLayer;
 use crate::layer::chunk::UnloadedChunk;
 use crate::math::DVec3;
+use crate::protocol::VarInt;
 use crate::protocol::packets::play::{
-    AcceptTeleportationC2s, MoveEntityPosS2c, MovePlayerPosRotC2s, PlayerPositionS2c,
-    SetEntityDataS2c,
+    AcceptTeleportationC2s, LoginS2c, MoveEntityPosS2c, MovePlayerPosRotC2s, PlayerCombatKillS2c,
+    PlayerPositionS2c, SetEntityDataS2c,
 };
 use crate::testing::{ScenarioSingleClient, create_mock_client};
 use crate::{ChunkPos, GameMode};
@@ -125,4 +128,35 @@ fn client_does_not_emit_delayed_tracked_data_after_initial_join() {
     helper
         .collect_received()
         .assert_count::<SetEntityDataS2c>(0);
+}
+
+#[test]
+fn client_knows_itself_by_its_entity_id() {
+    let ScenarioSingleClient {
+        mut app,
+        client,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    let entity_id = app.world().get::<EntityId>(client).unwrap().get();
+    assert_ne!(entity_id, 0, "ID 0 means unassigned to the client");
+
+    let recvd = helper.collect_received();
+    recvd.assert_count::<LoginS2c>(1);
+    assert_eq!(recvd.first::<LoginS2c>().entity_id, entity_id);
+
+    app.world_mut()
+        .get_mut::<Client>(client)
+        .unwrap()
+        .kill("test");
+    app.update();
+
+    let recvd = helper.collect_received();
+    recvd.assert_count::<PlayerCombatKillS2c>(1);
+    assert_eq!(
+        recvd.first::<PlayerCombatKillS2c>().player_id,
+        VarInt(entity_id)
+    );
 }

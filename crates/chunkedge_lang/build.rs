@@ -14,8 +14,17 @@ fn build() -> anyhow::Result<TokenStream> {
     let translations =
         serde_json::from_str::<Vec<Translation>>(include_str!("extracted/translation_keys.json"))?;
 
+    let mut seen = std::collections::HashSet::new();
+
     let translation_key_consts = translations
         .iter()
+        // Multiple translation keys can map to the same constant name
+        // (e.g. `book.editTitle` and `book.edit.title` both become
+        // `BOOK_EDIT_TITLE`). Keep the first occurrence so the generated
+        // code still compiles.
+        .filter(|translation| {
+            seen.insert(translation.key.to_shouty_snake_case())
+        })
         .map(|translation| {
             let const_id = ident(translation.key.to_shouty_snake_case());
             let key = &translation.key;

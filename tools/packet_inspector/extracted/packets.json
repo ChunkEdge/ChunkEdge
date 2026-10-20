@@ -1,1538 +1,1538 @@
 [
   {
+    "id": 0,
     "name": "intention",
     "phase": "handshake",
-    "side": "serverbound",
-    "id": 0
+    "side": "serverbound"
   },
   {
+    "id": 0,
     "name": "status_request",
     "phase": "status",
-    "side": "serverbound",
-    "id": 0
+    "side": "serverbound"
   },
   {
+    "id": 1,
     "name": "ping_request",
     "phase": "status",
-    "side": "serverbound",
-    "id": 1
+    "side": "serverbound"
   },
   {
+    "id": 0,
     "name": "status_response",
     "phase": "status",
-    "side": "clientbound",
-    "id": 0
+    "side": "clientbound"
   },
   {
+    "id": 1,
     "name": "pong_response",
     "phase": "status",
-    "side": "clientbound",
-    "id": 1
+    "side": "clientbound"
   },
   {
+    "id": 0,
     "name": "hello",
     "phase": "login",
-    "side": "serverbound",
-    "id": 0
+    "side": "serverbound"
   },
   {
+    "id": 1,
     "name": "key",
     "phase": "login",
-    "side": "serverbound",
-    "id": 1
+    "side": "serverbound"
   },
   {
+    "id": 2,
     "name": "custom_query_answer",
     "phase": "login",
-    "side": "serverbound",
-    "id": 2
+    "side": "serverbound"
   },
   {
+    "id": 3,
     "name": "login_acknowledged",
     "phase": "login",
-    "side": "serverbound",
-    "id": 3
+    "side": "serverbound"
   },
   {
+    "id": 4,
     "name": "cookie_response",
     "phase": "login",
-    "side": "serverbound",
-    "id": 4
+    "side": "serverbound"
   },
   {
+    "id": 0,
     "name": "login_disconnect",
     "phase": "login",
-    "side": "clientbound",
-    "id": 0
+    "side": "clientbound"
   },
   {
+    "id": 1,
     "name": "hello",
     "phase": "login",
-    "side": "clientbound",
-    "id": 1
+    "side": "clientbound"
   },
   {
+    "id": 2,
     "name": "login_finished",
     "phase": "login",
-    "side": "clientbound",
-    "id": 2
+    "side": "clientbound"
   },
   {
+    "id": 3,
     "name": "login_compression",
     "phase": "login",
-    "side": "clientbound",
-    "id": 3
+    "side": "clientbound"
   },
   {
+    "id": 4,
     "name": "custom_query",
     "phase": "login",
-    "side": "clientbound",
-    "id": 4
+    "side": "clientbound"
   },
   {
+    "id": 5,
     "name": "cookie_request",
     "phase": "login",
-    "side": "clientbound",
-    "id": 5
+    "side": "clientbound"
   },
   {
+    "id": 0,
     "name": "client_information",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 0
+    "side": "serverbound"
   },
   {
+    "id": 1,
     "name": "cookie_response",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 1
+    "side": "serverbound"
   },
   {
+    "id": 2,
     "name": "custom_payload",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 2
+    "side": "serverbound"
   },
   {
+    "id": 3,
     "name": "finish_configuration",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 3
+    "side": "serverbound"
   },
   {
+    "id": 4,
     "name": "keep_alive",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 4
+    "side": "serverbound"
   },
   {
+    "id": 5,
     "name": "pong",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 5
+    "side": "serverbound"
   },
   {
+    "id": 6,
     "name": "resource_pack",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 6
+    "side": "serverbound"
   },
   {
+    "id": 7,
     "name": "select_known_packs",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 7
+    "side": "serverbound"
   },
   {
+    "id": 8,
     "name": "custom_click_action",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 8
+    "side": "serverbound"
   },
   {
+    "id": 9,
     "name": "accept_code_of_conduct",
     "phase": "configuration",
-    "side": "serverbound",
-    "id": 9
+    "side": "serverbound"
   },
   {
+    "id": 0,
     "name": "cookie_request",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 0
+    "side": "clientbound"
   },
   {
+    "id": 1,
     "name": "custom_payload",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 1
+    "side": "clientbound"
   },
   {
+    "id": 2,
     "name": "disconnect",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 2
+    "side": "clientbound"
   },
   {
+    "id": 3,
     "name": "finish_configuration",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 3
+    "side": "clientbound"
   },
   {
+    "id": 4,
     "name": "keep_alive",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 4
+    "side": "clientbound"
   },
   {
+    "id": 5,
     "name": "ping",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 5
+    "side": "clientbound"
   },
   {
+    "id": 6,
     "name": "reset_chat",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 6
+    "side": "clientbound"
   },
   {
+    "id": 7,
     "name": "registry_data",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 7
+    "side": "clientbound"
   },
   {
+    "id": 8,
     "name": "resource_pack_pop",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 8
+    "side": "clientbound"
   },
   {
+    "id": 9,
     "name": "resource_pack_push",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 9
+    "side": "clientbound"
   },
   {
+    "id": 10,
     "name": "store_cookie",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 10
+    "side": "clientbound"
   },
   {
+    "id": 11,
     "name": "transfer",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 11
+    "side": "clientbound"
   },
   {
+    "id": 12,
     "name": "update_enabled_features",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 12
+    "side": "clientbound"
   },
   {
+    "id": 13,
     "name": "update_tags",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 13
+    "side": "clientbound"
   },
   {
+    "id": 14,
     "name": "select_known_packs",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 14
+    "side": "clientbound"
   },
   {
+    "id": 15,
     "name": "custom_report_details",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 15
+    "side": "clientbound"
   },
   {
+    "id": 16,
     "name": "server_links",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 16
+    "side": "clientbound"
   },
   {
+    "id": 17,
     "name": "clear_dialog",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 17
+    "side": "clientbound"
   },
   {
+    "id": 18,
     "name": "show_dialog",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 18
+    "side": "clientbound"
   },
   {
+    "id": 19,
     "name": "code_of_conduct",
     "phase": "configuration",
-    "side": "clientbound",
-    "id": 19
+    "side": "clientbound"
   },
   {
+    "id": 0,
     "name": "accept_teleportation",
     "phase": "play",
-    "side": "serverbound",
-    "id": 0
+    "side": "serverbound"
   },
   {
+    "id": 1,
     "name": "attack",
     "phase": "play",
-    "side": "serverbound",
-    "id": 1
+    "side": "serverbound"
   },
   {
+    "id": 2,
     "name": "block_entity_tag_query",
     "phase": "play",
-    "side": "serverbound",
-    "id": 2
+    "side": "serverbound"
   },
   {
+    "id": 3,
     "name": "bundle_item_selected",
     "phase": "play",
-    "side": "serverbound",
-    "id": 3
+    "side": "serverbound"
   },
   {
+    "id": 4,
     "name": "change_difficulty",
     "phase": "play",
-    "side": "serverbound",
-    "id": 4
+    "side": "serverbound"
   },
   {
+    "id": 5,
     "name": "change_game_mode",
     "phase": "play",
-    "side": "serverbound",
-    "id": 5
+    "side": "serverbound"
   },
   {
+    "id": 6,
     "name": "chat_ack",
     "phase": "play",
-    "side": "serverbound",
-    "id": 6
+    "side": "serverbound"
   },
   {
+    "id": 7,
     "name": "chat_command",
     "phase": "play",
-    "side": "serverbound",
-    "id": 7
+    "side": "serverbound"
   },
   {
+    "id": 8,
     "name": "chat_command_signed",
     "phase": "play",
-    "side": "serverbound",
-    "id": 8
+    "side": "serverbound"
   },
   {
+    "id": 9,
     "name": "chat",
     "phase": "play",
-    "side": "serverbound",
-    "id": 9
+    "side": "serverbound"
   },
   {
+    "id": 10,
     "name": "chat_session_update",
     "phase": "play",
-    "side": "serverbound",
-    "id": 10
+    "side": "serverbound"
   },
   {
+    "id": 11,
     "name": "chunk_batch_received",
     "phase": "play",
-    "side": "serverbound",
-    "id": 11
+    "side": "serverbound"
   },
   {
+    "id": 12,
     "name": "client_command",
     "phase": "play",
-    "side": "serverbound",
-    "id": 12
+    "side": "serverbound"
   },
   {
+    "id": 13,
     "name": "client_tick_end",
     "phase": "play",
-    "side": "serverbound",
-    "id": 13
+    "side": "serverbound"
   },
   {
+    "id": 14,
     "name": "client_information",
     "phase": "play",
-    "side": "serverbound",
-    "id": 14
+    "side": "serverbound"
   },
   {
+    "id": 15,
     "name": "command_suggestion",
     "phase": "play",
-    "side": "serverbound",
-    "id": 15
+    "side": "serverbound"
   },
   {
+    "id": 16,
     "name": "configuration_acknowledged",
     "phase": "play",
-    "side": "serverbound",
-    "id": 16
+    "side": "serverbound"
   },
   {
+    "id": 17,
     "name": "container_button_click",
     "phase": "play",
-    "side": "serverbound",
-    "id": 17
+    "side": "serverbound"
   },
   {
+    "id": 18,
     "name": "container_click",
     "phase": "play",
-    "side": "serverbound",
-    "id": 18
+    "side": "serverbound"
   },
   {
+    "id": 19,
     "name": "container_close",
     "phase": "play",
-    "side": "serverbound",
-    "id": 19
+    "side": "serverbound"
   },
   {
+    "id": 20,
     "name": "container_slot_state_changed",
     "phase": "play",
-    "side": "serverbound",
-    "id": 20
+    "side": "serverbound"
   },
   {
+    "id": 21,
     "name": "cookie_response",
     "phase": "play",
-    "side": "serverbound",
-    "id": 21
+    "side": "serverbound"
   },
   {
+    "id": 22,
     "name": "custom_payload",
     "phase": "play",
-    "side": "serverbound",
-    "id": 22
+    "side": "serverbound"
   },
   {
+    "id": 23,
     "name": "debug_subscription_request",
     "phase": "play",
-    "side": "serverbound",
-    "id": 23
+    "side": "serverbound"
   },
   {
+    "id": 24,
     "name": "edit_book",
     "phase": "play",
-    "side": "serverbound",
-    "id": 24
+    "side": "serverbound"
   },
   {
+    "id": 25,
     "name": "entity_tag_query",
     "phase": "play",
-    "side": "serverbound",
-    "id": 25
+    "side": "serverbound"
   },
   {
+    "id": 26,
     "name": "interact",
     "phase": "play",
-    "side": "serverbound",
-    "id": 26
+    "side": "serverbound"
   },
   {
+    "id": 27,
     "name": "jigsaw_generate",
     "phase": "play",
-    "side": "serverbound",
-    "id": 27
+    "side": "serverbound"
   },
   {
+    "id": 28,
     "name": "keep_alive",
     "phase": "play",
-    "side": "serverbound",
-    "id": 28
+    "side": "serverbound"
   },
   {
+    "id": 29,
     "name": "lock_difficulty",
     "phase": "play",
-    "side": "serverbound",
-    "id": 29
+    "side": "serverbound"
   },
   {
+    "id": 30,
     "name": "move_player_pos",
     "phase": "play",
-    "side": "serverbound",
-    "id": 30
+    "side": "serverbound"
   },
   {
+    "id": 31,
     "name": "move_player_pos_rot",
     "phase": "play",
-    "side": "serverbound",
-    "id": 31
+    "side": "serverbound"
   },
   {
+    "id": 32,
     "name": "move_player_rot",
     "phase": "play",
-    "side": "serverbound",
-    "id": 32
+    "side": "serverbound"
   },
   {
+    "id": 33,
     "name": "move_player_status_only",
     "phase": "play",
-    "side": "serverbound",
-    "id": 33
+    "side": "serverbound"
   },
   {
+    "id": 34,
     "name": "move_vehicle",
     "phase": "play",
-    "side": "serverbound",
-    "id": 34
+    "side": "serverbound"
   },
   {
+    "id": 35,
     "name": "paddle_boat",
     "phase": "play",
-    "side": "serverbound",
-    "id": 35
+    "side": "serverbound"
   },
   {
+    "id": 36,
     "name": "pick_item_from_block",
     "phase": "play",
-    "side": "serverbound",
-    "id": 36
+    "side": "serverbound"
   },
   {
+    "id": 37,
     "name": "pick_item_from_entity",
     "phase": "play",
-    "side": "serverbound",
-    "id": 37
+    "side": "serverbound"
   },
   {
+    "id": 38,
     "name": "ping_request",
     "phase": "play",
-    "side": "serverbound",
-    "id": 38
+    "side": "serverbound"
   },
   {
+    "id": 39,
     "name": "place_recipe",
     "phase": "play",
-    "side": "serverbound",
-    "id": 39
+    "side": "serverbound"
   },
   {
+    "id": 40,
     "name": "player_abilities",
     "phase": "play",
-    "side": "serverbound",
-    "id": 40
+    "side": "serverbound"
   },
   {
+    "id": 41,
     "name": "player_action",
     "phase": "play",
-    "side": "serverbound",
-    "id": 41
+    "side": "serverbound"
   },
   {
+    "id": 42,
     "name": "player_command",
     "phase": "play",
-    "side": "serverbound",
-    "id": 42
+    "side": "serverbound"
   },
   {
+    "id": 43,
     "name": "player_input",
     "phase": "play",
-    "side": "serverbound",
-    "id": 43
+    "side": "serverbound"
   },
   {
+    "id": 44,
     "name": "player_loaded",
     "phase": "play",
-    "side": "serverbound",
-    "id": 44
+    "side": "serverbound"
   },
   {
+    "id": 45,
     "name": "pong",
     "phase": "play",
-    "side": "serverbound",
-    "id": 45
+    "side": "serverbound"
   },
   {
+    "id": 46,
     "name": "recipe_book_change_settings",
     "phase": "play",
-    "side": "serverbound",
-    "id": 46
+    "side": "serverbound"
   },
   {
+    "id": 47,
     "name": "recipe_book_seen_recipe",
     "phase": "play",
-    "side": "serverbound",
-    "id": 47
+    "side": "serverbound"
   },
   {
+    "id": 48,
     "name": "rename_item",
     "phase": "play",
-    "side": "serverbound",
-    "id": 48
+    "side": "serverbound"
   },
   {
+    "id": 49,
     "name": "resource_pack",
     "phase": "play",
-    "side": "serverbound",
-    "id": 49
+    "side": "serverbound"
   },
   {
+    "id": 50,
     "name": "seen_advancements",
     "phase": "play",
-    "side": "serverbound",
-    "id": 50
+    "side": "serverbound"
   },
   {
+    "id": 51,
     "name": "select_trade",
     "phase": "play",
-    "side": "serverbound",
-    "id": 51
+    "side": "serverbound"
   },
   {
+    "id": 52,
     "name": "set_beacon",
     "phase": "play",
-    "side": "serverbound",
-    "id": 52
+    "side": "serverbound"
   },
   {
+    "id": 53,
     "name": "set_carried_item",
     "phase": "play",
-    "side": "serverbound",
-    "id": 53
+    "side": "serverbound"
   },
   {
+    "id": 54,
     "name": "set_command_block",
     "phase": "play",
-    "side": "serverbound",
-    "id": 54
+    "side": "serverbound"
   },
   {
+    "id": 55,
     "name": "set_command_minecart",
     "phase": "play",
-    "side": "serverbound",
-    "id": 55
+    "side": "serverbound"
   },
   {
+    "id": 56,
     "name": "set_creative_mode_slot",
     "phase": "play",
-    "side": "serverbound",
-    "id": 56
+    "side": "serverbound"
   },
   {
+    "id": 57,
     "name": "set_game_rule",
     "phase": "play",
-    "side": "serverbound",
-    "id": 57
+    "side": "serverbound"
   },
   {
+    "id": 58,
     "name": "set_jigsaw_block",
     "phase": "play",
-    "side": "serverbound",
-    "id": 58
+    "side": "serverbound"
   },
   {
+    "id": 59,
     "name": "set_structure_block",
     "phase": "play",
-    "side": "serverbound",
-    "id": 59
+    "side": "serverbound"
   },
   {
+    "id": 60,
     "name": "set_test_block",
     "phase": "play",
-    "side": "serverbound",
-    "id": 60
+    "side": "serverbound"
   },
   {
+    "id": 61,
     "name": "sign_update",
     "phase": "play",
-    "side": "serverbound",
-    "id": 61
+    "side": "serverbound"
   },
   {
+    "id": 62,
     "name": "spectator_action",
     "phase": "play",
-    "side": "serverbound",
-    "id": 62
+    "side": "serverbound"
   },
   {
+    "id": 63,
     "name": "swing",
     "phase": "play",
-    "side": "serverbound",
-    "id": 63
+    "side": "serverbound"
   },
   {
+    "id": 64,
     "name": "teleport_to_entity",
     "phase": "play",
-    "side": "serverbound",
-    "id": 64
+    "side": "serverbound"
   },
   {
+    "id": 65,
     "name": "test_instance_block_action",
     "phase": "play",
-    "side": "serverbound",
-    "id": 65
+    "side": "serverbound"
   },
   {
+    "id": 66,
     "name": "use_item_on",
     "phase": "play",
-    "side": "serverbound",
-    "id": 66
+    "side": "serverbound"
   },
   {
+    "id": 67,
     "name": "use_item",
     "phase": "play",
-    "side": "serverbound",
-    "id": 67
+    "side": "serverbound"
   },
   {
+    "id": 68,
     "name": "custom_click_action",
     "phase": "play",
-    "side": "serverbound",
-    "id": 68
+    "side": "serverbound"
   },
   {
+    "id": 0,
     "name": "bundle_delimiter",
     "phase": "play",
-    "side": "clientbound",
-    "id": 0
+    "side": "clientbound"
   },
   {
+    "id": 1,
     "name": "add_entity",
     "phase": "play",
-    "side": "clientbound",
-    "id": 1
+    "side": "clientbound"
   },
   {
+    "id": 2,
     "name": "animate",
     "phase": "play",
-    "side": "clientbound",
-    "id": 2
+    "side": "clientbound"
   },
   {
+    "id": 3,
     "name": "award_stats",
     "phase": "play",
-    "side": "clientbound",
-    "id": 3
+    "side": "clientbound"
   },
   {
+    "id": 4,
     "name": "block_changed_ack",
     "phase": "play",
-    "side": "clientbound",
-    "id": 4
+    "side": "clientbound"
   },
   {
+    "id": 5,
     "name": "block_destruction",
     "phase": "play",
-    "side": "clientbound",
-    "id": 5
+    "side": "clientbound"
   },
   {
+    "id": 6,
     "name": "block_entity_data",
     "phase": "play",
-    "side": "clientbound",
-    "id": 6
+    "side": "clientbound"
   },
   {
+    "id": 7,
     "name": "block_event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 7
+    "side": "clientbound"
   },
   {
+    "id": 8,
     "name": "block_update",
     "phase": "play",
-    "side": "clientbound",
-    "id": 8
+    "side": "clientbound"
   },
   {
+    "id": 9,
     "name": "boss_event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 9
+    "side": "clientbound"
   },
   {
+    "id": 10,
     "name": "change_difficulty",
     "phase": "play",
-    "side": "clientbound",
-    "id": 10
+    "side": "clientbound"
   },
   {
+    "id": 11,
     "name": "chunk_batch_finished",
     "phase": "play",
-    "side": "clientbound",
-    "id": 11
+    "side": "clientbound"
   },
   {
+    "id": 12,
     "name": "chunk_batch_start",
     "phase": "play",
-    "side": "clientbound",
-    "id": 12
+    "side": "clientbound"
   },
   {
+    "id": 13,
     "name": "chunks_biomes",
     "phase": "play",
-    "side": "clientbound",
-    "id": 13
+    "side": "clientbound"
   },
   {
+    "id": 14,
     "name": "clear_titles",
     "phase": "play",
-    "side": "clientbound",
-    "id": 14
+    "side": "clientbound"
   },
   {
+    "id": 15,
     "name": "command_suggestions",
     "phase": "play",
-    "side": "clientbound",
-    "id": 15
+    "side": "clientbound"
   },
   {
+    "id": 16,
     "name": "commands",
     "phase": "play",
-    "side": "clientbound",
-    "id": 16
+    "side": "clientbound"
   },
   {
+    "id": 17,
     "name": "container_close",
     "phase": "play",
-    "side": "clientbound",
-    "id": 17
+    "side": "clientbound"
   },
   {
+    "id": 18,
     "name": "container_set_content",
     "phase": "play",
-    "side": "clientbound",
-    "id": 18
+    "side": "clientbound"
   },
   {
+    "id": 19,
     "name": "container_set_data",
     "phase": "play",
-    "side": "clientbound",
-    "id": 19
+    "side": "clientbound"
   },
   {
+    "id": 20,
     "name": "container_set_slot",
     "phase": "play",
-    "side": "clientbound",
-    "id": 20
+    "side": "clientbound"
   },
   {
+    "id": 21,
     "name": "cookie_request",
     "phase": "play",
-    "side": "clientbound",
-    "id": 21
+    "side": "clientbound"
   },
   {
+    "id": 22,
     "name": "cooldown",
     "phase": "play",
-    "side": "clientbound",
-    "id": 22
+    "side": "clientbound"
   },
   {
+    "id": 23,
     "name": "custom_chat_completions",
     "phase": "play",
-    "side": "clientbound",
-    "id": 23
+    "side": "clientbound"
   },
   {
+    "id": 24,
     "name": "custom_payload",
     "phase": "play",
-    "side": "clientbound",
-    "id": 24
+    "side": "clientbound"
   },
   {
+    "id": 25,
     "name": "damage_event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 25
+    "side": "clientbound"
   },
   {
+    "id": 26,
     "name": "debug/block_value",
     "phase": "play",
-    "side": "clientbound",
-    "id": 26
+    "side": "clientbound"
   },
   {
+    "id": 27,
     "name": "debug/chunk_value",
     "phase": "play",
-    "side": "clientbound",
-    "id": 27
+    "side": "clientbound"
   },
   {
+    "id": 28,
     "name": "debug/entity_value",
     "phase": "play",
-    "side": "clientbound",
-    "id": 28
+    "side": "clientbound"
   },
   {
+    "id": 29,
     "name": "debug/event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 29
+    "side": "clientbound"
   },
   {
+    "id": 30,
     "name": "debug_sample",
     "phase": "play",
-    "side": "clientbound",
-    "id": 30
+    "side": "clientbound"
   },
   {
+    "id": 31,
     "name": "delete_chat",
     "phase": "play",
-    "side": "clientbound",
-    "id": 31
+    "side": "clientbound"
   },
   {
+    "id": 32,
     "name": "disconnect",
     "phase": "play",
-    "side": "clientbound",
-    "id": 32
+    "side": "clientbound"
   },
   {
+    "id": 33,
     "name": "disguised_chat",
     "phase": "play",
-    "side": "clientbound",
-    "id": 33
+    "side": "clientbound"
   },
   {
+    "id": 34,
     "name": "entity_event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 34
+    "side": "clientbound"
   },
   {
+    "id": 35,
     "name": "entity_position_sync",
     "phase": "play",
-    "side": "clientbound",
-    "id": 35
+    "side": "clientbound"
   },
   {
+    "id": 36,
     "name": "explode",
     "phase": "play",
-    "side": "clientbound",
-    "id": 36
+    "side": "clientbound"
   },
   {
+    "id": 37,
     "name": "forget_level_chunk",
     "phase": "play",
-    "side": "clientbound",
-    "id": 37
+    "side": "clientbound"
   },
   {
+    "id": 38,
     "name": "game_event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 38
+    "side": "clientbound"
   },
   {
+    "id": 39,
     "name": "game_rule_values",
     "phase": "play",
-    "side": "clientbound",
-    "id": 39
+    "side": "clientbound"
   },
   {
+    "id": 40,
     "name": "game_test_highlight_pos",
     "phase": "play",
-    "side": "clientbound",
-    "id": 40
+    "side": "clientbound"
   },
   {
+    "id": 41,
     "name": "mount_screen_open",
     "phase": "play",
-    "side": "clientbound",
-    "id": 41
+    "side": "clientbound"
   },
   {
+    "id": 42,
     "name": "hurt_animation",
     "phase": "play",
-    "side": "clientbound",
-    "id": 42
+    "side": "clientbound"
   },
   {
+    "id": 43,
     "name": "initialize_border",
     "phase": "play",
-    "side": "clientbound",
-    "id": 43
+    "side": "clientbound"
   },
   {
+    "id": 44,
     "name": "keep_alive",
     "phase": "play",
-    "side": "clientbound",
-    "id": 44
+    "side": "clientbound"
   },
   {
+    "id": 45,
     "name": "level_chunk_with_light",
     "phase": "play",
-    "side": "clientbound",
-    "id": 45
+    "side": "clientbound"
   },
   {
+    "id": 46,
     "name": "level_event",
     "phase": "play",
-    "side": "clientbound",
-    "id": 46
+    "side": "clientbound"
   },
   {
+    "id": 47,
     "name": "level_particles",
     "phase": "play",
-    "side": "clientbound",
-    "id": 47
+    "side": "clientbound"
   },
   {
+    "id": 48,
     "name": "light_update",
     "phase": "play",
-    "side": "clientbound",
-    "id": 48
+    "side": "clientbound"
   },
   {
+    "id": 49,
     "name": "login",
     "phase": "play",
-    "side": "clientbound",
-    "id": 49
+    "side": "clientbound"
   },
   {
+    "id": 50,
     "name": "low_disk_space_warning",
     "phase": "play",
-    "side": "clientbound",
-    "id": 50
+    "side": "clientbound"
   },
   {
+    "id": 51,
     "name": "map_item_data",
     "phase": "play",
-    "side": "clientbound",
-    "id": 51
+    "side": "clientbound"
   },
   {
+    "id": 52,
     "name": "merchant_offers",
     "phase": "play",
-    "side": "clientbound",
-    "id": 52
+    "side": "clientbound"
   },
   {
+    "id": 53,
     "name": "move_entity_pos",
     "phase": "play",
-    "side": "clientbound",
-    "id": 53
+    "side": "clientbound"
   },
   {
+    "id": 54,
     "name": "move_entity_pos_rot",
     "phase": "play",
-    "side": "clientbound",
-    "id": 54
+    "side": "clientbound"
   },
   {
+    "id": 55,
     "name": "move_minecart_along_track",
     "phase": "play",
-    "side": "clientbound",
-    "id": 55
+    "side": "clientbound"
   },
   {
+    "id": 56,
     "name": "move_entity_rot",
     "phase": "play",
-    "side": "clientbound",
-    "id": 56
+    "side": "clientbound"
   },
   {
+    "id": 57,
     "name": "move_vehicle",
     "phase": "play",
-    "side": "clientbound",
-    "id": 57
+    "side": "clientbound"
   },
   {
+    "id": 58,
     "name": "open_book",
     "phase": "play",
-    "side": "clientbound",
-    "id": 58
+    "side": "clientbound"
   },
   {
+    "id": 59,
     "name": "open_screen",
     "phase": "play",
-    "side": "clientbound",
-    "id": 59
+    "side": "clientbound"
   },
   {
+    "id": 60,
     "name": "open_sign_editor",
     "phase": "play",
-    "side": "clientbound",
-    "id": 60
+    "side": "clientbound"
   },
   {
+    "id": 61,
     "name": "ping",
     "phase": "play",
-    "side": "clientbound",
-    "id": 61
+    "side": "clientbound"
   },
   {
+    "id": 62,
     "name": "pong_response",
     "phase": "play",
-    "side": "clientbound",
-    "id": 62
+    "side": "clientbound"
   },
   {
+    "id": 63,
     "name": "place_ghost_recipe",
     "phase": "play",
-    "side": "clientbound",
-    "id": 63
+    "side": "clientbound"
   },
   {
+    "id": 64,
     "name": "player_abilities",
     "phase": "play",
-    "side": "clientbound",
-    "id": 64
+    "side": "clientbound"
   },
   {
+    "id": 65,
     "name": "player_chat",
     "phase": "play",
-    "side": "clientbound",
-    "id": 65
+    "side": "clientbound"
   },
   {
+    "id": 66,
     "name": "player_combat_end",
     "phase": "play",
-    "side": "clientbound",
-    "id": 66
+    "side": "clientbound"
   },
   {
+    "id": 67,
     "name": "player_combat_enter",
     "phase": "play",
-    "side": "clientbound",
-    "id": 67
+    "side": "clientbound"
   },
   {
+    "id": 68,
     "name": "player_combat_kill",
     "phase": "play",
-    "side": "clientbound",
-    "id": 68
+    "side": "clientbound"
   },
   {
+    "id": 69,
     "name": "player_info_remove",
     "phase": "play",
-    "side": "clientbound",
-    "id": 69
+    "side": "clientbound"
   },
   {
+    "id": 70,
     "name": "player_info_update",
     "phase": "play",
-    "side": "clientbound",
-    "id": 70
+    "side": "clientbound"
   },
   {
+    "id": 71,
     "name": "player_look_at",
     "phase": "play",
-    "side": "clientbound",
-    "id": 71
+    "side": "clientbound"
   },
   {
+    "id": 72,
     "name": "player_position",
     "phase": "play",
-    "side": "clientbound",
-    "id": 72
+    "side": "clientbound"
   },
   {
+    "id": 73,
     "name": "player_rotation",
     "phase": "play",
-    "side": "clientbound",
-    "id": 73
+    "side": "clientbound"
   },
   {
+    "id": 74,
     "name": "recipe_book_add",
     "phase": "play",
-    "side": "clientbound",
-    "id": 74
+    "side": "clientbound"
   },
   {
+    "id": 75,
     "name": "recipe_book_remove",
     "phase": "play",
-    "side": "clientbound",
-    "id": 75
+    "side": "clientbound"
   },
   {
+    "id": 76,
     "name": "recipe_book_settings",
     "phase": "play",
-    "side": "clientbound",
-    "id": 76
+    "side": "clientbound"
   },
   {
+    "id": 77,
     "name": "remove_entities",
     "phase": "play",
-    "side": "clientbound",
-    "id": 77
+    "side": "clientbound"
   },
   {
+    "id": 78,
     "name": "remove_mob_effect",
     "phase": "play",
-    "side": "clientbound",
-    "id": 78
+    "side": "clientbound"
   },
   {
+    "id": 79,
     "name": "reset_score",
     "phase": "play",
-    "side": "clientbound",
-    "id": 79
+    "side": "clientbound"
   },
   {
+    "id": 80,
     "name": "resource_pack_pop",
     "phase": "play",
-    "side": "clientbound",
-    "id": 80
+    "side": "clientbound"
   },
   {
+    "id": 81,
     "name": "resource_pack_push",
     "phase": "play",
-    "side": "clientbound",
-    "id": 81
+    "side": "clientbound"
   },
   {
+    "id": 82,
     "name": "respawn",
     "phase": "play",
-    "side": "clientbound",
-    "id": 82
+    "side": "clientbound"
   },
   {
+    "id": 83,
     "name": "rotate_head",
     "phase": "play",
-    "side": "clientbound",
-    "id": 83
+    "side": "clientbound"
   },
   {
+    "id": 84,
     "name": "section_blocks_update",
     "phase": "play",
-    "side": "clientbound",
-    "id": 84
+    "side": "clientbound"
   },
   {
+    "id": 85,
     "name": "select_advancements_tab",
     "phase": "play",
-    "side": "clientbound",
-    "id": 85
+    "side": "clientbound"
   },
   {
+    "id": 86,
     "name": "server_data",
     "phase": "play",
-    "side": "clientbound",
-    "id": 86
+    "side": "clientbound"
   },
   {
+    "id": 87,
     "name": "set_action_bar_text",
     "phase": "play",
-    "side": "clientbound",
-    "id": 87
+    "side": "clientbound"
   },
   {
+    "id": 88,
     "name": "set_border_center",
     "phase": "play",
-    "side": "clientbound",
-    "id": 88
+    "side": "clientbound"
   },
   {
+    "id": 89,
     "name": "set_border_lerp_size",
     "phase": "play",
-    "side": "clientbound",
-    "id": 89
+    "side": "clientbound"
   },
   {
+    "id": 90,
     "name": "set_border_size",
     "phase": "play",
-    "side": "clientbound",
-    "id": 90
+    "side": "clientbound"
   },
   {
+    "id": 91,
     "name": "set_border_warning_delay",
     "phase": "play",
-    "side": "clientbound",
-    "id": 91
+    "side": "clientbound"
   },
   {
+    "id": 92,
     "name": "set_border_warning_distance",
     "phase": "play",
-    "side": "clientbound",
-    "id": 92
+    "side": "clientbound"
   },
   {
+    "id": 93,
     "name": "set_camera",
     "phase": "play",
-    "side": "clientbound",
-    "id": 93
+    "side": "clientbound"
   },
   {
+    "id": 94,
     "name": "set_chunk_cache_center",
     "phase": "play",
-    "side": "clientbound",
-    "id": 94
+    "side": "clientbound"
   },
   {
+    "id": 95,
     "name": "set_chunk_cache_radius",
     "phase": "play",
-    "side": "clientbound",
-    "id": 95
+    "side": "clientbound"
   },
   {
+    "id": 96,
     "name": "set_cursor_item",
     "phase": "play",
-    "side": "clientbound",
-    "id": 96
+    "side": "clientbound"
   },
   {
+    "id": 97,
     "name": "set_default_spawn_position",
     "phase": "play",
-    "side": "clientbound",
-    "id": 97
+    "side": "clientbound"
   },
   {
+    "id": 98,
     "name": "set_display_objective",
     "phase": "play",
-    "side": "clientbound",
-    "id": 98
+    "side": "clientbound"
   },
   {
+    "id": 99,
     "name": "set_entity_data",
     "phase": "play",
-    "side": "clientbound",
-    "id": 99
+    "side": "clientbound"
   },
   {
+    "id": 100,
     "name": "set_entity_link",
     "phase": "play",
-    "side": "clientbound",
-    "id": 100
+    "side": "clientbound"
   },
   {
+    "id": 101,
     "name": "set_entity_motion",
     "phase": "play",
-    "side": "clientbound",
-    "id": 101
+    "side": "clientbound"
   },
   {
+    "id": 102,
     "name": "set_equipment",
     "phase": "play",
-    "side": "clientbound",
-    "id": 102
+    "side": "clientbound"
   },
   {
+    "id": 103,
     "name": "set_experience",
     "phase": "play",
-    "side": "clientbound",
-    "id": 103
+    "side": "clientbound"
   },
   {
+    "id": 104,
     "name": "set_health",
     "phase": "play",
-    "side": "clientbound",
-    "id": 104
+    "side": "clientbound"
   },
   {
+    "id": 105,
     "name": "set_held_slot",
     "phase": "play",
-    "side": "clientbound",
-    "id": 105
+    "side": "clientbound"
   },
   {
+    "id": 106,
     "name": "set_objective",
     "phase": "play",
-    "side": "clientbound",
-    "id": 106
+    "side": "clientbound"
   },
   {
+    "id": 107,
     "name": "set_passengers",
     "phase": "play",
-    "side": "clientbound",
-    "id": 107
+    "side": "clientbound"
   },
   {
+    "id": 108,
     "name": "set_player_inventory",
     "phase": "play",
-    "side": "clientbound",
-    "id": 108
+    "side": "clientbound"
   },
   {
+    "id": 109,
     "name": "set_player_team",
     "phase": "play",
-    "side": "clientbound",
-    "id": 109
+    "side": "clientbound"
   },
   {
+    "id": 110,
     "name": "set_score",
     "phase": "play",
-    "side": "clientbound",
-    "id": 110
+    "side": "clientbound"
   },
   {
+    "id": 111,
     "name": "set_simulation_distance",
     "phase": "play",
-    "side": "clientbound",
-    "id": 111
+    "side": "clientbound"
   },
   {
+    "id": 112,
     "name": "set_subtitle_text",
     "phase": "play",
-    "side": "clientbound",
-    "id": 112
+    "side": "clientbound"
   },
   {
+    "id": 113,
     "name": "set_time",
     "phase": "play",
-    "side": "clientbound",
-    "id": 113
+    "side": "clientbound"
   },
   {
+    "id": 114,
     "name": "set_title_text",
     "phase": "play",
-    "side": "clientbound",
-    "id": 114
+    "side": "clientbound"
   },
   {
+    "id": 115,
     "name": "set_titles_animation",
     "phase": "play",
-    "side": "clientbound",
-    "id": 115
+    "side": "clientbound"
   },
   {
+    "id": 116,
     "name": "sound_entity",
     "phase": "play",
-    "side": "clientbound",
-    "id": 116
+    "side": "clientbound"
   },
   {
+    "id": 117,
     "name": "sound",
     "phase": "play",
-    "side": "clientbound",
-    "id": 117
+    "side": "clientbound"
   },
   {
+    "id": 118,
     "name": "start_configuration",
     "phase": "play",
-    "side": "clientbound",
-    "id": 118
+    "side": "clientbound"
   },
   {
+    "id": 119,
     "name": "stop_sound",
     "phase": "play",
-    "side": "clientbound",
-    "id": 119
+    "side": "clientbound"
   },
   {
+    "id": 120,
     "name": "store_cookie",
     "phase": "play",
-    "side": "clientbound",
-    "id": 120
+    "side": "clientbound"
   },
   {
+    "id": 121,
     "name": "system_chat",
     "phase": "play",
-    "side": "clientbound",
-    "id": 121
+    "side": "clientbound"
   },
   {
+    "id": 122,
     "name": "tab_list",
     "phase": "play",
-    "side": "clientbound",
-    "id": 122
+    "side": "clientbound"
   },
   {
+    "id": 123,
     "name": "tag_query",
     "phase": "play",
-    "side": "clientbound",
-    "id": 123
+    "side": "clientbound"
   },
   {
+    "id": 124,
     "name": "take_item_entity",
     "phase": "play",
-    "side": "clientbound",
-    "id": 124
+    "side": "clientbound"
   },
   {
+    "id": 125,
     "name": "teleport_entity",
     "phase": "play",
-    "side": "clientbound",
-    "id": 125
+    "side": "clientbound"
   },
   {
+    "id": 126,
     "name": "test_instance_block_status",
     "phase": "play",
-    "side": "clientbound",
-    "id": 126
+    "side": "clientbound"
   },
   {
+    "id": 127,
     "name": "ticking_state",
     "phase": "play",
-    "side": "clientbound",
-    "id": 127
+    "side": "clientbound"
   },
   {
+    "id": 128,
     "name": "ticking_step",
     "phase": "play",
-    "side": "clientbound",
-    "id": 128
+    "side": "clientbound"
   },
   {
+    "id": 129,
     "name": "transfer",
     "phase": "play",
-    "side": "clientbound",
-    "id": 129
+    "side": "clientbound"
   },
   {
+    "id": 130,
     "name": "update_advancements",
     "phase": "play",
-    "side": "clientbound",
-    "id": 130
+    "side": "clientbound"
   },
   {
+    "id": 131,
     "name": "update_attributes",
     "phase": "play",
-    "side": "clientbound",
-    "id": 131
+    "side": "clientbound"
   },
   {
+    "id": 132,
     "name": "update_mob_effect",
     "phase": "play",
-    "side": "clientbound",
-    "id": 132
+    "side": "clientbound"
   },
   {
+    "id": 133,
     "name": "update_recipes",
     "phase": "play",
-    "side": "clientbound",
-    "id": 133
+    "side": "clientbound"
   },
   {
+    "id": 134,
     "name": "update_tags",
     "phase": "play",
-    "side": "clientbound",
-    "id": 134
+    "side": "clientbound"
   },
   {
+    "id": 135,
     "name": "projectile_power",
     "phase": "play",
-    "side": "clientbound",
-    "id": 135
+    "side": "clientbound"
   },
   {
+    "id": 136,
     "name": "custom_report_details",
     "phase": "play",
-    "side": "clientbound",
-    "id": 136
+    "side": "clientbound"
   },
   {
+    "id": 137,
     "name": "server_links",
     "phase": "play",
-    "side": "clientbound",
-    "id": 137
+    "side": "clientbound"
   },
   {
+    "id": 138,
     "name": "waypoint",
     "phase": "play",
-    "side": "clientbound",
-    "id": 138
+    "side": "clientbound"
   },
   {
+    "id": 139,
     "name": "clear_dialog",
     "phase": "play",
-    "side": "clientbound",
-    "id": 139
+    "side": "clientbound"
   },
   {
+    "id": 140,
     "name": "show_dialog",
     "phase": "play",
-    "side": "clientbound",
-    "id": 140
+    "side": "clientbound"
   }
 ]

@@ -23,9 +23,12 @@ struct Entity {
 
 #[derive(Deserialize, Clone, Debug)]
 struct BoundingBox {
-    size_x: f64,
-    size_y: f64,
-    size_z: f64,
+    #[serde(rename = "size_x")]
+    x: f64,
+    #[serde(rename = "size_y")]
+    y: f64,
+    #[serde(rename = "size_z")]
+    z: f64,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -626,7 +629,7 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
                 .default_bounding_box
                 .with_context(|| format!("missing default bounding box for {typ}"))?;
             anyhow::ensure!(
-                [size.size_x, size.size_y, size.size_z]
+                [size.x, size.y, size.z]
                     .into_iter()
                     .all(|dimension| dimension.is_finite() && dimension >= 0.0),
                 "invalid default bounding box for {typ}"
@@ -657,7 +660,7 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
             anyhow::bail!("missing default bounding box for entity type {name}");
         };
         let size = &boxes[source];
-        let (x, y, z) = (size.size_x, size.size_y, size.size_z);
+        let (x, y, z) = (size.x, size.y, size.z);
         arms.push(quote! { #id => Some(chunkedge_math::DVec3::new(#x, #y, #z)), });
     }
 

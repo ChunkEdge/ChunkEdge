@@ -15,6 +15,14 @@ struct Entity {
     fields: Vec<Field>,
     attributes: Option<Vec<Attribute>>,
     parent: Option<String>,
+    default_bounding_box: Option<BoundingBox>,
+}
+
+#[derive(Deserialize, Clone, Debug)]
+struct BoundingBox {
+    size_x: f64,
+    size_y: f64,
+    size_z: f64,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -25,6 +33,12 @@ struct EntityTypes {
 #[derive(Deserialize)]
 struct PaintingVariants {
     painting_variant: BTreeMap<String, i32>,
+}
+
+#[derive(Deserialize)]
+struct PaintingDimensions {
+    width: u32,
+    height: u32,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -472,10 +486,15 @@ impl Value {
 type Entities = BTreeMap<String, Entity>;
 
 pub fn main() -> anyhow::Result<()> {
-    rerun_if_changed(["extracted/misc.json", "extracted/entities.json"]);
+    rerun_if_changed([
+        "extracted/misc.json",
+        "extracted/entities.json",
+        "extracted/paintings.json",
+    ]);
 
     write_generated_file(build_entities()?, "entity.rs")?;
     write_generated_file(build_painting_kind()?, "painting_kind.rs")?;
+    write_generated_file(build_entity_hitbox_defaults()?, "entity_hitbox_defaults.rs")?;
 
     Ok(())
 }
@@ -485,6 +504,15 @@ fn build_painting_kind() -> anyhow::Result<TokenStream> {
         .context("failed to deserialize painting variants from misc.json")?;
     let mut paintings: Vec<_> = paintings.painting_variant.into_iter().collect();
     paintings.sort_by_key(|(_, id)| *id);
+    // paintings.json is the extractor's standalone copy of the painting_variant registry codec.
+    let dimensions: BTreeMap<String, PaintingDimensions> =
+        serde_json::from_str(include_str!("extracted/paintings.json"))
+            .context("failed to deserialize paintings.json")?;
+
+    anyhow::ensure!(
+        paintings.len() == dimensions.len(),
+        "painting IDs and painting definitions have different counts"
+    );
 
     for (expected, (name, id)) in paintings.iter().enumerate() {
         anyhow::ensure!(
@@ -506,6 +534,19 @@ fn build_painting_kind() -> anyhow::Result<TokenStream> {
         .iter()
         .map(|(name, _)| ident(name.to_pascal_case()))
         .collect();
+    let sizes: Vec<_> = paintings
+        .iter()
+        .map(|(name, _)| {
+            let PaintingDimensions { width, height } = dimensions
+                .get(&format!("minecraft:{name}"))
+                .with_context(|| format!("missing dimensions for painting {name}"))?;
+            anyhow::ensure!(
+                *width > 0 && *height > 0,
+                "painting {name} has invalid dimensions"
+            );
+            Ok(quote! { [#width, #height], })
+        })
+        .collect::<anyhow::Result<_>>()?;
 
     anyhow::ensure!(
         paintings.iter().any(|(name, _)| name == "alban"),
@@ -529,6 +570,113 @@ fn build_painting_kind() -> anyhow::Result<TokenStream> {
             pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
                 let idx = usize::try_from(id.id()).ok()?;
                 Self::ALL.get(idx).copied()
+            }
+
+            pub(crate) fn hitbox_bounds(self) -> chunkedge_math::UVec3 {
+                const DIMENSIONS: [[u32; 2]; #count] = [#(#sizes)*];
+                let [width, height] = DIMENSIONS[self as usize];
+                chunkedge_math::UVec3::new(width, height, width)
+            }
+        }
+    })
+}
+
+fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
+    // entities.json records default bounds, but not which hitboxes change at runtime.
+    // Keep this list in sync with the update_*_hitbox handlers in src/hitbox.rs,
+    // including the kinds matched by update_passive_child_hitbox. Marker is excluded
+    // so its hitbox stays user-managed. When updating MC, review new or changed
+    // entity kinds against those handlers and their pose, age, data, and facing rules.
+    const DYNAMIC: &[&str] = &[
+        "area_effect_cloud",
+        "armor_stand",
+        "bee",
+        "camel",
+        "chicken",
+        "donkey",
+        "fox",
+        "glow_item_frame",
+        "goat",
+        "hoglin",
+        "horse",
+        "item_frame",
+        "llama",
+        "magma_cube",
+        "marker",
+        "mooshroom",
+        "mule",
+        "ocelot",
+        "painting",
+        "panda",
+        "pig",
+        "piglin",
+        "player",
+        "polar_bear",
+        "rabbit",
+        "sheep",
+        "shulker",
+        "skeleton_horse",
+        "slime",
+        "sulfur_cube",
+        "turtle",
+        "villager",
+        "warden",
+        "wolf",
+        "zoglin",
+        "zombie",
+        "zombie_horse",
+    ];
+
+    let entity_types =
+        serde_json::from_str::<EntityTypes>(include_str!("extracted/misc.json"))?.entity_type;
+    let entities: Entities = serde_json::from_str(include_str!("extracted/entities.json"))?;
+    let mut boxes = BTreeMap::new();
+    for entity in entities.into_values() {
+        if let Some(typ) = entity.typ {
+            let size = entity
+                .default_bounding_box
+                .with_context(|| format!("missing default bounding box for {typ}"))?;
+            anyhow::ensure!(
+                [size.size_x, size.size_y, size.size_z]
+                    .into_iter()
+                    .all(|dimension| dimension.is_finite() && dimension >= 0.0),
+                "invalid default bounding box for {typ}"
+            );
+            boxes.insert(typ, size);
+        }
+    }
+
+    for name in DYNAMIC {
+        anyhow::ensure!(
+            entity_types.contains_key(*name),
+            "unknown dynamic entity {name}"
+        );
+    }
+
+    let mut arms = Vec::new();
+    for (name, id) in entity_types {
+        if DYNAMIC.contains(&name.as_str()) {
+            continue;
+        }
+        let source = if boxes.contains_key(&name) {
+            name.as_str()
+        } else if name.ends_with("_chest_boat") {
+            "acacia_chest_boat"
+        } else if name.ends_with("_boat") {
+            "acacia_boat"
+        } else {
+            anyhow::bail!("missing default bounding box for entity type {name}");
+        };
+        let size = &boxes[source];
+        let (x, y, z) = (size.size_x, size.size_y, size.size_z);
+        arms.push(quote! { #id => Some(chunkedge_math::DVec3::new(#x, #y, #z)), });
+    }
+
+    Ok(quote! {
+        fn default_entity_hitbox_size(kind: crate::EntityKind) -> Option<chunkedge_math::DVec3> {
+            match kind.get() {
+                #(#arms)*
+                _ => None,
             }
         }
     })

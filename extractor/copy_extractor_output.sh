@@ -8,6 +8,7 @@ set -euxo pipefail
 cd "$(dirname "$0")"
 
 cp run/chunkedge_extractor_output/{entities,misc}.json ../crates/chunkedge_entity/extracted/
+cp run/chunkedge_extractor_output/paintings.json ../crates/chunkedge_entity/extracted/
 cp run/chunkedge_extractor_output/misc.json ../crates/chunkedge_generated/extracted/
 cp run/chunkedge_extractor_output/{attributes,blocks,effects,items,packets,sounds}.json ../crates/chunkedge_generated/extracted/
 cp run/chunkedge_extractor_output/translation_keys.json ../crates/chunkedge_lang/extracted/

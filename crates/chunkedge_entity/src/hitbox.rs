@@ -9,6 +9,8 @@ use derive_more::Deref;
 
 use crate::*;
 
+include!(concat!(env!("OUT_DIR"), "/entity_hitbox_defaults.rs"));
+
 #[derive(SystemSet, Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub struct HitboxShapeUpdateSet;
 
@@ -142,83 +144,9 @@ fn update_constant_hitbox(
     >,
 ) {
     for (mut hitbox, entity_kind) in &mut hitbox_query {
-        let size = match *entity_kind {
-            EntityKind::ALLAY => [0.6, 0.35, 0.6],
-            EntityKind::CHEST_BOAT | EntityKind::BOAT => [1.375, 0.5625, 1.375],
-            EntityKind::FROG => [0.5, 0.5, 0.5],
-            EntityKind::TADPOLE => [0.4, 0.3, 0.4],
-            EntityKind::SPECTRAL_ARROW | EntityKind::ARROW => [0.5, 0.5, 0.5],
-            EntityKind::AXOLOTL => [1.3, 0.6, 1.3],
-            EntityKind::BAT => [0.5, 0.9, 0.5],
-            EntityKind::BLAZE => [0.6, 1.8, 0.6],
-            EntityKind::CAT => [0.6, 0.7, 0.6],
-            EntityKind::CAVE_SPIDER => [0.7, 0.5, 0.7],
-            EntityKind::COD => [0.5, 0.3, 0.5],
-            EntityKind::CREEPER => [0.6, 1.7, 0.6],
-            EntityKind::DOLPHIN => [0.9, 0.6, 0.9],
-            EntityKind::DRAGON_FIREBALL => [1.0, 1.0, 1.0],
-            EntityKind::ELDER_GUARDIAN => [1.9975, 1.9975, 1.9975],
-            EntityKind::END_CRYSTAL => [2.0, 2.0, 2.0],
-            EntityKind::ENDER_DRAGON => [16.0, 8.0, 16.0],
-            EntityKind::ENDERMAN => [0.6, 2.9, 0.6],
-            EntityKind::ENDERMITE => [0.4, 0.3, 0.4],
-            EntityKind::EVOKER => [0.6, 1.95, 0.6],
-            EntityKind::EVOKER_FANGS => [0.5, 0.8, 0.5],
-            EntityKind::EXPERIENCE_ORB => [0.5, 0.5, 0.5],
-            EntityKind::EYE_OF_ENDER => [0.25, 0.25, 0.25],
-            EntityKind::FALLING_BLOCK => [0.98, 0.98, 0.98],
-            EntityKind::FIREWORK_ROCKET => [0.25, 0.25, 0.25],
-            EntityKind::GHAST => [4.0, 4.0, 4.0],
-            EntityKind::GIANT => [3.6, 12.0, 3.6],
-            EntityKind::GLOW_SQUID | EntityKind::SQUID => [0.8, 0.8, 0.8],
-            EntityKind::GUARDIAN => [0.85, 0.85, 0.85],
-            EntityKind::ILLUSIONER => [0.6, 1.95, 0.6],
-            EntityKind::IRON_GOLEM => [1.4, 2.7, 1.4],
-            EntityKind::ITEM => [0.25, 0.25, 0.25],
-            EntityKind::FIREBALL => [1.0, 1.0, 1.0],
-            EntityKind::LEASH_KNOT => [0.375, 0.5, 0.375],
-            EntityKind::LIGHTNING /* | EntityKind::MARKER - marker hitbox */ => [0.0; 3],
-            EntityKind::LLAMA_SPIT => [0.25, 0.25, 0.25],
-            EntityKind::MINECART
-            | EntityKind::CHEST_MINECART
-            | EntityKind::TNT_MINECART
-            | EntityKind::HOPPER_MINECART
-            | EntityKind::FURNACE_MINECART
-            | EntityKind::SPAWNER_MINECART
-            | EntityKind::COMMAND_BLOCK_MINECART => [0.98, 0.7, 0.98],
-            EntityKind::PARROT => [0.5, 0.9, 0.5],
-            EntityKind::PHANTOM => [0.9, 0.5, 0.9],
-            EntityKind::PIGLIN_BRUTE => [0.6, 1.95, 0.6],
-            EntityKind::PILLAGER => [0.6, 1.95, 0.6],
-            EntityKind::TNT => [0.98, 0.98, 0.98],
-            EntityKind::PUFFERFISH => [0.7, 0.7, 0.7],
-            EntityKind::RAVAGER => [1.95, 2.2, 1.95],
-            EntityKind::SALMON => [0.7, 0.4, 0.7],
-            EntityKind::SHULKER_BULLET => [0.3125, 0.3125, 0.3125],
-            EntityKind::SILVERFISH => [0.4, 0.3, 0.4],
-            EntityKind::SMALL_FIREBALL => [0.3125, 0.3125, 0.3125],
-            EntityKind::SNOW_GOLEM => [0.7, 1.9, 0.7],
-            EntityKind::SPIDER => [1.4, 0.9, 1.4],
-            EntityKind::STRAY => [0.6, 1.99, 0.6],
-            EntityKind::EGG => [0.25, 0.25, 0.25],
-            EntityKind::ENDER_PEARL => [0.25, 0.25, 0.25],
-            EntityKind::EXPERIENCE_BOTTLE => [0.25, 0.25, 0.25],
-            EntityKind::SPLASH_POTION | EntityKind::LINGERING_POTION => [0.25, 0.25, 0.25],
-            EntityKind::TRIDENT => [0.5, 0.5, 0.5],
-            EntityKind::TRADER_LLAMA => [0.9, 1.87, 0.9],
-            EntityKind::TROPICAL_FISH => [0.5, 0.4, 0.5],
-            EntityKind::VEX => [0.4, 0.8, 0.4],
-            EntityKind::VINDICATOR => [0.6, 1.95, 0.6],
-            EntityKind::WITHER => [0.9, 3.5, 0.9],
-            EntityKind::WITHER_SKELETON => [0.7, 2.4, 0.7],
-            EntityKind::WITHER_SKULL => [0.3125, 0.3125, 0.3125],
-            EntityKind::FISHING_BOBBER => [0.25, 0.25, 0.25],
-            _ => {
-                continue;
-            }
+        if let Some(size) = default_entity_hitbox_size(*entity_kind) {
+            hitbox.centered(size);
         }
-        .into();
-        hitbox.centered(size);
     }
 }
 
@@ -451,7 +379,7 @@ fn update_painting_hitbox(
     for (mut hitbox, painting_variant, look) in &mut query {
         let bounds = match &painting_variant.0 {
             IdOr::Id(id) => PaintingKind::from_registry_id(*id)
-                .map_or_else(|| UVec3::splat(1), painting_kind_hitbox_bounds),
+                .map_or_else(|| UVec3::splat(1), PaintingKind::hitbox_bounds),
             IdOr::Inline(inline) => inline_painting_hitbox_bounds(inline),
         };
 
@@ -479,58 +407,6 @@ fn update_painting_hitbox(
 
         hitbox.0 = Aabb::new(center_pos - bounds / 2.0, center_pos + bounds / 2.0);
     }
-}
-
-fn painting_kind_hitbox_bounds(kind: PaintingKind) -> UVec3 {
-    match kind {
-        PaintingKind::Alban
-        | PaintingKind::Aztec
-        | PaintingKind::Aztec2
-        | PaintingKind::Bomb
-        | PaintingKind::Kebab
-        | PaintingKind::Meditative
-        | PaintingKind::Plant
-        | PaintingKind::Wasteland => [1, 1, 1],
-        PaintingKind::Graham | PaintingKind::PrairieRide | PaintingKind::Wanderer => [1, 2, 1],
-        PaintingKind::Courbet
-        | PaintingKind::Creebet
-        | PaintingKind::Pool
-        | PaintingKind::Sea
-        | PaintingKind::Sunset => [2, 1, 2],
-        PaintingKind::Baroque
-        | PaintingKind::Bust
-        | PaintingKind::Earth
-        | PaintingKind::Fire
-        | PaintingKind::Humble
-        | PaintingKind::Match
-        | PaintingKind::SkullAndRoses
-        | PaintingKind::Stage
-        | PaintingKind::Void
-        | PaintingKind::Water
-        | PaintingKind::Wind
-        | PaintingKind::Wither => [2, 2, 2],
-        PaintingKind::Bouquet
-        | PaintingKind::Cavebird
-        | PaintingKind::Cotan
-        | PaintingKind::Endboss
-        | PaintingKind::Fern
-        | PaintingKind::Owlemons
-        | PaintingKind::Sunflowers
-        | PaintingKind::Tides => [3, 3, 3],
-        PaintingKind::Backyard | PaintingKind::Pond => [3, 4, 3],
-        PaintingKind::Changing
-        | PaintingKind::Fighters
-        | PaintingKind::Finding
-        | PaintingKind::Lowmist
-        | PaintingKind::Passage => [4, 2, 4],
-        PaintingKind::DonkeyKong | PaintingKind::Skeleton => [4, 3, 4],
-        PaintingKind::BurningSkull
-        | PaintingKind::Orb
-        | PaintingKind::Pigscene
-        | PaintingKind::Pointer
-        | PaintingKind::Unpacked => [4, 4, 4],
-    }
-    .into()
 }
 
 fn inline_painting_hitbox_bounds(inline: &PaintingVariantDefinition) -> UVec3 {

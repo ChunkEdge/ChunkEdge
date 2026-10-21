@@ -31,6 +31,13 @@
     "temperate": 1,
     "warm": 2
   },
+  "copper_golem_state": {
+    "dropping_item": 3,
+    "dropping_no_item": 4,
+    "getting_item": 1,
+    "getting_no_item": 2,
+    "idle": 0
+  },
   "cow_sound_variant": {
     "classic": 0,
     "moody": 1
@@ -304,6 +311,10 @@
     "temperate": 1,
     "warm": 2
   },
+  "humanoid_arm": {
+    "left": 0,
+    "right": 1
+  },
   "painting_variant": {
     "alban": 0,
     "aztec": 1,
@@ -573,6 +584,12 @@
     "snow": 4,
     "swamp": 5,
     "taiga": 6
+  },
+  "weathering_copper_state": {
+    "exposed": 1,
+    "oxidized": 3,
+    "unaffected": 0,
+    "weathered": 2
   },
   "wolf_sound_variant": {
     "angry": 0,

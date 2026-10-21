@@ -82,7 +82,7 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
             })
         }
         Data::Enum(enum_) => {
-            let variants = pair_variants_with_discriminants(enum_.variants)?;
+            let variants = pair_variants_with_discriminants(&input.attrs, enum_.variants)?;
 
             let decode_arms = variants
                 .iter()

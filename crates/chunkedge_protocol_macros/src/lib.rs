@@ -1,11 +1,12 @@
 #![doc = include_str!("../README.md")]
 
+use heck::ToShoutySnakeCase;
 use proc_macro::TokenStream as StdTokenStream;
 use proc_macro2::TokenStream;
-use quote::ToTokens;
+use quote::{ToTokens, format_ident, quote};
 use syn::{
-    Attribute, GenericParam, Generics, Lifetime, LifetimeParam, LitInt, Result, Variant,
-    parse_quote,
+    Attribute, Data, DeriveInput, Fields, GenericParam, Generics, Lifetime, LifetimeParam, LitInt,
+    Path, Result, Variant, parse_quote, parse2,
 };
 
 mod decode;
@@ -36,22 +37,111 @@ pub fn derive_packet(item: StdTokenStream) -> StdTokenStream {
     }
 }
 
+#[proc_macro_derive(RegistryId, attributes(packet))]
+pub fn derive_registry_id(item: StdTokenStream) -> StdTokenStream {
+    match registry_id(item.into()) {
+        Ok(tokens) => tokens.into(),
+        Err(e) => e.into_compile_error().into(),
+    }
+}
+
+fn registry_id(item: TokenStream) -> Result<TokenStream> {
+    let input = parse2::<DeriveInput>(item)?;
+    let registry = registry_path(&input.attrs)?.ok_or_else(|| {
+        syn::Error::new_spanned(&input.ident, "expected #[packet(registry = path)]")
+    })?;
+    let Data::Enum(data) = input.data else {
+        return Err(syn::Error::new_spanned(
+            input.ident,
+            "RegistryId requires an enum",
+        ));
+    };
+    let count = data.variants.len();
+    let variants = pair_variants_with_discriminants(&input.attrs, data.variants)?;
+    let arms = variants.iter().map(|(id, variant)| {
+        let name = &variant.ident;
+        let pattern = match &variant.fields {
+            Fields::Named(_) => quote!(Self::#name { .. }),
+            Fields::Unnamed(_) => quote!(Self::#name(..)),
+            Fields::Unit => quote!(Self::#name),
+        };
+        quote!(#pattern => #id,)
+    });
+    let name = &input.ident;
+    let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
+
+    Ok(quote! {
+        // Every registry entry needs a payload definition before it can be decoded.
+        const _: [(); #registry::COUNT] = [(); #count];
+
+        impl #impl_generics #name #ty_generics #where_clause {
+            pub const fn id(&self) -> i32 {
+                match self { #(#arms)* }
+            }
+        }
+    })
+}
+
 fn pair_variants_with_discriminants(
+    attrs: &[Attribute],
     variants: impl IntoIterator<Item = Variant>,
-) -> Result<Vec<(i32, Variant)>> {
+) -> Result<Vec<(TokenStream, Variant)>> {
+    if let Some(registry) = registry_path(attrs)? {
+        return variants
+            .into_iter()
+            .map(|variant| {
+                if parse_tag_attr(&variant.attrs)?.is_some() {
+                    return Err(syn::Error::new_spanned(
+                        &variant,
+                        "registry-tagged enum variants cannot have explicit tags",
+                    ));
+                }
+                let id = format_ident!("{}", variant.ident.to_string().to_shouty_snake_case());
+                Ok((quote!(#registry::#id), variant))
+            })
+            .collect();
+    }
+
     let mut discriminant = 0;
     variants
         .into_iter()
         .map(|v| {
-            if let Some(i) = parse_tag_attr(&v.attrs)? {
-                discriminant = i;
+            if let Some(id) = parse_tag_attr(&v.attrs)? {
+                discriminant = id;
             }
-
-            let pair = (discriminant, v);
+            let id = discriminant;
             discriminant += 1;
-            Ok(pair)
+            Ok((quote!(#id), v))
         })
         .collect::<Result<_>>()
+}
+
+fn registry_path(attrs: &[Attribute]) -> Result<Option<Path>> {
+    let mut registry = None;
+    for attr in attrs {
+        if attr.path().is_ident("packet") {
+            attr.parse_nested_meta(|meta| {
+                if meta.path.is_ident("registry") {
+                    if registry.is_some() {
+                        return Err(meta.error("duplicate registry path"));
+                    }
+                    registry = Some(meta.value()?.parse::<Path>()?);
+                    Ok(())
+                } else if ["id", "name", "side", "state"]
+                    .iter()
+                    .any(|name| meta.path.is_ident(name))
+                {
+                    // These enum-level arguments belong to the Packet derive.
+                    // Encode and Decode must continue to accept them as before.
+                    meta.value()?.parse::<syn::Expr>()?;
+                    Ok(())
+                } else {
+                    Err(meta.error("unrecognized packet argument"))
+                }
+            })?;
+        }
+    }
+    Ok(registry)
 }
 
 fn parse_tag_attr(attrs: &[Attribute]) -> Result<Option<i32>> {

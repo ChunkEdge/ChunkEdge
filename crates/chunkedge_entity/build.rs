@@ -5,7 +5,10 @@ use chunkedge_build_utils::{ident, rerun_if_changed, write_generated_file};
 use heck::{ToPascalCase, ToShoutySnakeCase, ToSnakeCase};
 use proc_macro2::TokenStream;
 use quote::quote;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+
+#[path = "build/entity_enums.rs"]
+mod entity_enums;
 
 #[derive(Deserialize, Clone, Debug)]
 struct Entity {
@@ -15,11 +18,38 @@ struct Entity {
     fields: Vec<Field>,
     attributes: Option<Vec<Attribute>>,
     parent: Option<String>,
+    default_bounding_box: Option<BoundingBox>,
+}
+
+#[derive(Deserialize, Clone, Debug)]
+struct BoundingBox {
+    #[serde(rename = "size_x")]
+    x: f64,
+    #[serde(rename = "size_y")]
+    y: f64,
+    #[serde(rename = "size_z")]
+    z: f64,
 }
 
 #[derive(Deserialize, Clone, Debug)]
 struct EntityTypes {
     entity_type: BTreeMap<String, i32>,
+}
+
+#[derive(Deserialize)]
+struct TrackedDataHandlers {
+    tracked_data_handler: BTreeMap<String, u8>,
+}
+
+#[derive(Deserialize)]
+struct PaintingVariants {
+    painting_variant: BTreeMap<String, i32>,
+}
+
+#[derive(Deserialize)]
+struct PaintingDimensions {
+    width: u32,
+    height: u32,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -36,14 +66,14 @@ struct Attribute {
     base_value: f64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(untagged)]
 enum PaintingVariantValue {
     Identifier(String),
     Inline(PaintingVariantInline),
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 struct PaintingVariantInline {
     width: i32,
     height: i32,
@@ -52,7 +82,7 @@ struct PaintingVariantInline {
     author: Option<String>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(tag = "type", content = "default_value", rename_all = "snake_case")]
 #[allow(dead_code)]
 enum Value {
@@ -119,7 +149,7 @@ enum Value {
     HumanoidArm(String),
 }
 
-#[derive(Deserialize, Debug, Clone, Copy)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 struct BlockPos {
     x: i32,
     y: i32,
@@ -127,52 +157,32 @@ struct BlockPos {
 }
 
 impl Value {
-    fn type_id(&self) -> u8 {
-        match self {
-            Value::Byte(_) => 0,
-            Value::Integer(_) => 1,
-            Value::Long(_) => 2,
-            Value::Float(_) => 3,
-            Value::String(_) => 4,
-            Value::TextComponent(_) => 5,
-            Value::OptionalTextComponent(_) => 6,
-            Value::ItemStack(_) => 7,
-            Value::Boolean(_) => 8,
-            Value::Rotation { .. } => 9,
-            Value::BlockPos(_) => 10,
-            Value::OptionalBlockPos(_) => 11,
-            Value::Facing(_) => 12,
-            Value::LazyEntityReference(_) => 13,
-            Value::BlockState(_) => 14,
-            Value::OptionalBlockState(_) => 15,
-            Value::Particle(_) => 16,
-            Value::ParticleList(_) => 17,
-            Value::VillagerData { .. } => 18,
-            Value::OptionalInt(_) => 19,
-            Value::EntityPose(_) => 20,
-            Value::CatVariant(_) => 21,
-            Value::CatSoundVariant(_) => 22,
-            Value::CowVariant(_) => 23,
-            Value::CowSoundVariant(_) => 24,
-            Value::WolfVariant(_) => 25,
-            Value::WolfSoundVariant(_) => 26,
-            Value::FrogVariant(_) => 27,
-            Value::PigVariant(_) => 28,
-            Value::PigSoundVariant(_) => 29,
-            Value::ChickenVariant(_) => 30,
-            Value::ChickenSoundVariant(_) => 31,
-            Value::ZombieNautilusVariant(_) => 32,
-            Value::OptionalGlobalPos(_) => 33,
-            Value::PaintingVariant(_) => 34,
-            Value::SnifferState(_) => 35,
-            Value::ArmadilloState(_) => 36,
-            Value::CopperGolemState(_) => 37,
-            Value::WeatheringCopperState(_) => 38,
-            Value::Vector3f { .. } => 39,
-            Value::Quaternionf { .. } => 40,
-            Value::ResolvableProfile(_) => 41,
-            Value::HumanoidArm(_) => 42,
-        }
+    fn type_id(&self, handlers: &BTreeMap<String, u8>) -> anyhow::Result<u8> {
+        let value = serde_json::to_value(self).context("failed to serialize tracked-data value")?;
+        let name = value["type"]
+            .as_str()
+            .context("serialized tracked-data value has no type")?;
+
+        // The extracted entity field tags predate these handler names. We keep those
+        // tags for compatibility with entities.json and translate only the exceptions.
+        let name = match name {
+            "integer" => "int",
+            "text_component" => "component",
+            "optional_text_component" => "optional_component",
+            "rotation" => "rotations",
+            "facing" => "direction",
+            "lazy_entity_reference" => "optional_living_entity_reference",
+            "particle_list" => "particles",
+            "optional_int" => "optional_unsigned_int",
+            "entity_pose" => "pose",
+            "vector3f" => "vector3",
+            "quaternionf" => "quaternion",
+            name => name,
+        };
+        handlers
+            .get(name)
+            .copied()
+            .with_context(|| format!("missing tracked-data handler {name} in misc.json"))
     }
 
     fn field_type(&self) -> TokenStream {
@@ -307,7 +317,7 @@ impl Value {
                 quote!(None)
             }
             Value::EntityPose(p) => {
-                let variant = ident(p.to_pascal_case());
+                let variant = ident(entity_enums::variant_name("entity_pose", p));
                 quote!(crate::Pose::#variant)
             }
             Value::CatVariant(c) => {
@@ -467,17 +477,215 @@ impl Value {
 type Entities = BTreeMap<String, Entity>;
 
 pub fn main() -> anyhow::Result<()> {
-    rerun_if_changed(["extracted/misc.json", "extracted/entities.json"]);
+    rerun_if_changed([
+        "extracted/misc.json",
+        "extracted/entities.json",
+        "extracted/paintings.json",
+    ]);
 
     write_generated_file(build_entities()?, "entity.rs")?;
+    write_generated_file(entity_enums::build()?, "entity_enums.rs")?;
+    write_generated_file(build_painting_kind()?, "painting_kind.rs")?;
+    write_generated_file(build_entity_hitbox_defaults()?, "entity_hitbox_defaults.rs")?;
 
     Ok(())
 }
 
+fn build_painting_kind() -> anyhow::Result<TokenStream> {
+    let paintings: PaintingVariants = serde_json::from_str(include_str!("extracted/misc.json"))
+        .context("failed to deserialize painting variants from misc.json")?;
+    let mut paintings: Vec<_> = paintings.painting_variant.into_iter().collect();
+    paintings.sort_by_key(|(_, id)| *id);
+    // paintings.json is the extractor's standalone copy of the painting_variant registry codec.
+    let dimensions: BTreeMap<String, PaintingDimensions> =
+        serde_json::from_str(include_str!("extracted/paintings.json"))
+            .context("failed to deserialize paintings.json")?;
+
+    anyhow::ensure!(
+        paintings.len() == dimensions.len(),
+        "painting IDs and painting definitions have different counts"
+    );
+
+    for (expected, (name, id)) in paintings.iter().enumerate() {
+        anyhow::ensure!(
+            *id == expected as i32,
+            "painting variant {name} has ID {id}, expected {expected}"
+        );
+    }
+
+    let count = paintings.len();
+    let variants: Vec<_> = paintings
+        .iter()
+        .map(|(name, id)| {
+            let variant = ident(name.to_pascal_case());
+            let default = (name == "alban").then(|| quote!(#[default]));
+            quote! { #default #variant = #id, }
+        })
+        .collect();
+    let names: Vec<_> = paintings
+        .iter()
+        .map(|(name, _)| ident(name.to_pascal_case()))
+        .collect();
+    let sizes: Vec<_> = paintings
+        .iter()
+        .map(|(name, _)| {
+            let PaintingDimensions { width, height } = dimensions
+                .get(&format!("minecraft:{name}"))
+                .with_context(|| format!("missing dimensions for painting {name}"))?;
+            anyhow::ensure!(
+                *width > 0 && *height > 0,
+                "painting {name} has invalid dimensions"
+            );
+            Ok(quote! { [#width, #height], })
+        })
+        .collect::<anyhow::Result<_>>()?;
+
+    anyhow::ensure!(
+        paintings.iter().any(|(name, _)| name == "alban"),
+        "painting variants must contain the default alban"
+    );
+
+    Ok(quote! {
+        #[repr(i32)]
+        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
+        pub enum PaintingKind {
+            #(#variants)*
+        }
+
+        impl PaintingKind {
+            pub const ALL: [Self; #count] = [#(Self::#names,)*];
+
+            pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
+                chunkedge_protocol::RegistryId::new(self as i32)
+            }
+
+            pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
+                let idx = usize::try_from(id.id()).ok()?;
+                Self::ALL.get(idx).copied()
+            }
+
+            pub(crate) fn hitbox_bounds(self) -> chunkedge_math::UVec3 {
+                const DIMENSIONS: [[u32; 2]; #count] = [#(#sizes)*];
+                let [width, height] = DIMENSIONS[self as usize];
+                chunkedge_math::UVec3::new(width, height, width)
+            }
+        }
+    })
+}
+
+fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
+    // entities.json records default bounds, but not which hitboxes change at runtime.
+    // Keep this list in sync with the update_*_hitbox handlers in src/hitbox.rs,
+    // including the kinds matched by update_passive_child_hitbox. Marker is excluded
+    // so its hitbox stays user-managed. When updating MC, review new or changed
+    // entity kinds against those handlers and their pose, age, data, and facing rules.
+    const DYNAMIC: &[&str] = &[
+        "area_effect_cloud",
+        "armor_stand",
+        "bee",
+        "camel",
+        "chicken",
+        "donkey",
+        "drowned",
+        "fox",
+        "glow_item_frame",
+        "goat",
+        "hoglin",
+        "horse",
+        "husk",
+        "item_frame",
+        "llama",
+        "magma_cube",
+        "marker",
+        "mooshroom",
+        "mule",
+        "ocelot",
+        "painting",
+        "panda",
+        "pig",
+        "piglin",
+        "player",
+        "polar_bear",
+        "rabbit",
+        "sheep",
+        "shulker",
+        "skeleton_horse",
+        "slime",
+        "sulfur_cube",
+        "turtle",
+        "villager",
+        "warden",
+        "wolf",
+        "zoglin",
+        "zombie",
+        "zombie_horse",
+        "zombie_villager",
+        "zombified_piglin",
+    ];
+
+    let entity_types =
+        serde_json::from_str::<EntityTypes>(include_str!("extracted/misc.json"))?.entity_type;
+    let entities: Entities = serde_json::from_str(include_str!("extracted/entities.json"))?;
+    let mut boxes = BTreeMap::new();
+    for entity in entities.into_values() {
+        if let Some(typ) = entity.typ {
+            let size = entity
+                .default_bounding_box
+                .with_context(|| format!("missing default bounding box for {typ}"))?;
+            anyhow::ensure!(
+                [size.x, size.y, size.z]
+                    .into_iter()
+                    .all(|dimension| dimension.is_finite() && dimension >= 0.0),
+                "invalid default bounding box for {typ}"
+            );
+            boxes.insert(typ, size);
+        }
+    }
+
+    for name in DYNAMIC {
+        anyhow::ensure!(
+            entity_types.contains_key(*name),
+            "unknown dynamic entity {name}"
+        );
+    }
+
+    let mut arms = Vec::new();
+    for (name, id) in entity_types {
+        if DYNAMIC.contains(&name.as_str()) {
+            continue;
+        }
+        let source = if boxes.contains_key(&name) {
+            name.as_str()
+        } else if name.ends_with("_chest_boat") {
+            "acacia_chest_boat"
+        } else if name.ends_with("_boat") {
+            "acacia_boat"
+        } else {
+            anyhow::bail!("missing default bounding box for entity type {name}");
+        };
+        let size = &boxes[source];
+        let (x, y, z) = (size.x, size.y, size.z);
+        arms.push(quote! { #id => Some(chunkedge_math::DVec3::new(#x, #y, #z)), });
+    }
+
+    Ok(quote! {
+        fn default_entity_hitbox_size(kind: crate::EntityKind) -> Option<chunkedge_math::DVec3> {
+            match kind.get() {
+                #(#arms)*
+                _ => None,
+            }
+        }
+    })
+}
+
 fn build_entities() -> anyhow::Result<TokenStream> {
-    let entity_types = serde_json::from_str::<EntityTypes>(include_str!("extracted/misc.json"))
+    let misc = include_str!("extracted/misc.json");
+    let entity_types = serde_json::from_str::<EntityTypes>(misc)
         .context("failed to deserialize misc.json")?
         .entity_type;
+    let handlers = serde_json::from_str::<TrackedDataHandlers>(misc)
+        .context("failed to deserialize tracked-data handlers from misc.json")?
+        .tracked_data_handler;
 
     let entities: Entities =
         serde_json::from_str::<Entities>(include_str!("extracted/entities.json"))
@@ -616,7 +824,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             system_names.push(quote!(#system_name_ident));
 
             let data_index = field.index;
-            let data_type = field.default_value.type_id();
+            let data_type = field.default_value.type_id(&handlers)?;
             let encodable_expr = field.default_value.encodable_expr(quote!(value.0));
 
             systems.extend([quote! {

@@ -57,15 +57,15 @@ fn registry_id(item: TokenStream) -> Result<TokenStream> {
         ));
     };
     let count = data.variants.len();
-    let arms = data.variants.iter().map(|variant| {
+    let variants = pair_variants_with_discriminants(&input.attrs, data.variants)?;
+    let arms = variants.iter().map(|(id, variant)| {
         let name = &variant.ident;
-        let id = format_ident!("{}", name.to_string().to_shouty_snake_case());
         let pattern = match &variant.fields {
             Fields::Named(_) => quote!(Self::#name { .. }),
             Fields::Unnamed(_) => quote!(Self::#name(..)),
             Fields::Unit => quote!(Self::#name),
         };
-        quote!(#pattern => #registry::#id,)
+        quote!(#pattern => #id,)
     });
     let name = &input.ident;
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
@@ -117,21 +117,31 @@ fn pair_variants_with_discriminants(
 }
 
 fn registry_path(attrs: &[Attribute]) -> Result<Option<Path>> {
+    let mut registry = None;
     for attr in attrs {
         if attr.path().is_ident("packet") {
-            let mut registry = None;
             attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("registry") {
+                    if registry.is_some() {
+                        return Err(meta.error("duplicate registry path"));
+                    }
                     registry = Some(meta.value()?.parse::<Path>()?);
                     Ok(())
+                } else if ["id", "name", "side", "state"]
+                    .iter()
+                    .any(|name| meta.path.is_ident(name))
+                {
+                    // These enum-level arguments belong to the Packet derive.
+                    // Encode and Decode must continue to accept them as before.
+                    meta.value()?.parse::<syn::Expr>()?;
+                    Ok(())
                 } else {
-                    Err(meta.error("expected registry path"))
+                    Err(meta.error("unrecognized packet argument"))
                 }
             })?;
-            return Ok(registry);
         }
     }
-    Ok(None)
+    Ok(registry)
 }
 
 fn parse_tag_attr(attrs: &[Attribute]) -> Result<Option<i32>> {

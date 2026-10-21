@@ -586,11 +586,13 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
         "camel",
         "chicken",
         "donkey",
+        "drowned",
         "fox",
         "glow_item_frame",
         "goat",
         "hoglin",
         "horse",
+        "husk",
         "item_frame",
         "llama",
         "magma_cube",
@@ -617,6 +619,8 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
         "zoglin",
         "zombie",
         "zombie_horse",
+        "zombie_villager",
+        "zombified_piglin",
     ];
 
     let entity_types =

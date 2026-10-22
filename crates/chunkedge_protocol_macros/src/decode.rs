@@ -89,7 +89,18 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
                 .map(|(disc, variant)| {
                     let name = &variant.ident;
 
-                    match &variant.fields {
+                    if let Some(codec) = crate::variant_options(&variant.attrs)?.with {
+                        let (pattern, fields) = crate::variant_bindings(variant);
+                        let ctx = format!("failed to decode payload for variant `{name}`");
+                        return Ok(quote! {
+                            #disc => {
+                                let (#(#fields,)*) = #codec::decode(_r).context(#ctx)?;
+                                Ok(#pattern)
+                            }
+                        });
+                    }
+
+                    Ok(match &variant.fields {
                         Fields::Named(fields) => {
                             let fields = fields
                                 .named
@@ -128,9 +139,9 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
                             }
                         }
                         Fields::Unit => quote!(#disc => Ok(Self::#name),),
-                    }
+                    })
                 })
-                .collect::<TokenStream>();
+                .collect::<Result<Vec<_>>>()?;
 
             add_trait_bounds(
                 &mut input.generics,
@@ -151,7 +162,7 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
                         let ctx = concat!("failed to decode enum discriminant in `", stringify!(#input_name), "`");
                         let disc = VarInt::decode(_r).context(ctx)?.0;
                         match disc {
-                            #decode_arms
+                            #(#decode_arms)*
                             n => bail!("unexpected enum discriminant {} in `{}`", disc, stringify!(#input_name)),
                         }
                     }

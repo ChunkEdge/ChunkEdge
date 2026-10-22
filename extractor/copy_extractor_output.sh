@@ -10,7 +10,7 @@ cd "$(dirname "$0")"
 cp run/chunkedge_extractor_output/{entities,misc}.json ../crates/chunkedge_entity/extracted/
 cp run/chunkedge_extractor_output/paintings.json ../crates/chunkedge_entity/extracted/
 cp run/chunkedge_extractor_output/misc.json ../crates/chunkedge_generated/extracted/
-cp run/chunkedge_extractor_output/{attributes,blocks,effects,items,packets,sounds}.json ../crates/chunkedge_generated/extracted/
+cp run/chunkedge_extractor_output/{attributes,blocks,command_argument_types,effects,items,packets,sounds}.json ../crates/chunkedge_generated/extracted/
 cp run/chunkedge_extractor_output/translation_keys.json ../crates/chunkedge_lang/extracted/
 cp run/chunkedge_extractor_output/{registry_codec.json,tags.json} ../crates/chunkedge_registry/extracted/
 cp run/chunkedge_extractor_output/packets.json ../tools/packet_inspector/extracted/

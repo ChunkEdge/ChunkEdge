@@ -6,7 +6,7 @@ use proc_macro2::TokenStream;
 use quote::{ToTokens, format_ident, quote};
 use syn::{
     Attribute, Data, DeriveInput, Fields, GenericParam, Generics, Lifetime, LifetimeParam, LitInt,
-    Path, Result, Variant, parse_quote, parse2,
+    LitStr, Path, Result, Variant, parse_quote, parse2,
 };
 
 mod decode;
@@ -47,7 +47,7 @@ pub fn derive_registry_id(item: StdTokenStream) -> StdTokenStream {
 
 fn registry_id(item: TokenStream) -> Result<TokenStream> {
     let input = parse2::<DeriveInput>(item)?;
-    let registry = registry_path(&input.attrs)?.ok_or_else(|| {
+    let (registry, _) = registry_config(&input.attrs)?.ok_or_else(|| {
         syn::Error::new_spanned(&input.ident, "expected #[packet(registry = path)]")
     })?;
     let Data::Enum(data) = input.data else {
@@ -86,17 +86,24 @@ fn pair_variants_with_discriminants(
     attrs: &[Attribute],
     variants: impl IntoIterator<Item = Variant>,
 ) -> Result<Vec<(TokenStream, Variant)>> {
-    if let Some(registry) = registry_path(attrs)? {
+    if let Some((registry, prefix)) = registry_config(attrs)? {
         return variants
             .into_iter()
             .map(|variant| {
-                if parse_tag_attr(&variant.attrs)?.is_some() {
+                let options = variant_options(&variant.attrs)?;
+                if options.tag.is_some() {
                     return Err(syn::Error::new_spanned(
                         &variant,
                         "registry-tagged enum variants cannot have explicit tags",
                     ));
                 }
-                let id = format_ident!("{}", variant.ident.to_string().to_shouty_snake_case());
+                let id = options.key.unwrap_or_else(|| {
+                    format_ident!(
+                        "{}{}",
+                        prefix,
+                        variant.ident.to_string().to_shouty_snake_case()
+                    )
+                });
                 Ok((quote!(#registry::#id), variant))
             })
             .collect();
@@ -106,7 +113,14 @@ fn pair_variants_with_discriminants(
     variants
         .into_iter()
         .map(|v| {
-            if let Some(id) = parse_tag_attr(&v.attrs)? {
+            let options = variant_options(&v.attrs)?;
+            if let Some(key) = options.key {
+                return Err(syn::Error::new_spanned(
+                    key,
+                    "registry key requires #[packet(registry = path)]",
+                ));
+            }
+            if let Some(id) = options.tag {
                 discriminant = id;
             }
             let id = discriminant;
@@ -116,8 +130,9 @@ fn pair_variants_with_discriminants(
         .collect::<Result<_>>()
 }
 
-fn registry_path(attrs: &[Attribute]) -> Result<Option<Path>> {
+fn registry_config(attrs: &[Attribute]) -> Result<Option<(Path, String)>> {
     let mut registry = None;
+    let mut prefix: Option<LitStr> = None;
     for attr in attrs {
         if attr.path().is_ident("packet") {
             attr.parse_nested_meta(|meta| {
@@ -126,6 +141,12 @@ fn registry_path(attrs: &[Attribute]) -> Result<Option<Path>> {
                         return Err(meta.error("duplicate registry path"));
                     }
                     registry = Some(meta.value()?.parse::<Path>()?);
+                    Ok(())
+                } else if meta.path.is_ident("registry_prefix") {
+                    if prefix.is_some() {
+                        return Err(meta.error("duplicate registry prefix"));
+                    }
+                    prefix = Some(meta.value()?.parse()?);
                     Ok(())
                 } else if ["id", "name", "side", "state"]
                     .iter()
@@ -141,28 +162,80 @@ fn registry_path(attrs: &[Attribute]) -> Result<Option<Path>> {
             })?;
         }
     }
-    Ok(registry)
-}
-
-fn parse_tag_attr(attrs: &[Attribute]) -> Result<Option<i32>> {
-    for attr in attrs {
-        if attr.path().is_ident("packet") {
-            let mut res = 0;
-
-            attr.parse_nested_meta(|meta| {
-                if meta.path.is_ident("tag") {
-                    res = meta.value()?.parse::<LitInt>()?.base10_parse::<i32>()?;
-                    Ok(())
-                } else {
-                    Err(meta.error("unrecognized argument"))
-                }
-            })?;
-
-            return Ok(Some(res));
+    if let Some(prefix) = &prefix {
+        if registry.is_none() {
+            return Err(syn::Error::new_spanned(
+                prefix,
+                "registry prefix requires #[packet(registry = path)]",
+            ));
+        }
+        if !prefix.value().is_empty() {
+            syn::parse_str::<syn::Ident>(&prefix.value())?;
         }
     }
+    Ok(registry.map(|path| {
+        (
+            path,
+            prefix.map_or_else(String::new, |prefix| prefix.value()),
+        )
+    }))
+}
 
-    Ok(None)
+#[derive(Default)]
+struct VariantOptions {
+    tag: Option<i32>,
+    key: Option<syn::Ident>,
+    with: Option<Path>,
+}
+
+fn variant_options(attrs: &[Attribute]) -> Result<VariantOptions> {
+    let mut options = VariantOptions::default();
+    for attr in attrs.iter().filter(|attr| attr.path().is_ident("packet")) {
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("tag") {
+                if options.tag.is_some() {
+                    return Err(meta.error("duplicate tag"));
+                }
+                options.tag = Some(meta.value()?.parse::<LitInt>()?.base10_parse()?);
+            } else if meta.path.is_ident("key") {
+                if options.key.is_some() {
+                    return Err(meta.error("duplicate registry key"));
+                }
+                options.key = Some(meta.value()?.parse()?);
+            } else if meta.path.is_ident("with") {
+                if options.with.is_some() {
+                    return Err(meta.error("duplicate payload codec"));
+                }
+                options.with = Some(meta.value()?.parse()?);
+            } else {
+                return Err(meta.error("unrecognized argument"));
+            }
+            Ok(())
+        })?;
+    }
+    Ok(options)
+}
+
+// Payload codecs receive/return a tuple of fields in declaration order.
+fn variant_bindings(variant: &Variant) -> (TokenStream, Vec<syn::Ident>) {
+    let name = &variant.ident;
+    let fields: Vec<_> = variant
+        .fields
+        .iter()
+        .enumerate()
+        .map(|(index, field)| {
+            field
+                .ident
+                .clone()
+                .unwrap_or_else(|| format_ident!("_field_{index}"))
+        })
+        .collect();
+    let pattern = match &variant.fields {
+        Fields::Named(_) => quote!(Self::#name { #(#fields,)* }),
+        Fields::Unnamed(_) => quote!(Self::#name(#(#fields,)*)),
+        Fields::Unit => quote!(Self::#name),
+    };
+    (pattern, fields)
 }
 
 /// Adding our lifetime to the generics before calling `.split_for_impl()` would

@@ -71,7 +71,18 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
                          in `{input_name}`",
                     );
 
-                    match &variant.fields {
+                    if let Some(codec) = crate::variant_options(&variant.attrs)?.with {
+                        let (pattern, fields) = crate::variant_bindings(variant);
+                        let ctx = format!("failed to encode payload for variant `{variant_name}`");
+                        return Ok(quote! {
+                            #pattern => {
+                                VarInt(#disc).encode(&mut _w).context(#disc_ctx)?;
+                                #codec::encode((#(#fields,)*), &mut _w).context(#ctx)
+                            }
+                        });
+                    }
+
+                    Ok(match &variant.fields {
                         Fields::Named(fields) => {
                             let field_names = fields
                                 .named
@@ -137,9 +148,9 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
                                     .context(#disc_ctx)?
                             ),
                         },
-                    }
+                    })
                 })
-                .collect::<TokenStream>();
+                .collect::<Result<Vec<_>>>()?;
 
             Ok(quote! {
                 #[allow(unused_imports, unreachable_code)]
@@ -153,7 +164,7 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
                         let mut _w: &mut dyn ::std::io::Write = &mut _w;
 
                         match self {
-                            #encode_arms
+                            #(#encode_arms)*
                             _ => unreachable!(),
                         }
                     }

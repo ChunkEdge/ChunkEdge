@@ -33,3 +33,8 @@ pub mod chunk_view {
 pub mod status_effects {
     include!(concat!(env!("OUT_DIR"), "/status_effects.rs"));
 }
+
+/// Vanilla command argument type IDs extracted from the Minecraft registry.
+pub mod command_argument_type {
+    include!(concat!(env!("OUT_DIR"), "/command_argument_type.rs"));
+}

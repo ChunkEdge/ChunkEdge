@@ -641,8 +641,6 @@ impl OldVisibleEntityLayers {
     }
 }
 
-/// A system for adding [`Despawned`] components to disconnected clients. This
-/// works by listening for removed [`Client`] components.
 /// Maps the protocol-level main-arm setting to the entity metadata enum.
 pub(crate) fn map_main_arm(arm: MainArm) -> HumanoidArm {
     match arm {
@@ -651,6 +649,8 @@ pub(crate) fn map_main_arm(arm: MainArm) -> HumanoidArm {
     }
 }
 
+/// A system for adding [`Despawned`] components to disconnected clients. This
+/// works by listening for removed [`Client`] components.
 pub fn despawn_disconnected_clients(
     mut commands: Commands,
     mut disconnected_clients: RemovedComponents<Client>,

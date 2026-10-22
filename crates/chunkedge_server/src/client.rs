@@ -1016,19 +1016,23 @@ pub(crate) fn update_view_and_layers(
 
             // Was the client's chunk layer changed?
             if old_chunk_layer.0 != chunk_layer.0 {
-                // Unload all chunks in the old view.
-                // TODO: can we skip this step if old dimension != new dimension?
+                let new_chunk_layer = chunk_layers.get(chunk_layer.0).ok();
+
                 if let Ok(layer) = chunk_layers.get(old_chunk_layer.0) {
                     for pos in old_view.iter() {
                         if let Some(chunk) = layer.chunk(pos) {
-                            client.write_packet(&ForgetLevelChunkS2c { pos });
+                            let stays_loaded = view.contains(pos)
+                                && new_chunk_layer.is_some_and(|layer| layer.chunk(pos).is_some());
+                            if !stays_loaded {
+                                client.write_packet(&ForgetLevelChunkS2c { pos });
+                            }
                             chunk.dec_viewer_count();
                         }
                     }
                 }
 
                 // Load all chunks in the new view.
-                if let Ok(layer) = chunk_layers.get(chunk_layer.0) {
+                if let Some(layer) = new_chunk_layer {
                     for pos in view.iter() {
                         if let Some(chunk) = layer.chunk(pos) {
                             chunk.write_init_packets(&mut *client, pos, layer.info());

@@ -7,12 +7,13 @@
 //!   instances or clients spawned before mutating.
 
 use std::ops::{Deref, DerefMut};
+use std::sync::LazyLock;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_ident::{Ident, ident};
-use chunkedge_nbt::Compound;
 use chunkedge_nbt::serde::ser::CompoundSerializer;
+use chunkedge_nbt::{Compound, Value};
 use serde::{Deserialize, Serialize};
 use tracing::error;
 
@@ -37,9 +38,7 @@ fn load_default_dimension_types(mut reg: ResMut<DimensionTypeRegistry>, codec: R
         for value in codec.registry(DimensionTypeRegistry::KEY) {
             let mut dimension_type = DimensionType::deserialize(value.element.clone())?;
 
-            // HACK: We don't have a lighting engine implemented. To avoid shrouding the
-            // world in darkness, give all dimensions the max ambient light.
-            dimension_type.ambient_light = 1.0;
+            dimension_type.make_full_bright();
 
             reg.insert(value.name.clone(), dimension_type);
         }
@@ -156,27 +155,35 @@ pub struct DimensionType {
     pub cardinal_light: Option<String>,
 }
 
+impl DimensionType {
+    fn make_full_bright(&mut self) {
+        // HACK: We don't have a lighting engine implemented. To avoid shrouding the
+        // world in darkness, give all dimensions the max ambient light.
+        // This allows even zero-light chunks to be visible.
+        self.ambient_light = 1.0;
+        self.attributes.get_or_insert_with(Compound::new).insert(
+            "minecraft:visual/ambient_light_color",
+            Value::String("#ffffff".into()),
+        );
+    }
+}
+
 impl Default for DimensionType {
+    /// Extracted overworld settings from the registry codec, with full bright hack applied.
     fn default() -> Self {
-        Self {
-            ambient_light: 0.0,
-            coordinate_scale: 1.0,
-            has_fixed_time: false,
-            has_ceiling: false,
-            has_skylight: true,
-            height: 384,
-            infiniburn: "#minecraft:infiniburn_overworld".into(),
-            logical_height: 384,
-            min_y: -64,
-            monster_spawn_block_light_limit: 0,
-            monster_spawn_light_level: MonsterSpawnLightLevel::Int(7),
-            attributes: None,
-            has_ender_dragon_fight: false,
-            timelines: None,
-            default_clock: None,
-            skybox: None,
-            cardinal_light: None,
-        }
+        static DEFAULT: LazyLock<DimensionType> = LazyLock::new(|| {
+            let codec = RegistryCodec::default();
+            let overworld = codec
+                .registry(DimensionTypeRegistry::KEY)
+                .iter()
+                .find(|value| value.name.as_str() == "minecraft:overworld")
+                .expect("extracted overworld dimension");
+            let mut dimension = DimensionType::deserialize(overworld.element.clone())
+                .expect("valid extracted overworld dimension");
+            dimension.make_full_bright();
+            dimension
+        });
+        DEFAULT.clone()
     }
 }
 
@@ -217,8 +224,6 @@ impl From<i32> for MonsterSpawnLightLevel {
 
 #[cfg(test)]
 mod tests {
-    use chunkedge_nbt::Value;
-
     use super::*;
 
     /// The 26.x `attributes` (sky colors, light factors, ...) must survive

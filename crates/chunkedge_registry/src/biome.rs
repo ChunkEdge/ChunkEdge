@@ -9,6 +9,7 @@
 //!   will be disconnected.
 
 use std::ops::{Deref, DerefMut};
+use std::sync::LazyLock;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
@@ -127,13 +128,16 @@ pub struct Biome {
 impl Default for Biome {
     /// Default will be the same as the `minecraft:plains` biome.
     fn default() -> Self {
-        Self {
-            has_precipitation: true,
-            temperature: 0.8,
-            downfall: 0.4,
-            attributes: None,
-            effects: BiomeEffects::default(),
-        }
+        static DEFAULT: LazyLock<Biome> = LazyLock::new(|| {
+            let codec = RegistryCodec::default();
+            let plains = codec
+                .registry(BiomeRegistry::KEY)
+                .iter()
+                .find(|value| value.name.as_str() == "minecraft:plains")
+                .expect("extracted plains biome");
+            Biome::deserialize(plains.element.clone()).expect("valid extracted plains biome")
+        });
+        DEFAULT.clone()
     }
 }
 

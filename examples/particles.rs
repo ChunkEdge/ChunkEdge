@@ -3,6 +3,7 @@
 use std::fmt;
 
 use chunkedge::prelude::*;
+use chunkedge::protocol::ItemStackTemplate;
 use chunkedge::protocol::packets::play::level_particles_s2c::VibrationSourceType;
 
 const SPAWN_Y: i32 = 64;
@@ -116,7 +117,7 @@ fn create_particle_vec() -> Vec<Particle> {
         Particle::Cloud,
         Particle::Crit,
         Particle::DamageIndicator,
-        Particle::DragonBreath,
+        Particle::DragonBreath { power: 1.0 },
         Particle::DrippingLava,
         Particle::FallingLava,
         Particle::LandingLava,
@@ -131,7 +132,10 @@ fn create_particle_vec() -> Vec<Particle> {
             to_color: 0x0000ff00,   // green
             scale: 2.0,
         },
-        Particle::Effect,
+        Particle::Effect {
+            color: -1,
+            power: 1.0,
+        },
         Particle::ElderGuardian,
         Particle::EnchantedHit,
         Particle::Enchant,
@@ -161,12 +165,18 @@ fn create_particle_vec() -> Vec<Particle> {
         Particle::SculkChargePop,
         Particle::SoulFireFlame,
         Particle::Soul,
-        Particle::Flash,
+        Particle::Flash { color: -1 },
         Particle::HappyVillager,
         Particle::Composter,
         Particle::Heart,
-        Particle::InstantEffect,
-        Particle::Item(Box::new(ItemStack::new(ItemKind::IronPickaxe, 1))),
+        Particle::InstantEffect {
+            color: -1,
+            power: 1.0,
+        },
+        Particle::Item(Box::new(ItemStackTemplate(ItemStack::new(
+            ItemKind::IronPickaxe,
+            1,
+        )))),
         Particle::Vibration {
             source: VibrationSourceType::Block {
                 block_pos: [0, SPAWN_Y, 0].into(),

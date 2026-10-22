@@ -1,6 +1,6 @@
 use chunkedge_binary::{Decode, Encode, VarInt};
 use chunkedge_generated::block::BlockState;
-use chunkedge_item::ItemStack;
+use chunkedge_item::ItemStackTemplate;
 use chunkedge_math::{DVec3, Vec3};
 
 use crate::{BlockPos, Packet};
@@ -18,9 +18,10 @@ pub struct LevelParticlesS2c {
 
 // The format of the enum below currently needs to be manually maintained.
 // This means that when we update MC versions, we need to check if the
-// particle types below are still correct. Either with the wiki:
+// particle types below are still correct.
+// The current particle payloads follow the stream codecs in net.minecraft.core.particles.
+// Or check the wiki:
 // https://minecraft.wiki/w/Java_Edition_protocol/Particles
-// Or with the MC source code.
 #[derive(Clone, PartialEq, Debug, Encode, Decode, chunkedge_protocol_macros::RegistryId)]
 #[packet(registry = chunkedge_generated::particle_type)]
 pub enum Particle {
@@ -31,7 +32,10 @@ pub enum Particle {
     Cloud,
     Crit,
     DamageIndicator,
-    DragonBreath,
+    DragonBreath {
+        /// Particle power.
+        power: f32,
+    },
     DrippingLava,
     FallingLava,
     LandingLava,
@@ -53,7 +57,12 @@ pub enum Particle {
         /// The scale, will be clamped between 0.01 and 4.
         scale: f32,
     },
-    Effect,
+    Effect {
+        /// The color encoded as 0xRRGGBB.
+        color: i32,
+        /// Particle power.
+        power: f32,
+    },
     ElderGuardian,
     EnchantedHit,
     Enchant,
@@ -88,13 +97,21 @@ pub enum Particle {
     SculkChargePop,
     SoulFireFlame,
     Soul,
-    Flash,
+    Flash {
+        /// The ARGB components of the color encoded as an Int.
+        color: i32,
+    },
     HappyVillager,
     Composter,
     Heart,
-    InstantEffect,
-    /// If the item is air or its count is 0, the client might crash.
-    Item(Box<ItemStack>),
+    InstantEffect {
+        /// The color encoded as 0xRRGGBB.
+        color: i32,
+        /// Particle power.
+        power: f32,
+    },
+    /// A non-empty item stack.
+    Item(Box<ItemStackTemplate>),
     Vibration {
         /// The type of the vibration source defined by the
         /// `minecraft:position_source_type` builtin registry.

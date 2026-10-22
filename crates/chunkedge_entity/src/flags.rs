@@ -38,6 +38,9 @@ macro_rules! flags {
     }
 }
 
+// This set of flags should be checked against the Minecraft source
+// code and or wiki when we update the version of Minecraft we support
+// so that we can ensure these flags stay in sync with the game.
 flags! {
     entity::Flags {
         on_fire: 0,

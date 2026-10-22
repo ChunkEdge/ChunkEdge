@@ -47,9 +47,6 @@ impl Encode for ScoreboardPosition {
             ScoreboardPosition::SidebarTeam(TeamColor::Pink) => 16_u8.encode(w),
             ScoreboardPosition::SidebarTeam(TeamColor::Yellow) => 17_u8.encode(w),
             ScoreboardPosition::SidebarTeam(TeamColor::White) => 18_u8.encode(w),
-            ScoreboardPosition::SidebarTeam(_) => {
-                Err(anyhow::anyhow!("Invalid scoreboard display position"))
-            }
         }
     }
 }

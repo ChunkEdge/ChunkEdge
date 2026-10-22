@@ -65,7 +65,7 @@ impl Decode<'_> for Compound {
 
         // TODO: consider if we need to bound the input slice or add some other
         // mitigation to prevent excessive memory usage on hostile input.
-        Ok(chunkedge_nbt::from_binary(r)?.0)
+        Ok(chunkedge_nbt::from_unnamed_binary(r)?)
     }
 }
 

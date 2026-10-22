@@ -340,8 +340,8 @@ pub struct HeadYaw(pub f32);
 pub struct Velocity(pub DVec3);
 
 impl Velocity {
-    pub fn to_packet_units(self) -> chunkedge_protocol::Velocity {
-        chunkedge_protocol::Velocity::from_ms_f64(self.0.into())
+    pub fn to_packet_units(self) -> chunkedge_protocol::LpVec3 {
+        chunkedge_protocol::LpVec3((self.0 / 20.0).to_array())
     }
 }
 

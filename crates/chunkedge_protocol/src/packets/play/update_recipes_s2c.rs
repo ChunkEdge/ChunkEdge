@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use chunkedge_binary::{Decode, Encode, IDSet, VarInt};
 use chunkedge_generated::registry_id::RegistryId;
 use chunkedge_ident::Ident;
-use chunkedge_item::ItemStack;
+use chunkedge_item::ItemStackTemplate;
 
 use crate::Packet;
 
@@ -38,7 +38,7 @@ pub enum SlotDisplay<'a> {
         component_type: VarInt,
     },
     Item(RegistryId),
-    ItemStack(Box<ItemStack>),
+    ItemStack(Box<ItemStackTemplate>),
     Tag(Ident<Cow<'a, str>>),
     DyedSlotDemo {
         dye: Box<SlotDisplay<'a>>,

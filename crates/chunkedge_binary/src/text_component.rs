@@ -4,6 +4,7 @@ use std::io::Write;
 use anyhow::ensure;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use chunkedge_nbt::Tag;
+use chunkedge_nbt::binary::{FromModifiedUtf8, ToModifiedUtf8};
 use chunkedge_text::{IntoText, Text};
 
 use crate::{Decode, Encode};
@@ -79,7 +80,7 @@ impl Encode for TextComponent {
                 unreachable!()
             };
 
-            let len = string.len();
+            let len = string.modified_uf8_len();
 
             match u16::try_from(len) {
                 Ok(n) => w.write_u16::<BigEndian>(n)?,
@@ -90,8 +91,7 @@ impl Encode for TextComponent {
                 }
             }
 
-            // Write string bytes... (placeholder for `to_modified_utf8`)
-            w.write_all(string.as_bytes())?;
+            string.to_modified_utf8(len, &mut w)?;
             Ok(())
         } else {
             // Encode as Compound
@@ -117,9 +117,9 @@ impl Decode<'_> for TextComponent {
 
                     let (left, right) = r.split_at(len);
 
-                    *r = right; // make sure reader cusor is correctly possitioned
-
-                    String::from_utf8_lossy(left).into_owned().into()
+                    let decoded = String::from_modified_utf8(left)?;
+                    *r = right;
+                    decoded.into()
                 },
             }),
             val if val == Tag::Compound as u8 => {

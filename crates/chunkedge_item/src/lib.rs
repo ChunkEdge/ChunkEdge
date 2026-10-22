@@ -1,4 +1,5 @@
 mod components;
+mod cost;
 mod impls;
 mod stack;
 mod template;
@@ -21,6 +22,7 @@ pub use crate::components::{
     PropertyValue, RabbitType, Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition,
     ToolRule, TrimMaterial, TrimPattern, TropicalFishPattern, WritablePage, WrittenPage,
 };
+pub use crate::cost::ItemCost;
 pub use crate::impls::decode_item_stack_recursive;
 pub use crate::stack::{HashedItemStack, ItemStack};
 pub use crate::template::ItemStackTemplate;

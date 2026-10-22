@@ -12,6 +12,5 @@ const MAX_PAYLOAD_SIZE: usize = 0x200000;
 pub struct DebugBlockValueS2c<'a> {
     pub block_pos: BlockPos,
     pub subscription: VarInt,
-    pub has_payload: bool,
-    pub payload: Bounded<RawBytes<'a>, MAX_PAYLOAD_SIZE>,
+    pub payload: Option<Bounded<RawBytes<'a>, MAX_PAYLOAD_SIZE>>,
 }

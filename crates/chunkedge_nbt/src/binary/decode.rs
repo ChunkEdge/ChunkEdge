@@ -26,23 +26,30 @@ where
         )));
     }
 
-    let root_name = {
-        let mut slice = *state.slice;
-        let mut peek_state = DecodeState {
-            slice: &mut slice,
-            depth: 0,
-        };
-
-        match peek_state.read_string::<S>() {
-            Ok(_) => Some(state.read_string().unwrap()),
-            Err(_) => None,
-        }
-    };
+    let root_name = Some(state.read_string()?);
     let root = state.read_compound()?;
 
     debug_assert_eq!(state.depth, 0);
 
     Ok((root, root_name))
+}
+
+/// Decodes a compound with a root tag and no root name, as used in packets.
+/// Use [`from_binary`] for named file roots and [`from_network_binary`] for
+/// compound contents without a root tag.
+pub fn from_unnamed_binary<'de, S>(slice: &mut &'de [u8]) -> Result<Compound<S>>
+where
+    S: FromModifiedUtf8<'de> + Hash + Ord,
+{
+    let mut state = DecodeState { slice, depth: 0 };
+    let tag = state.read_tag()?;
+    if tag != Tag::Compound {
+        return Err(Error::new_owned(format!(
+            "expected compound root (got {})",
+            tag.name()
+        )));
+    }
+    state.read_compound()
 }
 
 /// Decodes uncompressed network NBT binary data from the provided slice,

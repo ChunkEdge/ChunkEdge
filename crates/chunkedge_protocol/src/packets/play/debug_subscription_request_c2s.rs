@@ -1,4 +1,4 @@
-use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Bounded, Decode, Encode, VarInt};
 
 use crate::Packet;
 
@@ -8,5 +8,5 @@ use crate::Packet;
 /// registry (e.g. dedicated server tick time, bees, brains, ...).
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct DebugSubscriptionRequestC2s {
-    pub subscriptions: Vec<VarInt>,
+    pub subscriptions: Bounded<Vec<VarInt>, 32>,
 }

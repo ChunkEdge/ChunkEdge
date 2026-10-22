@@ -1,14 +1,35 @@
 use base64::prelude::*;
-use chunkedge_binary::{Decode, Encode};
+use chunkedge_binary::{Bounded, Decode, Encode};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
 /// A property from the game profile.
-#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize, Encode, Decode)]
+#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct Property<S = String> {
     pub name: S,
     pub value: S,
     pub signature: Option<S>,
+}
+
+impl<S: AsRef<str>> Encode for Property<S> {
+    fn encode(&self, mut w: impl std::io::Write) -> anyhow::Result<()> {
+        Bounded::<_, 64>(self.name.as_ref()).encode(&mut w)?;
+        Bounded::<_, 32767>(self.value.as_ref()).encode(&mut w)?;
+        self.signature
+            .as_ref()
+            .map(|s| Bounded::<_, 1024>(s.as_ref()))
+            .encode(w)
+    }
+}
+
+impl<'a, S: From<&'a str>> Decode<'a> for Property<S> {
+    fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        Ok(Self {
+            name: Bounded::<&str, 64>::decode(r)?.0.into(),
+            value: Bounded::<&str, 32767>::decode(r)?.0.into(),
+            signature: Option::<Bounded<&str, 1024>>::decode(r)?.map(|s| s.0.into()),
+        })
+    }
 }
 
 /// Contains URLs to the skin and cape of a player.

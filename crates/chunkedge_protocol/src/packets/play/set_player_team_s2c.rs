@@ -84,10 +84,4 @@ pub enum TeamColor {
     Pink,
     Yellow,
     White,
-    Obfuscated,
-    Bold,
-    Strikethrough,
-    Underlined,
-    Italic,
-    Reset,
 }

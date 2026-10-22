@@ -1,4 +1,4 @@
-use chunkedge_binary::{Decode, Encode, IDSet, VarInt};
+use chunkedge_binary::{Decode, Encode, IDSet, OptionalVarInt, VarInt};
 use chunkedge_generated::registry_id::RegistryId;
 
 use crate::Packet;
@@ -14,7 +14,7 @@ pub struct RecipeBookAddS2c<'a> {
 pub struct RecipeEntry<'a> {
     pub id: VarInt,
     pub display: RecipeDisplay<'a>,
-    pub group: RegistryId,
+    pub group: OptionalVarInt,
     pub category: RegistryId,
     pub ingredients: Option<Vec<IDSet>>,
     // 0x01: show notification; 0x02: highlight as new

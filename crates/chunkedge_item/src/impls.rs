@@ -385,7 +385,11 @@ fn decode_block_predicate(r: &mut &[u8], depth: usize) -> anyhow::Result<BlockPr
     })
 }
 
-fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Result<ItemComponent> {
+pub(crate) fn decode_item_component(
+    r: &mut &[u8],
+    id: usize,
+    depth: usize,
+) -> anyhow::Result<ItemComponent> {
     Ok(match id {
         component_id::CUSTOM_DATA => ItemComponent::CustomData(Decode::decode(r)?),
         component_id::MAX_STACK_SIZE => ItemComponent::MaxStackSize(Decode::decode(r)?),

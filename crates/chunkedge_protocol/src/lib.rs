@@ -22,11 +22,11 @@ pub mod encode;
 pub mod game_mode;
 mod global_pos;
 mod hand;
+mod lp_vec3;
 pub mod movement_flags;
 pub mod packets;
 pub mod profile;
 pub mod sound;
-mod velocity;
 
 use std::io::Write;
 
@@ -43,7 +43,8 @@ pub use chunkedge_binary::array::FixedArray;
 pub use chunkedge_binary::bit_set::{FixedBitSet, VariableBitSet};
 pub use chunkedge_binary::byte_angle::ByteAngle;
 pub use chunkedge_binary::{
-    Either, IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
+    Either, IDSet, IdOr, IntoTextComponent, OptionalVarInt, TextComponent, VarInt,
+    VarIntDecodeError, VarLong,
 };
 pub use chunkedge_generated::registry_id::RegistryId;
 pub use chunkedge_generated::{block, packet_id, status_effects};
@@ -63,12 +64,12 @@ pub use game_mode::GameMode;
 pub use global_pos::GlobalPos;
 pub use hand::Hand;
 pub use ident::ident;
+pub use lp_vec3::LpVec3;
 pub use packets::play::level_particles_s2c::Particle;
 use serde::{Deserialize, Serialize};
 pub use sound::Sound;
 pub use text::{JsonText, Text};
 pub use uuid;
-pub use velocity::Velocity;
 
 /// The maximum number of bytes in a single Minecraft packet.
 pub const MAX_PACKET_SIZE: i32 = 2_i32.pow(21) - 1; // (the maximum that can be sent in a 3-byte VarInt)

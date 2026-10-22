@@ -43,7 +43,7 @@ pub use chunkedge_binary::array::FixedArray;
 pub use chunkedge_binary::bit_set::{FixedBitSet, VariableBitSet};
 pub use chunkedge_binary::byte_angle::ByteAngle;
 pub use chunkedge_binary::{
-    IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
+    Either, IDSet, IdOr, IntoTextComponent, TextComponent, VarInt, VarIntDecodeError, VarLong,
 };
 pub use chunkedge_generated::registry_id::RegistryId;
 pub use chunkedge_generated::{block, packet_id, status_effects};

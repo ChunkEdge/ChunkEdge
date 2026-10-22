@@ -4,6 +4,7 @@ pub mod array;
 pub mod bit_set;
 mod bounded;
 pub mod byte_angle;
+mod either;
 mod id_or;
 mod id_set;
 mod impls;
@@ -13,6 +14,7 @@ mod var_int;
 mod var_long;
 
 pub use bounded::Bounded;
+pub use either::Either;
 pub use id_or::IdOr;
 pub use id_set::IDSet;
 pub use impls::cautious_capacity;

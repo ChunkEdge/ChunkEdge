@@ -1,29 +1,47 @@
 use std::borrow::Cow;
 
-use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Decode, Either, Encode, VarInt};
 use chunkedge_ident::Ident;
 use uuid::Uuid;
 
 use crate::Packet;
 
 /// Tracks, untracks, or updates a waypoint for the client's locator bar.
-///
-/// The `identifier` is either a UUID (when `has_uuid`) or a string ID.
-/// `icon_color` is an optional packed RGB integer (three bytes).
-/// `waypoint_type` selects the `data` shape: 0 = empty, 1 = block position
-/// (`data_pos`), 2 = chunk position (`data_chunk_x`, `data_chunk_z`),
-/// 3 = azimuth angle (`data_azimuth`).
-#[derive(Clone, Debug, Encode, Decode, Packet)]
+#[derive(Clone, Debug, PartialEq, Encode, Decode, Packet)]
 pub struct WaypointS2c<'a> {
-    pub operation: VarInt,
-    pub has_uuid: bool,
-    pub uuid: Option<Uuid>,
-    pub id: Option<Ident<Cow<'a, str>>>,
+    pub operation: WaypointOperation,
+    /// Something that uniquely identifies this specific waypoint.
+    pub identifier: WaypointIdentifier<'a>,
+    /// Path to the waypoint style JSON: `assets/<namespace>/waypoint_style/<value>.json`.
     pub icon_style: Ident<Cow<'a, str>>,
-    pub icon_color: Option<i32>,
-    pub waypoint_type: VarInt,
-    pub data_pos: Option<(VarInt, VarInt, VarInt)>,
-    pub data_chunk_x: Option<VarInt>,
-    pub data_chunk_z: Option<VarInt>,
-    pub data_azimuth: Option<f32>,
+    /// The color of the waypoint icon.
+    pub icon_color: Option<[u8; 3]>,
+    pub data: WaypointData,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Encode, Decode)]
+pub enum WaypointOperation {
+    Track,
+    Untrack,
+    Update,
+}
+
+/// A waypoint identifier is either a UUID or a string.
+/// This uniquely identifies this specific waypoint.
+pub type WaypointIdentifier<'a> = Either<Uuid, Cow<'a, str>>;
+
+#[derive(Copy, Clone, Debug, PartialEq, Encode, Decode)]
+pub enum WaypointData {
+    Empty,
+    Position {
+        x: VarInt,
+        y: VarInt,
+        z: VarInt,
+    },
+    Chunk {
+        x: VarInt,
+        z: VarInt,
+    },
+    /// Angle in radians, encoded as a big-endian float.
+    Azimuth(f32),
 }

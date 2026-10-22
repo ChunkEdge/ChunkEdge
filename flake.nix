@@ -19,9 +19,7 @@
       };
 
       # Pinned to the same toolchain CI uses (see .github/workflows).
-      # selectLatestNightlyWith is intentionally NOT used: a moving nightly
-      # silently changes the toolchain under developers (edition2024 needs
-      # Cargo >= 1.85; the workspace currently requires Rust 1.97.1).
+      # Should be kept in sync with those workflows.
       rust = pkgs.rust-bin.stable."1.97.1".default.override {
         extensions = [ "rust-src" "rust-analyzer" "rustfmt" "clippy" ];
       };
@@ -36,19 +34,14 @@
           udev alsa-lib vulkan-loader wayland
           libX11 libXcursor libXi libXrandr
           libxkbcommon wayland
-          # Java: the extractor targets Minecraft 26.x, whose bytecode and
-          # Gradle/Loom toolchain require JDK 25 to compile and run. It is
-          # the only JDK on PATH (and JAVA_HOME) so `java`/`javac` are
-          # unambiguous. The extractor uses its own Gradle wrapper, so no
-          # system Gradle package is needed.
+          # Java: required for the extractor
           jdk25 jdt-language-server
       ];
-    in 
-    rec
+    in
     {
         devShell = pkgs.mkShell {
             nativeBuildInputs = appNativeBuildInputs;
-            buildInputs = appBuildInputs;    
+            buildInputs = appBuildInputs;
             shellHook = ''
                 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.lib.makeLibraryPath appBuildInputs}"
                 export JAVA_HOME="${pkgs.jdk25}"

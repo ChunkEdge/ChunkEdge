@@ -6,5 +6,6 @@ use crate::Packet;
 pub struct SetBorderLerpSizeS2c {
     pub old_diameter: f64,
     pub new_diameter: f64,
-    pub duration_millis: VarLong,
+    /// Transition duration in game ticks.
+    pub duration_ticks: VarLong,
 }

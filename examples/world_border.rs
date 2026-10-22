@@ -93,7 +93,7 @@ fn init_clients(
         let pickaxe = ItemStack::new(ItemKind::WoodenPickaxe, 1);
         inv.set_slot(main_slot.slot(), pickaxe);
         client
-            .send_chat_message("Use `add` and `center` chat messages to change the world border.");
+            .send_chat_message("Use `add <diameter change> <ticks>` or `center <x> <z>` in chat to change the world border.");
     }
 }
 
@@ -108,36 +108,34 @@ fn display_diameter(mut layers: Query<(&mut ChunkLayer, &WorldBorderLerp)>) {
 fn border_controls(
     mut messages: MessageReader<ChatReceivedMessage>,
     mut layers: Query<(&mut WorldBorderCenter, &mut WorldBorderLerp), With<ChunkLayer>>,
+    mut clients: Query<&mut Client>,
 ) {
-    for x in messages.read() {
-        let parts: Vec<&str> = x.message.split(' ').collect();
-        match parts[0] {
-            "add" => {
-                let Ok(value) = parts[1].parse::<f64>() else {
-                    return;
-                };
-
-                let Ok(ticks) = parts[2].parse::<u64>() else {
-                    return;
-                };
-
+    for message in messages.read() {
+        let parts: Vec<&str> = message.message.split_whitespace().collect();
+        match parts.as_slice() {
+            ["add", value, ticks]
+                if let (Ok(value), Ok(ticks)) = (value.parse::<f64>(), ticks.parse::<u64>())
+                    && value.is_finite() =>
+            {
                 let (_, mut lerp) = layers.single_mut().unwrap();
-
                 lerp.target_diameter = lerp.current_diameter + value;
                 lerp.remaining_ticks = ticks;
             }
-            "center" => {
-                let Ok(x) = parts[1].parse::<f64>() else {
-                    return;
-                };
-
-                let Ok(z) = parts[2].parse::<f64>() else {
-                    return;
-                };
-
+            ["center", x, z]
+                if let (Ok(x), Ok(z)) = (x.parse::<f64>(), z.parse::<f64>())
+                    && x.is_finite()
+                    && z.is_finite() =>
+            {
                 let (mut center, _) = layers.single_mut().unwrap();
                 center.x = x;
                 center.z = z;
+            }
+            ["add" | "center", ..] => {
+                if let Ok(mut client) = clients.get_mut(message.client) {
+                    client.send_chat_message(
+                        "Usage: add <diameter change> <ticks> or center <x> <z>. Coordinates and diameter changes must be finite numbers; ticks must be a non-negative integer.",
+                    );
+                }
             }
             _ => (),
         }

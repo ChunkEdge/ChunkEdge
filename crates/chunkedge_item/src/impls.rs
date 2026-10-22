@@ -296,6 +296,26 @@ pub fn decode_item_stack_recursive(
     }
     let item = ItemKind::decode(r)?;
 
+    decode_stack_components(r, item, count as i8, depth, prefixed)
+}
+
+pub(crate) fn decode_item_stack_template(r: &mut &[u8]) -> anyhow::Result<ItemStack> {
+    let item = ItemKind::decode(r)?;
+    let count = VarInt::decode(r)?.0;
+    anyhow::ensure!(
+        item != ItemKind::Air && (1..=i32::from(i8::MAX)).contains(&count),
+        "Item stack template must have a non-air item and a count between 1 and 127"
+    );
+    decode_stack_components(r, item, count as i8, 0, false)
+}
+
+fn decode_stack_components(
+    r: &mut &[u8],
+    item: ItemKind,
+    count: i8,
+    depth: usize,
+    prefixed: bool,
+) -> anyhow::Result<ItemStack> {
     let mut components = item.default_components();
 
     // Decode counts
@@ -331,7 +351,7 @@ pub fn decode_item_stack_recursive(
 
     Ok(ItemStack {
         item,
-        count: count as i8,
+        count,
         components,
     })
 }

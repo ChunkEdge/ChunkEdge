@@ -17,7 +17,8 @@ use chunkedge_server::protocol::packets::play::{
     SelectAdvancementsTabS2c, update_advancements_s2c as packet,
 };
 use chunkedge_server::protocol::{
-    IntoTextComponent, Packet, PacketSide, PacketState, VarInt, WritePacket, anyhow,
+    IntoTextComponent, ItemStackTemplate, Packet, PacketSide, PacketState, VarInt, WritePacket,
+    anyhow,
 };
 use chunkedge_server::{Ident, ItemStack, Text};
 use derive_more::{Deref, DerefMut};
@@ -118,7 +119,7 @@ impl UpdateAdvancementCachedBytesQuery<'_, '_> {
             pkt.display_data = Some(packet::AdvancementDisplay {
                 title: (&a_display.title).into_cow_text_component(),
                 description: (&a_display.description).into_cow_text_component(),
-                icon: &a_display.icon,
+                icon: ItemStackTemplate(&a_display.icon),
                 frame_type: VarInt(a_display.frame_type as i32),
                 flags: a_display.flags(),
                 background_texture: a_display.background_texture.as_ref().map(|v| v.borrowed()),

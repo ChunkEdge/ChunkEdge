@@ -1,6 +1,7 @@
 mod components;
 mod impls;
 mod stack;
+mod template;
 mod vanilla_components;
 
 pub(crate) const NUM_ITEM_COMPONENTS: usize = 96;
@@ -22,6 +23,7 @@ pub use crate::components::{
 };
 pub use crate::impls::decode_item_stack_recursive;
 pub use crate::stack::{HashedItemStack, ItemStack};
+pub use crate::template::ItemStackTemplate;
 
 #[cfg(test)]
 mod tests {

@@ -49,7 +49,7 @@ pub use chunkedge_generated::registry_id::RegistryId;
 pub use chunkedge_generated::{block, packet_id, status_effects};
 pub use chunkedge_ident as ident;
 pub use chunkedge_ident::Ident;
-pub use chunkedge_item::{ItemKind, ItemStack};
+pub use chunkedge_item::{ItemKind, ItemStack, ItemStackTemplate};
 pub use chunkedge_math as math;
 pub use chunkedge_nbt as nbt;
 use chunkedge_protocol_macros::Packet;

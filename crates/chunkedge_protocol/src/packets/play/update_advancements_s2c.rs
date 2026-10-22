@@ -6,12 +6,12 @@ use std::io::Write;
 use chunkedge_binary::{Decode, Encode, TextComponent, VarInt};
 use chunkedge_generated::packet_id;
 use chunkedge_ident::Ident;
-use chunkedge_item::ItemStack;
+use chunkedge_item::ItemStackTemplate;
 
 use crate::Packet;
 
 pub type UpdateAdvancementsS2c<'a> =
-    GenericUpdateAdvancementsS2c<'a, (Ident<Cow<'a, str>>, Advancement<'a, ItemStack>)>;
+    GenericUpdateAdvancementsS2c<'a, (Ident<Cow<'a, str>>, Advancement<'a, ItemStackTemplate>)>;
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 #[packet(id = packet_id::PLAY_UPDATE_ADVANCEMENTS_S2C)]
@@ -40,6 +40,7 @@ pub struct AdvancementRequirements<'a> {
 pub struct AdvancementDisplay<'a, I> {
     pub title: Cow<'a, TextComponent>,
     pub description: Cow<'a, TextComponent>,
+    /// Item icon encoded with [`ItemStackTemplate`].
     pub icon: I,
     pub frame_type: VarInt,
     pub flags: i32,

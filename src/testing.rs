@@ -117,6 +117,7 @@ pub fn create_mock_client<N: Into<String>>(name: N) -> (ClientBundle, MockClient
     let conn = MockClientConnection::new();
 
     let bundle = ClientBundle::new(ClientBundleArgs {
+        online_mode: false,
         username: name.into(),
         uuid: Uuid::from_bytes(rand::random()),
         ip: IpAddr::V4(Ipv4Addr::LOCALHOST),

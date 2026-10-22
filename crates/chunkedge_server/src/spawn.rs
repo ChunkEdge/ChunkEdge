@@ -139,6 +139,8 @@ pub(super) fn initial_join(
             position: *pos,
         });
 
+        let online_mode = client.online_mode;
+
         // The login packet is prepended so that it's sent before all the other packets.
         // Some packets don't work correctly when sent before the game join packet.
         _ = client.enc.prepend_packet(&LoginS2c {
@@ -160,8 +162,7 @@ pub(super) fn initial_join(
             portal_cooldown: VarInt(spawn.portal_cooldown.0),
             do_limited_crafting: false, // TODO
             dimension_type: VarInt(dimension_type.get_value().into()),
-            // TODO: picks up the actual connection mode instead of assuming online.
-            online_mode: true,
+            online_mode,
             enforeces_secure_chat: true,
             // FIXME: add missing sea_level
             sea_level: VarInt(0),

@@ -162,6 +162,7 @@ impl ClientBundle {
                 conn: args.conn,
                 enc: args.enc,
                 entity_id: EntityId::default(),
+                online_mode: args.online_mode,
             },
             settings: crate::client_settings::ClientSettings {
                 locale: args.locale.into_boxed_str(),
@@ -211,6 +212,9 @@ impl ClientBundle {
 
 /// Arguments for [`ClientBundle::new`].
 pub struct ClientBundleArgs {
+    /// Whether the connection uses direct online-mode authentication.
+    /// Set to false for offline and proxy-forwarded connections.
+    pub online_mode: bool,
     /// The username for the client.
     pub username: String,
     /// UUID of the client.
@@ -249,6 +253,7 @@ pub struct ClientMarker;
 #[derive(Component)]
 pub struct Client {
     conn: Box<dyn ClientConnection>,
+    pub(crate) online_mode: bool,
     pub(crate) enc: PacketEncoder,
     /// Copy of the client's [`EntityId`] component, set at join time, so
     /// methods on `Client` can address packets to the client's own entity.

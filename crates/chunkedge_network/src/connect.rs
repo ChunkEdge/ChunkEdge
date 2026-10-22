@@ -178,6 +178,7 @@ async fn handle_handshake(
                 Some((info, cleanup)) => {
                     let client = io.into_client_args(
                         info,
+                        matches!(shared.connection_mode(), ConnectionMode::Online { .. }),
                         shared.0.incoming_byte_limit,
                         shared.0.outgoing_byte_limit,
                         cleanup,

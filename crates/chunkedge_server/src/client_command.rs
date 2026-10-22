@@ -131,22 +131,23 @@ fn handle_client_command(
     }
 }
 
-/// Tracks sneak/sprint state from the 26.x player input packet, which carries
-/// them as a bitfield instead of the old sneak/sprint command actions.
-/// Edge transitions are forwarded as [`SneakMessage`] and [`SprintMessage`].
+/// Tracks sneaking from [`PlayerInputC2s`].
+///
+/// The sprint input bit is only the sprint key state. Actual sprinting comes
+/// from [`PlayerCommandC2s`] and is handled by [`handle_client_command`].
 pub(crate) fn handle_player_input(
     mut packets: MessageReader<PacketMessage>,
     mut clients: Query<(&mut entity::Pose, &mut Flags)>,
-    mut sprinting_messages: MessageWriter<SprintMessage>,
     mut sneaking_messages: MessageWriter<SneakMessage>,
-    mut last_inputs: Local<HashMap<Entity, (bool, bool)>>,
+    mut last_sneaking: Local<HashMap<Entity, bool>>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerInputC2s>() {
             let sneak = pkt.flags.sneak();
-            let sprint = pkt.flags.sprint();
-            let (was_sneaking, was_sprinting) =
-                last_inputs.get(&packet.client).copied().unwrap_or_default();
+            let was_sneaking = last_sneaking
+                .get(&packet.client)
+                .copied()
+                .unwrap_or_default();
 
             if sneak != was_sneaking {
                 if let Ok((mut pose, mut flags)) = clients.get_mut(packet.client) {
@@ -168,22 +169,7 @@ pub(crate) fn handle_player_input(
                 });
             }
 
-            if sprint != was_sprinting {
-                if let Ok((_, mut flags)) = clients.get_mut(packet.client) {
-                    flags.set_sprinting(sprint);
-                }
-
-                sprinting_messages.write(SprintMessage {
-                    client: packet.client,
-                    state: if sprint {
-                        SprintState::Start
-                    } else {
-                        SprintState::Stop
-                    },
-                });
-            }
-
-            last_inputs.insert(packet.client, (sneak, sprint));
+            last_sneaking.insert(packet.client, sneak);
         }
     }
 }

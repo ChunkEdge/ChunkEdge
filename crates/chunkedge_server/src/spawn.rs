@@ -5,7 +5,7 @@ use std::collections::BTreeSet;
 
 use bevy_ecs::prelude::*;
 use bevy_ecs::query::QueryData;
-use chunkedge_entity::{EntityId, EntityLayerId};
+use chunkedge_entity::EntityId;
 use chunkedge_protocol::packets::play::game_event_s2c::GameEventKind;
 use chunkedge_protocol::packets::play::respawn_s2c::DataKeptFlags;
 use chunkedge_protocol::packets::play::{
@@ -188,7 +188,7 @@ pub(super) fn respawn(
     mut clients: Query<
         (
             &mut Client,
-            &EntityLayerId,
+            &VisibleChunkLayer,
             &DeathLocation,
             &HashedSeed,
             &GameMode,

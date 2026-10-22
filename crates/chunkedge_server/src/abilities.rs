@@ -5,7 +5,7 @@ use chunkedge_protocol::packets::play::{PlayerAbilitiesC2s, PlayerAbilitiesS2c};
 use chunkedge_protocol::{GameMode, WritePacket};
 use derive_more::{Deref, DerefMut};
 
-use crate::client::{Client, UpdateClientsSet, update_game_mode};
+use crate::client::{Client, UpdateClientsSet, VisibleChunkLayer, update_game_mode};
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
 /// [`Component`] that stores the player's flying speed ability.
@@ -71,7 +71,8 @@ impl Plugin for AbilitiesPlugin {
                     update_player_abilities.before(update_client_player_abilities),
                 )
                     .in_set(UpdateClientsSet)
-                    .after(update_game_mode),
+                    .after(update_game_mode)
+                    .after(crate::spawn::respawn),
             )
             .add_systems(EventLoopPreUpdate, update_server_player_abilities);
     }
@@ -89,6 +90,8 @@ fn update_client_player_abilities(
             Changed<PlayerAbilitiesFlags>,
             Changed<FlyingSpeed>,
             Changed<FovModifier>,
+            // Respawn creates client-side abilities
+            Changed<VisibleChunkLayer>,
         )>,
     >,
 ) {

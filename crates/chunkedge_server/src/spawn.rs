@@ -11,7 +11,7 @@ use chunkedge_protocol::packets::play::respawn_s2c::DataKeptFlags;
 use chunkedge_protocol::packets::play::{
     GameEventS2c, LoginS2c, RespawnS2c, SetDefaultSpawnPositionS2c,
 };
-use chunkedge_protocol::{BlockPos, GameMode, GlobalPos, Ident, VarInt, WritePacket};
+use chunkedge_protocol::{BlockPos, GameMode, GlobalPos, Ident, VarInt, WritePacket, ident};
 use chunkedge_registry::tags::TagsRegistry;
 use chunkedge_registry::{DimensionTypeRegistry, RegistryCodec};
 use derive_more::{Deref, DerefMut};
@@ -60,8 +60,12 @@ impl Default for HasRespawnScreen {
 
 /// The position and angle that clients will respawn with. Also
 /// controls the position that compasses point towards.
-#[derive(Component, Copy, Clone, PartialEq, Default, Debug)]
+#[derive(Component, Clone, PartialEq, Debug)]
 pub struct RespawnPosition {
+    /// The dimension containing the spawn position. Defaults to
+    /// `minecraft:overworld` and is independent of the client's current layer.
+    /// This is a world identifier, not a dimension type identifier.
+    pub dimension: Ident<String>,
     /// The position that clients will respawn at. This can be changed at any
     /// time to set the position that compasses point towards.
     pub pos: BlockPos,
@@ -69,6 +73,17 @@ pub struct RespawnPosition {
     pub yaw: f32,
     /// The pitch angle that clients will respawn with (in degrees).
     pub pitch: f32,
+}
+
+impl Default for RespawnPosition {
+    fn default() -> Self {
+        Self {
+            dimension: ident!("overworld").into(),
+            pos: BlockPos::default(),
+            yaw: 0.0,
+            pitch: 0.0,
+        }
+    }
 }
 
 /// A convenient [`QueryData`] for obtaining client spawn components. Also see
@@ -232,11 +247,9 @@ pub(super) fn update_respawn_position(
     mut clients: Query<(&mut Client, &RespawnPosition), Changed<RespawnPosition>>,
 ) {
     for (mut client, respawn_pos) in &mut clients {
-        // TODO: picks up the actual spawn dimension instead of assuming
-        // overworld (no layer -> dimension mapping exists yet).
         client.write_packet(&SetDefaultSpawnPositionS2c {
             position: GlobalPos {
-                dimension_name: Ident::new("minecraft:overworld").expect("invalid dimension ident"),
+                dimension_name: respawn_pos.dimension.as_str_ident().into(),
                 position: respawn_pos.pos,
             },
             yaw: respawn_pos.yaw,

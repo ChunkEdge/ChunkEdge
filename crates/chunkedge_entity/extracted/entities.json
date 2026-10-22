@@ -4,19 +4,19 @@
       {
         "default_value": false,
         "index": 11,
-        "name": "data_id_paddle_left",
+        "name": "left_paddle_moving",
         "type": "boolean"
       },
       {
         "default_value": false,
         "index": 12,
-        "name": "data_id_paddle_right",
+        "name": "right_paddle_moving",
         "type": "boolean"
       },
       {
         "default_value": 0,
         "index": 13,
-        "name": "data_id_bubble_time",
+        "name": "bubble_wobble_ticks",
         "type": "integer"
       }
     ],
@@ -60,7 +60,7 @@
       {
         "default_value": false,
         "index": 19,
-        "name": "data_id_chest",
+        "name": "chest",
         "type": "boolean"
       }
     ],
@@ -8004,7 +8004,7 @@
       {
         "default_value": 0,
         "index": 18,
-        "name": "data_unhappy_counter",
+        "name": "head_rolling_time_left",
         "type": "integer"
       }
     ],
@@ -15207,7 +15207,7 @@
       {
         "default_value": 0,
         "index": 18,
-        "name": "data_target_c",
+        "name": "tracked_entity_id_3",
         "type": "integer"
       },
       {

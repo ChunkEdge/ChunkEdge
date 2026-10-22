@@ -12,6 +12,11 @@ import java.util.Map;
  * update. Only names Mojang actually changed are mapped; everything new
  * in 26.x keeps its official name.
  *
+ * <p>TODO: Revisit this compatibility layer and eventually adopt Mojang-mapped
+ * names throughout the generated Rust API. Preserving the old Yarn names is
+ * useful for this update, but a deliberate migration to Mojang names is likely
+ * preferable long term, even though it will cause widespread API breakage.
+ *
  * <p>Class mapping was derived by matching entity-type registry paths
  * (stable across versions) and children sets for abstract classes. Field
  * mapping was derived per class by wire-kind, default value, and name
@@ -195,6 +200,11 @@ public final class LegacyNames {
 
     /** Official Class.field -> legacy field name. */
     private static final Map<String, String> FIELD_NAMES = Map.ofEntries(
+            Map.entry("AbstractBoat.data_id_paddle_left", "left_paddle_moving"),
+            Map.entry("AbstractBoat.data_id_paddle_right", "right_paddle_moving"),
+            Map.entry("AbstractBoat.data_id_bubble_time", "bubble_wobble_ticks"),
+            Map.entry("AbstractChestedHorse.data_id_chest", "chest"),
+            Map.entry("AbstractVillager.data_unhappy_counter", "head_rolling_time_left"),
             Map.entry("AbstractCubeMob.id_size", "slime_size"),
             Map.entry("AgeableMob.data_baby_id", "child"),
             Map.entry("Allay.data_can_duplicate", "can_duplicate"),
@@ -370,6 +380,7 @@ public final class LegacyNames {
             Map.entry("WitherBoss.data_id_inv", "invul_timer"),
             Map.entry("WitherBoss.data_target_a", "tracked_entity_id_1"),
             Map.entry("WitherBoss.data_target_b", "tracked_entity_id_2"),
+            Map.entry("WitherBoss.data_target_c", "tracked_entity_id_3"),
             Map.entry("WitherSkull.data_dangerous", "charged"),
             Map.entry("Wolf.data_collar_color", "collar_color"),
             Map.entry("Wolf.data_interested_id", "begging"),

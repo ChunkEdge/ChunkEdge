@@ -12,6 +12,11 @@ pub mod item {
     include!(concat!(env!("OUT_DIR"), "/item.rs"));
 }
 
+/// Vanilla item component type IDs extracted from the Minecraft registry.
+pub mod item_component_type {
+    include!(concat!(env!("OUT_DIR"), "/item_component_type.rs"));
+}
+
 pub mod sound {
     include!(concat!(env!("OUT_DIR"), "/sound.rs"));
 }

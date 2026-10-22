@@ -5,6 +5,7 @@ mod block;
 mod chunk_view;
 mod command_argument_type;
 mod item;
+mod item_component_type;
 mod packet_id;
 mod particle_type;
 mod sound;
@@ -14,6 +15,7 @@ pub fn main() -> anyhow::Result<()> {
     write_generated_file(attributes::build()?, "attributes.rs")?;
     write_generated_file(block::build()?, "block.rs")?;
     write_generated_file(item::build()?, "item.rs")?;
+    write_generated_file(item_component_type::build()?, "item_component_type.rs")?;
     write_generated_file(sound::build()?, "sound.rs")?;
     write_generated_file(packet_id::build()?, "packet_id.rs")?;
     write_generated_file(particle_type::build()?, "particle_type.rs")?;

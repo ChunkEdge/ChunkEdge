@@ -4,7 +4,7 @@ mod stack;
 mod template;
 mod vanilla_components;
 
-pub(crate) const NUM_ITEM_COMPONENTS: usize = 96;
+pub(crate) const NUM_ITEM_COMPONENTS: usize = chunkedge_generated::item_component_type::COUNT;
 /// Controls the maximum recursion depth for encoding and decoding item
 /// components.
 pub(crate) const MAX_RECURSION_DEPTH: usize = 16;
@@ -12,14 +12,14 @@ pub(crate) const MAX_RECURSION_DEPTH: usize = 16;
 pub use chunkedge_generated::item::ItemKind;
 
 pub use crate::components::{
-    AttributeModifier, AttributeSlot, AxolotlType, BannerLayer, BannerPattern, BeeData,
-    BlockPredicate, ConsumableAnimation, ConsumeEffect, ConsumeEffectData, DamageReduction,
-    DyeColor, EquipSlot, ExactComponentMatcher, FireworkExplosionData, FoxType, HorseColor,
-    InstrumentDefinition, ItemComponent, JukeboxSong, LlamaColor, LodestoneTarget,
+    AttributeModifier, AttributeModifierDisplay, AttributeSlot, AxolotlType, BannerLayer,
+    BannerPattern, BeeData, BlockPredicate, ConsumableAnimation, ConsumeEffect, ConsumeEffectData,
+    DamageReduction, DyeColor, EquipSlot, ExactComponentMatcher, FireworkExplosionData, FoxType,
+    HorseColor, InstrumentDefinition, ItemComponent, JukeboxSong, LlamaColor, LodestoneTarget,
     MapPostProcessingType, ModePair, MooshroomType, PaintingVariantDefinition, ParrotType,
-    PartialComponentMatcher, PotionEffect, ProfileProperty, Property, PropertyValue, RabbitType,
-    Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition, ToolRule, TrimMaterial,
-    TrimPattern, TropicalFishPattern, WritablePage, WrittenPage,
+    PartialComponentMatcher, PlayerSkinPatch, PotionEffect, ProfileProperty, Property,
+    PropertyValue, RabbitType, Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition,
+    ToolRule, TrimMaterial, TrimPattern, TropicalFishPattern, WritablePage, WrittenPage,
 };
 pub use crate::impls::decode_item_stack_recursive;
 pub use crate::stack::{HashedItemStack, ItemStack};
@@ -93,18 +93,22 @@ mod tests {
 
         // Test Insert
         let custom_name = ItemComponent::CustomName(Text::from("Test Item").into());
+        let custom_name_id = custom_name.id() as usize;
         stack.insert_component(custom_name.clone());
 
-        assert_eq!(stack.get_component(5_usize), Some(&custom_name));
+        assert_eq!(stack.get_component(custom_name_id), Some(&custom_name));
         assert_eq!(stack.components().len(), 1);
 
         // Test Remove
-        let removed = stack.remove_component(5_usize);
+        let removed = stack.remove_component(custom_name_id);
         assert_eq!(removed, Some(custom_name));
-        assert_eq!(stack.get_component(5_usize), None);
+        assert_eq!(stack.get_component(custom_name_id), None);
 
         // Ensure "Removed" patch is applied (important for serialization)
-        assert!(matches!(stack.components[5], Patchable::Removed));
+        assert!(matches!(
+            stack.components[custom_name_id],
+            Patchable::Removed
+        ));
     }
 
     // --- Serialization Roundtrips ---
@@ -188,7 +192,9 @@ mod tests {
             VarInt(1).encode(&mut *w).unwrap(); // Added components count
             VarInt(0).encode(&mut *w).unwrap(); // Removed components count
 
-            VarInt(41).encode(&mut *w).unwrap(); // Component ID: BundleContents
+            VarInt(chunkedge_generated::item_component_type::BUNDLE_CONTENTS as i32)
+                .encode(&mut *w)
+                .unwrap();
 
             if depth > 0 {
                 VarInt(1).encode(&mut *w).unwrap(); // Nested list length
@@ -269,7 +275,7 @@ mod tests {
         }
 
         assert!(ids.contains(&4));
-        assert!(ids.contains(&30));
+        assert!(ids.contains(&34));
     }
 
     #[test]
@@ -292,6 +298,7 @@ mod tests {
             value: 5.0,
             operation: EntityAttributeOperation::Add,
             slot: AttributeSlot::MainHand,
+            display: AttributeModifierDisplay::Default,
         };
 
         let comp = ItemComponent::AttributeModifiers {

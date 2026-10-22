@@ -71,6 +71,7 @@ public class Main implements ModInitializer {
         var extractors = new Extractor[] {
             new Attributes(),
             new CommandArgumentTypes(),
+            new ItemComponentTypes(),
             new Blocks(),
             new Effects(),
             new Packets(),

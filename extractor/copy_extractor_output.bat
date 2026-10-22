@@ -13,6 +13,7 @@ copy run\chunkedge_extractor_output\paintings.json ..\crates\chunkedge_entity\ex
 copy run\chunkedge_extractor_output\misc.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\attributes.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\command_argument_types.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\item_component_types.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\blocks.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\effects.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\items.json ..\crates\chunkedge_generated\extracted\

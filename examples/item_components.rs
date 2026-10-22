@@ -1,10 +1,11 @@
-use chunkedge::entity::attributes::EntityAttributeOperation;
+use chunkedge::entity::attributes::{EntityAttribute, EntityAttributeOperation};
 use chunkedge::item::{
     AttributeModifier, AttributeSlot, ConsumableAnimation, EquipSlot, ItemComponent,
     ResolvableProfile, SoundEventDefinition,
 };
 use chunkedge::prelude::*;
 use chunkedge::protocol::IntoTextComponent;
+use chunkedge::registry::RegistryCodec;
 use chunkedge_binary::{IdOr, VarInt};
 
 fn main() {
@@ -51,6 +52,7 @@ fn init_clients(
         Added<Client>,
     >,
     layers: Query<Entity, With<ChunkLayer>>,
+    registry_codec: Res<RegistryCodec>,
 ) {
     for (
         mut layer_id,
@@ -79,13 +81,12 @@ fn init_clients(
                 ItemComponent::Lore(vec!["Very epic".into_text_component()]),
                 ItemComponent::AttributeModifiers {
                     modifiers: vec![AttributeModifier {
-                        // `attack_damage`, You can find these IDs in `attributes.json`.
-                        // The index in this map is the ID of attribute
-                        attribute_id: RegistryId::new(2),
+                        attribute_id: EntityAttribute::AttackDamage.into(),
                         modifier_id: ident!("my_custom_damage").into(),
                         operation: EntityAttributeOperation::Add,
                         value: 100.0,
                         slot: AttributeSlot::MainHand,
+                        display: Default::default(),
                     }],
                 },
             ]),
@@ -117,7 +118,12 @@ fn init_clients(
                     dispensable: true,
                     swappable: true,
                     damage_on_hurt: false,
-                    shearing_sound: None,
+                    equip_on_interact: false,
+                    can_be_sheared: false,
+                    shearing_sound: IdOr::Inline(SoundEventDefinition {
+                        sound: ident!("minecraft:item.shears.snip").into(),
+                        range: None,
+                    }),
                 },
             ]),
         );
@@ -130,10 +136,18 @@ fn init_clients(
                 ),
                 ItemComponent::DyedColor { color: 0xff0000 },
                 ItemComponent::Enchantments(vec![
-                    // Protection IV, You can find these IDs in the entry `minecraft:enchantments`
-                    // in `registry_codec.json`. The index in this map is the ID of the
-                    // enchantment.
-                    (RegistryId::new(27), VarInt(4)),
+                    // Dynamic registry IDs follow the registry sent to the client.
+                    (
+                        RegistryId::new(
+                            registry_codec
+                                .registry(ident!("enchantment"))
+                                .iter()
+                                .position(|value| value.name == ident!("protection"))
+                                .expect("protection enchantment")
+                                as i32,
+                        ),
+                        VarInt(4),
+                    ),
                 ]),
             ]),
         );
@@ -157,6 +171,7 @@ fn init_clients(
                     name: Some("Notch".to_owned()),
                     id: None,
                     properties: Vec::new(),
+                    ..Default::default()
                 },
             )]),
         );

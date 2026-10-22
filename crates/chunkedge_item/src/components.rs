@@ -2,6 +2,7 @@ use std::io::Write;
 
 use chunkedge_binary::{Decode, Encode, IDSet, IdOr, TextComponent, VarInt};
 use chunkedge_generated::attributes::EntityAttributeOperation;
+use chunkedge_generated::item_component_type as component_id;
 use chunkedge_generated::registry_id::RegistryId;
 use chunkedge_ident::Ident;
 use chunkedge_nbt::Compound;
@@ -221,9 +222,12 @@ pub enum ItemComponent {
         swappable: bool,
         /// If true, the item takes durability damage when the wearer is hurt.
         damage_on_hurt: bool,
-        /// `Some` If the item can be sheared off (like a pumpkin from a snow
-        /// golem) + The sound to play when the item is sheared.
-        shearing_sound: Option<IdOr<SoundEventDefinition>>,
+        /// Whether interacting with an entity equips the item onto it.
+        equip_on_interact: bool,
+        /// Whether the item can be sheared off its wearer.
+        can_be_sheared: bool,
+        /// Sound played when the item is sheared off.
+        shearing_sound: IdOr<SoundEventDefinition>,
     },
 
     /// Items that can be used in an anvil to repair this item.
@@ -500,102 +504,118 @@ pub enum ItemComponent {
 impl ItemComponent {
     pub fn id(&self) -> u32 {
         match self {
-            ItemComponent::CustomData { .. } => 0,
-            ItemComponent::MaxStackSize { .. } => 1,
-            ItemComponent::MaxDamage { .. } => 2,
-            ItemComponent::Damage { .. } => 3,
-            ItemComponent::Unbreakable => 4,
-            ItemComponent::CustomName { .. } => 5,
-            ItemComponent::ItemName { .. } => 6,
-            ItemComponent::ItemModel { .. } => 7,
-            ItemComponent::Lore { .. } => 8,
-            ItemComponent::Rarity { .. } => 9,
-            ItemComponent::Enchantments { .. } => 10,
-            ItemComponent::CanPlaceOn { .. } => 11,
-            ItemComponent::CanBreak { .. } => 12,
-            ItemComponent::AttributeModifiers { .. } => 13,
-            ItemComponent::CustomModelData { .. } => 14,
-            ItemComponent::TooltipDisplay { .. } => 15,
-            ItemComponent::RepairCost { .. } => 16,
-            ItemComponent::CreativeSlotLock => 17,
-            ItemComponent::EnchantmentGlintOverride { .. } => 18,
-            ItemComponent::IntangibleProjectile { .. } => 19,
-            ItemComponent::Food { .. } => 20,
-            ItemComponent::Consumable { .. } => 21,
-            ItemComponent::UseRemainder { .. } => 22,
-            ItemComponent::UseCooldown { .. } => 23,
-            ItemComponent::DamageResistant { .. } => 24,
-            ItemComponent::Tool { .. } => 25,
-            ItemComponent::Weapon { .. } => 26,
-            ItemComponent::Enchantable { .. } => 27,
-            ItemComponent::Equippable { .. } => 28,
-            ItemComponent::Repairable { .. } => 29,
-            ItemComponent::Glider => 30,
-            ItemComponent::TooltipStyle { .. } => 31,
-            ItemComponent::DeathProtection { .. } => 32,
-            ItemComponent::BlocksAttacks { .. } => 33,
-            ItemComponent::StoredEnchantments { .. } => 34,
-            ItemComponent::DyedColor { .. } => 35,
-            ItemComponent::MapColor { .. } => 36,
-            ItemComponent::MapId { .. } => 37,
-            ItemComponent::MapDecorations { .. } => 38,
-            ItemComponent::MapPostProcessing { .. } => 39,
-            ItemComponent::ChargedProjectiles { .. } => 40,
-            ItemComponent::BundleContents { .. } => 41,
-            ItemComponent::PotionContents { .. } => 42,
-            ItemComponent::PotionDurationScale { .. } => 43,
-            ItemComponent::SuspiciousStewEffects { .. } => 44,
-            ItemComponent::WritableBookContent { .. } => 45,
-            ItemComponent::WrittenBookContent { .. } => 46,
-            ItemComponent::Trim { .. } => 47,
-            ItemComponent::DebugStickState { .. } => 48,
-            ItemComponent::EntityData { .. } => 49,
-            ItemComponent::BucketEntityData { .. } => 50,
-            ItemComponent::BlockEntityData { .. } => 51,
-            ItemComponent::Instrument { .. } => 52,
-            ItemComponent::ProvidesTrimMaterial { .. } => 53,
-            ItemComponent::OminousBottleAmplifier { .. } => 54,
-            ItemComponent::JukeboxPlayable { .. } => 55,
-            ItemComponent::ProvidesBannerPatterns { .. } => 56,
-            ItemComponent::Recipes { .. } => 57,
-            ItemComponent::LodestoneTracker { .. } => 58,
-            ItemComponent::FireworkExplosion { .. } => 59,
-            ItemComponent::Fireworks { .. } => 60,
-            ItemComponent::Profile { .. } => 61,
-            ItemComponent::NoteBlockSound { .. } => 62,
-            ItemComponent::BannerPatterns { .. } => 63,
-            ItemComponent::BaseColor { .. } => 64,
-            ItemComponent::PotDecorations { .. } => 65,
-            ItemComponent::Container { .. } => 66,
-            ItemComponent::BlockState { .. } => 67,
-            ItemComponent::Bees { .. } => 68,
-            ItemComponent::Lock { .. } => 69,
-            ItemComponent::ContainerLoot { .. } => 70,
-            ItemComponent::BreakSound { .. } => 71,
-            ItemComponent::VillagerVariant { .. } => 72,
-            ItemComponent::WolfVariant { .. } => 73,
-            ItemComponent::WolfSoundVariant { .. } => 74,
-            ItemComponent::WolfCollar { .. } => 75,
-            ItemComponent::FoxVariant { .. } => 76,
-            ItemComponent::SalmonSize { .. } => 77,
-            ItemComponent::ParrotVariant { .. } => 78,
-            ItemComponent::TropicalFishPattern { .. } => 79,
-            ItemComponent::TropicalFishBaseColor { .. } => 80,
-            ItemComponent::TropicalFishPatternColor { .. } => 81,
-            ItemComponent::MooshroomVariant { .. } => 82,
-            ItemComponent::RabbitVariant { .. } => 83,
-            ItemComponent::PigVariant { .. } => 84,
-            ItemComponent::CowVariant { .. } => 85,
-            ItemComponent::ChickenVariant { .. } => 86,
-            ItemComponent::FrogVariant { .. } => 87,
-            ItemComponent::HorseVariant { .. } => 88,
-            ItemComponent::PaintingVariant { .. } => 89,
-            ItemComponent::LlamaVariant { .. } => 90,
-            ItemComponent::AxolotlVariant { .. } => 91,
-            ItemComponent::CatVariant { .. } => 92,
-            ItemComponent::CatCollar { .. } => 93,
-            ItemComponent::SheepColor { .. } => 94,
-            ItemComponent::ShulkerColor { .. } => 95,
+            ItemComponent::CustomData { .. } => component_id::CUSTOM_DATA as u32,
+            ItemComponent::MaxStackSize { .. } => component_id::MAX_STACK_SIZE as u32,
+            ItemComponent::MaxDamage { .. } => component_id::MAX_DAMAGE as u32,
+            ItemComponent::Damage { .. } => component_id::DAMAGE as u32,
+            ItemComponent::Unbreakable => component_id::UNBREAKABLE as u32,
+            ItemComponent::CustomName { .. } => component_id::CUSTOM_NAME as u32,
+            ItemComponent::ItemName { .. } => component_id::ITEM_NAME as u32,
+            ItemComponent::ItemModel { .. } => component_id::ITEM_MODEL as u32,
+            ItemComponent::Lore { .. } => component_id::LORE as u32,
+            ItemComponent::Rarity { .. } => component_id::RARITY as u32,
+            ItemComponent::Enchantments { .. } => component_id::ENCHANTMENTS as u32,
+            ItemComponent::CanPlaceOn { .. } => component_id::CAN_PLACE_ON as u32,
+            ItemComponent::CanBreak { .. } => component_id::CAN_BREAK as u32,
+            ItemComponent::AttributeModifiers { .. } => component_id::ATTRIBUTE_MODIFIERS as u32,
+            ItemComponent::CustomModelData { .. } => component_id::CUSTOM_MODEL_DATA as u32,
+            ItemComponent::TooltipDisplay { .. } => component_id::TOOLTIP_DISPLAY as u32,
+            ItemComponent::RepairCost { .. } => component_id::REPAIR_COST as u32,
+            ItemComponent::CreativeSlotLock => component_id::CREATIVE_SLOT_LOCK as u32,
+            ItemComponent::EnchantmentGlintOverride { .. } => {
+                component_id::ENCHANTMENT_GLINT_OVERRIDE as u32
+            }
+            ItemComponent::IntangibleProjectile { .. } => {
+                component_id::INTANGIBLE_PROJECTILE as u32
+            }
+            ItemComponent::Food { .. } => component_id::FOOD as u32,
+            ItemComponent::Consumable { .. } => component_id::CONSUMABLE as u32,
+            ItemComponent::UseRemainder { .. } => component_id::USE_REMAINDER as u32,
+            ItemComponent::UseCooldown { .. } => component_id::USE_COOLDOWN as u32,
+            ItemComponent::DamageResistant { .. } => component_id::DAMAGE_RESISTANT as u32,
+            ItemComponent::Tool { .. } => component_id::TOOL as u32,
+            ItemComponent::Weapon { .. } => component_id::WEAPON as u32,
+            ItemComponent::Enchantable { .. } => component_id::ENCHANTABLE as u32,
+            ItemComponent::Equippable { .. } => component_id::EQUIPPABLE as u32,
+            ItemComponent::Repairable { .. } => component_id::REPAIRABLE as u32,
+            ItemComponent::Glider => component_id::GLIDER as u32,
+            ItemComponent::TooltipStyle { .. } => component_id::TOOLTIP_STYLE as u32,
+            ItemComponent::DeathProtection { .. } => component_id::DEATH_PROTECTION as u32,
+            ItemComponent::BlocksAttacks { .. } => component_id::BLOCKS_ATTACKS as u32,
+            ItemComponent::StoredEnchantments { .. } => component_id::STORED_ENCHANTMENTS as u32,
+            ItemComponent::DyedColor { .. } => component_id::DYED_COLOR as u32,
+            ItemComponent::MapColor { .. } => component_id::MAP_COLOR as u32,
+            ItemComponent::MapId { .. } => component_id::MAP_ID as u32,
+            ItemComponent::MapDecorations { .. } => component_id::MAP_DECORATIONS as u32,
+            ItemComponent::MapPostProcessing { .. } => component_id::MAP_POST_PROCESSING as u32,
+            ItemComponent::ChargedProjectiles { .. } => component_id::CHARGED_PROJECTILES as u32,
+            ItemComponent::BundleContents { .. } => component_id::BUNDLE_CONTENTS as u32,
+            ItemComponent::PotionContents { .. } => component_id::POTION_CONTENTS as u32,
+            ItemComponent::PotionDurationScale { .. } => component_id::POTION_DURATION_SCALE as u32,
+            ItemComponent::SuspiciousStewEffects { .. } => {
+                component_id::SUSPICIOUS_STEW_EFFECTS as u32
+            }
+            ItemComponent::WritableBookContent { .. } => component_id::WRITABLE_BOOK_CONTENT as u32,
+            ItemComponent::WrittenBookContent { .. } => component_id::WRITTEN_BOOK_CONTENT as u32,
+            ItemComponent::Trim { .. } => component_id::TRIM as u32,
+            ItemComponent::DebugStickState { .. } => component_id::DEBUG_STICK_STATE as u32,
+            ItemComponent::EntityData { .. } => component_id::ENTITY_DATA as u32,
+            ItemComponent::BucketEntityData { .. } => component_id::BUCKET_ENTITY_DATA as u32,
+            ItemComponent::BlockEntityData { .. } => component_id::BLOCK_ENTITY_DATA as u32,
+            ItemComponent::Instrument { .. } => component_id::INSTRUMENT as u32,
+            ItemComponent::ProvidesTrimMaterial { .. } => {
+                component_id::PROVIDES_TRIM_MATERIAL as u32
+            }
+            ItemComponent::OminousBottleAmplifier { .. } => {
+                component_id::OMINOUS_BOTTLE_AMPLIFIER as u32
+            }
+            ItemComponent::JukeboxPlayable { .. } => component_id::JUKEBOX_PLAYABLE as u32,
+            ItemComponent::ProvidesBannerPatterns { .. } => {
+                component_id::PROVIDES_BANNER_PATTERNS as u32
+            }
+            ItemComponent::Recipes { .. } => component_id::RECIPES as u32,
+            ItemComponent::LodestoneTracker { .. } => component_id::LODESTONE_TRACKER as u32,
+            ItemComponent::FireworkExplosion { .. } => component_id::FIREWORK_EXPLOSION as u32,
+            ItemComponent::Fireworks { .. } => component_id::FIREWORKS as u32,
+            ItemComponent::Profile { .. } => component_id::PROFILE as u32,
+            ItemComponent::NoteBlockSound { .. } => component_id::NOTE_BLOCK_SOUND as u32,
+            ItemComponent::BannerPatterns { .. } => component_id::BANNER_PATTERNS as u32,
+            ItemComponent::BaseColor { .. } => component_id::BASE_COLOR as u32,
+            ItemComponent::PotDecorations { .. } => component_id::POT_DECORATIONS as u32,
+            ItemComponent::Container { .. } => component_id::CONTAINER as u32,
+            ItemComponent::BlockState { .. } => component_id::BLOCK_STATE as u32,
+            ItemComponent::Bees { .. } => component_id::BEES as u32,
+            ItemComponent::Lock { .. } => component_id::LOCK as u32,
+            ItemComponent::ContainerLoot { .. } => component_id::CONTAINER_LOOT as u32,
+            ItemComponent::BreakSound { .. } => component_id::BREAK_SOUND as u32,
+            ItemComponent::VillagerVariant { .. } => component_id::VILLAGER_VARIANT as u32,
+            ItemComponent::WolfVariant { .. } => component_id::WOLF_VARIANT as u32,
+            ItemComponent::WolfSoundVariant { .. } => component_id::WOLF_SOUND_VARIANT as u32,
+            ItemComponent::WolfCollar { .. } => component_id::WOLF_COLLAR as u32,
+            ItemComponent::FoxVariant { .. } => component_id::FOX_VARIANT as u32,
+            ItemComponent::SalmonSize { .. } => component_id::SALMON_SIZE as u32,
+            ItemComponent::ParrotVariant { .. } => component_id::PARROT_VARIANT as u32,
+            ItemComponent::TropicalFishPattern { .. } => component_id::TROPICAL_FISH_PATTERN as u32,
+            ItemComponent::TropicalFishBaseColor { .. } => {
+                component_id::TROPICAL_FISH_BASE_COLOR as u32
+            }
+            ItemComponent::TropicalFishPatternColor { .. } => {
+                component_id::TROPICAL_FISH_PATTERN_COLOR as u32
+            }
+            ItemComponent::MooshroomVariant { .. } => component_id::MOOSHROOM_VARIANT as u32,
+            ItemComponent::RabbitVariant { .. } => component_id::RABBIT_VARIANT as u32,
+            ItemComponent::PigVariant { .. } => component_id::PIG_VARIANT as u32,
+            ItemComponent::CowVariant { .. } => component_id::COW_VARIANT as u32,
+            ItemComponent::ChickenVariant { .. } => component_id::CHICKEN_VARIANT as u32,
+            ItemComponent::FrogVariant { .. } => component_id::FROG_VARIANT as u32,
+            ItemComponent::HorseVariant { .. } => component_id::HORSE_VARIANT as u32,
+            ItemComponent::PaintingVariant { .. } => component_id::PAINTING_VARIANT as u32,
+            ItemComponent::LlamaVariant { .. } => component_id::LLAMA_VARIANT as u32,
+            ItemComponent::AxolotlVariant { .. } => component_id::AXOLOTL_VARIANT as u32,
+            ItemComponent::CatVariant { .. } => component_id::CAT_VARIANT as u32,
+            ItemComponent::CatCollar { .. } => component_id::CAT_COLLAR as u32,
+            ItemComponent::SheepColor { .. } => component_id::SHEEP_COLOR as u32,
+            ItemComponent::ShulkerColor { .. } => component_id::SHULKER_COLOR as u32,
         }
     }
 
@@ -754,6 +774,16 @@ pub struct AttributeModifier {
 
     /// Which slot the item must be in for this to work.
     pub slot: AttributeSlot,
+    /// How this modifier is displayed in the item's tooltip.
+    pub display: AttributeModifierDisplay,
+}
+
+#[derive(Clone, PartialEq, Debug, Default, Encode, Decode)]
+pub enum AttributeModifierDisplay {
+    #[default]
+    Default,
+    Hidden,
+    Override(TextComponent),
 }
 
 /// Defines custom mining speed logic for a tool.
@@ -934,7 +964,7 @@ pub struct WrittenPage {
 }
 
 /// Represents a Player's Game Profile (Skin/UUID).
-#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+#[derive(Clone, PartialEq, Debug, Default)]
 pub struct ResolvableProfile {
     /// The player's username.
     pub name: Option<String>,
@@ -944,6 +974,46 @@ pub struct ResolvableProfile {
 
     /// Properties, primarily the "textures" property containing the skin URL.
     pub properties: Vec<ProfileProperty>,
+    /// Optional client texture and model overrides.
+    pub skin_patch: PlayerSkinPatch,
+}
+
+/// Optional resource textures and player-model selection for a profile.
+#[derive(Clone, PartialEq, Debug, Default, Encode, Decode)]
+pub struct PlayerSkinPatch {
+    pub texture: Option<Ident<String>>,
+    pub cape: Option<Ident<String>>,
+    pub elytra: Option<Ident<String>>,
+    /// `true` selects the slim model; `false` selects the wide model.
+    pub slim: Option<bool>,
+}
+
+impl Encode for ResolvableProfile {
+    fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
+        // The right branch contains optional profile fields; the left contains a full profile.
+        false.encode(&mut w)?;
+        self.name.encode(&mut w)?;
+        self.id.encode(&mut w)?;
+        self.properties.encode(&mut w)?;
+        self.skin_patch.encode(w)
+    }
+}
+
+impl<'a> Decode<'a> for ResolvableProfile {
+    fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        let (name, id) = if bool::decode(r)? {
+            let id = Uuid::decode(r)?;
+            (Some(String::decode(r)?), Some(id))
+        } else {
+            (Option::<String>::decode(r)?, Option::<Uuid>::decode(r)?)
+        };
+        Ok(Self {
+            name,
+            id,
+            properties: Vec::decode(r)?,
+            skin_patch: PlayerSkinPatch::decode(r)?,
+        })
+    }
 }
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
@@ -1078,6 +1148,7 @@ pub enum EquipSlot {
     Head,
     OffHand,
     Body, // Horse armor / Llama carpet
+    Saddle,
 }
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
@@ -1092,6 +1163,7 @@ pub enum AttributeSlot {
     Head,
     Armor, // Any armor slot
     Body,
+    Saddle,
 }
 
 #[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]

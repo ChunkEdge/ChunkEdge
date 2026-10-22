@@ -68,31 +68,24 @@ pub struct Section {
 
 impl Section {
     fn count_fluids(&self) -> u16 {
-        fn is_fluid(state: BlockState) -> bool {
-            // Mirrors vanilla counting non-empty fluid states: water and lava
-            // source/flowing blocks, plus any waterlogged state.
-            matches!(state.to_kind(), BlockKind::Water | BlockKind::Lava)
-                || state.get(PropName::Waterlogged) == Some(PropValue::True)
-        }
-
         let mut count = 0;
 
         match &self.block_states {
             PalettedContainer::Single(s) => {
-                if is_fluid(*s) {
+                if s.has_fluid() {
                     count += SECTION_BLOCK_COUNT as u16;
                 }
             }
             PalettedContainer::Indirect(ind) => {
                 for i in 0..SECTION_BLOCK_COUNT {
-                    if is_fluid(ind.get(i)) {
+                    if ind.get(i).has_fluid() {
                         count += 1;
                     }
                 }
             }
             PalettedContainer::Direct(dir) => {
                 for s in dir.as_ref() {
-                    if is_fluid(*s) {
+                    if s.has_fluid() {
                         count += 1;
                     }
                 }

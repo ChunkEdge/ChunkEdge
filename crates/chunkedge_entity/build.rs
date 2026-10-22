@@ -18,17 +18,6 @@ struct Entity {
     fields: Vec<Field>,
     attributes: Option<Vec<Attribute>>,
     parent: Option<String>,
-    default_bounding_box: Option<BoundingBox>,
-}
-
-#[derive(Deserialize, Clone, Debug)]
-struct BoundingBox {
-    #[serde(rename = "size_x")]
-    x: f64,
-    #[serde(rename = "size_y")]
-    y: f64,
-    #[serde(rename = "size_z")]
-    z: f64,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -481,6 +470,7 @@ pub fn main() -> anyhow::Result<()> {
         "extracted/misc.json",
         "extracted/entities.json",
         "extracted/paintings.json",
+        "extracted/entity_hitboxes.json",
     ]);
 
     write_generated_file(build_entities()?, "entity.rs")?;
@@ -573,107 +563,101 @@ fn build_painting_kind() -> anyhow::Result<TokenStream> {
     })
 }
 
+#[derive(Deserialize, Clone, PartialEq)]
+struct ExtractedHitbox {
+    min: [f64; 3],
+    max: [f64; 3],
+    scalable: bool,
+}
+
+#[derive(Deserialize)]
+struct HitboxVariant {
+    adult: BTreeMap<String, ExtractedHitbox>,
+    baby: Option<BTreeMap<String, ExtractedHitbox>>,
+}
+
 fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
-    // entities.json records default bounds, but not which hitboxes change at runtime.
-    // Keep this list in sync with the update_*_hitbox handlers in src/hitbox.rs,
-    // including the kinds matched by update_passive_child_hitbox. Marker is excluded
-    // so its hitbox stays user-managed. When updating MC, review new or changed
-    // entity kinds against those handlers and their pose, age, data, and facing rules.
-    const DYNAMIC: &[&str] = &[
-        "area_effect_cloud",
-        "armor_stand",
-        "bee",
-        "camel",
-        "chicken",
-        "donkey",
-        "drowned",
-        "fox",
-        "glow_item_frame",
-        "goat",
-        "hoglin",
-        "horse",
-        "husk",
-        "item_frame",
-        "llama",
-        "magma_cube",
-        "marker",
-        "mooshroom",
-        "mule",
-        "ocelot",
-        "painting",
-        "panda",
-        "pig",
-        "piglin",
-        "player",
-        "polar_bear",
-        "rabbit",
-        "sheep",
-        "shulker",
-        "skeleton_horse",
-        "slime",
-        "sulfur_cube",
-        "turtle",
-        "villager",
-        "warden",
-        "wolf",
-        "zoglin",
-        "zombie",
-        "zombie_horse",
-        "zombie_villager",
-        "zombified_piglin",
-    ];
-
-    let entity_types =
-        serde_json::from_str::<EntityTypes>(include_str!("extracted/misc.json"))?.entity_type;
-    let entities: Entities = serde_json::from_str(include_str!("extracted/entities.json"))?;
-    let mut boxes = BTreeMap::new();
-    for entity in entities.into_values() {
-        if let Some(typ) = entity.typ {
-            let size = entity
-                .default_bounding_box
-                .with_context(|| format!("missing default bounding box for {typ}"))?;
-            anyhow::ensure!(
-                [size.x, size.y, size.z]
-                    .into_iter()
-                    .all(|dimension| dimension.is_finite() && dimension >= 0.0),
-                "invalid default bounding box for {typ}"
-            );
-            boxes.insert(typ, size);
-        }
-    }
-
-    for name in DYNAMIC {
-        anyhow::ensure!(
-            entity_types.contains_key(*name),
-            "unknown dynamic entity {name}"
-        );
-    }
-
-    let mut arms = Vec::new();
-    for (name, id) in entity_types {
-        if DYNAMIC.contains(&name.as_str()) {
-            continue;
-        }
-        let source = if boxes.contains_key(&name) {
-            name.as_str()
-        } else if name.ends_with("_chest_boat") {
-            "acacia_chest_boat"
-        } else if name.ends_with("_boat") {
-            "acacia_boat"
-        } else {
-            anyhow::bail!("missing default bounding box for entity type {name}");
-        };
-        let size = &boxes[source];
-        let (x, y, z) = (size.x, size.y, size.z);
-        arms.push(quote! { #id => Some(chunkedge_math::DVec3::new(#x, #y, #z)), });
-    }
-
-    Ok(quote! {
-        fn default_entity_hitbox_size(kind: crate::EntityKind) -> Option<chunkedge_math::DVec3> {
-            match kind.get() {
-                #(#arms)*
-                _ => None,
+    let hitboxes: BTreeMap<String, Vec<HitboxVariant>> =
+        serde_json::from_str(include_str!("extracted/entity_hitboxes.json"))?;
+    let entity_types: EntityTypes = serde_json::from_str(include_str!("extracted/misc.json"))?;
+    anyhow::ensure!(
+        hitboxes.keys().eq(entity_types.entity_type.keys()),
+        "hitbox extraction must cover every entity type"
+    );
+    let mut templates = Vec::<ExtractedHitbox>::new();
+    let mut kinds = Vec::new();
+    for (name, variants) in hitboxes {
+        let id = entity_types.entity_type[&name];
+        anyhow::ensure!(!variants.is_empty(), "missing hitbox variants for {name}");
+        let mut variant_arms = Vec::new();
+        for (variant, sample) in variants.into_iter().enumerate() {
+            let mut ages = Vec::new();
+            for poses in [&sample.adult, sample.baby.as_ref().unwrap_or(&sample.adult)] {
+                let mut pose_arms = Vec::new();
+                let mut standing = None;
+                for (pose, bounds) in poses {
+                    anyhow::ensure!(
+                        bounds.min.iter().chain(&bounds.max).all(|n| n.is_finite())
+                            && bounds.min.iter().zip(bounds.max).all(|(a, b)| *a <= b),
+                        "invalid {name} hitbox for {pose}"
+                    );
+                    let index = templates
+                        .iter()
+                        .position(|v| v == bounds)
+                        .unwrap_or_else(|| {
+                            templates.push(bounds.clone());
+                            templates.len() - 1
+                        });
+                    if pose == "standing" {
+                        standing = Some(index);
+                    } else {
+                        let variant = ident(entity_enums::variant_name("entity_pose", pose));
+                        pose_arms.push(quote! { crate::Pose::#variant => #index, });
+                    }
+                }
+                let standing =
+                    standing.with_context(|| format!("missing standing hitbox for {name}"))?;
+                ages.push(if pose_arms.is_empty() {
+                    quote! { #standing }
+                } else {
+                    quote! { match pose { #(#pose_arms)* _ => #standing } }
+                });
             }
+            let adult = &ages[0];
+            let baby = &ages[1];
+            let body = if sample.baby.is_none() {
+                adult.clone()
+            } else {
+                quote! { if baby { #baby } else { #adult } }
+            };
+            variant_arms.push((variant, body));
+        }
+        let fallback = &variant_arms[0].1;
+        if variant_arms.len() == 1 {
+            kinds.push(quote! { #id => #fallback, });
+        } else {
+            let arms = variant_arms
+                .iter()
+                .skip(1)
+                .map(|(variant, body)| quote! { #variant => #body, });
+            kinds.push(quote! { #id => match variant { #(#arms)* _ => #fallback }, });
+        }
+    }
+    let count = templates.len();
+    let templates = templates.iter().map(|bounds| {
+        let [x0, y0, z0] = bounds.min;
+        let [x1, y1, z1] = bounds.max;
+        let scalable = bounds.scalable;
+        quote! { HitboxTemplate {
+            bounds: Aabb::new_unchecked(DVec3::new(#x0, #y0, #z0), DVec3::new(#x1, #y1, #z1)),
+            scalable: #scalable,
+        } }
+    });
+    Ok(quote! {
+        fn entity_hitbox_template(kind: crate::EntityKind, baby: bool, pose: crate::Pose, variant: usize) -> Option<HitboxTemplate> {
+            const TEMPLATES: [HitboxTemplate; #count] = [#(#templates),*];
+            let index = match kind.get() { #(#kinds)* _ => return None };
+            Some(TEMPLATES[index])
         }
     })
 }

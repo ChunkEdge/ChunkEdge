@@ -7,6 +7,7 @@ REM Run the extractor first (`./gradlew runServer`) before running this.
 cd /d "%~dp0"
 
 copy run\chunkedge_extractor_output\entities.json ..\crates\chunkedge_entity\extracted\
+copy run\chunkedge_extractor_output\entity_hitboxes.json ..\crates\chunkedge_entity\extracted\
 copy run\chunkedge_extractor_output\misc.json ..\crates\chunkedge_entity\extracted\
 copy run\chunkedge_extractor_output\paintings.json ..\crates\chunkedge_entity\extracted\
 copy run\chunkedge_extractor_output\misc.json ..\crates\chunkedge_generated\extracted\

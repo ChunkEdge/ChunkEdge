@@ -137,6 +137,7 @@ public class Main implements ModInitializer {
                 new Paintings(server),
                 new Enchants(server),
                 new Entities(server),
+                new EntityHitboxes(server),
                 new Items(server),
                 new Misc(server),
                 new Recipe(server),

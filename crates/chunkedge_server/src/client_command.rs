@@ -134,7 +134,7 @@ fn handle_client_command(
 /// Tracks sneak/sprint state from the 26.x player input packet, which carries
 /// them as a bitfield instead of the old sneak/sprint command actions.
 /// Edge transitions are forwarded as [`SneakMessage`] and [`SprintMessage`].
-fn handle_player_input(
+pub(crate) fn handle_player_input(
     mut packets: MessageReader<PacketMessage>,
     mut clients: Query<(&mut entity::Pose, &mut Flags)>,
     mut sprinting_messages: MessageWriter<SprintMessage>,

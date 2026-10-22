@@ -135,7 +135,8 @@ fn mount_on_interact(
     riders: Query<Has<Riding>>,
 ) {
     for message in messages.read() {
-        if vehicles.get(message.entity).is_err() {
+        if message.kind != EntityInteractionKind::Interact || vehicles.get(message.entity).is_err()
+        {
             continue;
         }
 

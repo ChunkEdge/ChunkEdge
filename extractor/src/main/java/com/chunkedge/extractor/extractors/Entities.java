@@ -377,8 +377,14 @@ public class Entities implements Main.Extractor {
                 var entityType = (EntityType<?>) f.get(null);
 
                 entityList.add(new Main.Pair<>(entityClass, entityType));
-                entityClassTypeMap.put(entityClass, entityType);
             }
+        }
+
+        entityList.sort(Comparator.comparingInt(entry ->
+            BuiltInRegistries.ENTITY_TYPE.getId(entry.right())
+        ));
+        for (var entry : entityList) {
+            entityClassTypeMap.putIfAbsent(entry.left(), entry.right());
         }
 
         final var dataTrackerField = Entity.class.getDeclaredField(
@@ -404,7 +410,7 @@ public class Entities implements Main.Extractor {
             // We also handle player entities specially since they cannot be spawned with
             // EntityType#create.
             final var entityInstance = entityType.equals(EntityTypes.PLAYER)
-                ? new DummyPlayerEntity(world, new GameProfile(UUID.randomUUID(), "cooldude"))
+                ? new DummyPlayerEntity(world, new GameProfile(new UUID(0L, 0L), "cooldude"))
                 : entityType.create(world, EntitySpawnReason.COMMAND);
 
             // The zombie villager constructor chooses a random profession.
@@ -450,7 +456,9 @@ public class Entities implements Main.Extractor {
                 }
 
                 var fieldsJson = new JsonArray();
-                for (var entityField : entityClass.getDeclaredFields()) {
+                var declaredFields = entityClass.getDeclaredFields();
+                Arrays.sort(declaredFields, Comparator.comparing(field -> field.getName()));
+                for (var entityField : declaredFields) {
                     if (
                         entityField.getType().equals(EntityDataAccessor.class)
                     ) {
@@ -488,6 +496,9 @@ public class Entities implements Main.Extractor {
                         fieldsJson.add(fieldJson);
                     }
                 }
+                fieldsJson.asList().sort(Comparator.comparingInt(field ->
+                    field.getAsJsonObject().get("index").getAsInt()
+                ));
                 entityJson.add("fields", fieldsJson);
 
                 if (entityInstance instanceof LivingEntity) {
@@ -529,6 +540,9 @@ public class Entities implements Main.Extractor {
                             attributesJson.add(attributeJson);
                         }
                     }
+                    attributesJson.asList().sort(Comparator.comparingInt(attribute ->
+                        attribute.getAsJsonObject().get("id").getAsInt()
+                    ));
                     entityJson.add("attributes", attributesJson);
                 }
 

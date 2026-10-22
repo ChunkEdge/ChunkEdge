@@ -12,9 +12,6 @@ import java.nio.file.Paths;
 import java.util.TreeMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.level.storage.PrimaryLevelData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.chunkedge.extractor.extractors.*;
@@ -114,22 +111,6 @@ public class Main implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             LOGGER.info("Server starting, Running startup extractors...");
-            if (
-                server.getWorldData() instanceof PrimaryLevelData levelData
-            ) {
-                levelData.setDataConfiguration(
-                    levelData
-                        .getDataConfiguration()
-                        .expandFeatures(
-                            FeatureFlagSet.of(
-                                FeatureFlags.VANILLA,
-                                FeatureFlags.MINECART_IMPROVEMENTS,
-                                FeatureFlags.REDSTONE_EXPERIMENTS,
-                                FeatureFlags.TRADE_REBALANCE
-                            )
-                        )
-                );
-            }
             // TODO: make `Codec` implement `Extractor`
             // TODO: the way to get Codex has changed, this is not working anymore
             var packetRegistryExtractor = new PacketRegistries(server);

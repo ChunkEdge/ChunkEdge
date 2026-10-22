@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.TreeMap;
 import net.minecraft.locale.Language;
 
 public class TranslationKeys implements Main.Extractor {
@@ -19,7 +20,7 @@ public class TranslationKeys implements Main.Extractor {
     public JsonElement extract() {
         JsonArray translationsJson = new JsonArray();
 
-        Map<String, String> translations = extractTranslations();
+        Map<String, String> translations = new TreeMap<>(extractTranslations());
         for (var translation : translations.entrySet()) {
             String translationKey = translation.getKey();
             String translationValue = translation.getValue();

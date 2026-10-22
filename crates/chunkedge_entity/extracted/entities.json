@@ -94,13 +94,13 @@
       {
         "default_value": null,
         "index": 11,
-        "name": "data_id_custom_display_block",
+        "name": "custom_block_state",
         "type": "optional_block_state"
       },
       {
         "default_value": 8,
         "index": 12,
-        "name": "data_id_display_offset",
+        "name": "block_offset",
         "type": "integer"
       }
     ],
@@ -124,7 +124,7 @@
       {
         "default_value": false,
         "index": 16,
-        "name": "data_immune_to_zombification",
+        "name": "immune_to_zombification",
         "type": "boolean"
       }
     ],
@@ -744,13 +744,13 @@
       {
         "default_value": "right",
         "index": 15,
-        "name": "data_player_main_hand",
+        "name": "main_arm",
         "type": "humanoid_arm"
       },
       {
         "default_value": 127,
         "index": 16,
-        "name": "data_player_mode_customisation",
+        "name": "player_model_parts",
         "type": "byte"
       }
     ],
@@ -5110,7 +5110,7 @@
         "type": "boolean"
       }
     ],
-    "parent": "WaterAnimalEntity"
+    "parent": "WaterCreatureEntity"
   },
   "FishingBobberEntity": {
     "default_bounding_box": {
@@ -6321,7 +6321,7 @@
       {
         "default_value": false,
         "index": 16,
-        "name": "data_id_moving",
+        "name": "spikes_retracted",
         "type": "boolean"
       },
       {
@@ -6658,7 +6658,7 @@
       {
         "default_value": false,
         "index": 18,
-        "name": "data_immune_to_zombification",
+        "name": "baby",
         "type": "boolean"
       }
     ],
@@ -14863,6 +14863,11 @@
     "type": "warden"
   },
   "WaterAnimalEntity": {
+    "attributes": [],
+    "fields": [],
+    "parent": "PassiveEntity"
+  },
+  "WaterCreatureEntity": {
     "attributes": [],
     "fields": [],
     "parent": "PathAwareEntity"

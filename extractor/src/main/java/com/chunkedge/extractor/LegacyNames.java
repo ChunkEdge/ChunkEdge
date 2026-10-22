@@ -1,6 +1,14 @@
 package com.chunkedge.extractor;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.entity.Entity;
 
 /**
  * Maps Minecraft 26.x official (MojMap) names back to the legacy
@@ -17,11 +25,11 @@ import java.util.Map;
  * useful for this update, but a deliberate migration to Mojang names is likely
  * preferable long term, even though it will cause widespread API breakage.
  *
- * <p>Class mapping was derived by matching entity-type registry paths
- * (stable across versions) and children sets for abstract classes. Field
- * mapping was derived per class by wire-kind, default value, and name
- * similarity, with shifted/reused indexes resolved by hand against the
- * vanilla sources. Status/animation mapping is by numeric ID.
+ * <p>Names were checked against the 1.21.5 official and Yarn mappings using
+ * their shared obfuscated class/field identities, then against the 26.2
+ * sources for moved or replaced fields. Replacements with different semantics
+ * (e.g. anger deadlines instead of durations) retain their new official names.
+ * Status/animation mapping is by numeric ID.
  */
 public final class LegacyNames {
 
@@ -185,7 +193,7 @@ public final class LegacyNames {
             Map.entry("Vindicator", "VindicatorEntity"),
             Map.entry("WanderingTrader", "WanderingTraderEntity"),
             Map.entry("Warden", "WardenEntity"),
-            Map.entry("WaterAnimal", "WaterAnimalEntity"),
+            Map.entry("WaterAnimal", "WaterCreatureEntity"),
             Map.entry("WindCharge", "WindChargeEntity"),
             Map.entry("Witch", "WitchEntity"),
             Map.entry("WitherBoss", "WitherEntity"),
@@ -204,6 +212,9 @@ public final class LegacyNames {
             Map.entry("AbstractBoat.data_id_paddle_right", "right_paddle_moving"),
             Map.entry("AbstractBoat.data_id_bubble_time", "bubble_wobble_ticks"),
             Map.entry("AbstractChestedHorse.data_id_chest", "chest"),
+            Map.entry("AbstractMinecart.data_id_custom_display_block", "custom_block_state"),
+            Map.entry("AbstractMinecart.data_id_display_offset", "block_offset"),
+            Map.entry("AbstractPiglin.data_immune_to_zombification", "immune_to_zombification"),
             Map.entry("AbstractVillager.data_unhappy_counter", "head_rolling_time_left"),
             Map.entry("AbstractCubeMob.id_size", "slime_size"),
             Map.entry("AgeableMob.data_baby_id", "child"),
@@ -221,6 +232,9 @@ public final class LegacyNames {
             Map.entry("ArmorStand.data_right_arm_pose", "tracker_right_arm_rotation"),
             Map.entry("ArmorStand.data_right_leg_pose", "tracker_right_leg_rotation"),
             Map.entry("Arrow.id_effect_color", "color"),
+            // These fields moved from Player to Avatar in 26.x.
+            Map.entry("Avatar.data_player_main_hand", "main_arm"),
+            Map.entry("Avatar.data_player_mode_customisation", "player_model_parts"),
             Map.entry("Axolotl.data_playing_dead", "playing_dead"),
             Map.entry("Axolotl.data_variant", "variant"),
             Map.entry("AbstractArrow.id_flags", "projectile_flags"),
@@ -296,6 +310,11 @@ public final class LegacyNames {
             Map.entry("Goat.data_has_right_horn", "right_horn"),
             Map.entry("Goat.data_is_screaming_goat", "screaming"),
             Map.entry("Guardian.data_id_attack_target", "beam_target_id"),
+            Map.entry("Guardian.data_id_moving", "spikes_retracted"),
+            // Yarn called this BABY, although it controls zombification immunity.
+            // Preserve the legacy component name, not the misleading meaning.
+            // Should be revisited in the future.
+            Map.entry("Hoglin.data_immune_to_zombification", "baby"),
             Map.entry("Horse.data_id_type_variant", "variant"),
             Map.entry("Interaction.data_height_id", "height"),
             Map.entry("Interaction.data_response_id", "response"),
@@ -368,7 +387,6 @@ public final class LegacyNames {
             Map.entry("ThrownTrident.id_foil", "enchanted"),
             Map.entry("ThrownTrident.id_loyalty", "loyalty"),
             Map.entry("TropicalFish.data_id_type_variant", "variant"),
-            Map.entry("Turtle.has_egg", "has_egg"),
             Map.entry("Turtle.laying_egg", "digging_sand"),
             Map.entry("VehicleEntity.data_id_damage", "damage_wobble_strength"),
             Map.entry("VehicleEntity.data_id_hurt", "damage_wobble_ticks"),
@@ -392,21 +410,6 @@ public final class LegacyNames {
             Map.entry("Zombie.data_special_type_id", "zombie_type"),
             Map.entry("ZombieVillager.data_converting_id", "converting"),
             Map.entry("ZombieVillager.data_villager_data", "villager_data")    );
-
-    /** Official Class.field -> legacy type string. */
-    private static final Map<String, String> FIELD_TYPES = Map.ofEntries(
-            Map.entry("AbstractCubeMob.id_size", "integer"),
-            Map.entry("Armadillo.armadillo_state", "armadillo_state"),
-            Map.entry("Cat.is_lying", "boolean"),
-            Map.entry("Cat.relax_state_one", "boolean"),
-            Map.entry("Fox.data_trusted_id_0", "lazy_entity_reference"),
-            Map.entry("Fox.data_trusted_id_1", "lazy_entity_reference"),
-            Map.entry("Panda.eat_counter", "integer"),
-            Map.entry("Player.data_player_absorption_id", "float"),
-            Map.entry("Player.data_score_id", "integer"),
-            Map.entry("Turtle.has_egg", "boolean"),
-            Map.entry("Turtle.laying_egg", "boolean"),
-            Map.entry("WitherBoss.data_id_inv", "integer")    );
 
     /** Official (lowercased) status key -> legacy key, by stable numeric ID. */
     private static final Map<String, String> STATUS_NAMES = Map.ofEntries(
@@ -467,21 +470,71 @@ public final class LegacyNames {
         Map.entry("body_break", "break_body"),
         Map.entry("shake", "invulnerable_creaking_hit"),
         Map.entry("drown_particles", "add_bubble_particles"),
-        Map.entry("saddle_break", "break_saddle"),
-        Map.entry("critical_hit", "crit"),
-        Map.entry("magic_critical_hit", "enchanted_hit")    );
+        Map.entry("saddle_break", "break_saddle")    );
 
-    public static String className(String official) {
+    public static String className(Class<?> officialClass) {
+        var official = officialClass.getSimpleName();
         return CLASS_NAMES.getOrDefault(official, official);
     }
 
-    public static String fieldName(String ownerClass, String officialField) {
-        return FIELD_NAMES.getOrDefault(ownerClass + "." + officialField, officialField);
+    public static String fieldName(Class<?> ownerClass, String officialField) {
+        return FIELD_NAMES.getOrDefault(ownerClass.getSimpleName() + "." + officialField, officialField);
     }
 
-    /** Legacy type string override, or {@code null} to keep the computed one. */
-    public static String fieldTypeOrNull(String ownerClass, String officialField) {
-        return FIELD_TYPES.get(ownerClass + "." + officialField);
+    public static void validateEntityMappings(Collection<Class<? extends Entity>> classes) {
+        var classNames = new HashSet<String>();
+        var fieldNames = new HashSet<String>();
+        for (var clazz : classes) {
+            var owner = clazz.getSimpleName();
+            if (!classNames.add(owner)) {
+                throw new IllegalStateException("Ambiguous entity class name: " + owner);
+            }
+            for (var field : clazz.getDeclaredFields()) {
+                if (field.getType().equals(EntityDataAccessor.class)) {
+                    var name = owner + "." + field.getName().toLowerCase(Locale.ROOT);
+                    if (!fieldNames.add(name)) {
+                        throw new IllegalStateException("Ambiguous entity field name: " + name);
+                    }
+                }
+            }
+        }
+        validateAliases("entity class", CLASS_NAMES, classNames);
+        // Field names only need to be unique within their declaring class.
+        var qualifiedAliases = new HashMap<String, String>();
+        FIELD_NAMES.forEach((source, target) -> qualifiedAliases.put(
+            source, source.substring(0, source.indexOf('.') + 1) + target
+        ));
+        validateAliases("entity field", qualifiedAliases, fieldNames);
+    }
+
+    public static void validateStatusMappings(Set<String> names) {
+        validateAliases("entity status", STATUS_NAMES, names);
+    }
+
+    public static void validateAnimationMappings(Set<String> names) {
+        validateAliases("entity animation", ANIMATION_NAMES, names);
+    }
+
+    private static void validateAliases(
+        String kind,
+        Map<String, String> aliases,
+        Set<String> originals
+    ) {
+        var unused = new HashSet<>(aliases.keySet());
+        unused.removeAll(originals);
+        if (!unused.isEmpty()) {
+            throw new IllegalStateException("Unknown " + kind + " mappings: " + unused);
+        }
+        var owners = new TreeMap<String, String>();
+        for (var original : originals) {
+            var target = aliases.getOrDefault(original, original);
+            var previous = owners.putIfAbsent(target, original);
+            if (previous != null) {
+                throw new IllegalStateException(
+                    "Duplicate " + kind + " name " + target + ": " + previous + " and " + original
+                );
+            }
+        }
     }
 
     /** Official (lowercased) animation key -> legacy key, by stable numeric ID. */

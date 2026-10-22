@@ -437,7 +437,7 @@ public class Entities implements Main.Extractor {
                 if (hasParent) {
                     entityJson.addProperty(
                         "parent",
-                        LegacyNames.className(parent.getSimpleName())
+                        LegacyNames.className(parent)
                     );
                 }
 
@@ -474,23 +474,15 @@ public class Entities implements Main.Extractor {
                             .toLowerCase(Locale.ROOT);
                         // Keep the legacy (1.21.5-era) JSON keys so the
                         // generated Rust API stays stable across versions.
-                        var ownerName = entityClass.getSimpleName();
                         var fieldName = LegacyNames.fieldName(
-                            ownerName,
+                            entityClass,
                             officialFieldName
                         );
                         fieldJson.addProperty("name", fieldName);
                         fieldJson.addProperty("index", trackedData.id());
 
                         var data = trackedDataToJson(trackedData, dataTracker);
-                        var legacyType = LegacyNames.fieldTypeOrNull(
-                            ownerName,
-                            officialFieldName
-                        );
-                        fieldJson.addProperty(
-                            "type",
-                            legacyType != null ? legacyType : data.left()
-                        );
+                        fieldJson.addProperty("type", data.left());
                         fieldJson.add("default_value", data.right());
 
                         fieldsJson.add(fieldJson);
@@ -568,10 +560,11 @@ public class Entities implements Main.Extractor {
             }
         }
 
+        LegacyNames.validateEntityMappings(entitiesMap.keySet());
         var entitiesJson = new JsonObject();
         for (var entry : entitiesMap.entrySet()) {
             entitiesJson.add(
-                LegacyNames.className(entry.getKey().getSimpleName()),
+                LegacyNames.className(entry.getKey()),
                 entry.getValue()
             );
         }

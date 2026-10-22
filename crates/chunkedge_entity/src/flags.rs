@@ -55,7 +55,7 @@ flags! {
         off_hand_active: 1,
         using_riptide: 2,
     }
-    avatar::DataPlayerModeCustomisation {
+    avatar::PlayerModelParts {
         cape: 0,
         jacket: 1,
         left_sleeve: 2,

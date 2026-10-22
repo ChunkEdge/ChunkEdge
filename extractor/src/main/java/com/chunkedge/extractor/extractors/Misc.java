@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
+import java.util.HashSet;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -55,6 +56,7 @@ public class Misc implements Main.Extractor {
         }
         miscJson.add("entity_type", entityTypeJson);
 
+        var statusNames = new HashSet<String>();
         var entityStatusJson = new JsonObject();
         for (var field : EntityEvent.class.getDeclaredFields()) {
             if (
@@ -62,6 +64,7 @@ public class Misc implements Main.Extractor {
                 field.canAccess(null) &&
                 field.get(null) instanceof Byte code
             ) {
+                statusNames.add(field.getName().toLowerCase(Locale.ROOT));
                 entityStatusJson.addProperty(
                     LegacyNames.statusName(
                         field.getName().toLowerCase(Locale.ROOT)
@@ -70,8 +73,10 @@ public class Misc implements Main.Extractor {
                 );
             }
         }
+        LegacyNames.validateStatusMappings(statusNames);
         miscJson.add("entity_status", entityStatusJson);
 
+        var animationNames = new HashSet<String>();
         var entityAnimationJson = new JsonObject();
         for (var field : ClientboundAnimatePacket.class.getDeclaredFields()) {
             field.setAccessible(true);
@@ -80,6 +85,7 @@ public class Misc implements Main.Extractor {
                 field.canAccess(null) &&
                 field.get(null) instanceof Integer i
             ) {
+                animationNames.add(field.getName().toLowerCase(Locale.ROOT));
                 entityAnimationJson.addProperty(
                     LegacyNames.animationName(
                         field.getName().toLowerCase(Locale.ROOT)
@@ -88,6 +94,7 @@ public class Misc implements Main.Extractor {
                 );
             }
         }
+        LegacyNames.validateAnimationMappings(animationNames);
         miscJson.add("entity_animation", entityAnimationJson);
 
         var villagerTypeJson = new JsonObject();

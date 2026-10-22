@@ -187,18 +187,6 @@ impl Default for DimensionType {
     }
 }
 
-/// Determines what skybox/fog effects to use in dimensions.
-#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Default, Debug)]
-pub enum DimensionEffects {
-    #[serde(rename = "minecraft:overworld")]
-    #[default]
-    Overworld,
-    #[serde(rename = "minecraft:the_nether")]
-    TheNether,
-    #[serde(rename = "minecraft:the_end")]
-    TheEnd,
-}
-
 #[derive(Copy, Clone, PartialEq, Debug, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum MonsterSpawnLightLevel {

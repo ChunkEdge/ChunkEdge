@@ -137,8 +137,7 @@ pub struct DimensionType {
     pub monster_spawn_block_light_limit: i32,
     pub monster_spawn_light_level: MonsterSpawnLightLevel,
     /// Environment attributes (sky/fog colors, light factors, music, ...).
-    /// New in 26.x and forwarded opaquely: without these the client falls
-    /// back to defaults such as a black sky and black fog.
+    /// Forwarded opaquely so the client receives the dimension's visual and audio settings.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Compound>,
     /// Timelines (world clocks) reference, e.g. `"#minecraft:in_overworld"`.
@@ -214,10 +213,8 @@ impl From<i32> for MonsterSpawnLightLevel {
 mod tests {
     use super::*;
 
-    /// The 26.x `attributes` (sky colors, light factors, ...) must survive
-    /// the deserialize → serialize round-trip instead of being dropped.
-    /// Dropping them makes vanilla clients fall back to defaults such as a
-    /// black sky and black fog.
+    /// Dimension environment attributes must survive deserialization and serialization
+    /// so clients receive the configured sky colors, light factors, and fog.
     #[test]
     fn dimension_attributes_round_trip() {
         let codec = include_bytes!("../extracted/registry_codec.json");

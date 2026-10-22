@@ -117,9 +117,8 @@ pub struct Biome {
     pub has_precipitation: bool,
     pub temperature: f32,
     pub downfall: f32,
-    /// Environment attributes (e.g. `minecraft:visual/sky_color`, moved out
-    /// of `effects` in 26.1). Forwarded opaquely: without these the client
-    /// falls back to defaults such as a black sky.
+    /// Environment attributes, such as `minecraft:visual/sky_color`.
+    /// Forwarded opaquely so the client receives the biome's visual settings.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub attributes: Option<Compound>,
     pub effects: BiomeEffects,
@@ -141,8 +140,7 @@ impl Default for Biome {
     }
 }
 
-/// Deserializes a color that is either a packed `u32` (legacy) or a
-/// `"#rrggbb"` hex string (26.1+).
+/// Deserializes a color from a packed `u32` or a `"#rrggbb"` hex string.
 fn deserialize_color<'de, D>(deserializer: D) -> Result<Option<u32>, D::Error>
 where
     D: Deserializer<'de>,
@@ -297,8 +295,8 @@ mod tests {
 
     use super::*;
 
-    /// Same as the dimension-type case: 26.x biome `attributes` (sky color,
-    /// ...) must survive the round-trip instead of being dropped.
+    /// Biome environment attributes must survive deserialization and serialization
+    /// so clients receive the configured sky color and other visual settings.
     #[test]
     fn biome_attributes_round_trip() {
         let codec = include_bytes!("../extracted/registry_codec.json");

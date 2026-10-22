@@ -20,8 +20,8 @@ fn build() -> anyhow::Result<TokenStream> {
         .iter()
         // Multiple translation keys can map to the same constant name
         // (e.g. `book.editTitle` and `book.edit.title` both become
-        // `BOOK_EDIT_TITLE`). Keep the first occurrence so the generated
-        // code still compiles.
+        // `BOOK_EDIT_TITLE`). Keep the first occurrence to avoid duplicate
+        // Rust constant definitions.
         .filter(|translation| {
             seen.insert(translation.key.to_shouty_snake_case())
         })

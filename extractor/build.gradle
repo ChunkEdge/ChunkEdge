@@ -23,8 +23,6 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.11.0'
 
 	// To change the versions see the gradle.properties file
-	// NOTE: Minecraft 26.1+ is unobfuscated, so there are no Yarn
-	// mappings. Loom uses Mojang's official (MojMap) names directly.
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"

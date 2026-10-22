@@ -6,10 +6,6 @@ use chunkedge_binary::{Decode, Encode, VarInt};
 use derive_more::{From, Into};
 
 /// Quantized entity velocity in 1/8000 blocks-per-tick units.
-///
-/// Since 26.x this is serialized on the wire with vanilla's compact
-/// low-precision vector codec (previously three raw shorts); the in-memory
-/// representation is unchanged.
 #[derive(Copy, Clone, PartialEq, Eq, From, Into)]
 pub struct Velocity(pub [i16; 3]);
 

@@ -11,31 +11,25 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 
 /**
- * Maps Minecraft 26.x official (MojMap) names back to the legacy
- * (1.21.5-era Yarn) names used in the extracted JSON files.
+ * Maps Minecraft official (MojMap) names back to the legacy
+ * Yarn mapping names used in the extracted JSON files.
  *
  * <p>ChunkEdge's generated Rust API (entity modules, tracked-data
  * components, status/animation enums) is built from these JSON keys, so
- * keeping the legacy names keeps the public API stable across the version
- * update. Only names Mojang actually changed are mapped; everything new
- * in 26.x keeps its official name.
+ * keeping the legacy names keeps the generated API stable. Only
+ * names Mojang actually changed are mapped. New things get their
+ * official names.
  *
  * <p>TODO: Revisit this compatibility layer and eventually adopt Mojang-mapped
- * names throughout the generated Rust API. Preserving the old Yarn names is
- * useful for this update, but a deliberate migration to Mojang names is likely
+ * names throughout the generated Rust API. Preserving the old Yarn names was
+ * useful for the initial update, but a deliberate migration to Mojang names is likely
  * preferable long term, even though it will cause widespread API breakage.
- *
- * <p>Names were checked against the 1.21.5 official and Yarn mappings using
- * their shared obfuscated class/field identities, then against the 26.2
- * sources for moved or replaced fields. Replacements with different semantics
- * (e.g. anger deadlines instead of durations) retain their new official names.
- * Status/animation mapping is by numeric ID.
  */
 public final class LegacyNames {
 
     private LegacyNames() {}
 
-    /** Official class simple name -> legacy JSON key. */
+    /** Official class simple name -> ChunkEdge JSON key. */
     private static final Map<String, String> CLASS_NAMES = Map.ofEntries(
             Map.entry("AbstractArrow", "PersistentProjectileEntity"),
             Map.entry("AbstractBoat", "AbstractBoatEntity"),
@@ -206,7 +200,7 @@ public final class LegacyNames {
             Map.entry("ZombieVillager", "ZombieVillagerEntity"),
             Map.entry("ZombifiedPiglin", "ZombifiedPiglinEntity")    );
 
-    /** Official Class.field -> legacy field name. */
+    /** Official Class.field -> ChunkEdge field name. */
     private static final Map<String, String> FIELD_NAMES = Map.ofEntries(
             Map.entry("AbstractBoat.data_id_paddle_left", "left_paddle_moving"),
             Map.entry("AbstractBoat.data_id_paddle_right", "right_paddle_moving"),
@@ -232,7 +226,7 @@ public final class LegacyNames {
             Map.entry("ArmorStand.data_right_arm_pose", "tracker_right_arm_rotation"),
             Map.entry("ArmorStand.data_right_leg_pose", "tracker_right_leg_rotation"),
             Map.entry("Arrow.id_effect_color", "color"),
-            // These fields moved from Player to Avatar in 26.x.
+            // Avatar owns the main-arm and model-part metadata shared by players and mannequins.
             Map.entry("Avatar.data_player_main_hand", "main_arm"),
             Map.entry("Avatar.data_player_mode_customisation", "player_model_parts"),
             Map.entry("Axolotl.data_playing_dead", "playing_dead"),
@@ -411,7 +405,7 @@ public final class LegacyNames {
             Map.entry("ZombieVillager.data_converting_id", "converting"),
             Map.entry("ZombieVillager.data_villager_data", "villager_data")    );
 
-    /** Official (lowercased) status key -> legacy key, by stable numeric ID. */
+    /** Official (lowercased) status key -> ChunkEdge key, by numeric ID. */
     private static final Map<String, String> STATUS_NAMES = Map.ofEntries(
         Map.entry("jump", "add_sprinting_particles_or_reset_spawner_minecart_spawn_delay"),
         Map.entry("death", "play_death_sound_or_add_projectile_hit_particles"),
@@ -537,7 +531,7 @@ public final class LegacyNames {
         }
     }
 
-    /** Official (lowercased) animation key -> legacy key, by stable numeric ID. */
+    /** Official (lowercased) animation key -> ChunkEdge key, by numeric ID. */
     private static final Map<String, String> ANIMATION_NAMES = Map.ofEntries(
         Map.entry("critical_hit", "crit"),
         Map.entry("magic_critical_hit", "enchanted_hit")

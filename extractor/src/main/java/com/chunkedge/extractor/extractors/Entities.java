@@ -472,8 +472,7 @@ public class Entities implements Main.Extractor {
                         var officialFieldName = entityField
                             .getName()
                             .toLowerCase(Locale.ROOT);
-                        // Keep the legacy (1.21.5-era) JSON keys so the
-                        // generated Rust API stays stable across versions.
+                        // JSON keys determine the public Rust component names.
                         var fieldName = LegacyNames.fieldName(
                             entityClass,
                             officialFieldName

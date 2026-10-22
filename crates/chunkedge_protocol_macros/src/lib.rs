@@ -153,7 +153,7 @@ fn registry_config(attrs: &[Attribute]) -> Result<Option<(Path, String)>> {
                     .any(|name| meta.path.is_ident(name))
                 {
                     // These enum-level arguments belong to the Packet derive.
-                    // Encode and Decode must continue to accept them as before.
+                    // Encode and Decode accept them without affecting field codecs.
                     meta.value()?.parse::<syn::Expr>()?;
                     Ok(())
                 } else {

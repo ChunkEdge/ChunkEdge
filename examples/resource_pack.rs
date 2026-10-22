@@ -94,8 +94,7 @@ fn init_clients(
 
 fn prompt_on_punch(mut clients: Query<&mut Client>, mut packets: MessageReader<PacketMessage>) {
     for packet in packets.read() {
-        // In 26.1 attacks arrive as their own packet rather than as an
-        // interaction variant.
+        // Prompt only when the player attacks an entity.
         if packet.decode::<AttackC2s>().is_none() {
             continue;
         }

@@ -1,7 +1,7 @@
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::quote;
 use syn::spanned::Spanned;
-use syn::{Data, DeriveInput, Error, Fields, LitInt, Result, parse2};
+use syn::{Data, DeriveInput, Error, Field, Fields, Member, Result, parse2};
 
 use crate::{add_trait_bounds, pair_variants_with_discriminants};
 
@@ -19,29 +19,23 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
 
     match input.data {
         Data::Struct(struct_) => {
-            let encode_fields = match &struct_.fields {
-                Fields::Named(fields) => fields
-                    .named
-                    .iter()
-                    .map(|f| {
-                        let name = &f.ident.as_ref().unwrap();
-                        let ctx = format!("failed to encode field `{name}` in `{input_name}`");
-                        quote! {
-                            self.#name.encode(&mut _w).context(#ctx)?;
-                        }
-                    })
-                    .collect(),
-                Fields::Unnamed(fields) => (0..fields.unnamed.len())
-                    .map(|i| {
-                        let lit = LitInt::new(&i.to_string(), Span::call_site());
-                        let ctx = format!("failed to encode field `{lit}` in `{input_name}`");
-                        quote! {
-                            self.#lit.encode(&mut _w).context(#ctx)?;
-                        }
-                    })
-                    .collect(),
-                Fields::Unit => TokenStream::new(),
-            };
+            let encode_fields = struct_
+                .fields
+                .iter()
+                .enumerate()
+                .map(|(index, field)| {
+                    let member = field
+                        .ident
+                        .clone()
+                        .map_or_else(|| Member::from(index), Member::Named);
+                    let name = field
+                        .ident
+                        .as_ref()
+                        .map_or_else(|| index.to_string(), ToString::to_string);
+                    let ctx = format!("failed to encode field `{name}` in `{input_name}`");
+                    encode_field(field, quote!(&self.#member), &ctx)
+                })
+                .collect::<Result<TokenStream>>()?;
 
             Ok(quote! {
                 #[allow(unused_imports)]
@@ -72,6 +66,7 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
                     );
 
                     if let Some(codec) = crate::variant_options(&variant.attrs)?.with {
+                        crate::check_variant_field_codecs(variant)?;
                         let (pattern, fields) = crate::variant_bindings(variant);
                         let ctx = format!("failed to encode payload for variant `{variant_name}`");
                         return Ok(quote! {
@@ -92,17 +87,16 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
 
                             let encode_fields = field_names
                                 .iter()
-                                .map(|name| {
+                                .zip(fields.named.iter())
+                                .map(|(name, field)| {
                                     let ctx = format!(
                                         "failed to encode field `{name}` in variant \
                                          `{variant_name}` in `{input_name}`",
                                     );
 
-                                    quote! {
-                                        #name.encode(&mut _w).context(#ctx)?;
-                                    }
+                                    encode_field(field, quote!(#name), &ctx)
                                 })
-                                .collect::<TokenStream>();
+                                .collect::<Result<TokenStream>>()?;
 
                             quote! {
                                 Self::#variant_name { #(#field_names,)* } => {
@@ -120,17 +114,16 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
 
                             let encode_fields = field_names
                                 .iter()
-                                .map(|name| {
+                                .zip(fields.unnamed.iter())
+                                .map(|(name, field)| {
                                     let ctx = format!(
                                         "failed to encode field `{name}` in variant \
                                          `{variant_name}` in `{input_name}`"
                                     );
 
-                                    quote! {
-                                        #name.encode(&mut _w).context(#ctx)?;
-                                    }
+                                    encode_field(field, quote!(#name), &ctx)
                                 })
-                                .collect::<TokenStream>();
+                                .collect::<Result<TokenStream>>()?;
 
                             quote! {
                                 Self::#variant_name(#(#field_names,)*) => {
@@ -176,4 +169,12 @@ pub(super) fn derive_encode(item: TokenStream) -> Result<TokenStream> {
             "cannot derive `Encode` on unions",
         )),
     }
+}
+
+fn encode_field(field: &Field, value: TokenStream, ctx: &str) -> Result<TokenStream> {
+    let encode = match crate::field_codec(&field.attrs)? {
+        Some(codec) => quote!(#codec::encode(#value, &mut _w)),
+        None => quote!(Encode::encode(#value, &mut _w)),
+    };
+    Ok(quote!(#encode.context(#ctx)?;))
 }

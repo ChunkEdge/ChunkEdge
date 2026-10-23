@@ -52,6 +52,20 @@ where
     state.read_compound()
 }
 
+/// Decodes a value with a root tag and no root name, as used in packets.
+/// `TAG_End` has no value and is rejected. Callers must handle nullable roots.
+pub fn from_unnamed_value<'de, S>(slice: &mut &'de [u8]) -> Result<Value<S>>
+where
+    S: FromModifiedUtf8<'de> + Hash + Ord,
+{
+    let mut state = DecodeState { slice, depth: 0 };
+    let tag = state.read_tag()?;
+    if tag == Tag::End {
+        return Err(Error::new_static("unexpected TAG_End root"));
+    }
+    state.read_value(tag)
+}
+
 /// Decodes uncompressed network NBT binary data from the provided slice,
 /// Network NBT omits the root compound.
 pub fn from_network_binary<'de, S>(slice: &mut &'de [u8]) -> Result<Compound<S>>

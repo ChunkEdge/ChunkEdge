@@ -42,6 +42,7 @@ pub enum HeightMapKind {
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct ChunkDataBlockEntity<'a> {
+    /// Section-relative X in the high nibble and Z in the low nibble.
     pub packed_xz: i8,
     pub y: i16,
     pub kind: BlockEntityKind,

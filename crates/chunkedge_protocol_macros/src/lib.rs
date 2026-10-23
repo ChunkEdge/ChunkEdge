@@ -216,6 +216,35 @@ fn variant_options(attrs: &[Attribute]) -> Result<VariantOptions> {
     Ok(options)
 }
 
+fn field_codec(attrs: &[Attribute]) -> Result<Option<Path>> {
+    let mut codec = None;
+    for attr in attrs.iter().filter(|attr| attr.path().is_ident("packet")) {
+        attr.parse_nested_meta(|meta| {
+            if !meta.path.is_ident("with") {
+                return Err(meta.error("expected `with = path` on a field"));
+            }
+            if codec.is_some() {
+                return Err(meta.error("duplicate field codec"));
+            }
+            codec = Some(meta.value()?.parse()?);
+            Ok(())
+        })?;
+    }
+    Ok(codec)
+}
+
+fn check_variant_field_codecs(variant: &Variant) -> Result<()> {
+    for field in &variant.fields {
+        if field_codec(&field.attrs)?.is_some() {
+            return Err(syn::Error::new_spanned(
+                field,
+                "a field codec cannot be combined with a variant payload codec",
+            ));
+        }
+    }
+    Ok(())
+}
+
 // Payload codecs receive/return a tuple of fields in declaration order.
 fn variant_bindings(variant: &Variant) -> (TokenStream, Vec<syn::Ident>) {
     let name = &variant.ident;

@@ -15,6 +15,8 @@ pub struct SectionBlocksUpdateS2c<'a> {
 
 #[bitfield(u64)]
 #[derive(PartialEq, Eq)]
+/// Vanilla packs `(block_state << 12) | (off_x << 8) | (off_z << 4) | off_y`.
+/// Bitfield fields are listed from least to most significant, so Y comes first.
 pub struct ChunkDeltaUpdateEntry {
     #[bits(4)]
     pub off_y: u8,

@@ -8,6 +8,7 @@ const MAX_PAYLOAD_SIZE: usize = 0x200000;
 /// A debug subscription value update for a chunk. See [`DebugBlockValueS2c`](super::debug_block_value_s2c::DebugBlockValueS2c).
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct DebugChunkValueS2c<'a> {
+    #[packet(with = crate::chunk_pos::packed)]
     pub chunk_pos: ChunkPos,
     pub subscription: VarInt,
     pub payload: Option<Bounded<RawBytes<'a>, MAX_PAYLOAD_SIZE>>,

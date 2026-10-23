@@ -51,7 +51,7 @@ pub struct AdvancementDisplay<'a, I> {
 
 #[derive(Clone, PartialEq, Eq, Debug, Encode, Decode)]
 pub struct AdvancementCriteria<'a> {
-    pub criterion_identifier: Ident<Cow<'a, str>>,
+    pub criterion_identifier: Cow<'a, str>,
     /// If present, the criteria has been achieved at the
     /// time wrapped; time represented as millis since epoch
     pub criterion_progress: Option<i64>,

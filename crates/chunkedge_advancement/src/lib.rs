@@ -244,7 +244,7 @@ impl Encode for AdvancementUpdateEncodeS2c<'_, '_, '_> {
             for (c, c_progress) in c_progresses {
                 let c_identifier = criteria_query.get(c)?;
                 c_progresses_p.push(packet::AdvancementCriteria {
-                    criterion_identifier: c_identifier.0.borrowed(),
+                    criterion_identifier: Cow::Borrowed(c_identifier.0.as_str()),
                     criterion_progress: c_progress,
                 });
             }

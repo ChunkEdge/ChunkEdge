@@ -1,11 +1,13 @@
 use std::borrow::Cow;
 use std::io::Write;
 
-use anyhow::ensure;
-use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
-use chunkedge_nbt::Tag;
-use chunkedge_nbt::binary::{FromModifiedUtf8, ToModifiedUtf8};
+use anyhow::{Context, bail, ensure};
+use byteorder::{BigEndian, WriteBytesExt};
+use chunkedge_nbt::binary::ToModifiedUtf8;
+use chunkedge_nbt::{Tag, Value};
 use chunkedge_text::{IntoText, Text};
+use serde::Deserialize;
+use serde::de::IntoDeserializer;
 
 use crate::{Decode, Encode};
 
@@ -103,34 +105,28 @@ impl Encode for TextComponent {
 
 impl Decode<'_> for TextComponent {
     fn decode(r: &mut &'_ [u8]) -> anyhow::Result<Self> {
-        let tag_id = r.read_u8()?;
-        match tag_id {
-            val if val == Tag::String as u8 => Ok(TextComponent {
-                text: {
-                    let len = r.read_u16::<BigEndian>()?.into();
-                    ensure!(
-                        len <= r.len(),
-                        "string of length {} exceeds remainder of input {}",
-                        len,
-                        r.len()
-                    );
+        let value = chunkedge_nbt::from_unnamed_value(r).context("decoding text NBT")?;
+        Ok(Self {
+            text: text_from_nbt(value)?,
+        })
+    }
+}
 
-                    let (left, right) = r.split_at(len);
-
-                    let decoded = String::from_modified_utf8(left)?;
-                    *r = right;
-                    decoded.into()
-                },
-            }),
-            val if val == Tag::Compound as u8 => {
-                // Standard Text decode
-                Ok(TextComponent {
-                    text: Decode::decode(r)?,
-                })
-            }
-            _ => Err(anyhow::anyhow!(
-                "unexpected tag ID {tag_id} when decoding TextComponent"
-            )),
+fn text_from_nbt(value: Value) -> anyhow::Result<Text> {
+    match value {
+        Value::String(text) => Ok(text.into()),
+        Value::Compound(compound) => {
+            Text::deserialize(compound.into_deserializer()).context("deserializing text NBT")
         }
+        Value::List(list) => {
+            ensure!(!list.is_empty(), "text component list must not be empty");
+            let mut components = list.into_iter();
+            let mut text = text_from_nbt(components.next().unwrap())?;
+            for component in components {
+                text += text_from_nbt(component)?;
+            }
+            Ok(text)
+        }
+        _ => bail!("expected a string, compound or list text component"),
     }
 }

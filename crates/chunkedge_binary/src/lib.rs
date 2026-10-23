@@ -8,6 +8,7 @@ mod either;
 mod id_or;
 mod id_set;
 mod impls;
+pub mod nullable_compound;
 mod optional_var_int;
 mod raw;
 mod text_component;
@@ -79,6 +80,25 @@ pub use chunkedge_protocol_macros::{Decode, Encode};
 /// value.encode(&mut buf).unwrap();
 ///
 /// println!("{buf:?}");
+/// ```
+///
+/// Use `#[packet(with = path)]` to override a field's wire codec while keeping
+/// its Rust type. This works on named and tuple fields in structs and enum
+/// variants. The module must provide `encode(&FieldType, writer)` and
+/// `decode(&mut input)` functions returning `anyhow::Result`. The decoder may
+/// borrow from the input. Fields without an override use their usual traits.
+/// A variant-wide payload codec cannot be combined with field overrides.
+///
+/// ```
+/// use chunkedge_binary::{Decode, Encode, VarInt};
+/// use chunkedge_nbt::Compound;
+///
+/// #[derive(Encode, Decode)]
+/// struct TagQuery {
+///     transaction_id: VarInt,
+///     #[packet(with = chunkedge_binary::nullable_compound)]
+///     nbt: Option<Compound>,
+/// }
 /// ```
 ///
 /// [macro]: chunkedge_protocol_macros::Encode

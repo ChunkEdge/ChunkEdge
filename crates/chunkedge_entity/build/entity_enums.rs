@@ -21,7 +21,7 @@ struct ExtractedField {
 
 pub(super) fn build() -> anyhow::Result<TokenStream> {
     let misc: BTreeMap<String, BTreeMap<String, i32>> =
-        serde_json::from_str(include_str!("../extracted/misc.json"))?;
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)?;
     let enum_keys: BTreeSet<_> = misc
         .keys()
         .filter(|name| enum_name(name).is_some())

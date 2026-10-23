@@ -15,7 +15,7 @@ struct Packet {
 }
 
 pub fn main() -> anyhow::Result<()> {
-    let packets: Vec<Packet> = serde_json::from_str(include_str!("extracted/packets.json"))?;
+    let packets: Vec<Packet> = serde_json::from_str(chunkedge_generated::extracted::PACKETS_JSON)?;
 
     write_packets(&packets)?;
     write_transformer(&packets)?;

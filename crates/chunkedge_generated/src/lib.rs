@@ -4,6 +4,15 @@
 pub mod block;
 pub mod registry_id;
 
+/// Raw Minecraft extractor output shared with downstream build scripts.
+pub mod extracted {
+    /// Miscellaneous registries and entity metadata as JSON.
+    pub const MISC_JSON: &str = include_str!("../extracted/misc.json");
+
+    /// Packet names, directions, states, and IDs as JSON.
+    pub const PACKETS_JSON: &str = include_str!("../extracted/packets.json");
+}
+
 pub mod attributes {
     include!(concat!(env!("OUT_DIR"), "/attributes.rs"));
 }

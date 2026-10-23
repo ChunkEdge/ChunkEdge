@@ -467,7 +467,6 @@ type Entities = BTreeMap<String, Entity>;
 
 pub fn main() -> anyhow::Result<()> {
     rerun_if_changed([
-        "extracted/misc.json",
         "extracted/entities.json",
         "extracted/paintings.json",
         "extracted/entity_hitboxes.json",
@@ -482,8 +481,9 @@ pub fn main() -> anyhow::Result<()> {
 }
 
 fn build_painting_kind() -> anyhow::Result<TokenStream> {
-    let paintings: PaintingVariants = serde_json::from_str(include_str!("extracted/misc.json"))
-        .context("failed to deserialize painting variants from misc.json")?;
+    let paintings: PaintingVariants =
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)
+            .context("failed to deserialize painting variants from misc.json")?;
     let mut paintings: Vec<_> = paintings.painting_variant.into_iter().collect();
     paintings.sort_by_key(|(_, id)| *id);
     // paintings.json is the extractor's standalone copy of the painting_variant registry codec.
@@ -579,7 +579,8 @@ struct HitboxVariant {
 fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
     let hitboxes: BTreeMap<String, Vec<HitboxVariant>> =
         serde_json::from_str(include_str!("extracted/entity_hitboxes.json"))?;
-    let entity_types: EntityTypes = serde_json::from_str(include_str!("extracted/misc.json"))?;
+    let entity_types: EntityTypes =
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)?;
     anyhow::ensure!(
         hitboxes.keys().eq(entity_types.entity_type.keys()),
         "hitbox extraction must cover every entity type"
@@ -663,7 +664,7 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
 }
 
 fn build_entities() -> anyhow::Result<TokenStream> {
-    let misc = include_str!("extracted/misc.json");
+    let misc = chunkedge_generated::extracted::MISC_JSON;
     let entity_types = serde_json::from_str::<EntityTypes>(misc)
         .context("failed to deserialize misc.json")?
         .entity_type;
@@ -939,7 +940,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
     }
 
     let misc_entity_data: MiscEntityData =
-        serde_json::from_str(include_str!("extracted/misc.json"))?;
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)?;
 
     let entity_status_variants = misc_entity_data
         .entity_status

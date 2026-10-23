@@ -8,7 +8,6 @@ cd /d "%~dp0"
 
 copy run\chunkedge_extractor_output\entities.json ..\crates\chunkedge_entity\extracted\
 copy run\chunkedge_extractor_output\entity_hitboxes.json ..\crates\chunkedge_entity\extracted\
-copy run\chunkedge_extractor_output\misc.json ..\crates\chunkedge_entity\extracted\
 copy run\chunkedge_extractor_output\paintings.json ..\crates\chunkedge_entity\extracted\
 copy run\chunkedge_extractor_output\misc.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\attributes.json ..\crates\chunkedge_generated\extracted\
@@ -22,4 +21,3 @@ copy run\chunkedge_extractor_output\sounds.json ..\crates\chunkedge_generated\ex
 copy run\chunkedge_extractor_output\translation_keys.json ..\crates\chunkedge_lang\extracted\
 copy run\chunkedge_extractor_output\registry_codec.json ..\crates\chunkedge_registry\extracted\
 copy run\chunkedge_extractor_output\tags.json ..\crates\chunkedge_registry\extracted\
-copy run\chunkedge_extractor_output\packets.json ..\tools\packet_inspector\extracted\

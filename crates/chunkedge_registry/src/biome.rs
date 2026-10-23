@@ -138,6 +138,10 @@ pub enum TemperatureModifier {
 }
 
 impl TemperatureModifier {
+    #[expect(
+        clippy::trivially_copy_pass_by_ref,
+        reason = "serde skip_serializing_if passes a reference"
+    )]
     fn is_none(&self) -> bool {
         *self == Self::None
     }
@@ -187,6 +191,10 @@ where
 /// Serializes a color as a `"#rrggbb"` hex string like vanilla `STRING_RGB_COLOR`.
 /// The client reads that form as an opaque color, but it reads a plain int as is,
 /// so an RGB int would arrive with alpha 0. Bits above the low 24 are ignored.
+#[expect(
+    clippy::trivially_copy_pass_by_ref,
+    reason = "serde serialize_with passes a reference"
+)]
 fn serialize_color<S>(color: &Option<u32>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
@@ -197,6 +205,10 @@ where
     }
 }
 
+#[expect(
+    clippy::trivially_copy_pass_by_ref,
+    reason = "serde serialize_with passes a reference"
+)]
 fn serialize_water_color<S>(color: &u32, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,

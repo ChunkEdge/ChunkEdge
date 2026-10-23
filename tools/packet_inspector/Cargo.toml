@@ -46,4 +46,4 @@ chunkedge_build_utils.workspace = true
 chunkedge_generated.workspace = true
 
 [package.metadata.cargo-machete]
-ignored = ["heck", "proc-macro2", "quote", "serde_json", "syn", "chunkedge_build_utils"]
+ignored = ["heck", "proc-macro2", "quote", "serde_json", "syn", "chunkedge_build_utils", "chunkedge_generated"]

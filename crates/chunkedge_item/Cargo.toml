@@ -10,6 +10,7 @@ license.workspace = true
 anyhow.workspace = true
 uuid.workspace = true
 chunkedge_binary.workspace = true
+chunkedge_protocol_macros.workspace = true
 chunkedge_generated.workspace = true
 chunkedge_ident.workspace = true
 chunkedge_nbt.workspace = true

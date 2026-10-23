@@ -9,7 +9,7 @@ use chunkedge_nbt::Compound;
 use chunkedge_text::Text;
 use uuid::Uuid;
 
-use crate::stack::ItemStack;
+use crate::ItemStackTemplate;
 
 #[derive(Clone, PartialEq, Debug, Copy)]
 pub(crate) enum Patchable<T> {
@@ -39,8 +39,40 @@ impl<T> Patchable<T> {
     }
 }
 
-#[derive(Clone, PartialEq, Debug)]
-pub enum ItemComponent {
+// Keep payload variants and their wire IDs in one declaration. The generated kind
+// enum checks registry coverage; matching it exhaustively requires a decoder for
+// every component, just as matching ItemComponent requires every encoder.
+macro_rules! item_components {
+    ($(
+        $(#[$meta:meta])* $variant:ident
+        $(($($ty:ty),* $(,)?))?
+        $({ $($(#[$field_meta:meta])* $field:ident: $field_ty:ty),* $(,)? })?
+    ),* $(,)?) => {
+        #[derive(Clone, PartialEq, Debug)]
+        pub enum ItemComponent {
+            $($(#[$meta])* $variant $(($($ty),*))?
+                $({ $($(#[$field_meta])* $field: $field_ty),* })?,)*
+        }
+
+        #[derive(Copy, Clone, chunkedge_protocol_macros::RegistryId)]
+        #[packet(registry = component_id)]
+        pub(crate) enum ItemComponentKind { $($variant,)* }
+
+        impl ItemComponent {
+            pub const fn id(&self) -> u32 {
+                match self {
+                    $(item_components!(@pattern $variant $(($($ty),*))? $({$($field),*})?)
+                        => ItemComponentKind::$variant.id() as u32,)*
+                }
+            }
+        }
+    };
+    (@pattern $variant:ident ($($ty:ty),*)) => { Self::$variant(..) };
+    (@pattern $variant:ident {$($field:ident),*}) => { Self::$variant { .. } };
+    (@pattern $variant:ident) => { Self::$variant };
+}
+
+item_components! {
     /// Arbitrary NBT data that does not fit into other structured components.
     /// Used primarily by data-driven systems and server-side plugins to store
     /// state.
@@ -65,6 +97,13 @@ pub enum ItemComponent {
     /// A custom name for the item, typically set via an anvil.
     /// Usually rendered in italics by the client.
     CustomName(TextComponent),
+
+    /// Movement and vibration behavior while using the item.
+    UseEffects(UseEffects),
+    /// Minimum attack charge required to use the item as a weapon.
+    MinimumAttackCharge(f32),
+    /// Raw ID in the damage-type registry.
+    DamageType(RegistryId),
 
     /// Overrides the base name of the item (e.g., "Stone").
     /// Unlike `CustomName`, this is not italicized by default.
@@ -162,7 +201,7 @@ pub enum ItemComponent {
 
     /// Defines an item that is returned to the inventory after this one is
     /// used. Example: Eating Mushroom Stew returns an empty Bowl.
-    UseRemainder(Box<ItemStack>),
+    UseRemainder(Box<ItemStackTemplate>),
 
     /// Prevents the item from being used again for a set duration.
     UseCooldown {
@@ -175,7 +214,7 @@ pub enum ItemComponent {
 
     /// Prevents the item from being destroyed by certain damage types (e.g.,
     /// fire-resistant Netherite).
-    DamageResistant(String),
+    DamageResistant(IDSet),
 
     /// Configures how this item mines blocks.
     Tool {
@@ -201,6 +240,8 @@ pub enum ItemComponent {
     /// Determines how many experience points the item "absorbs" in an
     /// enchanting table.
     Enchantable(VarInt),
+
+    AttackRange(AttackRange),
 
     /// Logic for equipping the item.
     Equippable {
@@ -256,13 +297,24 @@ pub enum ItemComponent {
         item_damage_base: f32,
         /// Multiplier for durability loss based on damage blocked.
         item_damage_factor: f32,
-        /// Damage type tag that pierces this shield's blocking logic.
-        bypassed_by: Option<String>,
+        /// Damage types that pierce this shield's blocking logic.
+        bypassed_by: Option<IDSet>,
         /// Sound played when a hit is successfully blocked.
         block_sound: Option<IdOr<SoundEventDefinition>>,
         /// Sound played when the shield is disabled (e.g., by an Axe).
         disable_sound: Option<IdOr<SoundEventDefinition>>,
     },
+
+    /// Properties of a piercing (jab) attack.
+    PiercingWeapon(PiercingWeapon),
+    /// Damage, knockback and dismount conditions for a kinetic attack.
+    KineticWeapon(KineticWeapon),
+    /// The item's swing animation and duration in ticks.
+    SwingAnimation(SwingAnimation),
+    /// Additional item count required by a merchant offer.
+    AdditionalTradeCost(VarInt),
+    /// The dye color supplied by this item.
+    Dye(DyeColor),
 
     /// Enchantments contained within an Enchanted Book.
     StoredEnchantments {
@@ -289,10 +341,10 @@ pub enum ItemComponent {
     MapPostProcessing(MapPostProcessingType),
 
     /// Items currently loaded into a Crossbow.
-    ChargedProjectiles(Vec<ItemStack>),
+    ChargedProjectiles(Vec<ItemStackTemplate>),
 
     /// Items stored inside a Bundle.
-    BundleContents(Vec<ItemStack>),
+    BundleContents(Vec<ItemStackTemplate>),
 
     /// Data for Potion items, including their base type and custom effects.
     PotionContents {
@@ -357,7 +409,7 @@ pub enum ItemComponent {
     Instrument(IdOr<InstrumentDefinition>),
 
     /// Marks an item as a valid material for the Armor Trim system.
-    ProvidesTrimMaterial(ModePair<String, IdOr<TrimMaterial>>),
+    ProvidesTrimMaterial(IdOr<TrimMaterial>),
 
     /// The level of Bad Omen granted by an Ominous Bottle (0-4).
     OminousBottleAmplifier(VarInt),
@@ -411,13 +463,16 @@ pub enum ItemComponent {
     PotDecorations(Vec<RegistryId>),
 
     /// The inventory contents of a block (like a Chest or Shulker Box).
-    Container(Vec<ItemStack>),
+    Container(Vec<Option<ItemStackTemplate>>),
 
     /// Block state property overrides (e.g., "lit: true").
     BlockState(Vec<(String, String)>),
 
     /// Data for bees currently inside a Beehive item.
     Bees(Vec<BeeData>),
+
+    /// The block item absorbed by a sulfur cube.
+    SulfurCubeContent(Box<ItemStackTemplate>),
 
     /// The "Key" name required to open a container if it has a Lock component.
     Lock(String),
@@ -499,130 +554,78 @@ pub enum ItemComponent {
 
     /// Shell color of a Shulker.
     ShulkerColor(DyeColor),
+
+    PigSoundVariant(RegistryId),
+    CowSoundVariant(RegistryId),
+    ChickenSoundVariant(RegistryId),
+    ZombieNautilusVariant(RegistryId),
+    CatSoundVariant(RegistryId),
 }
 
 impl ItemComponent {
-    pub fn id(&self) -> u32 {
-        match self {
-            ItemComponent::CustomData { .. } => component_id::CUSTOM_DATA as u32,
-            ItemComponent::MaxStackSize { .. } => component_id::MAX_STACK_SIZE as u32,
-            ItemComponent::MaxDamage { .. } => component_id::MAX_DAMAGE as u32,
-            ItemComponent::Damage { .. } => component_id::DAMAGE as u32,
-            ItemComponent::Unbreakable => component_id::UNBREAKABLE as u32,
-            ItemComponent::CustomName { .. } => component_id::CUSTOM_NAME as u32,
-            ItemComponent::ItemName { .. } => component_id::ITEM_NAME as u32,
-            ItemComponent::ItemModel { .. } => component_id::ITEM_MODEL as u32,
-            ItemComponent::Lore { .. } => component_id::LORE as u32,
-            ItemComponent::Rarity { .. } => component_id::RARITY as u32,
-            ItemComponent::Enchantments { .. } => component_id::ENCHANTMENTS as u32,
-            ItemComponent::CanPlaceOn { .. } => component_id::CAN_PLACE_ON as u32,
-            ItemComponent::CanBreak { .. } => component_id::CAN_BREAK as u32,
-            ItemComponent::AttributeModifiers { .. } => component_id::ATTRIBUTE_MODIFIERS as u32,
-            ItemComponent::CustomModelData { .. } => component_id::CUSTOM_MODEL_DATA as u32,
-            ItemComponent::TooltipDisplay { .. } => component_id::TOOLTIP_DISPLAY as u32,
-            ItemComponent::RepairCost { .. } => component_id::REPAIR_COST as u32,
-            ItemComponent::CreativeSlotLock => component_id::CREATIVE_SLOT_LOCK as u32,
-            ItemComponent::EnchantmentGlintOverride { .. } => {
-                component_id::ENCHANTMENT_GLINT_OVERRIDE as u32
-            }
-            ItemComponent::IntangibleProjectile { .. } => {
-                component_id::INTANGIBLE_PROJECTILE as u32
-            }
-            ItemComponent::Food { .. } => component_id::FOOD as u32,
-            ItemComponent::Consumable { .. } => component_id::CONSUMABLE as u32,
-            ItemComponent::UseRemainder { .. } => component_id::USE_REMAINDER as u32,
-            ItemComponent::UseCooldown { .. } => component_id::USE_COOLDOWN as u32,
-            ItemComponent::DamageResistant { .. } => component_id::DAMAGE_RESISTANT as u32,
-            ItemComponent::Tool { .. } => component_id::TOOL as u32,
-            ItemComponent::Weapon { .. } => component_id::WEAPON as u32,
-            ItemComponent::Enchantable { .. } => component_id::ENCHANTABLE as u32,
-            ItemComponent::Equippable { .. } => component_id::EQUIPPABLE as u32,
-            ItemComponent::Repairable { .. } => component_id::REPAIRABLE as u32,
-            ItemComponent::Glider => component_id::GLIDER as u32,
-            ItemComponent::TooltipStyle { .. } => component_id::TOOLTIP_STYLE as u32,
-            ItemComponent::DeathProtection { .. } => component_id::DEATH_PROTECTION as u32,
-            ItemComponent::BlocksAttacks { .. } => component_id::BLOCKS_ATTACKS as u32,
-            ItemComponent::StoredEnchantments { .. } => component_id::STORED_ENCHANTMENTS as u32,
-            ItemComponent::DyedColor { .. } => component_id::DYED_COLOR as u32,
-            ItemComponent::MapColor { .. } => component_id::MAP_COLOR as u32,
-            ItemComponent::MapId { .. } => component_id::MAP_ID as u32,
-            ItemComponent::MapDecorations { .. } => component_id::MAP_DECORATIONS as u32,
-            ItemComponent::MapPostProcessing { .. } => component_id::MAP_POST_PROCESSING as u32,
-            ItemComponent::ChargedProjectiles { .. } => component_id::CHARGED_PROJECTILES as u32,
-            ItemComponent::BundleContents { .. } => component_id::BUNDLE_CONTENTS as u32,
-            ItemComponent::PotionContents { .. } => component_id::POTION_CONTENTS as u32,
-            ItemComponent::PotionDurationScale { .. } => component_id::POTION_DURATION_SCALE as u32,
-            ItemComponent::SuspiciousStewEffects { .. } => {
-                component_id::SUSPICIOUS_STEW_EFFECTS as u32
-            }
-            ItemComponent::WritableBookContent { .. } => component_id::WRITABLE_BOOK_CONTENT as u32,
-            ItemComponent::WrittenBookContent { .. } => component_id::WRITTEN_BOOK_CONTENT as u32,
-            ItemComponent::Trim { .. } => component_id::TRIM as u32,
-            ItemComponent::DebugStickState { .. } => component_id::DEBUG_STICK_STATE as u32,
-            ItemComponent::EntityData { .. } => component_id::ENTITY_DATA as u32,
-            ItemComponent::BucketEntityData { .. } => component_id::BUCKET_ENTITY_DATA as u32,
-            ItemComponent::BlockEntityData { .. } => component_id::BLOCK_ENTITY_DATA as u32,
-            ItemComponent::Instrument { .. } => component_id::INSTRUMENT as u32,
-            ItemComponent::ProvidesTrimMaterial { .. } => {
-                component_id::PROVIDES_TRIM_MATERIAL as u32
-            }
-            ItemComponent::OminousBottleAmplifier { .. } => {
-                component_id::OMINOUS_BOTTLE_AMPLIFIER as u32
-            }
-            ItemComponent::JukeboxPlayable { .. } => component_id::JUKEBOX_PLAYABLE as u32,
-            ItemComponent::ProvidesBannerPatterns { .. } => {
-                component_id::PROVIDES_BANNER_PATTERNS as u32
-            }
-            ItemComponent::Recipes { .. } => component_id::RECIPES as u32,
-            ItemComponent::LodestoneTracker { .. } => component_id::LODESTONE_TRACKER as u32,
-            ItemComponent::FireworkExplosion { .. } => component_id::FIREWORK_EXPLOSION as u32,
-            ItemComponent::Fireworks { .. } => component_id::FIREWORKS as u32,
-            ItemComponent::Profile { .. } => component_id::PROFILE as u32,
-            ItemComponent::NoteBlockSound { .. } => component_id::NOTE_BLOCK_SOUND as u32,
-            ItemComponent::BannerPatterns { .. } => component_id::BANNER_PATTERNS as u32,
-            ItemComponent::BaseColor { .. } => component_id::BASE_COLOR as u32,
-            ItemComponent::PotDecorations { .. } => component_id::POT_DECORATIONS as u32,
-            ItemComponent::Container { .. } => component_id::CONTAINER as u32,
-            ItemComponent::BlockState { .. } => component_id::BLOCK_STATE as u32,
-            ItemComponent::Bees { .. } => component_id::BEES as u32,
-            ItemComponent::Lock { .. } => component_id::LOCK as u32,
-            ItemComponent::ContainerLoot { .. } => component_id::CONTAINER_LOOT as u32,
-            ItemComponent::BreakSound { .. } => component_id::BREAK_SOUND as u32,
-            ItemComponent::VillagerVariant { .. } => component_id::VILLAGER_VARIANT as u32,
-            ItemComponent::WolfVariant { .. } => component_id::WOLF_VARIANT as u32,
-            ItemComponent::WolfSoundVariant { .. } => component_id::WOLF_SOUND_VARIANT as u32,
-            ItemComponent::WolfCollar { .. } => component_id::WOLF_COLLAR as u32,
-            ItemComponent::FoxVariant { .. } => component_id::FOX_VARIANT as u32,
-            ItemComponent::SalmonSize { .. } => component_id::SALMON_SIZE as u32,
-            ItemComponent::ParrotVariant { .. } => component_id::PARROT_VARIANT as u32,
-            ItemComponent::TropicalFishPattern { .. } => component_id::TROPICAL_FISH_PATTERN as u32,
-            ItemComponent::TropicalFishBaseColor { .. } => {
-                component_id::TROPICAL_FISH_BASE_COLOR as u32
-            }
-            ItemComponent::TropicalFishPatternColor { .. } => {
-                component_id::TROPICAL_FISH_PATTERN_COLOR as u32
-            }
-            ItemComponent::MooshroomVariant { .. } => component_id::MOOSHROOM_VARIANT as u32,
-            ItemComponent::RabbitVariant { .. } => component_id::RABBIT_VARIANT as u32,
-            ItemComponent::PigVariant { .. } => component_id::PIG_VARIANT as u32,
-            ItemComponent::CowVariant { .. } => component_id::COW_VARIANT as u32,
-            ItemComponent::ChickenVariant { .. } => component_id::CHICKEN_VARIANT as u32,
-            ItemComponent::FrogVariant { .. } => component_id::FROG_VARIANT as u32,
-            ItemComponent::HorseVariant { .. } => component_id::HORSE_VARIANT as u32,
-            ItemComponent::PaintingVariant { .. } => component_id::PAINTING_VARIANT as u32,
-            ItemComponent::LlamaVariant { .. } => component_id::LLAMA_VARIANT as u32,
-            ItemComponent::AxolotlVariant { .. } => component_id::AXOLOTL_VARIANT as u32,
-            ItemComponent::CatVariant { .. } => component_id::CAT_VARIANT as u32,
-            ItemComponent::CatCollar { .. } => component_id::CAT_COLLAR as u32,
-            ItemComponent::SheepColor { .. } => component_id::SHEEP_COLOR as u32,
-            ItemComponent::ShulkerColor { .. } => component_id::SHULKER_COLOR as u32,
-        }
-    }
-
     pub fn hash(&self) -> i32 {
         // TODO: implement if required
         0
     }
+}
+
+/// Movement and vibration behavior while an item is being used.
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct UseEffects {
+    pub can_sprint: bool,
+    pub interact_vibrations: bool,
+    pub speed_multiplier: f32,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct AttackRange {
+    pub min_reach: f32,
+    pub max_reach: f32,
+    pub min_creative_reach: f32,
+    pub max_creative_reach: f32,
+    pub hitbox_margin: f32,
+    pub mob_factor: f32,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct PiercingWeapon {
+    pub deals_knockback: bool,
+    pub dismounts: bool,
+    pub sound: Option<IdOr<SoundEventDefinition>>,
+    pub hit_sound: Option<IdOr<SoundEventDefinition>>,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct KineticWeapon {
+    pub contact_cooldown_ticks: VarInt,
+    pub delay_ticks: VarInt,
+    pub dismount_conditions: Option<KineticWeaponCondition>,
+    pub knockback_conditions: Option<KineticWeaponCondition>,
+    pub damage_conditions: Option<KineticWeaponCondition>,
+    pub forward_movement: f32,
+    pub damage_multiplier: f32,
+    pub sound: Option<IdOr<SoundEventDefinition>>,
+    pub hit_sound: Option<IdOr<SoundEventDefinition>>,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct KineticWeaponCondition {
+    pub max_duration_ticks: VarInt,
+    pub min_speed: f32,
+    pub min_relative_speed: f32,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct SwingAnimation {
+    pub kind: SwingAnimationType,
+    pub duration: VarInt,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub enum SwingAnimationType {
+    None,
+    Whack,
+    Stab,
 }
 
 /// A helper struct for protocol fields that start with a "Mode" byte.

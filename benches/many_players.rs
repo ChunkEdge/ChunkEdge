@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use bevy_app::prelude::*;
-use chunkedge::entity::Position;
+use chunkedge::entity::{EntityManager, Position};
 use chunkedge::keepalive::KeepaliveSettings;
 use chunkedge::layer::LayerBundle;
 use chunkedge::layer::chunk::UnloadedChunk;
@@ -63,7 +63,10 @@ fn run_many_players(bencher: Bencher, client_count: usize, view_dist: u8, world_
 
     // Spawn a bunch of clients in at random initial positions in the instance.
     for i in 0..client_count {
-        let (mut bundle, helper) = create_mock_client(format!("client_{i}"));
+        let (mut bundle, helper) = create_mock_client(
+            format!("client_{i}"),
+            &mut app.world_mut().resource_mut::<EntityManager>(),
+        );
 
         bundle.visible_chunk_layer.0 = layer;
         bundle.visible_entity_layers.0.insert(layer);

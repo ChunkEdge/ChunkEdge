@@ -31,7 +31,12 @@ fn client_teleport_and_move() {
         }
     }
 
-    let (mut bundle, mut helper_2) = create_mock_client("other");
+    let (mut bundle, mut helper_2) = create_mock_client(
+        "other",
+        &mut app
+            .world_mut()
+            .resource_mut::<chunkedge_server::entity::EntityManager>(),
+    );
 
     bundle.layer.0 = layer_ent;
     bundle.visible_chunk_layer.0 = layer_ent;

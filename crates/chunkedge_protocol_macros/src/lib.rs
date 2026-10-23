@@ -65,19 +65,49 @@ fn registry_id(item: TokenStream) -> Result<TokenStream> {
             Fields::Unnamed(_) => quote!(Self::#name(..)),
             Fields::Unit => quote!(Self::#name),
         };
-        quote!(#pattern => #id,)
+        quote!(#pattern => #id as i32,)
     });
+    let checks = variants.iter().map(|(id, _)| {
+        quote! {
+            let id = #id as usize;
+            assert!(id < #registry::COUNT, "registry ID out of range");
+            assert!(!seen[id], "duplicate registry ID");
+            seen[id] = true;
+        }
+    });
+    let from_id = variants
+        .iter()
+        .all(|(_, variant)| matches!(variant.fields, Fields::Unit))
+        .then(|| {
+            let arms = variants.iter().map(|(id, variant)| {
+                let name = &variant.ident;
+                quote!(n if n == #id as usize => Some(Self::#name),)
+            });
+            quote! {
+                #[allow(clippy::unnecessary_cast)]
+                pub const fn from_id(id: usize) -> Option<Self> {
+                    match id { #(#arms)* _ => None }
+                }
+            }
+        });
     let name = &input.ident;
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     Ok(quote! {
         // Every registry entry needs a payload definition before it can be decoded.
         const _: [(); #registry::COUNT] = [(); #count];
+        #[allow(clippy::unnecessary_cast)]
+        const _: () = {
+            let mut seen = [false; #registry::COUNT];
+            #(#checks)*
+        };
 
         impl #impl_generics #name #ty_generics #where_clause {
+            #[allow(clippy::unnecessary_cast)]
             pub const fn id(&self) -> i32 {
                 match self { #(#arms)* }
             }
+            #from_id
         }
     })
 }

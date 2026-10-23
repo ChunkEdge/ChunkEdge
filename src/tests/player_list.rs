@@ -33,7 +33,12 @@ fn player_list_arrives_before_player_spawn() {
         assert_eq!(pkt.entries.len(), 1)
     };
 
-    let (mut client_2, mut client_helper_2) = create_mock_client("test_2");
+    let (mut client_2, mut client_helper_2) = create_mock_client(
+        "test_2",
+        &mut app
+            .world_mut()
+            .resource_mut::<chunkedge_server::entity::EntityManager>(),
+    );
     client_2.layer.0 = layer_ent;
     client_2.visible_chunk_layer.0 = layer_ent;
     client_2.visible_entity_layers.0.insert(layer_ent);

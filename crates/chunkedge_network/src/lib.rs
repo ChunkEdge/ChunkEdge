@@ -29,6 +29,7 @@ use chunkedge_server::registry::dimension_type::{DimensionType, DimensionTypeId}
 use chunkedge_server::registry::{BiomeRegistry, DimensionTypeRegistry, Registry, TagsRegistry};
 use chunkedge_server::{
     CompressionThreshold, Ident, MINECRAFT_VERSION, PROTOCOL_VERSION, Server, Text,
+    entity::EntityManager,
 };
 pub use connect::HandshakeData;
 use connect::do_accept_loop;
@@ -150,7 +151,11 @@ fn build_plugin(app: &mut App) -> anyhow::Result<()> {
     let spawn_new_clients = move |world: &mut World| {
         for _ in 0..shared.0.new_clients_recv.len() {
             match shared.0.new_clients_recv.try_recv() {
-                Ok(args) => world.spawn(ClientBundle::new(args)),
+                Ok(args) => {
+                    let bundle =
+                        ClientBundle::new(args, &mut world.resource_mut::<EntityManager>());
+                    world.spawn(bundle)
+                }
                 Err(_) => break,
             };
         }

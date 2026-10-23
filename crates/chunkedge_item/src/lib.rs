@@ -13,14 +13,16 @@ pub(crate) const MAX_RECURSION_DEPTH: usize = 16;
 pub use chunkedge_generated::item::ItemKind;
 
 pub use crate::components::{
-    AttributeModifier, AttributeModifierDisplay, AttributeSlot, AxolotlType, BannerLayer,
-    BannerPattern, BeeData, BlockPredicate, ConsumableAnimation, ConsumeEffect, ConsumeEffectData,
-    DamageReduction, DyeColor, EquipSlot, ExactComponentMatcher, FireworkExplosionData, FoxType,
-    HorseColor, InstrumentDefinition, ItemComponent, JukeboxSong, LlamaColor, LodestoneTarget,
-    MapPostProcessingType, ModePair, MooshroomType, PaintingVariantDefinition, ParrotType,
-    PartialComponentMatcher, PlayerSkinPatch, PotionEffect, ProfileProperty, Property,
-    PropertyValue, RabbitType, Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition,
-    ToolRule, TrimMaterial, TrimPattern, TropicalFishPattern, WritablePage, WrittenPage,
+    AttackRange, AttributeModifier, AttributeModifierDisplay, AttributeSlot, AxolotlType,
+    BannerLayer, BannerPattern, BeeData, BlockPredicate, ConsumableAnimation, ConsumeEffect,
+    ConsumeEffectData, DamageReduction, DyeColor, EquipSlot, ExactComponentMatcher,
+    FireworkExplosionData, FoxType, HorseColor, InstrumentDefinition, ItemComponent, JukeboxSong,
+    KineticWeapon, KineticWeaponCondition, LlamaColor, LodestoneTarget, MapPostProcessingType,
+    ModePair, MooshroomType, PaintingVariantDefinition, ParrotType, PartialComponentMatcher,
+    PiercingWeapon, PlayerSkinPatch, PotionEffect, ProfileProperty, Property, PropertyValue,
+    RabbitType, Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition, SwingAnimation,
+    SwingAnimationType, ToolRule, TrimMaterial, TrimPattern, TropicalFishPattern, UseEffects,
+    WritablePage, WrittenPage,
 };
 pub use crate::cost::ItemCost;
 pub use crate::impls::decode_item_stack_recursive;
@@ -177,7 +179,9 @@ mod tests {
         inner_stack.insert_component(ItemComponent::ItemName(Text::from("Inner").into()));
 
         let mut outer_stack = ItemStack::new(ItemKind::Chest, 1);
-        outer_stack.insert_component(ItemComponent::Container(vec![inner_stack]));
+        outer_stack.insert_component(ItemComponent::Container(vec![Some(ItemStackTemplate(
+            inner_stack,
+        ))]));
 
         roundtrip(&outer_stack);
     }
@@ -187,9 +191,14 @@ mod tests {
         let mut buf = Vec::new();
 
         // Helper to write a recursive bundle structure manually
-        fn write_recursive_bundle(w: &mut Vec<u8>, depth: usize) {
-            VarInt(1).encode(&mut *w).unwrap(); // Count
-            ItemKind::Bundle.encode(&mut *w).unwrap(); // Item
+        fn write_recursive_bundle(w: &mut Vec<u8>, depth: usize, template: bool) {
+            if template {
+                ItemKind::Bundle.encode(&mut *w).unwrap();
+                VarInt(1).encode(&mut *w).unwrap();
+            } else {
+                VarInt(1).encode(&mut *w).unwrap();
+                ItemKind::Bundle.encode(&mut *w).unwrap();
+            }
 
             VarInt(1).encode(&mut *w).unwrap(); // Added components count
             VarInt(0).encode(&mut *w).unwrap(); // Removed components count
@@ -200,13 +209,13 @@ mod tests {
 
             if depth > 0 {
                 VarInt(1).encode(&mut *w).unwrap(); // Nested list length
-                write_recursive_bundle(w, depth - 1);
+                write_recursive_bundle(w, depth - 1, true);
             } else {
                 VarInt(0).encode(&mut *w).unwrap(); // Empty nested list
             }
         }
 
-        write_recursive_bundle(&mut buf, 20); // 20 > 16
+        write_recursive_bundle(&mut buf, 20, false); // 20 > 16
 
         let mut slice = buf.as_slice();
         let result = ItemStack::decode(&mut slice);

@@ -12,6 +12,7 @@ use chunkedge_ident::ident;
 use chunkedge_network::NetworkPlugin;
 use chunkedge_registry::{BiomeRegistry, DimensionTypeRegistry};
 use chunkedge_server::client::{ClientBundle, ClientBundleArgs, ClientConnection, ReceivedPacket};
+use chunkedge_server::entity::EntityManager;
 use chunkedge_server::keepalive::KeepaliveSettings;
 use chunkedge_server::protocol::decode::PacketFrame;
 use chunkedge_server::protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
@@ -88,7 +89,8 @@ impl ScenarioSingleClient {
         let entity_layer = EntityLayer::new(app.world().resource::<Server>());
         let layer = app.world_mut().spawn((chunk_layer, entity_layer)).id();
 
-        let (mut client, helper) = create_mock_client("test");
+        let (mut client, helper) =
+            create_mock_client("test", &mut app.world_mut().resource_mut::<EntityManager>());
         client.layer.0 = layer;
         client.visible_chunk_layer.0 = layer;
         client.visible_entity_layers.0.insert(layer);
@@ -113,27 +115,33 @@ impl Default for ScenarioSingleClient {
 ///
 /// Returns the client, and a helper to inject packets as if the client sent
 /// them and receive packets as if the client received them.
-pub fn create_mock_client<N: Into<String>>(name: N) -> (ClientBundle, MockClientHelper) {
+pub fn create_mock_client<N: Into<String>>(
+    name: N,
+    entities: &mut EntityManager,
+) -> (ClientBundle, MockClientHelper) {
     let conn = MockClientConnection::new();
 
-    let bundle = ClientBundle::new(ClientBundleArgs {
-        online_mode: false,
-        username: name.into(),
-        uuid: Uuid::from_bytes(rand::random()),
-        ip: IpAddr::V4(Ipv4Addr::LOCALHOST),
-        properties: Default::default(),
-        conn: Box::new(conn.clone()),
-        view_distance: 2,
-        locale: Default::default(),
-        chat_mode: Default::default(),
-        chat_colors: false,
-        displayed_skin_parts: Default::default(),
-        main_arm: Default::default(),
-        enable_text_filtering: false,
-        allow_server_listings: false,
-        particle_mode: Default::default(),
-        enc: PacketEncoder::new(),
-    });
+    let bundle = ClientBundle::new(
+        ClientBundleArgs {
+            online_mode: false,
+            username: name.into(),
+            uuid: Uuid::from_bytes(rand::random()),
+            ip: IpAddr::V4(Ipv4Addr::LOCALHOST),
+            properties: Default::default(),
+            conn: Box::new(conn.clone()),
+            view_distance: 2,
+            locale: Default::default(),
+            chat_mode: Default::default(),
+            chat_colors: false,
+            displayed_skin_parts: Default::default(),
+            main_arm: Default::default(),
+            enable_text_filtering: false,
+            allow_server_listings: false,
+            particle_mode: Default::default(),
+            enc: PacketEncoder::new(),
+        },
+        entities,
+    );
 
     let helper = MockClientHelper::new(conn);
 

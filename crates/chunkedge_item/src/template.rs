@@ -18,7 +18,7 @@ impl<I: Borrow<ItemStack>> Encode for ItemStackTemplate<I> {
 
 impl<'a> Decode<'a> for ItemStackTemplate {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
-        crate::impls::decode_item_stack_template(r).map(Self)
+        crate::impls::decode_item_stack_template(r, 0).map(Self)
     }
 }
 

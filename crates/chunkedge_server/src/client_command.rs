@@ -1,12 +1,10 @@
-use std::collections::HashMap;
-
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_entity::entity::Flags;
 use chunkedge_entity::{Pose, entity};
 use chunkedge_protocol::packets::play::PlayerCommandC2s;
 pub use chunkedge_protocol::packets::play::player_command_c2s::PlayerCommand;
-use chunkedge_protocol::packets::play::player_input_c2s::PlayerInputC2s;
+use chunkedge_protocol::packets::play::player_input_c2s::{PlayerInputC2s, PlayerInputFlags};
 
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
@@ -131,34 +129,28 @@ fn handle_client_command(
     }
 }
 
-/// Tracks sneaking from [`PlayerInputC2s`].
-///
-/// The sprint input bit is only the sprint key state. Actual sprinting comes
-/// from [`PlayerCommandC2s`] and is handled by [`handle_client_command`].
+#[derive(Component, Default)]
+pub(crate) struct LastPlayerInput(PlayerInputFlags);
+
+/// Tracks sneaking from input, while actual sprinting comes from player commands.
 pub(crate) fn handle_player_input(
     mut packets: MessageReader<PacketMessage>,
-    mut clients: Query<(&mut entity::Pose, &mut Flags)>,
+    mut clients: Query<(&mut entity::Pose, &mut Flags, &mut LastPlayerInput)>,
     mut sneaking_messages: MessageWriter<SneakMessage>,
-    mut last_sneaking: Local<HashMap<Entity, bool>>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerInputC2s>() {
+            let Ok((mut pose, mut flags, mut last_input)) = clients.get_mut(packet.client) else {
+                continue;
+            };
             let sneak = pkt.flags.sneak();
-            let was_sneaking = last_sneaking
-                .get(&packet.client)
-                .copied()
-                .unwrap_or_default();
-
-            if sneak != was_sneaking {
-                if let Ok((mut pose, mut flags)) = clients.get_mut(packet.client) {
-                    pose.0 = if sneak {
-                        Pose::Sneaking
-                    } else {
-                        Pose::Standing
-                    };
-                    flags.set_sneaking(sneak);
-                }
-
+            if sneak != last_input.0.sneak() {
+                pose.0 = if sneak {
+                    Pose::Sneaking
+                } else {
+                    Pose::Standing
+                };
+                flags.set_sneaking(sneak);
                 sneaking_messages.write(SneakMessage {
                     client: packet.client,
                     state: if sneak {
@@ -168,8 +160,7 @@ pub(crate) fn handle_player_input(
                     },
                 });
             }
-
-            last_sneaking.insert(packet.client, sneak);
+            last_input.0 = pkt.flags;
         }
     }
 }

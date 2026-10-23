@@ -119,9 +119,6 @@ pub(super) fn initial_join(
     chunk_layers: Query<&ChunkLayer>,
 ) {
     for (mut client, entity_id, visible_chunk_layer, spawn) in &mut clients {
-        // The client knows itself by its own entity ID. ID 0 means "unassigned"
-        // to vanilla clients, so it can't be used as a shortcut for "self".
-        client.entity_id = *entity_id;
         let Ok(chunk_layer) = chunk_layers.get(visible_chunk_layer.0) else {
             continue;
         };

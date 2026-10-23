@@ -17,7 +17,8 @@ use chunkedge_entity::living::Health;
 use chunkedge_entity::player::{Food, PlayerEntity, Saturation};
 use chunkedge_entity::tracked_data::TrackedData;
 use chunkedge_entity::{
-    ClearEntityChangesSet, EntityId, EntityLayerId, EntityStatus, OldPosition, Position, Velocity,
+    ClearEntityChangesSet, EntityId, EntityLayerId, EntityManager, EntityStatus, OldPosition,
+    Position, Velocity,
 };
 use chunkedge_entity::{HumanoidArm, query::EntityInitQuery};
 use chunkedge_math::{DVec3, Vec3};
@@ -116,6 +117,7 @@ impl Plugin for ClientPlugin {
 #[derive(Bundle)]
 pub struct ClientBundle {
     pub marker: ClientMarker,
+    pub entity_id: EntityId,
     pub client: Client,
     pub settings: crate::client_settings::ClientSettings,
     pub entity_remove_buf: EntityRemoveBuf,
@@ -155,13 +157,16 @@ pub struct ClientBundle {
 }
 
 impl ClientBundle {
-    pub fn new(args: ClientBundleArgs) -> Self {
+    /// Allocates the player's protocol ID before any packets reference it.
+    pub fn new(args: ClientBundleArgs, entities: &mut EntityManager) -> Self {
+        let entity_id = entities.next_id();
         Self {
+            entity_id,
             marker: ClientMarker,
             client: Client {
                 conn: args.conn,
                 enc: args.enc,
-                entity_id: EntityId::default(),
+                entity_id,
                 online_mode: args.online_mode,
             },
             settings: crate::client_settings::ClientSettings {
@@ -251,11 +256,12 @@ pub struct ClientMarker;
 /// The component is removed when the client is disconnected. You are allowed to
 /// remove the component yourself.
 #[derive(Component)]
+#[require(crate::client_command::LastPlayerInput)]
 pub struct Client {
     conn: Box<dyn ClientConnection>,
     pub(crate) online_mode: bool,
     pub(crate) enc: PacketEncoder,
-    /// Copy of the client's [`EntityId`] component, set at join time, so
+    /// Copy of the client's [`EntityId`] component, allocated at construction, so
     /// methods on `Client` can address packets to the client's own entity.
     pub(crate) entity_id: EntityId,
 }

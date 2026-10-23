@@ -2,6 +2,8 @@ use std::io::Write;
 
 use chunkedge_binary::{Bounded, Decode, Encode, VarInt, cautious_capacity};
 use chunkedge_generated::item::ItemKind;
+use chunkedge_ident::Ident;
+use chunkedge_nbt::{List, Value};
 
 use crate::components::{
     BlockPredicate, ExactComponentMatcher, ItemComponent, ItemComponentKind, Patchable,
@@ -46,7 +48,7 @@ impl Encode for ItemComponent {
             ItemComponent::CustomName(v) => v.encode(w),
             ItemComponent::ItemName(v) => v.encode(w),
             ItemComponent::ItemModel(v) => v.encode(w),
-            ItemComponent::Lore(v) => v.encode(w),
+            ItemComponent::Lore(v) => Bounded::<_, 256>(v.as_slice()).encode(w),
             ItemComponent::Rarity(v) => v.encode(w),
             ItemComponent::Enchantments(v) => v.encode(w),
             ItemComponent::CanPlaceOn(v) => v.encode(w),
@@ -174,13 +176,7 @@ impl Encode for ItemComponent {
                 block_sound.encode(&mut *w)?;
                 disable_sound.encode(w)
             }
-            ItemComponent::StoredEnchantments {
-                enchantments,
-                show_in_tooltip,
-            } => {
-                enchantments.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
-            }
+            ItemComponent::StoredEnchantments(v) => v.encode(w),
             ItemComponent::DyedColor { color } => color.encode(w),
             ItemComponent::MapColor(v) => v.encode(w),
             ItemComponent::MapId(v) => v.encode(w),
@@ -201,7 +197,9 @@ impl Encode for ItemComponent {
             }
             ItemComponent::PotionDurationScale(v) => v.encode(w),
             ItemComponent::SuspiciousStewEffects(v) => v.encode(w),
-            ItemComponent::WritableBookContent { pages } => pages.encode(w),
+            ItemComponent::WritableBookContent { pages } => {
+                Bounded::<_, 100>(pages.as_slice()).encode(w)
+            }
             ItemComponent::WrittenBookContent {
                 raw_title,
                 filtered_title,
@@ -217,14 +215,9 @@ impl Encode for ItemComponent {
                 pages.encode(&mut *w)?;
                 resolved.encode(w)
             }
-            ItemComponent::Trim {
-                material,
-                pattern,
-                show_in_tooltip,
-            } => {
+            ItemComponent::Trim { material, pattern } => {
                 material.encode(&mut *w)?;
-                pattern.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
+                pattern.encode(w)
             }
             ItemComponent::DebugStickState(v) => v.encode(w),
             ItemComponent::EntityData { id, data } => {
@@ -239,15 +232,9 @@ impl Encode for ItemComponent {
             ItemComponent::Instrument(v) => v.encode(w),
             ItemComponent::ProvidesTrimMaterial(v) => v.encode(w),
             ItemComponent::OminousBottleAmplifier(v) => v.encode(w),
-            ItemComponent::JukeboxPlayable {
-                song,
-                show_in_tooltip,
-            } => {
-                song.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
-            }
+            ItemComponent::JukeboxPlayable(v) => v.encode(w),
             ItemComponent::ProvidesBannerPatterns(v) => v.encode(w),
-            ItemComponent::Recipes(v) => v.encode(w),
+            ItemComponent::Recipes(v) => recipes_to_nbt(v).encode(w),
             ItemComponent::LodestoneTracker { target, tracked } => {
                 target.encode(&mut *w)?;
                 tracked.encode(w)
@@ -258,13 +245,13 @@ impl Encode for ItemComponent {
                 explosions,
             } => {
                 flight_duration.encode(&mut *w)?;
-                explosions.encode(w)
+                Bounded::<_, 256>(explosions.as_slice()).encode(w)
             }
             ItemComponent::Profile(v) => v.encode(w),
             ItemComponent::NoteBlockSound(v) => v.encode(w),
             ItemComponent::BannerPatterns(v) => v.encode(w),
             ItemComponent::BaseColor(v) => v.encode(w),
-            ItemComponent::PotDecorations(v) => v.encode(w),
+            ItemComponent::PotDecorations(v) => Bounded::<_, 4>(v.as_slice()).encode(w),
             ItemComponent::Container(v) => Bounded::<_, 256>(v.as_slice()).encode(w),
             ItemComponent::BlockState(v) => v.encode(w),
             ItemComponent::Bees(v) => v.encode(w),
@@ -397,6 +384,25 @@ fn decode_stack_components(
     })
 }
 
+/// Encodes knowledge book recipe keys the way vanilla's persistent codec
+/// does: an NBT list of strings.
+fn recipes_to_nbt(recipes: &[Ident<String>]) -> Value {
+    Value::List(List::String(
+        recipes.iter().map(|id| id.as_str().to_owned()).collect(),
+    ))
+}
+
+fn recipes_from_nbt(value: Value) -> anyhow::Result<Vec<Ident<String>>> {
+    match value {
+        Value::List(List::End) => Ok(Vec::new()),
+        Value::List(List::String(keys)) => keys
+            .into_iter()
+            .map(|key| Ident::<String>::try_from(key).map_err(Into::into))
+            .collect(),
+        other => anyhow::bail!("expected a list of recipe keys, got {:?}", other.tag()),
+    }
+}
+
 fn decode_block_predicate(r: &mut &[u8], depth: usize) -> anyhow::Result<BlockPredicate> {
     Ok(BlockPredicate {
         blocks: Decode::decode(r)?,
@@ -417,7 +423,7 @@ fn decode_block_predicate(r: &mut &[u8], depth: usize) -> anyhow::Result<BlockPr
             }
             vec
         },
-        partial_components: Decode::decode(r)?,
+        partial_components: Bounded::<_, 64>::decode(r)?.0,
     })
 }
 
@@ -466,7 +472,7 @@ pub(crate) fn decode_item_component(
         ItemComponentKind::CustomName => ItemComponent::CustomName(Decode::decode(r)?),
         ItemComponentKind::ItemName => ItemComponent::ItemName(Decode::decode(r)?),
         ItemComponentKind::ItemModel => ItemComponent::ItemModel(Decode::decode(r)?),
-        ItemComponentKind::Lore => ItemComponent::Lore(Decode::decode(r)?),
+        ItemComponentKind::Lore => ItemComponent::Lore(Bounded::<_, 256>::decode(r)?.0),
         ItemComponentKind::Rarity => ItemComponent::Rarity(Decode::decode(r)?),
         ItemComponentKind::Enchantments => ItemComponent::Enchantments(Decode::decode(r)?),
         ItemComponentKind::CanPlaceOn => ItemComponent::CanPlaceOn({
@@ -565,10 +571,9 @@ pub(crate) fn decode_item_component(
             block_sound: Decode::decode(r)?,
             disable_sound: Decode::decode(r)?,
         },
-        ItemComponentKind::StoredEnchantments => ItemComponent::StoredEnchantments {
-            enchantments: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
-        },
+        ItemComponentKind::StoredEnchantments => {
+            ItemComponent::StoredEnchantments(Decode::decode(r)?)
+        }
         ItemComponentKind::DyedColor => ItemComponent::DyedColor {
             color: Decode::decode(r)?,
         },
@@ -617,7 +622,7 @@ pub(crate) fn decode_item_component(
             ItemComponent::SuspiciousStewEffects(Decode::decode(r)?)
         }
         ItemComponentKind::WritableBookContent => ItemComponent::WritableBookContent {
-            pages: Decode::decode(r)?,
+            pages: Bounded::<_, 100>::decode(r)?.0,
         },
         ItemComponentKind::WrittenBookContent => ItemComponent::WrittenBookContent {
             raw_title: Decode::decode(r)?,
@@ -630,7 +635,6 @@ pub(crate) fn decode_item_component(
         ItemComponentKind::Trim => ItemComponent::Trim {
             material: Decode::decode(r)?,
             pattern: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
         },
         ItemComponentKind::DebugStickState => ItemComponent::DebugStickState(Decode::decode(r)?),
         ItemComponentKind::EntityData => ItemComponent::EntityData {
@@ -649,14 +653,11 @@ pub(crate) fn decode_item_component(
         ItemComponentKind::OminousBottleAmplifier => {
             ItemComponent::OminousBottleAmplifier(Decode::decode(r)?)
         }
-        ItemComponentKind::JukeboxPlayable => ItemComponent::JukeboxPlayable {
-            song: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
-        },
+        ItemComponentKind::JukeboxPlayable => ItemComponent::JukeboxPlayable(Decode::decode(r)?),
         ItemComponentKind::ProvidesBannerPatterns => {
             ItemComponent::ProvidesBannerPatterns(Decode::decode(r)?)
         }
-        ItemComponentKind::Recipes => ItemComponent::Recipes(Decode::decode(r)?),
+        ItemComponentKind::Recipes => ItemComponent::Recipes(recipes_from_nbt(Value::decode(r)?)?),
         ItemComponentKind::LodestoneTracker => ItemComponent::LodestoneTracker {
             target: Decode::decode(r)?,
             tracked: Decode::decode(r)?,
@@ -666,13 +667,15 @@ pub(crate) fn decode_item_component(
         }
         ItemComponentKind::Fireworks => ItemComponent::Fireworks {
             flight_duration: Decode::decode(r)?,
-            explosions: Decode::decode(r)?,
+            explosions: Bounded::<_, 256>::decode(r)?.0,
         },
         ItemComponentKind::Profile => ItemComponent::Profile(Decode::decode(r)?),
         ItemComponentKind::NoteBlockSound => ItemComponent::NoteBlockSound(Decode::decode(r)?),
         ItemComponentKind::BannerPatterns => ItemComponent::BannerPatterns(Decode::decode(r)?),
         ItemComponentKind::BaseColor => ItemComponent::BaseColor(Decode::decode(r)?),
-        ItemComponentKind::PotDecorations => ItemComponent::PotDecorations(Decode::decode(r)?),
+        ItemComponentKind::PotDecorations => {
+            ItemComponent::PotDecorations(Bounded::<_, 4>::decode(r)?.0)
+        }
         ItemComponentKind::Container => {
             let count = VarInt::decode(r)?.0;
             anyhow::ensure!((0..=256).contains(&count), "invalid Container length");

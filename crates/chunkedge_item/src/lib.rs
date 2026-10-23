@@ -14,15 +14,15 @@ pub use chunkedge_generated::item::ItemKind;
 
 pub use crate::components::{
     AttackRange, AttributeModifier, AttributeModifierDisplay, AttributeSlot, AxolotlType,
-    BannerLayer, BannerPattern, BeeData, BlockPredicate, ConsumableAnimation, ConsumeEffect,
-    ConsumeEffectData, DamageReduction, DyeColor, EquipSlot, ExactComponentMatcher,
-    FireworkExplosionData, FoxType, HorseColor, InstrumentDefinition, ItemComponent, JukeboxSong,
-    KineticWeapon, KineticWeaponCondition, LlamaColor, LodestoneTarget, MapPostProcessingType,
-    ModePair, MooshroomType, PaintingVariantDefinition, ParrotType, PartialComponentMatcher,
-    PiercingWeapon, PlayerSkinPatch, PotionEffect, ProfileProperty, Property, PropertyValue,
-    RabbitType, Rarity, ResolvableProfile, SalmonScale, SoundEventDefinition, SwingAnimation,
-    SwingAnimationType, ToolRule, TrimMaterial, TrimPattern, TropicalFishPattern, UseEffects,
-    WritablePage, WrittenPage,
+    BannerLayer, BannerPattern, BeeData, BlockPredicate, ComponentPredicateType,
+    ConsumableAnimation, ConsumeEffect, DamageReduction, DyeColor, EquipSlot,
+    ExactComponentMatcher, FireworkExplosionData, FoxType, HorseColor, InstrumentDefinition,
+    ItemComponent, JukeboxSong, KineticWeapon, KineticWeaponCondition, LlamaColor, LodestoneTarget,
+    MapPostProcessingType, MooshroomType, PaintingVariantDefinition, ParrotType,
+    PartialComponentMatcher, PiercingWeapon, PlayerSkinPatch, PotionEffect, PotionEffectDetails,
+    ProfileProperty, Property, PropertyValue, RabbitType, Rarity, ResolvableProfile, SalmonScale,
+    SoundEventDefinition, SwingAnimation, SwingAnimationType, ToolRule, TrimMaterial, TrimPattern,
+    TropicalFishPattern, UseEffects, WritablePage, WrittenPage,
 };
 pub use crate::cost::ItemCost;
 pub use crate::impls::decode_item_stack_recursive;
@@ -41,7 +41,7 @@ mod tests {
 
     use super::*;
     use crate::components::{
-        AttributeModifier, AttributeSlot, DyeColor, ModePair, Patchable, PropertyValue, Rarity,
+        AttributeModifier, AttributeSlot, DyeColor, Patchable, PropertyValue, Rarity,
     };
 
     // --- Helpers ---
@@ -151,20 +151,11 @@ mod tests {
     }
 
     #[test]
-    fn test_mode_pair_serialization() {
-        let m0 = ModePair::<String, RegistryId>::Mode0("minecraft:standard".to_owned());
-        let m1 = ModePair::<String, RegistryId>::Mode1(RegistryId::new(1));
-
-        roundtrip(&m0);
-        roundtrip(&m1);
-    }
-
-    #[test]
     fn test_property_value_serialization() {
         let exact = PropertyValue::Exact("true".into());
         let min_max = PropertyValue::MinMax {
-            min: "1".into(),
-            max: "5".into(),
+            min: Some("1".into()),
+            max: None,
         };
 
         roundtrip(&exact);
@@ -319,5 +310,156 @@ mod tests {
         let mut stack = ItemStack::new(ItemKind::NetheriteSword, 1);
         stack.insert_component(comp);
         roundtrip(&stack);
+    }
+
+    /// Each component encodes to the bytes of vanilla 26.2's network codec
+    /// and decodes back from them.
+    #[test]
+    fn test_components_match_vanilla_wire_format() {
+        use chunkedge_binary::{IDSet, IdOr, IntoTextComponent};
+        use chunkedge_ident::Ident;
+        use chunkedge_nbt::Value;
+
+        let details = |amplifier, duration, hidden_effect| PotionEffectDetails {
+            amplifier: VarInt(amplifier),
+            duration: VarInt(duration),
+            ambient: false,
+            show_particles: true,
+            show_icon: true,
+            hidden_effect,
+        };
+        let cases: Vec<(ItemComponent, Vec<u8>)> = vec![
+            (
+                ItemComponent::StoredEnchantments(vec![(RegistryId::new(3), VarInt(2))]),
+                vec![1, 3, 2],
+            ),
+            (
+                ItemComponent::LodestoneTracker {
+                    target: Some(LodestoneTarget {
+                        dimension: "a:b".into(),
+                        position: (1, 64, -1),
+                    }),
+                    tracked: true,
+                },
+                vec![
+                    1, 3, b'a', b':', b'b', 0, 0, 0, 0x7f, 0xff, 0xff, 0xf0, 0x40, 1,
+                ],
+            ),
+            (
+                ItemComponent::PotionContents {
+                    potion_id: None,
+                    custom_color: None,
+                    custom_effects: vec![PotionEffect {
+                        id: RegistryId::new(1),
+                        details: details(0, 200, Some(Box::new(details(1, 100, None)))),
+                    }],
+                    custom_name: None,
+                },
+                vec![0, 0, 1, 1, 0, 0xc8, 0x01, 0, 1, 1, 1, 1, 100, 0, 1, 1, 0, 0],
+            ),
+            (
+                ItemComponent::ProvidesBannerPatterns(IDSet::AdHocSet(vec![RegistryId::new(4)])),
+                vec![2, 4],
+            ),
+            (
+                ItemComponent::Trim {
+                    material: IdOr::Id(RegistryId::new(0)),
+                    pattern: IdOr::Inline(TrimPattern {
+                        asset_id: "a:b".into(),
+                        description: "x".into_text_component(),
+                        decal: true,
+                    }),
+                },
+                vec![1, 0, 3, b'a', b':', b'b', 8, 0, 1, b'x', 1],
+            ),
+            (
+                ItemComponent::JukeboxPlayable(IdOr::Inline(JukeboxSong {
+                    sound_event: IdOr::Id(RegistryId::new(0)),
+                    description: "s".into_text_component(),
+                    length_seconds: 1.0,
+                    comparator_output: VarInt(15),
+                })),
+                vec![0, 1, 8, 0, 1, b's', 0x3f, 0x80, 0, 0, 15],
+            ),
+            (ItemComponent::ChickenVariant(RegistryId::new(2)), vec![2]),
+            (
+                ItemComponent::DeathProtection(vec![ConsumeEffect::TeleportRandomly {
+                    diameter: 16.0,
+                }]),
+                vec![1, 3, 0x41, 0x80, 0, 0],
+            ),
+            (
+                ItemComponent::Recipes(vec![Ident::new("a:b").unwrap().to_string_ident()]),
+                vec![9, 8, 0, 0, 0, 1, 0, 3, b'a', b':', b'b'],
+            ),
+            (ItemComponent::Lock(Compound::new()), vec![10, 0]),
+            (
+                ItemComponent::PaintingVariant(IdOr::Inline(PaintingVariantDefinition {
+                    width: VarInt(2),
+                    height: VarInt(1),
+                    asset_id: "a:b".into(),
+                    title: Some("t".into_text_component()),
+                    author: None,
+                })),
+                vec![0, 2, 1, 3, b'a', b':', b'b', 1, 8, 0, 1, b't', 0],
+            ),
+            (
+                ItemComponent::CanBreak(vec![BlockPredicate {
+                    blocks: None,
+                    properties: Some(vec![Property {
+                        name: "n".into(),
+                        value: PropertyValue::MinMax {
+                            min: None,
+                            max: Some("5".into()),
+                        },
+                    }]),
+                    nbt: None,
+                    exact_components: Vec::new(),
+                    partial_components: vec![PartialComponentMatcher {
+                        predicate_type: ComponentPredicateType::Predicate(RegistryId::new(1)),
+                        predicate: Value::Int(7),
+                    }],
+                }]),
+                vec![
+                    1, 0, 1, 1, 1, b'n', 0, 0, 1, 1, b'5', 0, 0, 1, 1, 1, 3, 0, 0, 0, 7,
+                ],
+            ),
+            (ItemComponent::RabbitVariant(RabbitType::Evil), vec![99]),
+            (
+                ItemComponent::TropicalFishPattern(TropicalFishPattern::Clayfish),
+                vec![0x81, 0x0a],
+            ),
+            (
+                ItemComponent::Consumable {
+                    consume_seconds: 1.0,
+                    animation: ConsumableAnimation::Spear,
+                    sound: IdOr::Id(RegistryId::new(0)),
+                    has_consume_particles: false,
+                    effects: Vec::new(),
+                },
+                vec![0x3f, 0x80, 0, 0, 11, 1, 0, 0],
+            ),
+            (
+                ItemComponent::Bees(vec![BeeData {
+                    entity_type: RegistryId::new(5),
+                    entity_data: Compound::new(),
+                    ticks_in_hive: VarInt(10),
+                    min_ticks_in_hive: VarInt(20),
+                }]),
+                vec![1, 5, 10, 0, 10, 20],
+            ),
+        ];
+
+        for (component, expected) in cases {
+            let mut bytes = Vec::new();
+            component.encode(&mut bytes).unwrap();
+            assert_eq!(bytes, expected, "encoding {component:?}");
+
+            let mut r = bytes.as_slice();
+            let decoded = impls::decode_item_component(&mut r, component.id() as usize, 0)
+                .unwrap_or_else(|e| panic!("decoding {component:?}: {e:#}"));
+            assert_eq!(decoded, component);
+            assert!(r.is_empty(), "{component:?} left {} bytes", r.len());
+        }
     }
 }

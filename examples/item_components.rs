@@ -193,5 +193,21 @@ fn init_clients(
                 },
             ]),
         );
+
+        inventory.set_slot(
+            43,
+            ItemStack::new(ItemKind::EnchantedBook, 1).with_components(vec![
+                ItemComponent::StoredEnchantments(vec![(
+                    RegistryId::new(
+                        registry_codec
+                            .registry(ident!("enchantment"))
+                            .iter()
+                            .position(|value| value.name == ident!("mending"))
+                            .expect("mending enchantment") as i32,
+                    ),
+                    VarInt(1),
+                )]),
+            ]),
+        );
     }
 }

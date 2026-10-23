@@ -1,12 +1,11 @@
 use std::io::Write;
 
-use chunkedge_binary::{Decode, Encode, IDSet, IdOr, TextComponent, VarInt};
+use chunkedge_binary::{Bounded, Decode, Either, Encode, IDSet, IdOr, TextComponent, VarInt};
 use chunkedge_generated::attributes::EntityAttributeOperation;
 use chunkedge_generated::item_component_type as component_id;
 use chunkedge_generated::registry_id::RegistryId;
 use chunkedge_ident::Ident;
-use chunkedge_nbt::Compound;
-use chunkedge_text::Text;
+use chunkedge_nbt::{Compound, Value};
 use uuid::Uuid;
 
 use crate::ItemStackTemplate;
@@ -317,10 +316,7 @@ item_components! {
     Dye(DyeColor),
 
     /// Enchantments contained within an Enchanted Book.
-    StoredEnchantments {
-        enchantments: Vec<(RegistryId, VarInt)>,
-        show_in_tooltip: bool,
-    },
+    StoredEnchantments(Vec<(RegistryId, VarInt)>),
 
     /// RGB color for leather armor or other dyeable items.
     DyedColor {
@@ -387,8 +383,6 @@ item_components! {
     Trim {
         material: IdOr<TrimMaterial>,
         pattern: IdOr<TrimPattern>,
-        /// Whether the "Armor Trim" lines show in the tooltip.
-        show_in_tooltip: bool,
     },
 
     /// Internal state for the Debug Stick, tracking property toggles.
@@ -414,18 +408,15 @@ item_components! {
     /// The level of Bad Omen granted by an Ominous Bottle (0-4).
     OminousBottleAmplifier(VarInt),
 
-    /// Configuration for items that can be played in a Jukebox.
-    JukeboxPlayable {
-        /// Reference to a Jukebox Song.
-        song: ModePair<String, IdOr<JukeboxSong>>,
-        show_in_tooltip: bool,
-    },
+    /// The Jukebox Song played when this item is inserted into a Jukebox.
+    JukeboxPlayable(IdOr<JukeboxSong>),
 
-    /// Marks an item as a valid pattern for the Loom (Banner Patterns).
-    ProvidesBannerPatterns(String),
+    /// Banner patterns this item unlocks in the Loom.
+    ProvidesBannerPatterns(IDSet),
 
-    /// A list of recipe IDs that a Knowledge Book will teach the player.
-    Recipes(Compound),
+    /// The recipe IDs that a Knowledge Book will teach the player. Sent as an
+    /// NBT list of strings, since vanilla has no network codec for it.
+    Recipes(Vec<Ident<String>>),
 
     /// Tracking data for a Compass pointing to a specific Lodestone.
     LodestoneTracker {
@@ -474,8 +465,9 @@ item_components! {
     /// The block item absorbed by a sulfur cube.
     SulfurCubeContent(Box<ItemStackTemplate>),
 
-    /// The "Key" name required to open a container if it has a Lock component.
-    Lock(String),
+    /// The item predicate a key must match to open a locked container, as an
+    /// NBT compound. Vanilla sends it through the persistent codec.
+    Lock(Compound),
 
     /// Reference to a Loot Table for an unopened chest.
     ContainerLoot(Compound),
@@ -526,7 +518,7 @@ item_components! {
     CowVariant(RegistryId),
 
     /// Skin variant for a Chicken.
-    ChickenVariant(ModePair<String, RegistryId>),
+    ChickenVariant(RegistryId),
 
     /// Biome variant for a Frog.
     FrogVariant(RegistryId),
@@ -628,48 +620,9 @@ pub enum SwingAnimationType {
     Stab,
 }
 
-/// A helper struct for protocol fields that start with a "Mode" byte.
-///
-/// In 1.21, several components (like Jukebox Songs or Trim Materials) are
-/// encoded as:
-/// - Byte `0`: Followed by Type A (usually a String Identifier).
-/// - Byte `1`: Followed by Type B (usually an ID or Inline Definition).
-#[derive(Clone, PartialEq, Debug)]
-pub enum ModePair<A, B> {
-    /// Mode 0: Usually references a registry key by name.
-    Mode0(A),
-    /// Mode 1: Usually references a registry ID or defines the data inline.
-    Mode1(B),
-}
-
-impl<A: Encode, B: Encode> Encode for ModePair<A, B> {
-    fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
-        match self {
-            ModePair::Mode0(a) => {
-                0_u8.encode(&mut w)?;
-                a.encode(w)
-            }
-            ModePair::Mode1(b) => {
-                1_u8.encode(&mut w)?;
-                b.encode(w)
-            }
-        }
-    }
-}
-impl<'a, A: Decode<'a>, B: Decode<'a>> Decode<'a> for ModePair<A, B> {
-    fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
-        let mode = u8::decode(r)?;
-        match mode {
-            0 => Ok(ModePair::Mode0(A::decode(r)?)),
-            1 => Ok(ModePair::Mode1(B::decode(r)?)),
-            _ => anyhow::bail!("Invalid ModePair byte: {mode}"),
-        }
-    }
-}
-
 /// Defines a rule for matching a block in the world.
 /// Used by `CanPlaceOn` and `CanBreak` in Adventure Mode.
-#[derive(Clone, PartialEq, Debug, Encode)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct BlockPredicate {
     /// If None, matches any block ID.
     pub blocks: Option<IDSet>,
@@ -685,8 +638,18 @@ pub struct BlockPredicate {
     pub exact_components: Vec<ExactComponentMatcher>,
 
     /// (1.21+) Matches if the block drops an item containing specific NBT
-    /// structures within specific components.
+    /// structures within specific components (at most 64).
     pub partial_components: Vec<PartialComponentMatcher>,
+}
+
+impl Encode for BlockPredicate {
+    fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
+        self.blocks.encode(&mut w)?;
+        self.properties.encode(&mut w)?;
+        self.nbt.encode(&mut w)?;
+        self.exact_components.encode(&mut w)?;
+        Bounded::<_, 64>(self.partial_components.as_slice()).encode(w)
+    }
 }
 
 // A specific Block State property requirement.
@@ -703,8 +666,11 @@ pub struct Property {
 pub enum PropertyValue {
     /// An exact string value.
     Exact(String),
-    /// A min max string value.
-    MinMax { min: String, max: String },
+    /// An inclusive range; a missing bound is unbounded.
+    MinMax {
+        min: Option<String>,
+        max: Option<String>,
+    },
 }
 
 // encoded as bool followed by one if true or min and max if false
@@ -730,8 +696,8 @@ impl<'a> Decode<'a> for PropertyValue {
             let v = String::decode(r)?;
             Ok(PropertyValue::Exact(v))
         } else {
-            let min = String::decode(r)?;
-            let max = String::decode(r)?;
+            let min = Option::<String>::decode(r)?;
+            let max = Option::<String>::decode(r)?;
             Ok(PropertyValue::MinMax { min, max })
         }
     }
@@ -746,13 +712,42 @@ pub struct ExactComponentMatcher {
     pub component_data: ItemComponent,
 }
 
+/// What a [`PartialComponentMatcher`] checks.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum ComponentPredicateType {
+    /// A data component predicate type (e.g. `minecraft:damage`), by its ID in
+    /// the `data_component_predicate_type` registry.
+    Predicate(RegistryId),
+    /// Matches any value of the item component with this ID. The predicate
+    /// value is then an empty compound.
+    AnyValue(VarInt),
+}
+
+impl Encode for ComponentPredicateType {
+    fn encode(&self, w: impl Write) -> anyhow::Result<()> {
+        match *self {
+            Self::Predicate(id) => Either::<RegistryId, VarInt>::Left(id).encode(w),
+            Self::AnyValue(id) => Either::<RegistryId, VarInt>::Right(id).encode(w),
+        }
+    }
+}
+
+impl<'a> Decode<'a> for ComponentPredicateType {
+    fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        Ok(match Either::<RegistryId, VarInt>::decode(r)? {
+            Either::Left(id) => Self::Predicate(id),
+            Either::Right(id) => Self::AnyValue(id),
+        })
+    }
+}
+
 /// Matches a subset of data within a component using NBT.
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct PartialComponentMatcher {
-    /// The ID of the component to check.
-    pub component_type: VarInt,
-    /// An NBT matcher to apply to that component's internal data.
-    pub predicate: Compound,
+    /// The predicate type to apply.
+    pub predicate_type: ComponentPredicateType,
+    /// The predicate's value, sent as an NBT tag of any type.
+    pub predicate: Value,
 }
 
 /// Modifies a player's attributes (like Strength or Speed).
@@ -803,13 +798,62 @@ pub struct ToolRule {
     pub correct_drop_for_blocks: Option<bool>,
 }
 
-#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct LodestoneTarget {
     /// The namespaced key of the dimension (e.g., "`minecraft:the_nether`").
     pub dimension: String,
 
-    /// The precise X, Y, Z coordinates of the Lodestone block.
-    pub position: (VarInt, VarInt, VarInt),
+    /// The X, Y, Z coordinates of the Lodestone block. Sent as a packed
+    /// block position, so X and Z must fit in 26 bits and Y in 12 bits.
+    pub position: (i32, i32, i32),
+}
+
+impl Encode for LodestoneTarget {
+    fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
+        self.dimension.encode(&mut w)?;
+        pack_block_pos(self.position)?.encode(w)
+    }
+}
+
+impl<'a> Decode<'a> for LodestoneTarget {
+    fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
+        Ok(Self {
+            dimension: String::decode(r)?,
+            position: unpack_block_pos(i64::decode(r)?),
+        })
+    }
+}
+
+const PACKED_HORIZONTAL_BITS: u32 = 26;
+const PACKED_Y_BITS: u32 = 12;
+
+/// Packs a block position like vanilla's `BlockPos.asLong`: X in the top 26
+/// bits, then Z in 26 bits, then Y in the low 12 bits. `chunkedge_item` cannot
+/// depend on `chunkedge_protocol`'s `BlockPos`.
+fn pack_block_pos((x, y, z): (i32, i32, i32)) -> anyhow::Result<i64> {
+    const H: i32 = 1 << (PACKED_HORIZONTAL_BITS - 1);
+    const V: i32 = 1 << (PACKED_Y_BITS - 1);
+    anyhow::ensure!(
+        (-H..H).contains(&x) && (-V..V).contains(&y) && (-H..H).contains(&z),
+        "block position ({x}, {y}, {z}) is out of range"
+    );
+    let horizontal_mask = (1_i64 << PACKED_HORIZONTAL_BITS) - 1;
+    let y_mask = (1_i64 << PACKED_Y_BITS) - 1;
+    Ok(
+        ((i64::from(x) & horizontal_mask) << (PACKED_Y_BITS + PACKED_HORIZONTAL_BITS))
+            | ((i64::from(z) & horizontal_mask) << PACKED_Y_BITS)
+            | (i64::from(y) & y_mask),
+    )
+}
+
+/// Unpacks a block position packed by [`pack_block_pos`], sign-extending each
+/// coordinate.
+fn unpack_block_pos(packed: i64) -> (i32, i32, i32) {
+    let x = packed >> (PACKED_Y_BITS + PACKED_HORIZONTAL_BITS);
+    let z =
+        (packed << (64 - PACKED_Y_BITS - PACKED_HORIZONTAL_BITS)) >> (64 - PACKED_HORIZONTAL_BITS);
+    let y = (packed << (64 - PACKED_Y_BITS)) >> (64 - PACKED_Y_BITS);
+    (x as i32, y as i32, z as i32)
 }
 
 /// Defines a sound event, either by referencing the registry or defining it
@@ -850,9 +894,6 @@ pub struct TrimPattern {
     /// The asset ID for the texture pattern.
     pub asset_id: String,
 
-    /// The Smithing Template item required to apply this pattern.
-    pub template_item: RegistryId,
-
     /// The text displayed in the tooltip (e.g., "Vex Armor Trim").
     pub description: TextComponent,
 
@@ -883,7 +924,7 @@ pub struct JukeboxSong {
     pub sound_event: IdOr<SoundEventDefinition>,
 
     /// The song title shown in the "Now Playing" action bar.
-    pub description: Text,
+    pub description: TextComponent,
 
     /// The duration of the song in seconds.
     pub length_seconds: f32,
@@ -896,14 +937,20 @@ pub struct JukeboxSong {
 /// Defines a variant of a painting entity.
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct PaintingVariantDefinition {
-    /// The path to the texture in the resource pack.
-    pub asset_id: String,
-
     /// Width in blocks (1 block = 16 pixels).
     pub width: VarInt,
 
     /// Height in blocks.
     pub height: VarInt,
+
+    /// The path to the texture in the resource pack.
+    pub asset_id: String,
+
+    /// The painting's title shown in the tooltip.
+    pub title: Option<TextComponent>,
+
+    /// The painting's author shown in the tooltip.
+    pub author: Option<TextComponent>,
 }
 
 /// Defines a single explosion in a Firework Rocket.
@@ -1031,7 +1078,11 @@ pub struct ProfileProperty {
 /// Information about a Bee inside a Beehive.
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct BeeData {
-    /// The NBT data of the Bee entity itself (Health, Name, etc.).
+    /// The entity type of the occupant, by its `entity_type` registry ID.
+    pub entity_type: RegistryId,
+
+    /// The NBT data of the Bee entity itself (Health, Name, etc.), without
+    /// its `id` field.
     pub entity_data: Compound,
 
     /// How many ticks the bee has been inside the hive.
@@ -1041,21 +1092,10 @@ pub struct BeeData {
     pub min_ticks_in_hive: VarInt,
 }
 
-/// A wrapper for the various effects caused by consuming an item.
+/// An effect caused by consuming an item. The discriminant is the effect
+/// type's ID in the `consume_effect_type` registry.
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
-pub struct ConsumeEffect {
-    /// The registry ID of the effect type (`ApplyEffects`, Teleport, etc.).
-    pub type_id: VarInt,
-
-    /// The effect data. Note: The protocol doesn't wrap this in a neat enum,
-    /// it sends the data immediately after the ID.
-    /// You must ensure your Decode logic matches the `type_id` to the correct
-    /// variant here.
-    pub data: ConsumeEffectData,
-}
-
-#[derive(Clone, PartialEq, Debug, Encode, Decode)]
-pub enum ConsumeEffectData {
+pub enum ConsumeEffect {
     /// Type 0: Apply Effects
     ApplyEffects {
         /// List of potion effects to apply.
@@ -1082,6 +1122,14 @@ pub struct PotionEffect {
     /// The ID of the effect (Speed, Jump Boost, etc.).
     pub id: RegistryId,
 
+    /// The strength, duration and visibility of the effect.
+    pub details: PotionEffectDetails,
+}
+
+/// The parameters of a [`PotionEffect`], matching vanilla's
+/// `MobEffectInstance.Details`.
+#[derive(Clone, PartialEq, Debug, Decode)]
+pub struct PotionEffectDetails {
     /// The level of the effect (0 = Level 1, 1 = Level 2).
     pub amplifier: VarInt,
 
@@ -1094,8 +1142,27 @@ pub struct PotionEffect {
     /// If false, no particles are shown.
     pub show_particles: bool,
 
-    /// If true, the effect icon is displayed in the top-right of theinventory.
+    /// If true, the effect icon is displayed in the top-right of the
+    /// inventory.
     pub show_icon: bool,
+
+    /// A weaker, longer effect of the same type that resumes once this one
+    /// expires.
+    pub hidden_effect: Option<Box<PotionEffectDetails>>,
+}
+
+impl Encode for PotionEffectDetails {
+    fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
+        // Erase the writer type so the recursive hidden effect does not
+        // instantiate an unbounded chain of `&mut` writers.
+        let w: &mut dyn Write = &mut w;
+        self.amplifier.encode(&mut *w)?;
+        self.duration.encode(&mut *w)?;
+        self.ambient.encode(&mut *w)?;
+        self.show_particles.encode(&mut *w)?;
+        self.show_icon.encode(&mut *w)?;
+        self.hidden_effect.encode(w)
+    }
 }
 
 /// Shield logic for reducing damage.
@@ -1135,11 +1202,13 @@ pub enum ConsumableAnimation {
     Drink,
     Block, // Shield block animation
     Bow,
-    Spear, // Trident throw
+    Trident,
     Crossbow,
     Spyglass,
     TootHorn,
     Brush,
+    Bundle,
+    Spear,
 }
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
@@ -1211,19 +1280,33 @@ pub enum ParrotType {
     Gray,
 }
 
+/// Sent as a packed ID: the base shape (0 = small, 1 = large) in the low byte
+/// and the pattern index within that shape above it.
 #[derive(Clone, Copy, PartialEq, Debug, Encode, Decode)]
 pub enum TropicalFishPattern {
+    #[packet(tag = 0)]
     Kob,
+    #[packet(tag = 0x100)]
     Sunstreak,
+    #[packet(tag = 0x200)]
     Snooper,
+    #[packet(tag = 0x300)]
     Dasher,
+    #[packet(tag = 0x400)]
     Brinely,
+    #[packet(tag = 0x500)]
     Spotty,
+    #[packet(tag = 1)]
     Flopper,
+    #[packet(tag = 0x101)]
     Stripey,
+    #[packet(tag = 0x201)]
     Glitter,
+    #[packet(tag = 0x301)]
     Blockfish,
+    #[packet(tag = 0x401)]
     Betty,
+    #[packet(tag = 0x501)]
     Clayfish,
 }
 
@@ -1241,6 +1324,7 @@ pub enum RabbitType {
     WhiteSplotched,
     Gold,
     Salt,
+    #[packet(tag = 99)]
     Evil, // "Toast"
 }
 

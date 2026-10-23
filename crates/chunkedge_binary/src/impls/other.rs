@@ -7,8 +7,8 @@ use chunkedge_generated::block::{BlockEntityKind, BlockKind, BlockState};
 use chunkedge_generated::item::ItemKind;
 use chunkedge_generated::registry_id::RegistryId;
 use chunkedge_ident::{Ident, IdentError};
-use chunkedge_nbt::Compound;
 use chunkedge_nbt::compound::NetworkCompound;
+use chunkedge_nbt::{Compound, Value};
 use chunkedge_text::color::RgbColor;
 use indexmap::IndexMap;
 use uuid::Uuid;
@@ -66,6 +66,20 @@ impl Decode<'_> for Compound {
         // TODO: consider if we need to bound the input slice or add some other
         // mitigation to prevent excessive memory usage on hostile input.
         Ok(chunkedge_nbt::from_unnamed_binary(r)?)
+    }
+}
+
+/// Any NBT tag, written as its tag byte followed by the payload (vanilla's
+/// `ByteBufCodecs.TAG`).
+impl Encode for Value {
+    fn encode(&self, w: impl Write) -> anyhow::Result<()> {
+        Ok(chunkedge_nbt::to_unnamed_value_binary(self, w)?)
+    }
+}
+
+impl Decode<'_> for Value {
+    fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
+        Ok(chunkedge_nbt::from_unnamed_value(r)?)
     }
 }
 

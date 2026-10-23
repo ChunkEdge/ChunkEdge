@@ -114,7 +114,7 @@ fn teleport(
             client.write_packet(&PlayerPositionS2c {
                 position: if changed_pos { pos.0 } else { DVec3::ZERO },
                 velocity: if changed_velocity {
-                    velocity.0
+                    velocity.to_blocks_per_tick()
                 } else {
                     DVec3::ZERO
                 },

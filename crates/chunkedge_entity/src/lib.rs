@@ -341,8 +341,14 @@ pub struct HeadYaw(pub f32);
 pub struct Velocity(pub DVec3);
 
 impl Velocity {
+    /// Converts to blocks per tick, the unit of the delta movement that
+    /// packets such as `PlayerPositionS2c` and `SetEntityMotionS2c` carry.
+    pub fn to_blocks_per_tick(self) -> DVec3 {
+        self.0 / 20.0
+    }
+
     pub fn to_packet_units(self) -> chunkedge_protocol::LpVec3 {
-        chunkedge_protocol::LpVec3((self.0 / 20.0).to_array())
+        chunkedge_protocol::LpVec3(self.to_blocks_per_tick().to_array())
     }
 }
 

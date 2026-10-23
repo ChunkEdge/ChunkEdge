@@ -16,7 +16,7 @@ use bevy_ecs::prelude::*;
 use chunkedge_ident::{Ident, ident};
 use chunkedge_nbt::Compound;
 use chunkedge_nbt::serde::ser::CompoundSerializer;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use tracing::error;
 
 use crate::codec::{RegistryCodec, RegistryValue};
@@ -116,6 +116,8 @@ impl RegistryIdx for BiomeId {
 pub struct Biome {
     pub has_precipitation: bool,
     pub temperature: f32,
+    #[serde(default, skip_serializing_if = "TemperatureModifier::is_none")]
+    pub temperature_modifier: TemperatureModifier,
     pub downfall: f32,
     /// Environment attributes controlling sky/fog colors, music, ambient sounds,
     /// and particles. Color attributes such as `minecraft:visual/sky_color`
@@ -123,6 +125,22 @@ pub struct Biome {
     #[serde(default, skip_serializing_if = "Compound::is_empty")]
     pub attributes: Compound,
     pub effects: BiomeEffects,
+}
+
+/// Vanilla `Biome.TemperatureModifier`.
+#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Default, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum TemperatureModifier {
+    #[default]
+    None,
+    /// Used by frozen oceans to add warmer patches.
+    Frozen,
+}
+
+impl TemperatureModifier {
+    fn is_none(&self) -> bool {
+        *self == Self::None
+    }
 }
 
 impl Default for Biome {
@@ -166,28 +184,54 @@ where
     }
 }
 
+/// Serializes a color as a `"#rrggbb"` hex string like vanilla `STRING_RGB_COLOR`.
+/// The client reads that form as an opaque color, but it reads a plain int as is,
+/// so an RGB int would arrive with alpha 0. Bits above the low 24 are ignored.
+fn serialize_color<S>(color: &Option<u32>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    match color {
+        Some(color) => serialize_water_color(color, serializer),
+        None => serializer.serialize_none(),
+    }
+}
+
+fn serialize_water_color<S>(color: &u32, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_str(&format!("#{:06x}", color & 0xff_ffff))
+}
+
 /// Biome colors that remain separate from environment attributes in 26.2.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct BiomeEffects {
-    #[serde(deserialize_with = "deserialize_water_color")]
+    #[serde(
+        deserialize_with = "deserialize_water_color",
+        serialize_with = "serialize_water_color"
+    )]
     pub water_color: u32,
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
-        deserialize_with = "deserialize_color"
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
     )]
     pub foliage_color: Option<u32>,
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
-        deserialize_with = "deserialize_color"
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
     )]
     pub grass_color: Option<u32>,
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
-        deserialize_with = "deserialize_color"
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
     )]
     pub dry_foliage_color: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -248,5 +292,36 @@ mod tests {
             panic!("attributes dropped from biome");
         };
         assert!(attrs.contains_key("minecraft:visual/sky_color"));
+    }
+
+    /// Reserializing the extracted biomes must give back the `temperature_modifier`
+    /// and the hex string effect colors vanilla sends. Numbers are left out: the
+    /// JSON codec loads them as doubles.
+    #[test]
+    fn extracted_biomes_round_trip() {
+        let codec = RegistryCodec::default();
+
+        for value in codec.registry(BiomeRegistry::KEY) {
+            let biome = Biome::deserialize(value.element.clone()).expect("biome deserializes");
+            let reserialized = biome.serialize(CompoundSerializer).expect("serializes");
+
+            for key in ["temperature_modifier", "effects"] {
+                assert_eq!(
+                    reserialized.get(key),
+                    value.element.get(key),
+                    "{key} of {} changed",
+                    value.name
+                );
+            }
+        }
+
+        let frozen_ocean = codec
+            .registry(BiomeRegistry::KEY)
+            .iter()
+            .find(|value| value.name.as_str() == "minecraft:frozen_ocean")
+            .expect("frozen ocean");
+        let biome = Biome::deserialize(frozen_ocean.element.clone()).unwrap();
+        assert_eq!(biome.temperature_modifier, TemperatureModifier::Frozen);
+        assert_eq!(biome.effects.water_color, 0x3938c9);
     }
 }

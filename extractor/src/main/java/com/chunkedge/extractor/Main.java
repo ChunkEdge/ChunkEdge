@@ -134,6 +134,7 @@ public class Main implements ModInitializer {
 
             var startupExtractors = new Extractor[] {
                 new Blocks(),
+                new BlockPhysics(),
                 new Tags(server),
                 new Paintings(server),
                 new Enchants(server),

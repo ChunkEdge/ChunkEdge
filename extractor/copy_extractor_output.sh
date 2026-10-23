@@ -11,5 +11,6 @@ cp run/chunkedge_extractor_output/{entities,entity_hitboxes}.json ../crates/chun
 cp run/chunkedge_extractor_output/paintings.json ../crates/chunkedge_entity/extracted/
 cp run/chunkedge_extractor_output/misc.json ../crates/chunkedge_generated/extracted/
 cp run/chunkedge_extractor_output/{attributes,blocks,command_argument_types,effects,item_component_types,items,packets,sounds}.json ../crates/chunkedge_generated/extracted/
+cp run/chunkedge_extractor_output/block_physics.json ../crates/chunkedge_generated/extracted/
 cp run/chunkedge_extractor_output/translation_keys.json ../crates/chunkedge_lang/extracted/
 cp run/chunkedge_extractor_output/{registry_codec.json,tags.json} ../crates/chunkedge_registry/extracted/

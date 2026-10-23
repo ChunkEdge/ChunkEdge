@@ -38,10 +38,11 @@ pub enum NodeData<'a> {
     },
 }
 
+/// Vanilla `SuggestionProviders`. The client treats an unknown provider as
+/// [`Suggestion::AskServer`].
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Suggestion {
     AskServer,
-    AllRecipes,
     AvailableSounds,
     SummonableEntities,
 }
@@ -199,7 +200,6 @@ impl Encode for Node<'_> {
                 if let Some(suggestion) = suggestion {
                     match suggestion {
                         Suggestion::AskServer => "minecraft:ask_server",
-                        Suggestion::AllRecipes => "minecraft:all_recipes",
                         Suggestion::AvailableSounds => "minecraft:available_sounds",
                         Suggestion::SummonableEntities => "minecraft:summonable_entities",
                     }
@@ -235,10 +235,11 @@ impl<'a> Decode<'a> for Node<'a> {
                 suggestion: if flags & 0x10 != 0 {
                     Some(match Ident::<Cow<str>>::decode(r)?.as_str() {
                         "minecraft:ask_server" => Suggestion::AskServer,
-                        "minecraft:all_recipes" => Suggestion::AllRecipes,
                         "minecraft:available_sounds" => Suggestion::AvailableSounds,
                         "minecraft:summonable_entities" => Suggestion::SummonableEntities,
-                        other => bail!("unknown command suggestion type of \"{other}\""),
+                        // Vanilla `SuggestionProviders.getProvider` falls back to
+                        // asking the server for unknown names.
+                        _ => Suggestion::AskServer,
                     })
                 } else {
                     None
@@ -306,5 +307,44 @@ mod entity_flags {
     pub(super) fn decode(r: &mut &[u8]) -> anyhow::Result<(bool, bool)> {
         let flags = u8::decode(r)?;
         Ok((flags & 1 != 0, flags & 2 != 0))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unknown_suggestion_provider_falls_back_to_ask_server() {
+        let node = Node {
+            data: NodeData::Argument {
+                name: "arg".into(),
+                parser: Parser::Bool,
+                suggestion: Some(Suggestion::AvailableSounds),
+            },
+            executable: false,
+            children: vec![],
+            redirect_node: None,
+            is_restricted: false,
+        };
+
+        let mut buf = vec![];
+        node.encode(&mut buf).unwrap();
+        // The provider name is the last field. Swap it for one that 26.2 removed
+        // from `SuggestionProviders`.
+        let name = "minecraft:available_sounds";
+        buf.truncate(buf.len() - 1 - name.len());
+        "minecraft:all_recipes".encode(&mut buf).unwrap();
+
+        let decoded = Node::decode(&mut buf.as_slice()).unwrap();
+
+        assert_eq!(
+            decoded.data,
+            NodeData::Argument {
+                name: "arg".into(),
+                parser: Parser::Bool,
+                suggestion: Some(Suggestion::AskServer),
+            }
+        );
     }
 }

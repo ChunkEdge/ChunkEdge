@@ -748,7 +748,7 @@
         "type": "humanoid_arm"
       },
       {
-        "default_value": 127,
+        "default_value": 0,
         "index": 16,
         "name": "player_model_parts",
         "type": "byte"

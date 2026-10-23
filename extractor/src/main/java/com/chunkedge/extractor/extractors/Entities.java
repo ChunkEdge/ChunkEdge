@@ -39,6 +39,21 @@ import org.joml.Vector3f;
 
 public class Entities implements Main.Extractor {
 
+    /**
+     * Abstract entity classes whose tracked-data defaults are read from a
+     * representative entity type instead of from whichever subclass is
+     * visited first.
+     *
+     * <p>Avatar defines the model-part mask as 0, which is what players start
+     * with on the client, but Mannequin's constructor turns on every skin
+     * layer. Reading Avatar's defaults from a mannequin made ChunkEdge treat
+     * "all layers" as the default and never send it for players.
+     */
+    private static final Map<
+        Class<? extends Entity>,
+        EntityType<?>
+    > DEFAULTS_FROM_TYPE = Map.of(Avatar.class, EntityTypes.PLAYER);
+
     private final ServerLevel world;
     private final Registry<VillagerProfession> professionRegistry;
 
@@ -350,6 +365,31 @@ public class Entities implements Main.Extractor {
         }
     }
 
+    private Entity createInstance(EntityType<?> entityType) {
+        // While we can use the tracked data registry and reflection to get the tracked
+        // fields on entities, we won't know what their default values are because they
+        // are assigned in the entity's constructor.
+        // To obtain this, we create a dummy world to spawn the entities into and read
+        // the data tracker field from the base entity class.
+        // We also handle player entities specially since they cannot be spawned with
+        // EntityType#create.
+        final var entityInstance = entityType.equals(EntityTypes.PLAYER)
+            ? new DummyPlayerEntity(world, new GameProfile(new UUID(0L, 0L), "cooldude"))
+            : entityType.create(world, EntitySpawnReason.COMMAND);
+
+        // The zombie villager constructor chooses a random profession.
+        // Use the unassigned profession as a stable representative default.
+        if (entityInstance instanceof ZombieVillager zombieVillager) {
+            zombieVillager.setVillagerData(
+                zombieVillager.getVillagerData().withProfession(
+                    professionRegistry.getOrThrow(VillagerProfession.NONE)
+                )
+            );
+        }
+
+        return entityInstance;
+    }
+
     private static String holderIdString(Holder<?> holder) {
         return holder.unwrapKey().map(k -> k.identifier().toString()).orElse("");
     }
@@ -402,32 +442,20 @@ public class Entities implements Main.Extractor {
             var entityType = entry.right();
             assert null != entityType;
 
-            // While we can use the tracked data registry and reflection to get the tracked
-            // fields on entities, we won't know what their default values are because they
-            // are assigned in the entity's constructor.
-            // To obtain this, we create a dummy world to spawn the entities into and read
-            // the data tracker field from the base entity class.
-            // We also handle player entities specially since they cannot be spawned with
-            // EntityType#create.
-            final var entityInstance = entityType.equals(EntityTypes.PLAYER)
-                ? new DummyPlayerEntity(world, new GameProfile(new UUID(0L, 0L), "cooldude"))
-                : entityType.create(world, EntitySpawnReason.COMMAND);
-
-            // The zombie villager constructor chooses a random profession.
-            // Use the unassigned profession as a stable representative default.
-            if (entityInstance instanceof ZombieVillager zombieVillager) {
-                zombieVillager.setVillagerData(
-                    zombieVillager.getVillagerData().withProfession(
-                        professionRegistry.getOrThrow(VillagerProfession.NONE)
-                    )
-                );
-            }
+            final var entityInstance = createInstance(entityType);
 
             final var dataTracker = (SynchedEntityData) dataTrackerField.get(
                 entityInstance
             );
 
             while (null == entitiesMap.get(entityClass)) {
+                var defaultsType = DEFAULTS_FROM_TYPE.get(entityClass);
+                var classDataTracker = null == defaultsType
+                    ? dataTracker
+                    : (SynchedEntityData) dataTrackerField.get(
+                        createInstance(defaultsType)
+                    );
+
                 var entityJson = new JsonObject();
 
                 var parent = entityClass.getSuperclass();
@@ -480,7 +508,10 @@ public class Entities implements Main.Extractor {
                         fieldJson.addProperty("name", fieldName);
                         fieldJson.addProperty("index", trackedData.id());
 
-                        var data = trackedDataToJson(trackedData, dataTracker);
+                        var data = trackedDataToJson(
+                            trackedData,
+                            classDataTracker
+                        );
                         fieldJson.addProperty("type", data.left());
                         fieldJson.add("default_value", data.right());
 

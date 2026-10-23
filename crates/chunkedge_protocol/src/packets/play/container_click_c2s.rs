@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_binary::{Bounded, Decode, Encode, VarInt};
 use chunkedge_item::{HashedItemStack, ItemStack};
 
 use crate::Packet;
@@ -14,7 +14,7 @@ pub struct ContainerClickC2s<'a> {
     /// because the meaning of this value depends on the mode.
     pub button: i8,
     pub mode: ClickMode,
-    pub slot_changes: Cow<'a, [HashedSlotChange]>,
+    pub slot_changes: Bounded<Cow<'a, [HashedSlotChange]>, 128>,
     pub carried_item: HashedItemStack,
 }
 

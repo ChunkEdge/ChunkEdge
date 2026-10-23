@@ -1,24 +1,19 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import java.util.stream.Stream;
-import net.minecraft.registry.*;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.server.MinecraftServer;
-import com.chunkedge.extractor.Main;
 
 public class PacketRegistries implements Main.Extractor {
 
-    private final DynamicRegistryManager.Immutable registryManager;
-    private final CombinedDynamicRegistries<
-        ServerDynamicRegistryType
-    > registries;
+    private final MinecraftServer server;
 
     public PacketRegistries(MinecraftServer server) {
-        this.registryManager = server.getRegistryManager();
-        this.registries = server.getCombinedDynamicRegistries();
+        this.server = server;
     }
 
     public String fileName() {
@@ -26,25 +21,24 @@ public class PacketRegistries implements Main.Extractor {
     }
 
     public static <T> JsonObject mapJson(
-        RegistryLoader.Entry<T> registry_entry,
-        DynamicRegistryManager.Immutable registryManager,
-        CombinedDynamicRegistries<ServerDynamicRegistryType> combinedRegistries
+        RegistryDataLoader.RegistryData<T> registryData,
+        MinecraftServer server
     ) {
-        Codec<T> codec = registry_entry.elementCodec();
-        Registry<T> registry = registryManager.getOrThrow(registry_entry.key());
+        var ops = server.registryAccess().createSerializationContext(
+            JsonOps.INSTANCE
+        );
+        Registry<T> registry = server
+            .registryAccess()
+            .lookupOrThrow(registryData.key());
         JsonObject json = new JsonObject();
         registry
-            .streamEntries()
+            .listElements()
             .forEach(entry -> {
                 json.add(
-                    entry.getKey().orElseThrow().getValue().toString(),
-                    codec
-                        .encodeStart(
-                            combinedRegistries
-                                .getCombinedRegistryManager()
-                                .getOps(JsonOps.INSTANCE),
-                            entry.value()
-                        )
+                    entry.key().identifier().toString(),
+                    registryData
+                        .elementCodec()
+                        .encodeStart(ops, entry.value())
                         .resultOrPartial(e ->
                             Main.LOGGER.error("Cannot encode json: {}", e)
                         )
@@ -55,15 +49,13 @@ public class PacketRegistries implements Main.Extractor {
     }
 
     public JsonElement extract() {
-        Stream<RegistryLoader.Entry<?>> registries =
-            RegistryLoader.SYNCED_REGISTRIES.stream();
         JsonObject json = new JsonObject();
-        registries.forEach(entry -> {
+        for (var entry : RegistryDataLoader.SYNCHRONIZED_REGISTRIES) {
             json.add(
-                entry.key().getValue().toString(),
-                mapJson(entry, registryManager, this.registries)
+                entry.key().identifier().toString(),
+                mapJson(entry, server)
             );
-        });
+        }
         return json;
     }
 }

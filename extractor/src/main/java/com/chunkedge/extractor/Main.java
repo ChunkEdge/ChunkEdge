@@ -1,13 +1,15 @@
 package com.chunkedge.extractor;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import java.io.FileWriter;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.TreeMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.slf4j.Logger;
@@ -19,6 +21,31 @@ public class Main implements ModInitializer {
 
     public static final String MOD_ID = "chunkedge_extractor";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    // Codecs can build JSON objects from maps with unspecified iteration order.
+    // Sort object keys recursively while retaining array order, to make
+    // the extractor output deterministic.
+    private static JsonElement sortObjectKeys(JsonElement element) {
+        if (element.isJsonObject()) {
+            var sorted = new JsonObject();
+            var entries = new TreeMap<String, JsonElement>();
+            element.getAsJsonObject().entrySet().forEach(entry ->
+                entries.put(entry.getKey(), entry.getValue())
+            );
+            entries.forEach((key, value) ->
+                sorted.add(key, sortObjectKeys(value))
+            );
+            return sorted;
+        }
+        if (element.isJsonArray()) {
+            var sorted = new JsonArray();
+            element.getAsJsonArray().forEach(value ->
+                sorted.add(sortObjectKeys(value))
+            );
+            return sorted;
+        }
+        return element;
+    }
 
     /**
      * Magically creates an instance of a <i>concrete</i> class without calling its constructor.
@@ -43,6 +70,8 @@ public class Main implements ModInitializer {
 
         var extractors = new Extractor[] {
             new Attributes(),
+            new CommandArgumentTypes(),
+            new ItemComponentTypes(),
             new Blocks(),
             new Effects(),
             new Packets(),
@@ -69,12 +98,9 @@ public class Main implements ModInitializer {
         for (var ext : extractors) {
             try {
                 var out = outputDirectory.resolve(ext.fileName());
-                var fileWriter = new FileWriter(
-                    out.toFile(),
-                    StandardCharsets.UTF_8
-                );
-                gson.toJson(ext.extract(), fileWriter);
-                fileWriter.close();
+                try (var writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
+                    gson.toJson(sortObjectKeys(ext.extract()), writer);
+                }
                 LOGGER.info("Wrote " + out.toAbsolutePath());
             } catch (Exception e) {
                 LOGGER.error(
@@ -86,16 +112,6 @@ public class Main implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             LOGGER.info("Server starting, Running startup extractors...");
-            server
-                .getSaveProperties()
-                .updateLevelInfo(
-                    server
-                        .getSaveProperties()
-                        .getDataConfiguration()
-                        .withFeaturesAdded(
-                            DummyWorld.INSTANCE.getEnabledFeatures()
-                        )
-                );
             // TODO: make `Codec` implement `Extractor`
             // TODO: the way to get Codex has changed, this is not working anymore
             var packetRegistryExtractor = new PacketRegistries(server);
@@ -103,12 +119,9 @@ public class Main implements ModInitializer {
                 var out = outputDirectory.resolve(
                     packetRegistryExtractor.fileName()
                 );
-                var fileWriter = new FileWriter(
-                    out.toFile(),
-                    StandardCharsets.UTF_8
-                );
-                gson.toJson(packetRegistryExtractor.extract(), fileWriter);
-                fileWriter.close();
+                try (var writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
+                    gson.toJson(sortObjectKeys(packetRegistryExtractor.extract()), writer);
+                }
 
                 LOGGER.info("Wrote " + out.toAbsolutePath());
             } catch (Exception e) {
@@ -125,6 +138,7 @@ public class Main implements ModInitializer {
                 new Paintings(server),
                 new Enchants(server),
                 new Entities(server),
+                new EntityHitboxes(server),
                 new Items(server),
                 new Misc(server),
                 new Recipe(server),
@@ -133,12 +147,9 @@ public class Main implements ModInitializer {
             for (var ext : startupExtractors) {
                 try {
                     var out = outputDirectory.resolve(ext.fileName());
-                    var fileWriter = new FileWriter(
-                        out.toFile(),
-                        StandardCharsets.UTF_8
-                    );
-                    gson.toJson(ext.extract(), fileWriter);
-                    fileWriter.close();
+                    try (var writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
+                        gson.toJson(sortObjectKeys(ext.extract()), writer);
+                    }
                     LOGGER.info("Wrote " + out.toAbsolutePath());
                 } catch (Exception e) {
                     LOGGER.error(
@@ -149,7 +160,7 @@ public class Main implements ModInitializer {
             }
 
             LOGGER.info("Done.");
-            server.stop(false);
+            server.halt(false);
         });
     }
 

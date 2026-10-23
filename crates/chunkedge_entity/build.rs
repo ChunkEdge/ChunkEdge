@@ -5,7 +5,10 @@ use chunkedge_build_utils::{ident, rerun_if_changed, write_generated_file};
 use heck::{ToPascalCase, ToShoutySnakeCase, ToSnakeCase};
 use proc_macro2::TokenStream;
 use quote::quote;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+
+#[path = "build/entity_enums.rs"]
+mod entity_enums;
 
 #[derive(Deserialize, Clone, Debug)]
 struct Entity {
@@ -22,6 +25,22 @@ struct EntityTypes {
     entity_type: BTreeMap<String, i32>,
 }
 
+#[derive(Deserialize)]
+struct TrackedDataHandlers {
+    tracked_data_handler: BTreeMap<String, u8>,
+}
+
+#[derive(Deserialize)]
+struct PaintingVariants {
+    painting_variant: BTreeMap<String, i32>,
+}
+
+#[derive(Deserialize)]
+struct PaintingDimensions {
+    width: u32,
+    height: u32,
+}
+
 #[derive(Deserialize, Clone, Debug)]
 struct Field {
     name: String,
@@ -36,14 +55,14 @@ struct Attribute {
     base_value: f64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(untagged)]
 enum PaintingVariantValue {
     Identifier(String),
     Inline(PaintingVariantInline),
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 struct PaintingVariantInline {
     width: i32,
     height: i32,
@@ -52,7 +71,7 @@ struct PaintingVariantInline {
     author: Option<String>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(tag = "type", content = "default_value", rename_all = "snake_case")]
 #[allow(dead_code)]
 enum Value {
@@ -76,7 +95,6 @@ enum Value {
     LazyEntityReference(Option<()>), // TODO
     BlockState(String),
     OptionalBlockState(Option<String>),
-    NbtCompound(String),
     Particle(String),
     ParticleList(Vec<String>),
     VillagerData {
@@ -88,16 +106,23 @@ enum Value {
     OptionalInt(Option<i32>),
     EntityPose(String),
     CatVariant(String),
+    CatSoundVariant(String),
     CowVariant(String),
+    CowSoundVariant(String),
     WolfVariant(String),
     WolfSoundVariant(String),
     FrogVariant(String),
     PigVariant(String),
+    PigSoundVariant(String),
     ChickenVariant(String),
+    ChickenSoundVariant(String),
+    ZombieNautilusVariant(String),
     OptionalGlobalPos(Option<()>), // TODO
     PaintingVariant(PaintingVariantValue),
     SnifferState(String),
     ArmadilloState(String),
+    CopperGolemState(String),
+    WeatheringCopperState(String),
     Vector3f {
         x: f32,
         y: f32,
@@ -109,9 +134,11 @@ enum Value {
         z: f32,
         w: f32,
     },
+    ResolvableProfile(String),
+    HumanoidArm(String),
 }
 
-#[derive(Deserialize, Debug, Clone, Copy)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 struct BlockPos {
     x: i32,
     y: i32,
@@ -119,44 +146,32 @@ struct BlockPos {
 }
 
 impl Value {
-    fn type_id(&self) -> u8 {
-        match self {
-            Value::Byte(_) => 0,
-            Value::Integer(_) => 1,
-            Value::Long(_) => 2,
-            Value::Float(_) => 3,
-            Value::String(_) => 4,
-            Value::TextComponent(_) => 5,
-            Value::OptionalTextComponent(_) => 6,
-            Value::ItemStack(_) => 7,
-            Value::Boolean(_) => 8,
-            Value::Rotation { .. } => 9,
-            Value::BlockPos(_) => 10,
-            Value::OptionalBlockPos(_) => 11,
-            Value::Facing(_) => 12,
-            Value::LazyEntityReference(_) => 13,
-            Value::BlockState(_) => 14,
-            Value::OptionalBlockState(_) => 15,
-            Value::NbtCompound(_) => 16,
-            Value::Particle(_) => 17,
-            Value::ParticleList(_) => 18,
-            Value::VillagerData { .. } => 19,
-            Value::OptionalInt(_) => 20,
-            Value::EntityPose(_) => 21,
-            Value::CatVariant(_) => 22,
-            Value::CowVariant(_) => 23,
-            Value::WolfVariant(_) => 24,
-            Value::WolfSoundVariant(_) => 25,
-            Value::FrogVariant(_) => 26,
-            Value::PigVariant(_) => 27,
-            Value::ChickenVariant(_) => 28,
-            Value::OptionalGlobalPos(_) => 29,
-            Value::PaintingVariant(_) => 30,
-            Value::SnifferState(_) => 31,
-            Value::ArmadilloState(_) => 32,
-            Value::Vector3f { .. } => 33,
-            Value::Quaternionf { .. } => 34,
-        }
+    fn type_id(&self, handlers: &BTreeMap<String, u8>) -> anyhow::Result<u8> {
+        let value = serde_json::to_value(self).context("failed to serialize tracked-data value")?;
+        let name = value["type"]
+            .as_str()
+            .context("serialized tracked-data value has no type")?;
+
+        // The extracted entity field tags predate these handler names. We keep those
+        // tags for compatibility with entities.json and translate only the exceptions.
+        let name = match name {
+            "integer" => "int",
+            "text_component" => "component",
+            "optional_text_component" => "optional_component",
+            "rotation" => "rotations",
+            "facing" => "direction",
+            "lazy_entity_reference" => "optional_living_entity_reference",
+            "particle_list" => "particles",
+            "optional_int" => "optional_unsigned_int",
+            "entity_pose" => "pose",
+            "vector3f" => "vector3",
+            "quaternionf" => "quaternion",
+            name => name,
+        };
+        handlers
+            .get(name)
+            .copied()
+            .with_context(|| format!("missing tracked-data handler {name} in misc.json"))
     }
 
     fn field_type(&self) -> TokenStream {
@@ -177,7 +192,6 @@ impl Value {
             Value::LazyEntityReference(_) => quote!(()), // TODO
             Value::BlockState(_) => quote!(chunkedge_protocol::BlockState),
             Value::OptionalBlockState(_) => quote!(Option<chunkedge_protocol::BlockState>),
-            Value::NbtCompound(_) => quote!(chunkedge_nbt::Compound),
             Value::Particle(_) => {
                 quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle)
             }
@@ -188,18 +202,27 @@ impl Value {
             Value::OptionalInt(_) => quote!(Option<i32>),
             Value::EntityPose(_) => quote!(crate::Pose),
             Value::CatVariant(_) => quote!(crate::CatKind),
+            Value::CatSoundVariant(_) => quote!(crate::CatSoundKind),
             Value::CowVariant(_) => quote!(crate::CowKind),
+            Value::CowSoundVariant(_) => quote!(crate::CowSoundKind),
             Value::WolfVariant(_) => quote!(crate::WolfKind),
             Value::WolfSoundVariant(_) => quote!(crate::WolfSoundKind),
             Value::FrogVariant(_) => quote!(crate::FrogKind),
             Value::PigVariant(_) => quote!(crate::PigKind),
+            Value::PigSoundVariant(_) => quote!(crate::PigSoundKind),
             Value::ChickenVariant(_) => quote!(crate::ChickenKind),
+            Value::ChickenSoundVariant(_) => quote!(crate::ChickenSoundKind),
+            Value::ZombieNautilusVariant(_) => quote!(crate::ZombieNautilusKind),
             Value::OptionalGlobalPos(_) => quote!(()), // TODO
             Value::PaintingVariant(_) => {
                 quote!(chunkedge_binary::IdOr<crate::PaintingVariantDefinition>)
             }
             Value::SnifferState(_) => quote!(crate::SnifferState),
             Value::ArmadilloState(_) => quote!(crate::ArmadilloState),
+            Value::CopperGolemState(_) => quote!(crate::CopperGolemState),
+            Value::WeatheringCopperState(_) => quote!(crate::WeatheringCopperState),
+            Value::ResolvableProfile(_) => quote!(()), // TODO
+            Value::HumanoidArm(_) => quote!(crate::HumanoidArm),
             Value::Vector3f { .. } => quote!(chunkedge_math::Vec3),
             Value::Quaternionf { .. } => quote!(chunkedge_math::Quat),
         }
@@ -213,13 +236,12 @@ impl Value {
             Value::Float(f) => quote!(#f),
             Value::String(s) => quote!(#s.to_owned()),
             Value::TextComponent(txt) => {
-                assert!(txt.is_empty());
-                quote!(chunkedge_protocol::Text::default())
+                quote!(chunkedge_protocol::Text::text(#txt))
             }
-            Value::OptionalTextComponent(t) => {
-                assert!(t.is_none());
-                quote!(None)
-            }
+            Value::OptionalTextComponent(t) => match t {
+                Some(txt) => quote!(Some(chunkedge_protocol::Text::text(#txt))),
+                None => quote!(None),
+            },
             Value::ItemStack(_stack) => {
                 quote!(chunkedge_protocol::ItemStack::default())
             }
@@ -251,10 +273,6 @@ impl Value {
             Value::OptionalBlockState(bs) => {
                 assert!(bs.is_none());
                 quote!(None)
-            }
-            Value::NbtCompound(s) => {
-                assert_eq!(s, "{}");
-                quote!(chunkedge_nbt::Compound::default())
             }
             Value::Particle(p) => match p.to_pascal_case().as_str() {
                 // TODO: fix this, now an entyity has this as the default, so we need to extract
@@ -288,7 +306,7 @@ impl Value {
                 quote!(None)
             }
             Value::EntityPose(p) => {
-                let variant = ident(p.to_pascal_case());
+                let variant = ident(entity_enums::variant_name("entity_pose", p));
                 quote!(crate::Pose::#variant)
             }
             Value::CatVariant(c) => {
@@ -296,10 +314,20 @@ impl Value {
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::CatKind::#variant)
             }
+            Value::CatSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::CatSoundKind::#variant)
+            }
             Value::CowVariant(c) => {
                 let stripped_variant = c.trim_start_matches("minecraft");
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::CowKind::#variant)
+            }
+            Value::CowSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::CowSoundKind::#variant)
             }
             Value::WolfVariant(c) => {
                 let stripped_variant = c.trim_start_matches("minecraft");
@@ -321,10 +349,25 @@ impl Value {
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::PigKind::#variant)
             }
+            Value::PigSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::PigSoundKind::#variant)
+            }
             Value::ChickenVariant(c) => {
                 let stripped_variant = c.trim_start_matches("minecraft");
                 let variant = ident(stripped_variant.to_pascal_case());
                 quote!(crate::ChickenKind::#variant)
+            }
+            Value::ChickenSoundVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::ChickenSoundKind::#variant)
+            }
+            Value::ZombieNautilusVariant(c) => {
+                let stripped_variant = c.trim_start_matches("minecraft:");
+                let variant = ident(stripped_variant.to_pascal_case());
+                quote!(crate::ZombieNautilusKind::#variant)
             }
             Value::OptionalGlobalPos(gp) => {
                 assert!(gp.is_none());
@@ -376,6 +419,21 @@ impl Value {
                 let state = ident(s.to_pascal_case());
                 quote!(crate::ArmadilloState::#state)
             }
+            Value::CopperGolemState(s) => {
+                let state = ident(s.to_pascal_case());
+                quote!(crate::CopperGolemState::#state)
+            }
+            Value::WeatheringCopperState(s) => {
+                let state = ident(s.to_pascal_case());
+                quote!(crate::WeatheringCopperState::#state)
+            }
+            Value::ResolvableProfile(_) => {
+                quote!(()) // TODO
+            }
+            Value::HumanoidArm(s) => {
+                let arm = ident(s.to_pascal_case());
+                quote!(crate::HumanoidArm::#arm)
+            }
             Value::Vector3f { x, y, z } => quote!(chunkedge_math::Vec3::new(#x, #y, #z)),
             Value::Quaternionf { x, y, z, w } => quote! {
                 chunkedge_math::Quat::from_xyzw(#x, #y, #z, #w)
@@ -408,17 +466,211 @@ impl Value {
 type Entities = BTreeMap<String, Entity>;
 
 pub fn main() -> anyhow::Result<()> {
-    rerun_if_changed(["extracted/misc.json", "extracted/entities.json"]);
+    rerun_if_changed([
+        "extracted/entities.json",
+        "extracted/paintings.json",
+        "extracted/entity_hitboxes.json",
+    ]);
 
     write_generated_file(build_entities()?, "entity.rs")?;
+    write_generated_file(entity_enums::build()?, "entity_enums.rs")?;
+    write_generated_file(build_painting_kind()?, "painting_kind.rs")?;
+    write_generated_file(build_entity_hitbox_defaults()?, "entity_hitbox_defaults.rs")?;
 
     Ok(())
 }
 
+fn build_painting_kind() -> anyhow::Result<TokenStream> {
+    let paintings: PaintingVariants =
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)
+            .context("failed to deserialize painting variants from misc.json")?;
+    let mut paintings: Vec<_> = paintings.painting_variant.into_iter().collect();
+    paintings.sort_by_key(|(_, id)| *id);
+    // paintings.json is the extractor's standalone copy of the painting_variant registry codec.
+    let dimensions: BTreeMap<String, PaintingDimensions> =
+        serde_json::from_str(include_str!("extracted/paintings.json"))
+            .context("failed to deserialize paintings.json")?;
+
+    anyhow::ensure!(
+        paintings.len() == dimensions.len(),
+        "painting IDs and painting definitions have different counts"
+    );
+
+    for (expected, (name, id)) in paintings.iter().enumerate() {
+        anyhow::ensure!(
+            *id == expected as i32,
+            "painting variant {name} has ID {id}, expected {expected}"
+        );
+    }
+
+    let count = paintings.len();
+    let variants: Vec<_> = paintings
+        .iter()
+        .map(|(name, id)| {
+            let variant = ident(name.to_pascal_case());
+            let default = (name == "alban").then(|| quote!(#[default]));
+            quote! { #default #variant = #id, }
+        })
+        .collect();
+    let names: Vec<_> = paintings
+        .iter()
+        .map(|(name, _)| ident(name.to_pascal_case()))
+        .collect();
+    let sizes: Vec<_> = paintings
+        .iter()
+        .map(|(name, _)| {
+            let PaintingDimensions { width, height } = dimensions
+                .get(&format!("minecraft:{name}"))
+                .with_context(|| format!("missing dimensions for painting {name}"))?;
+            anyhow::ensure!(
+                *width > 0 && *height > 0,
+                "painting {name} has invalid dimensions"
+            );
+            Ok(quote! { [#width, #height], })
+        })
+        .collect::<anyhow::Result<_>>()?;
+
+    anyhow::ensure!(
+        paintings.iter().any(|(name, _)| name == "alban"),
+        "painting variants must contain the default alban"
+    );
+
+    Ok(quote! {
+        #[repr(i32)]
+        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
+        pub enum PaintingKind {
+            #(#variants)*
+        }
+
+        impl PaintingKind {
+            pub const ALL: [Self; #count] = [#(Self::#names,)*];
+
+            pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
+                chunkedge_protocol::RegistryId::new(self as i32)
+            }
+
+            pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
+                let idx = usize::try_from(id.id()).ok()?;
+                Self::ALL.get(idx).copied()
+            }
+
+            pub(crate) fn hitbox_bounds(self) -> chunkedge_math::UVec3 {
+                const DIMENSIONS: [[u32; 2]; #count] = [#(#sizes)*];
+                let [width, height] = DIMENSIONS[self as usize];
+                chunkedge_math::UVec3::new(width, height, width)
+            }
+        }
+    })
+}
+
+#[derive(Deserialize, Clone, PartialEq)]
+struct ExtractedHitbox {
+    min: [f64; 3],
+    max: [f64; 3],
+    scalable: bool,
+}
+
+#[derive(Deserialize)]
+struct HitboxVariant {
+    adult: BTreeMap<String, ExtractedHitbox>,
+    baby: Option<BTreeMap<String, ExtractedHitbox>>,
+}
+
+fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
+    let hitboxes: BTreeMap<String, Vec<HitboxVariant>> =
+        serde_json::from_str(include_str!("extracted/entity_hitboxes.json"))?;
+    let entity_types: EntityTypes =
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)?;
+    anyhow::ensure!(
+        hitboxes.keys().eq(entity_types.entity_type.keys()),
+        "hitbox extraction must cover every entity type"
+    );
+    let mut templates = Vec::<ExtractedHitbox>::new();
+    let mut kinds = Vec::new();
+    for (name, variants) in hitboxes {
+        let id = entity_types.entity_type[&name];
+        anyhow::ensure!(!variants.is_empty(), "missing hitbox variants for {name}");
+        let mut variant_arms = Vec::new();
+        for (variant, sample) in variants.into_iter().enumerate() {
+            let mut ages = Vec::new();
+            for poses in [&sample.adult, sample.baby.as_ref().unwrap_or(&sample.adult)] {
+                let mut pose_arms = Vec::new();
+                let mut standing = None;
+                for (pose, bounds) in poses {
+                    anyhow::ensure!(
+                        bounds.min.iter().chain(&bounds.max).all(|n| n.is_finite())
+                            && bounds.min.iter().zip(bounds.max).all(|(a, b)| *a <= b),
+                        "invalid {name} hitbox for {pose}"
+                    );
+                    let index = templates
+                        .iter()
+                        .position(|v| v == bounds)
+                        .unwrap_or_else(|| {
+                            templates.push(bounds.clone());
+                            templates.len() - 1
+                        });
+                    if pose == "standing" {
+                        standing = Some(index);
+                    } else {
+                        let variant = ident(entity_enums::variant_name("entity_pose", pose));
+                        pose_arms.push(quote! { crate::Pose::#variant => #index, });
+                    }
+                }
+                let standing =
+                    standing.with_context(|| format!("missing standing hitbox for {name}"))?;
+                ages.push(if pose_arms.is_empty() {
+                    quote! { #standing }
+                } else {
+                    quote! { match pose { #(#pose_arms)* _ => #standing } }
+                });
+            }
+            let adult = &ages[0];
+            let baby = &ages[1];
+            let body = if sample.baby.is_none() {
+                adult.clone()
+            } else {
+                quote! { if baby { #baby } else { #adult } }
+            };
+            variant_arms.push((variant, body));
+        }
+        let fallback = &variant_arms[0].1;
+        if variant_arms.len() == 1 {
+            kinds.push(quote! { #id => #fallback, });
+        } else {
+            let arms = variant_arms
+                .iter()
+                .skip(1)
+                .map(|(variant, body)| quote! { #variant => #body, });
+            kinds.push(quote! { #id => match variant { #(#arms)* _ => #fallback }, });
+        }
+    }
+    let count = templates.len();
+    let templates = templates.iter().map(|bounds| {
+        let [x0, y0, z0] = bounds.min;
+        let [x1, y1, z1] = bounds.max;
+        let scalable = bounds.scalable;
+        quote! { HitboxTemplate {
+            bounds: Aabb::new_unchecked(DVec3::new(#x0, #y0, #z0), DVec3::new(#x1, #y1, #z1)),
+            scalable: #scalable,
+        } }
+    });
+    Ok(quote! {
+        fn entity_hitbox_template(kind: crate::EntityKind, baby: bool, pose: crate::Pose, variant: usize) -> Option<HitboxTemplate> {
+            const TEMPLATES: [HitboxTemplate; #count] = [#(#templates),*];
+            let index = match kind.get() { #(#kinds)* _ => return None };
+            Some(TEMPLATES[index])
+        }
+    })
+}
+
 fn build_entities() -> anyhow::Result<TokenStream> {
-    let entity_types = serde_json::from_str::<EntityTypes>(include_str!("extracted/misc.json"))
+    let misc = chunkedge_generated::extracted::MISC_JSON;
+    let entity_types = serde_json::from_str::<EntityTypes>(misc)
         .context("failed to deserialize misc.json")?
         .entity_type;
+    let handlers = serde_json::from_str::<TrackedDataHandlers>(misc)
+        .context("failed to deserialize tracked-data handlers from misc.json")?
+        .tracked_data_handler;
 
     let entities: Entities =
         serde_json::from_str::<Entities>(include_str!("extracted/entities.json"))
@@ -557,7 +809,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
             system_names.push(quote!(#system_name_ident));
 
             let data_index = field.index;
-            let data_type = field.default_value.type_id();
+            let data_type = field.default_value.type_id(&handlers)?;
             let encodable_expr = field.default_value.encodable_expr(quote!(value.0));
 
             systems.extend([quote! {
@@ -688,7 +940,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
     }
 
     let misc_entity_data: MiscEntityData =
-        serde_json::from_str(include_str!("extracted/misc.json"))?;
+        serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)?;
 
     let entity_status_variants = misc_entity_data
         .entity_status

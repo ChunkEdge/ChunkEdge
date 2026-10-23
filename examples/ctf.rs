@@ -955,12 +955,16 @@ fn handle_combat_messages(
         }
     }
 
-    for &InteractEntityMessage {
-        client: attacker_client,
-        entity: victim_client,
-        ..
-    } in interact_entity.read()
-    {
+    for &message in interact_entity.read() {
+        let InteractEntityMessage {
+            client: attacker_client,
+            entity: victim_client,
+            kind: EntityInteractionKind::Attack,
+            ..
+        } = message
+        else {
+            continue;
+        };
         let true_victim_ent = clones
             .get(victim_client)
             .map_or(victim_client, |cloned| cloned.0);

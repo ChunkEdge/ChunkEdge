@@ -1,11 +1,17 @@
 use std::io::Write;
 
-use chunkedge_binary::{Decode, Encode, VarInt, cautious_capacity};
+use chunkedge_binary::{Bounded, Decode, Encode, VarInt, cautious_capacity};
 use chunkedge_generated::item::ItemKind;
+use chunkedge_ident::Ident;
+use chunkedge_nbt::{List, Value};
 
-use crate::components::{BlockPredicate, ExactComponentMatcher, ItemComponent, Patchable};
+use crate::components::{
+    BlockPredicate, ExactComponentMatcher, ItemComponent, ItemComponentKind, Patchable,
+};
 use crate::vanilla_components::ItemKindExt;
-use crate::{HashedItemStack, ItemStack, MAX_RECURSION_DEPTH, NUM_ITEM_COMPONENTS};
+use crate::{
+    HashedItemStack, ItemStack, ItemStackTemplate, MAX_RECURSION_DEPTH, NUM_ITEM_COMPONENTS,
+};
 
 impl Encode for ItemStack {
     fn encode(&self, w: impl Write) -> anyhow::Result<()> {
@@ -20,6 +26,21 @@ impl Encode for ItemComponent {
 
         match self {
             ItemComponent::CustomData(v) => v.encode(w),
+            ItemComponent::UseEffects(v) => v.encode(w),
+            ItemComponent::MinimumAttackCharge(v) => v.encode(w),
+            ItemComponent::DamageType(v) => v.encode(w),
+            ItemComponent::AttackRange(v) => v.encode(w),
+            ItemComponent::PiercingWeapon(v) => v.encode(w),
+            ItemComponent::KineticWeapon(v) => v.encode(w),
+            ItemComponent::SwingAnimation(v) => v.encode(w),
+            ItemComponent::AdditionalTradeCost(v) => v.encode(w),
+            ItemComponent::Dye(v) => v.encode(w),
+            ItemComponent::PigSoundVariant(v) => v.encode(w),
+            ItemComponent::CowSoundVariant(v) => v.encode(w),
+            ItemComponent::ChickenSoundVariant(v) => v.encode(w),
+            ItemComponent::ZombieNautilusVariant(v) => v.encode(w),
+            ItemComponent::CatSoundVariant(v) => v.encode(w),
+            ItemComponent::SulfurCubeContent(v) => v.encode(w),
             ItemComponent::MaxStackSize(v) => v.encode(w),
             ItemComponent::MaxDamage(v) => v.encode(w),
             ItemComponent::Damage(v) => v.encode(w),
@@ -27,7 +48,7 @@ impl Encode for ItemComponent {
             ItemComponent::CustomName(v) => v.encode(w),
             ItemComponent::ItemName(v) => v.encode(w),
             ItemComponent::ItemModel(v) => v.encode(w),
-            ItemComponent::Lore(v) => v.encode(w),
+            ItemComponent::Lore(v) => Bounded::<_, 256>(v.as_slice()).encode(w),
             ItemComponent::Rarity(v) => v.encode(w),
             ItemComponent::Enchantments(v) => v.encode(w),
             ItemComponent::CanPlaceOn(v) => v.encode(w),
@@ -114,6 +135,8 @@ impl Encode for ItemComponent {
                 dispensable,
                 swappable,
                 damage_on_hurt,
+                equip_on_interact,
+                can_be_sheared,
                 shearing_sound,
             } => {
                 slot.encode(&mut *w)?;
@@ -124,6 +147,8 @@ impl Encode for ItemComponent {
                 dispensable.encode(&mut *w)?;
                 swappable.encode(&mut *w)?;
                 damage_on_hurt.encode(&mut *w)?;
+                equip_on_interact.encode(&mut *w)?;
+                can_be_sheared.encode(&mut *w)?;
                 shearing_sound.encode(w)
             }
             ItemComponent::Repairable(v) => v.encode(w),
@@ -151,19 +176,13 @@ impl Encode for ItemComponent {
                 block_sound.encode(&mut *w)?;
                 disable_sound.encode(w)
             }
-            ItemComponent::StoredEnchantments {
-                enchantments,
-                show_in_tooltip,
-            } => {
-                enchantments.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
-            }
+            ItemComponent::StoredEnchantments(v) => v.encode(w),
             ItemComponent::DyedColor { color } => color.encode(w),
             ItemComponent::MapColor(v) => v.encode(w),
             ItemComponent::MapId(v) => v.encode(w),
             ItemComponent::MapDecorations(v) => v.encode(w),
             ItemComponent::MapPostProcessing(v) => v.encode(w),
-            ItemComponent::ChargedProjectiles(v) => v.encode(w),
+            ItemComponent::ChargedProjectiles(v) => Bounded::<_, 1024>(v.as_slice()).encode(w),
             ItemComponent::BundleContents(v) => v.encode(w),
             ItemComponent::PotionContents {
                 potion_id,
@@ -178,7 +197,9 @@ impl Encode for ItemComponent {
             }
             ItemComponent::PotionDurationScale(v) => v.encode(w),
             ItemComponent::SuspiciousStewEffects(v) => v.encode(w),
-            ItemComponent::WritableBookContent { pages } => pages.encode(w),
+            ItemComponent::WritableBookContent { pages } => {
+                Bounded::<_, 100>(pages.as_slice()).encode(w)
+            }
             ItemComponent::WrittenBookContent {
                 raw_title,
                 filtered_title,
@@ -194,14 +215,9 @@ impl Encode for ItemComponent {
                 pages.encode(&mut *w)?;
                 resolved.encode(w)
             }
-            ItemComponent::Trim {
-                material,
-                pattern,
-                show_in_tooltip,
-            } => {
+            ItemComponent::Trim { material, pattern } => {
                 material.encode(&mut *w)?;
-                pattern.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
+                pattern.encode(w)
             }
             ItemComponent::DebugStickState(v) => v.encode(w),
             ItemComponent::EntityData { id, data } => {
@@ -216,15 +232,9 @@ impl Encode for ItemComponent {
             ItemComponent::Instrument(v) => v.encode(w),
             ItemComponent::ProvidesTrimMaterial(v) => v.encode(w),
             ItemComponent::OminousBottleAmplifier(v) => v.encode(w),
-            ItemComponent::JukeboxPlayable {
-                song,
-                show_in_tooltip,
-            } => {
-                song.encode(&mut *w)?;
-                show_in_tooltip.encode(w)
-            }
+            ItemComponent::JukeboxPlayable(v) => v.encode(w),
             ItemComponent::ProvidesBannerPatterns(v) => v.encode(w),
-            ItemComponent::Recipes(v) => v.encode(w),
+            ItemComponent::Recipes(v) => recipes_to_nbt(v).encode(w),
             ItemComponent::LodestoneTracker { target, tracked } => {
                 target.encode(&mut *w)?;
                 tracked.encode(w)
@@ -235,14 +245,14 @@ impl Encode for ItemComponent {
                 explosions,
             } => {
                 flight_duration.encode(&mut *w)?;
-                explosions.encode(w)
+                Bounded::<_, 256>(explosions.as_slice()).encode(w)
             }
             ItemComponent::Profile(v) => v.encode(w),
             ItemComponent::NoteBlockSound(v) => v.encode(w),
             ItemComponent::BannerPatterns(v) => v.encode(w),
             ItemComponent::BaseColor(v) => v.encode(w),
-            ItemComponent::PotDecorations(v) => v.encode(w),
-            ItemComponent::Container(v) => v.encode(w),
+            ItemComponent::PotDecorations(v) => Bounded::<_, 4>(v.as_slice()).encode(w),
+            ItemComponent::Container(v) => Bounded::<_, 256>(v.as_slice()).encode(w),
             ItemComponent::BlockState(v) => v.encode(w),
             ItemComponent::Bees(v) => v.encode(w),
             ItemComponent::Lock(v) => v.encode(w),
@@ -296,11 +306,40 @@ pub fn decode_item_stack_recursive(
     }
     let item = ItemKind::decode(r)?;
 
+    decode_stack_components(r, item, count as i8, depth, prefixed)
+}
+
+pub(crate) fn decode_item_stack_template(r: &mut &[u8], depth: usize) -> anyhow::Result<ItemStack> {
+    anyhow::ensure!(
+        depth <= MAX_RECURSION_DEPTH,
+        "ItemStack recursion limit exceeded"
+    );
+    let item = ItemKind::decode(r)?;
+    let count = VarInt::decode(r)?.0;
+    anyhow::ensure!(
+        item != ItemKind::Air && (1..=i32::from(i8::MAX)).contains(&count),
+        "Item stack template must have a non-air item and a count between 1 and 127"
+    );
+    decode_stack_components(r, item, count as i8, depth, false)
+}
+
+fn decode_stack_components(
+    r: &mut &[u8],
+    item: ItemKind,
+    count: i8,
+    depth: usize,
+    prefixed: bool,
+) -> anyhow::Result<ItemStack> {
     let mut components = item.default_components();
 
     // Decode counts
     let added_count = VarInt::decode(r)?.0;
     let removed_count = VarInt::decode(r)?.0;
+
+    anyhow::ensure!(
+        added_count >= 0 && removed_count >= 0,
+        "negative component count"
+    );
 
     // Decode Added Components
     for _ in 0..added_count {
@@ -309,13 +348,22 @@ pub fn decode_item_stack_recursive(
             return Err(anyhow::anyhow!("Invalid item component ID: {id}"));
         }
 
-        let _prefix = if prefixed {
-            Some(VarInt::decode(r)?)
+        let component = if prefixed {
+            let len = VarInt::decode(r)?.0;
+            anyhow::ensure!(
+                len >= 0 && len as usize <= r.len(),
+                "invalid component length"
+            );
+            let (payload, rest) = r.split_at(len as usize);
+            *r = rest;
+            let mut payload = payload;
+            let component = decode_item_component(&mut payload, id, depth)?;
+            anyhow::ensure!(payload.is_empty(), "trailing component bytes");
+            component
         } else {
-            None
-        }; // TODO: Use prefix?
+            decode_item_component(r, id, depth)?
+        };
 
-        let component = decode_item_component(r, id, depth)?;
         let hash = component.hash();
         components[id] = Patchable::Added((Box::new(component), hash));
     }
@@ -331,9 +379,28 @@ pub fn decode_item_stack_recursive(
 
     Ok(ItemStack {
         item,
-        count: count as i8,
+        count,
         components,
     })
+}
+
+/// Encodes knowledge book recipe keys the way vanilla's persistent codec
+/// does: an NBT list of strings.
+fn recipes_to_nbt(recipes: &[Ident<String>]) -> Value {
+    Value::List(List::String(
+        recipes.iter().map(|id| id.as_str().to_owned()).collect(),
+    ))
+}
+
+fn recipes_from_nbt(value: Value) -> anyhow::Result<Vec<Ident<String>>> {
+    match value {
+        Value::List(List::End) => Ok(Vec::new()),
+        Value::List(List::String(keys)) => keys
+            .into_iter()
+            .map(|key| Ident::<String>::try_from(key).map_err(Into::into))
+            .collect(),
+        other => anyhow::bail!("expected a list of recipe keys, got {:?}", other.tag()),
+    }
 }
 
 fn decode_block_predicate(r: &mut &[u8], depth: usize) -> anyhow::Result<BlockPredicate> {
@@ -356,24 +423,59 @@ fn decode_block_predicate(r: &mut &[u8], depth: usize) -> anyhow::Result<BlockPr
             }
             vec
         },
-        partial_components: Decode::decode(r)?,
+        partial_components: Bounded::<_, 64>::decode(r)?.0,
     })
 }
 
-fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Result<ItemComponent> {
-    Ok(match id {
-        0 => ItemComponent::CustomData(Decode::decode(r)?),
-        1 => ItemComponent::MaxStackSize(Decode::decode(r)?),
-        2 => ItemComponent::MaxDamage(Decode::decode(r)?),
-        3 => ItemComponent::Damage(Decode::decode(r)?),
-        4 => ItemComponent::Unbreakable,
-        5 => ItemComponent::CustomName(Decode::decode(r)?),
-        6 => ItemComponent::ItemName(Decode::decode(r)?),
-        7 => ItemComponent::ItemModel(Decode::decode(r)?),
-        8 => ItemComponent::Lore(Decode::decode(r)?),
-        9 => ItemComponent::Rarity(Decode::decode(r)?),
-        10 => ItemComponent::Enchantments(Decode::decode(r)?),
-        11 => ItemComponent::CanPlaceOn({
+pub(crate) fn decode_item_component(
+    r: &mut &[u8],
+    id: usize,
+    depth: usize,
+) -> anyhow::Result<ItemComponent> {
+    anyhow::ensure!(
+        depth <= MAX_RECURSION_DEPTH,
+        "ItemStack recursion limit exceeded"
+    );
+    let kind = ItemComponentKind::from_id(id)
+        .ok_or_else(|| anyhow::anyhow!("Unknown ItemComponent ID: {id}"))?;
+    Ok(match kind {
+        ItemComponentKind::CustomData => ItemComponent::CustomData(Decode::decode(r)?),
+        ItemComponentKind::UseEffects => ItemComponent::UseEffects(Decode::decode(r)?),
+        ItemComponentKind::MinimumAttackCharge => {
+            ItemComponent::MinimumAttackCharge(Decode::decode(r)?)
+        }
+        ItemComponentKind::DamageType => ItemComponent::DamageType(Decode::decode(r)?),
+        ItemComponentKind::AttackRange => ItemComponent::AttackRange(Decode::decode(r)?),
+        ItemComponentKind::PiercingWeapon => ItemComponent::PiercingWeapon(Decode::decode(r)?),
+        ItemComponentKind::KineticWeapon => ItemComponent::KineticWeapon(Decode::decode(r)?),
+        ItemComponentKind::SwingAnimation => ItemComponent::SwingAnimation(Decode::decode(r)?),
+        ItemComponentKind::AdditionalTradeCost => {
+            ItemComponent::AdditionalTradeCost(Decode::decode(r)?)
+        }
+        ItemComponentKind::Dye => ItemComponent::Dye(Decode::decode(r)?),
+        ItemComponentKind::PigSoundVariant => ItemComponent::PigSoundVariant(Decode::decode(r)?),
+        ItemComponentKind::CowSoundVariant => ItemComponent::CowSoundVariant(Decode::decode(r)?),
+        ItemComponentKind::ChickenSoundVariant => {
+            ItemComponent::ChickenSoundVariant(Decode::decode(r)?)
+        }
+        ItemComponentKind::ZombieNautilusVariant => {
+            ItemComponent::ZombieNautilusVariant(Decode::decode(r)?)
+        }
+        ItemComponentKind::CatSoundVariant => ItemComponent::CatSoundVariant(Decode::decode(r)?),
+        ItemComponentKind::SulfurCubeContent => ItemComponent::SulfurCubeContent(Box::new(
+            ItemStackTemplate(decode_item_stack_template(r, depth + 1)?),
+        )),
+        ItemComponentKind::MaxStackSize => ItemComponent::MaxStackSize(Decode::decode(r)?),
+        ItemComponentKind::MaxDamage => ItemComponent::MaxDamage(Decode::decode(r)?),
+        ItemComponentKind::Damage => ItemComponent::Damage(Decode::decode(r)?),
+        ItemComponentKind::Unbreakable => ItemComponent::Unbreakable,
+        ItemComponentKind::CustomName => ItemComponent::CustomName(Decode::decode(r)?),
+        ItemComponentKind::ItemName => ItemComponent::ItemName(Decode::decode(r)?),
+        ItemComponentKind::ItemModel => ItemComponent::ItemModel(Decode::decode(r)?),
+        ItemComponentKind::Lore => ItemComponent::Lore(Bounded::<_, 256>::decode(r)?.0),
+        ItemComponentKind::Rarity => ItemComponent::Rarity(Decode::decode(r)?),
+        ItemComponentKind::Enchantments => ItemComponent::Enchantments(Decode::decode(r)?),
+        ItemComponentKind::CanPlaceOn => ItemComponent::CanPlaceOn({
             let count = VarInt::decode(r)?.0;
             let mut items = Vec::with_capacity(cautious_capacity::<BlockPredicate>(count as usize));
             for _ in 0..count {
@@ -381,7 +483,7 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             }
             items
         }),
-        12 => ItemComponent::CanBreak({
+        ItemComponentKind::CanBreak => ItemComponent::CanBreak({
             let count = VarInt::decode(r)?.0;
             let mut items = Vec::with_capacity(cautious_capacity::<BlockPredicate>(count as usize));
             for _ in 0..count {
@@ -389,55 +491,59 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             }
             items
         }),
-        13 => ItemComponent::AttributeModifiers {
+        ItemComponentKind::AttributeModifiers => ItemComponent::AttributeModifiers {
             modifiers: Decode::decode(r)?,
         },
-        14 => ItemComponent::CustomModelData {
+        ItemComponentKind::CustomModelData => ItemComponent::CustomModelData {
             floats: Decode::decode(r)?,
             flags: Decode::decode(r)?,
             strings: Decode::decode(r)?,
             colors: Decode::decode(r)?,
         },
-        15 => ItemComponent::TooltipDisplay {
+        ItemComponentKind::TooltipDisplay => ItemComponent::TooltipDisplay {
             hide_tooltip: Decode::decode(r)?,
             hidden_components: Decode::decode(r)?,
         },
-        16 => ItemComponent::RepairCost(Decode::decode(r)?),
-        17 => ItemComponent::CreativeSlotLock,
-        18 => ItemComponent::EnchantmentGlintOverride(Decode::decode(r)?),
-        19 => ItemComponent::IntangibleProjectile(Decode::decode(r)?),
-        20 => ItemComponent::Food {
+        ItemComponentKind::RepairCost => ItemComponent::RepairCost(Decode::decode(r)?),
+        ItemComponentKind::CreativeSlotLock => ItemComponent::CreativeSlotLock,
+        ItemComponentKind::EnchantmentGlintOverride => {
+            ItemComponent::EnchantmentGlintOverride(Decode::decode(r)?)
+        }
+        ItemComponentKind::IntangibleProjectile => {
+            ItemComponent::IntangibleProjectile(Decode::decode(r)?)
+        }
+        ItemComponentKind::Food => ItemComponent::Food {
             nutrition: Decode::decode(r)?,
             saturation_modifier: Decode::decode(r)?,
             can_always_eat: Decode::decode(r)?,
         },
-        21 => ItemComponent::Consumable {
+        ItemComponentKind::Consumable => ItemComponent::Consumable {
             consume_seconds: Decode::decode(r)?,
             animation: Decode::decode(r)?,
             sound: Decode::decode(r)?,
             has_consume_particles: Decode::decode(r)?,
             effects: Decode::decode(r)?,
         },
-        22 => {
-            ItemComponent::UseRemainder(Box::new(decode_item_stack_recursive(r, depth + 1, false)?))
-        }
-        23 => ItemComponent::UseCooldown {
+        ItemComponentKind::UseRemainder => ItemComponent::UseRemainder(Box::new(
+            ItemStackTemplate(decode_item_stack_template(r, depth + 1)?),
+        )),
+        ItemComponentKind::UseCooldown => ItemComponent::UseCooldown {
             seconds: Decode::decode(r)?,
             cooldown_group: Decode::decode(r)?,
         },
-        24 => ItemComponent::DamageResistant(Decode::decode(r)?),
-        25 => ItemComponent::Tool {
+        ItemComponentKind::DamageResistant => ItemComponent::DamageResistant(Decode::decode(r)?),
+        ItemComponentKind::Tool => ItemComponent::Tool {
             rules: Decode::decode(r)?,
             default_mining_speed: Decode::decode(r)?,
             damage_per_block: Decode::decode(r)?,
             can_destroy_blocks_in_creative: Decode::decode(r)?,
         },
-        26 => ItemComponent::Weapon {
+        ItemComponentKind::Weapon => ItemComponent::Weapon {
             damage_per_attack: Decode::decode(r)?,
             disable_blocking_for_seconds: Decode::decode(r)?,
         },
-        27 => ItemComponent::Enchantable(Decode::decode(r)?),
-        28 => ItemComponent::Equippable {
+        ItemComponentKind::Enchantable => ItemComponent::Enchantable(Decode::decode(r)?),
+        ItemComponentKind::Equippable => ItemComponent::Equippable {
             slot: Decode::decode(r)?,
             equip_sound: Decode::decode(r)?,
             model: Decode::decode(r)?,
@@ -446,13 +552,15 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             dispensable: Decode::decode(r)?,
             swappable: Decode::decode(r)?,
             damage_on_hurt: Decode::decode(r)?,
+            equip_on_interact: Decode::decode(r)?,
+            can_be_sheared: Decode::decode(r)?,
             shearing_sound: Decode::decode(r)?,
         },
-        29 => ItemComponent::Repairable(Decode::decode(r)?),
-        30 => ItemComponent::Glider,
-        31 => ItemComponent::TooltipStyle(Decode::decode(r)?),
-        32 => ItemComponent::DeathProtection(Decode::decode(r)?),
-        33 => ItemComponent::BlocksAttacks {
+        ItemComponentKind::Repairable => ItemComponent::Repairable(Decode::decode(r)?),
+        ItemComponentKind::Glider => ItemComponent::Glider,
+        ItemComponentKind::TooltipStyle => ItemComponent::TooltipStyle(Decode::decode(r)?),
+        ItemComponentKind::DeathProtection => ItemComponent::DeathProtection(Decode::decode(r)?),
+        ItemComponentKind::BlocksAttacks => ItemComponent::BlocksAttacks {
             block_delay_seconds: Decode::decode(r)?,
             disable_cooldown_scale: Decode::decode(r)?,
             damage_reductions: Decode::decode(r)?,
@@ -463,45 +571,60 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             block_sound: Decode::decode(r)?,
             disable_sound: Decode::decode(r)?,
         },
-        34 => ItemComponent::StoredEnchantments {
-            enchantments: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
-        },
-        35 => ItemComponent::DyedColor {
+        ItemComponentKind::StoredEnchantments => {
+            ItemComponent::StoredEnchantments(Decode::decode(r)?)
+        }
+        ItemComponentKind::DyedColor => ItemComponent::DyedColor {
             color: Decode::decode(r)?,
         },
-        36 => ItemComponent::MapColor(Decode::decode(r)?),
-        37 => ItemComponent::MapId(Decode::decode(r)?),
-        38 => ItemComponent::MapDecorations(Decode::decode(r)?),
-        39 => ItemComponent::MapPostProcessing(Decode::decode(r)?),
-        40 => {
+        ItemComponentKind::MapColor => ItemComponent::MapColor(Decode::decode(r)?),
+        ItemComponentKind::MapId => ItemComponent::MapId(Decode::decode(r)?),
+        ItemComponentKind::MapDecorations => ItemComponent::MapDecorations(Decode::decode(r)?),
+        ItemComponentKind::MapPostProcessing => {
+            ItemComponent::MapPostProcessing(Decode::decode(r)?)
+        }
+        ItemComponentKind::ChargedProjectiles => {
             let count = VarInt::decode(r)?.0;
-            let mut items = Vec::with_capacity(cautious_capacity::<ItemStack>(count as usize));
+            anyhow::ensure!(
+                (0..=1024).contains(&count),
+                "invalid ChargedProjectiles length"
+            );
+            let mut items =
+                Vec::with_capacity(cautious_capacity::<ItemStackTemplate>(count as usize));
             for _ in 0..count {
-                items.push(decode_item_stack_recursive(r, depth + 1, false)?);
+                items.push(ItemStackTemplate(decode_item_stack_template(r, depth + 1)?));
             }
             ItemComponent::ChargedProjectiles(items)
         }
-        41 => {
+        ItemComponentKind::BundleContents => {
             let count = VarInt::decode(r)?.0;
-            let mut items = Vec::with_capacity(cautious_capacity::<ItemStack>(count as usize));
+            anyhow::ensure!(
+                (0..=i32::MAX).contains(&count),
+                "invalid BundleContents length"
+            );
+            let mut items =
+                Vec::with_capacity(cautious_capacity::<ItemStackTemplate>(count as usize));
             for _ in 0..count {
-                items.push(decode_item_stack_recursive(r, depth + 1, false)?);
+                items.push(ItemStackTemplate(decode_item_stack_template(r, depth + 1)?));
             }
             ItemComponent::BundleContents(items)
         }
-        42 => ItemComponent::PotionContents {
+        ItemComponentKind::PotionContents => ItemComponent::PotionContents {
             potion_id: Decode::decode(r)?,
             custom_color: Decode::decode(r)?,
             custom_effects: Decode::decode(r)?,
             custom_name: Decode::decode(r)?,
         },
-        43 => ItemComponent::PotionDurationScale(Decode::decode(r)?),
-        44 => ItemComponent::SuspiciousStewEffects(Decode::decode(r)?),
-        45 => ItemComponent::WritableBookContent {
-            pages: Decode::decode(r)?,
+        ItemComponentKind::PotionDurationScale => {
+            ItemComponent::PotionDurationScale(Decode::decode(r)?)
+        }
+        ItemComponentKind::SuspiciousStewEffects => {
+            ItemComponent::SuspiciousStewEffects(Decode::decode(r)?)
+        }
+        ItemComponentKind::WritableBookContent => ItemComponent::WritableBookContent {
+            pages: Bounded::<_, 100>::decode(r)?.0,
         },
-        46 => ItemComponent::WrittenBookContent {
+        ItemComponentKind::WrittenBookContent => ItemComponent::WrittenBookContent {
             raw_title: Decode::decode(r)?,
             filtered_title: Decode::decode(r)?,
             author: Decode::decode(r)?,
@@ -509,82 +632,100 @@ fn decode_item_component(r: &mut &[u8], id: usize, depth: usize) -> anyhow::Resu
             pages: Decode::decode(r)?,
             resolved: Decode::decode(r)?,
         },
-        47 => ItemComponent::Trim {
+        ItemComponentKind::Trim => ItemComponent::Trim {
             material: Decode::decode(r)?,
             pattern: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
         },
-        48 => ItemComponent::DebugStickState(Decode::decode(r)?),
-        49 => ItemComponent::EntityData {
+        ItemComponentKind::DebugStickState => ItemComponent::DebugStickState(Decode::decode(r)?),
+        ItemComponentKind::EntityData => ItemComponent::EntityData {
             id: Decode::decode(r)?,
             data: Decode::decode(r)?,
         },
-        50 => ItemComponent::BucketEntityData(Decode::decode(r)?),
-        51 => ItemComponent::BlockEntityData {
+        ItemComponentKind::BucketEntityData => ItemComponent::BucketEntityData(Decode::decode(r)?),
+        ItemComponentKind::BlockEntityData => ItemComponent::BlockEntityData {
             id: Decode::decode(r)?,
             data: Decode::decode(r)?,
         },
-        52 => ItemComponent::Instrument(Decode::decode(r)?),
-        53 => ItemComponent::ProvidesTrimMaterial(Decode::decode(r)?),
-        54 => ItemComponent::OminousBottleAmplifier(Decode::decode(r)?),
-        55 => ItemComponent::JukeboxPlayable {
-            song: Decode::decode(r)?,
-            show_in_tooltip: Decode::decode(r)?,
-        },
-        56 => ItemComponent::ProvidesBannerPatterns(Decode::decode(r)?),
-        57 => ItemComponent::Recipes(Decode::decode(r)?),
-        58 => ItemComponent::LodestoneTracker {
+        ItemComponentKind::Instrument => ItemComponent::Instrument(Decode::decode(r)?),
+        ItemComponentKind::ProvidesTrimMaterial => {
+            ItemComponent::ProvidesTrimMaterial(Decode::decode(r)?)
+        }
+        ItemComponentKind::OminousBottleAmplifier => {
+            ItemComponent::OminousBottleAmplifier(Decode::decode(r)?)
+        }
+        ItemComponentKind::JukeboxPlayable => ItemComponent::JukeboxPlayable(Decode::decode(r)?),
+        ItemComponentKind::ProvidesBannerPatterns => {
+            ItemComponent::ProvidesBannerPatterns(Decode::decode(r)?)
+        }
+        ItemComponentKind::Recipes => ItemComponent::Recipes(recipes_from_nbt(Value::decode(r)?)?),
+        ItemComponentKind::LodestoneTracker => ItemComponent::LodestoneTracker {
             target: Decode::decode(r)?,
             tracked: Decode::decode(r)?,
         },
-        59 => ItemComponent::FireworkExplosion(Decode::decode(r)?),
-        60 => ItemComponent::Fireworks {
+        ItemComponentKind::FireworkExplosion => {
+            ItemComponent::FireworkExplosion(Decode::decode(r)?)
+        }
+        ItemComponentKind::Fireworks => ItemComponent::Fireworks {
             flight_duration: Decode::decode(r)?,
-            explosions: Decode::decode(r)?,
+            explosions: Bounded::<_, 256>::decode(r)?.0,
         },
-        61 => ItemComponent::Profile(Decode::decode(r)?),
-        62 => ItemComponent::NoteBlockSound(Decode::decode(r)?),
-        63 => ItemComponent::BannerPatterns(Decode::decode(r)?),
-        64 => ItemComponent::BaseColor(Decode::decode(r)?),
-        65 => ItemComponent::PotDecorations(Decode::decode(r)?),
-        66 => {
+        ItemComponentKind::Profile => ItemComponent::Profile(Decode::decode(r)?),
+        ItemComponentKind::NoteBlockSound => ItemComponent::NoteBlockSound(Decode::decode(r)?),
+        ItemComponentKind::BannerPatterns => ItemComponent::BannerPatterns(Decode::decode(r)?),
+        ItemComponentKind::BaseColor => ItemComponent::BaseColor(Decode::decode(r)?),
+        ItemComponentKind::PotDecorations => {
+            ItemComponent::PotDecorations(Bounded::<_, 4>::decode(r)?.0)
+        }
+        ItemComponentKind::Container => {
             let count = VarInt::decode(r)?.0;
-            let mut items = Vec::with_capacity(cautious_capacity::<ItemStack>(count as usize));
+            anyhow::ensure!((0..=256).contains(&count), "invalid Container length");
+            let mut items = Vec::with_capacity(cautious_capacity::<Option<ItemStackTemplate>>(
+                count as usize,
+            ));
             for _ in 0..count {
-                items.push(decode_item_stack_recursive(r, depth + 1, false)?);
+                items.push(if bool::decode(r)? {
+                    Some(ItemStackTemplate(decode_item_stack_template(r, depth + 1)?))
+                } else {
+                    None
+                });
             }
             ItemComponent::Container(items)
         }
-        67 => ItemComponent::BlockState(Decode::decode(r)?),
-        68 => ItemComponent::Bees(Decode::decode(r)?),
-        69 => ItemComponent::Lock(Decode::decode(r)?),
-        70 => ItemComponent::ContainerLoot(Decode::decode(r)?),
-        71 => ItemComponent::BreakSound(Decode::decode(r)?),
-        72 => ItemComponent::VillagerVariant(Decode::decode(r)?),
-        73 => ItemComponent::WolfVariant(Decode::decode(r)?),
-        74 => ItemComponent::WolfSoundVariant(Decode::decode(r)?),
-        75 => ItemComponent::WolfCollar(Decode::decode(r)?),
-        76 => ItemComponent::FoxVariant(Decode::decode(r)?),
-        77 => ItemComponent::SalmonSize(Decode::decode(r)?),
-        78 => ItemComponent::ParrotVariant(Decode::decode(r)?),
-        79 => ItemComponent::TropicalFishPattern(Decode::decode(r)?),
-        80 => ItemComponent::TropicalFishBaseColor(Decode::decode(r)?),
-        81 => ItemComponent::TropicalFishPatternColor(Decode::decode(r)?),
-        82 => ItemComponent::MooshroomVariant(Decode::decode(r)?),
-        83 => ItemComponent::RabbitVariant(Decode::decode(r)?),
-        84 => ItemComponent::PigVariant(Decode::decode(r)?),
-        85 => ItemComponent::CowVariant(Decode::decode(r)?),
-        86 => ItemComponent::ChickenVariant(Decode::decode(r)?),
-        87 => ItemComponent::FrogVariant(Decode::decode(r)?),
-        88 => ItemComponent::HorseVariant(Decode::decode(r)?),
-        89 => ItemComponent::PaintingVariant(Decode::decode(r)?),
-        90 => ItemComponent::LlamaVariant(Decode::decode(r)?),
-        91 => ItemComponent::AxolotlVariant(Decode::decode(r)?),
-        92 => ItemComponent::CatVariant(Decode::decode(r)?),
-        93 => ItemComponent::CatCollar(Decode::decode(r)?),
-        94 => ItemComponent::SheepColor(Decode::decode(r)?),
-        95 => ItemComponent::ShulkerColor(Decode::decode(r)?),
-        _ => return Err(anyhow::anyhow!("Unknown ItemComponent ID: {id}")),
+        ItemComponentKind::BlockState => ItemComponent::BlockState(Decode::decode(r)?),
+        ItemComponentKind::Bees => ItemComponent::Bees(Decode::decode(r)?),
+        ItemComponentKind::Lock => ItemComponent::Lock(Decode::decode(r)?),
+        ItemComponentKind::ContainerLoot => ItemComponent::ContainerLoot(Decode::decode(r)?),
+        ItemComponentKind::BreakSound => ItemComponent::BreakSound(Decode::decode(r)?),
+        ItemComponentKind::VillagerVariant => ItemComponent::VillagerVariant(Decode::decode(r)?),
+        ItemComponentKind::WolfVariant => ItemComponent::WolfVariant(Decode::decode(r)?),
+        ItemComponentKind::WolfSoundVariant => ItemComponent::WolfSoundVariant(Decode::decode(r)?),
+        ItemComponentKind::WolfCollar => ItemComponent::WolfCollar(Decode::decode(r)?),
+        ItemComponentKind::FoxVariant => ItemComponent::FoxVariant(Decode::decode(r)?),
+        ItemComponentKind::SalmonSize => ItemComponent::SalmonSize(Decode::decode(r)?),
+        ItemComponentKind::ParrotVariant => ItemComponent::ParrotVariant(Decode::decode(r)?),
+        ItemComponentKind::TropicalFishPattern => {
+            ItemComponent::TropicalFishPattern(Decode::decode(r)?)
+        }
+        ItemComponentKind::TropicalFishBaseColor => {
+            ItemComponent::TropicalFishBaseColor(Decode::decode(r)?)
+        }
+        ItemComponentKind::TropicalFishPatternColor => {
+            ItemComponent::TropicalFishPatternColor(Decode::decode(r)?)
+        }
+        ItemComponentKind::MooshroomVariant => ItemComponent::MooshroomVariant(Decode::decode(r)?),
+        ItemComponentKind::RabbitVariant => ItemComponent::RabbitVariant(Decode::decode(r)?),
+        ItemComponentKind::PigVariant => ItemComponent::PigVariant(Decode::decode(r)?),
+        ItemComponentKind::CowVariant => ItemComponent::CowVariant(Decode::decode(r)?),
+        ItemComponentKind::ChickenVariant => ItemComponent::ChickenVariant(Decode::decode(r)?),
+        ItemComponentKind::FrogVariant => ItemComponent::FrogVariant(Decode::decode(r)?),
+        ItemComponentKind::HorseVariant => ItemComponent::HorseVariant(Decode::decode(r)?),
+        ItemComponentKind::PaintingVariant => ItemComponent::PaintingVariant(Decode::decode(r)?),
+        ItemComponentKind::LlamaVariant => ItemComponent::LlamaVariant(Decode::decode(r)?),
+        ItemComponentKind::AxolotlVariant => ItemComponent::AxolotlVariant(Decode::decode(r)?),
+        ItemComponentKind::CatVariant => ItemComponent::CatVariant(Decode::decode(r)?),
+        ItemComponentKind::CatCollar => ItemComponent::CatCollar(Decode::decode(r)?),
+        ItemComponentKind::SheepColor => ItemComponent::SheepColor(Decode::decode(r)?),
+        ItemComponentKind::ShulkerColor => ItemComponent::ShulkerColor(Decode::decode(r)?),
     })
 }
 

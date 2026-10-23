@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use chunkedge_binary::{Decode, Encode, IDSet, VarInt};
 use chunkedge_generated::registry_id::RegistryId;
 use chunkedge_ident::Ident;
-use chunkedge_item::ItemStack;
+use chunkedge_item::ItemStackTemplate;
 
 use crate::Packet;
 
@@ -29,9 +29,21 @@ pub struct StonecutterRecipe<'a> {
 pub enum SlotDisplay<'a> {
     Empty,
     AnyFuel,
+    WithAnyPotion {
+        base: Box<SlotDisplay<'a>>,
+    },
+    OnlyWithComponent {
+        base: Box<SlotDisplay<'a>>,
+        /// Raw ID in the data-component-type registry.
+        component_type: VarInt,
+    },
     Item(RegistryId),
-    ItemStack(Box<ItemStack>),
+    ItemStack(Box<ItemStackTemplate>),
     Tag(Ident<Cow<'a, str>>),
+    DyedSlotDemo {
+        dye: Box<SlotDisplay<'a>>,
+        target: Box<SlotDisplay<'a>>,
+    },
     SmithingTrim {
         base: Box<SlotDisplay<'a>>,
         material: Box<SlotDisplay<'a>>,

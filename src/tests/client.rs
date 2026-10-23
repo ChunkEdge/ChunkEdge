@@ -1,13 +1,17 @@
 use chunkedge_server::protocol::movement_flags::MovementFlags;
 
 use crate::abilities::PlayerAbilitiesFlags;
+use crate::client::Client;
+use crate::entity::EntityId;
+use crate::entity::avatar::PlayerModelParts;
 use crate::layer::ChunkLayer;
 use crate::layer::chunk::UnloadedChunk;
 use crate::math::DVec3;
 use crate::protocol::packets::play::{
-    AcceptTeleportationC2s, MoveEntityPosS2c, MovePlayerPosRotC2s, PlayerPositionS2c,
-    SetEntityDataS2c,
+    AcceptTeleportationC2s, LoginS2c, MoveEntityPosS2c, MovePlayerPosRotC2s, PlayerCombatKillS2c,
+    PlayerPositionS2c, SetEntityDataS2c,
 };
+use crate::protocol::{Packet, VarInt};
 use crate::testing::{ScenarioSingleClient, create_mock_client};
 use crate::{ChunkPos, GameMode};
 
@@ -28,7 +32,12 @@ fn client_teleport_and_move() {
         }
     }
 
-    let (mut bundle, mut helper_2) = create_mock_client("other");
+    let (mut bundle, mut helper_2) = create_mock_client(
+        "other",
+        &mut app
+            .world_mut()
+            .resource_mut::<chunkedge_server::entity::EntityManager>(),
+    );
 
     bundle.layer.0 = layer_ent;
     bundle.visible_chunk_layer.0 = layer_ent;
@@ -125,4 +134,78 @@ fn client_does_not_emit_delayed_tracked_data_after_initial_join() {
     helper
         .collect_received()
         .assert_count::<SetEntityDataS2c>(0);
+}
+
+#[test]
+fn client_knows_itself_by_its_entity_id() {
+    let ScenarioSingleClient {
+        mut app,
+        client,
+        mut helper,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    let entity_id = app.world().get::<EntityId>(client).unwrap().get();
+    assert_ne!(entity_id, 0, "ID 0 means unassigned to the client");
+
+    let recvd = helper.collect_received();
+    recvd.assert_count::<LoginS2c>(1);
+    assert_eq!(recvd.first::<LoginS2c>().entity_id, entity_id);
+
+    app.world_mut()
+        .get_mut::<Client>(client)
+        .unwrap()
+        .kill("test");
+    app.update();
+
+    let recvd = helper.collect_received();
+    recvd.assert_count::<PlayerCombatKillS2c>(1);
+    assert_eq!(
+        recvd.first::<PlayerCombatKillS2c>().player_id,
+        VarInt(entity_id)
+    );
+}
+
+#[test]
+// Regression test: the extracted default for the model-part mask was 127
+// (taken from a mannequin), so a player showing every skin layer had that
+// value dropped from its initial tracked data and others saw no layers.
+fn client_skin_layers_are_sent_to_other_clients() {
+    let ScenarioSingleClient {
+        mut app,
+        mut helper,
+        layer: layer_ent,
+        ..
+    } = ScenarioSingleClient::new();
+
+    app.update();
+    helper.clear_received();
+
+    let (mut bundle, _helper_2) = create_mock_client(
+        "other",
+        &mut app
+            .world_mut()
+            .resource_mut::<chunkedge_server::entity::EntityManager>(),
+    );
+    bundle.layer.0 = layer_ent;
+    bundle.visible_chunk_layer.0 = layer_ent;
+    bundle.visible_entity_layers.0.insert(layer_ent);
+    bundle.player_model_parts = PlayerModelParts(0x7f);
+    let other = app.world_mut().spawn(bundle).id();
+
+    app.update();
+
+    let other_id = app.world().get::<EntityId>(other).unwrap().get();
+    let recvd = helper.collect_received();
+    let sent_all_layers = recvd
+        .0
+        .iter()
+        .filter(|frame| frame.id == SetEntityDataS2c::ID)
+        .map(|frame| frame.decode::<SetEntityDataS2c>().unwrap())
+        .filter(|pkt| pkt.entity_id.0 == other_id)
+        // Index 16 (Avatar model parts), byte serializer (0), every layer.
+        .any(|pkt| pkt.tracked_values.0.windows(3).any(|w| w == [16, 0, 0x7f]));
+
+    assert!(sent_all_layers, "model-part mask missing from tracked data");
 }

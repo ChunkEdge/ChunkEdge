@@ -1,21 +1,20 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.entity.decoration.painting.PaintingVariant;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryOps;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
-import com.chunkedge.extractor.Main;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 
 public class Paintings implements Main.Extractor {
 
-    private final DynamicRegistryManager.Immutable registryManager;
+    private final MinecraftServer server;
 
     public Paintings(MinecraftServer server) {
-        this.registryManager = server.getRegistryManager();
+        this.server = server;
     }
 
     @Override
@@ -25,21 +24,24 @@ public class Paintings implements Main.Extractor {
 
     @Override
     public JsonElement extract() throws Exception {
-        var paintingRegistry = registryManager.getOrThrow(
-            RegistryKeys.PAINTING_VARIANT
-        );
+        var paintingRegistry = server
+            .registryAccess()
+            .lookupOrThrow(Registries.PAINTING_VARIANT);
 
-        var codec = PaintingVariant.CODEC;
+        var codec = PaintingVariant.DIRECT_CODEC;
 
         JsonObject json = new JsonObject();
         paintingRegistry
-            .streamEntries()
+            .listElements()
             .forEach(entry -> {
                 json.add(
-                    entry.getKey().orElseThrow().getValue().toString(),
+                    entry.key().identifier().toString(),
                     codec
                         .encodeStart(
-                            RegistryOps.of(JsonOps.INSTANCE, registryManager),
+                            RegistryOps.create(
+                                JsonOps.INSTANCE,
+                                server.registryAccess()
+                            ),
                             entry.value()
                         )
                         .getOrThrow()

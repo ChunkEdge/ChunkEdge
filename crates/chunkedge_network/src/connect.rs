@@ -178,6 +178,7 @@ async fn handle_handshake(
                 Some((info, cleanup)) => {
                     let client = io.into_client_args(
                         info,
+                        matches!(shared.connection_mode(), ConnectionMode::Online { .. }),
                         shared.0.incoming_byte_limit,
                         shared.0.outgoing_byte_limit,
                         cleanup,
@@ -334,6 +335,7 @@ async fn handle_login(
         uuid: info.uuid,
         username: info.username.as_str().into(),
         properties: Default::default(),
+        session_id: Uuid::new_v4(),
     })
     .await?;
 

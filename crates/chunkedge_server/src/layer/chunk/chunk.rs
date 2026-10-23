@@ -322,12 +322,12 @@ mod tests {
     fn chunk_get_set() {
         fn check(mut chunk: impl Chunk) {
             assert_eq!(
-                chunk.set_block_state(1, 2, 3, BlockState::CHAIN),
+                chunk.set_block_state(1, 2, 3, BlockState::IRON_CHAIN),
                 BlockState::AIR
             );
             assert_eq!(
                 chunk.set_block_state(1, 2, 3, BlockState::AIR),
-                BlockState::CHAIN
+                BlockState::IRON_CHAIN
             );
 
             assert_eq!(chunk.set_block_entity(1, 2, 3, Some(Compound::new())), None);

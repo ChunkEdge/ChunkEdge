@@ -17,6 +17,7 @@ pub struct PlayerInputFlags {
     pub right: bool,
     pub jump: bool,
     pub sneak: bool,
+    /// Sprint key state, not whether the player is actually sprinting.
     pub sprint: bool,
     #[bits(1)]
     _padding: u8,

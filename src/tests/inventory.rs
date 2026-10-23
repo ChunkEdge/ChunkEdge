@@ -177,7 +177,8 @@ fn test_should_modify_player_inventory_click_slot() {
             }
             .into()]
             .as_slice(),
-        ),
+        )
+        .into(),
         carried_item: ItemStack::new(ItemKind::Diamond, 2)
             .with_components(vec![
                 ItemComponent::CustomName("Custom Diamond".into_text_component()),

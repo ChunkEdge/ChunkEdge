@@ -149,7 +149,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "zulu"
-          java-version: "21"
+          java-version: "25"
 
       - name: Test Build
         run: ./gradlew build

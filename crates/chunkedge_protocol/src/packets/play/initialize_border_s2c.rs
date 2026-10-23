@@ -8,7 +8,8 @@ pub struct InitializeBorderS2c {
     pub z: f64,
     pub old_diameter: f64,
     pub new_diameter: f64,
-    pub duration_millis: VarLong,
+    /// Transition duration in game ticks.
+    pub duration_ticks: VarLong,
     pub portal_teleport_boundary: VarInt,
     pub warning_blocks: VarInt,
     pub warning_time: VarInt,

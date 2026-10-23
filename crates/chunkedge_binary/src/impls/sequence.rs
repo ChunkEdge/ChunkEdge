@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::io::Write;
 use std::mem::{self, MaybeUninit};
 use std::slice;
@@ -181,5 +182,27 @@ impl<'a, T: Decode<'a>> Decode<'a> for Box<[T]> {
 impl<'a, T: Decode<'a>, const MAX_LEN: usize> Decode<'a> for Bounded<Box<[T]>, MAX_LEN> {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
         Ok(Bounded::<Vec<_>, MAX_LEN>::decode(r)?.map_into())
+    }
+}
+
+impl<T: Encode, const MAX_LEN: usize> Encode for Bounded<Vec<T>, MAX_LEN> {
+    fn encode(&self, w: impl Write) -> anyhow::Result<()> {
+        Bounded::<_, MAX_LEN>(self.0.as_slice()).encode(w)
+    }
+}
+
+impl<T: Encode + Clone, const MAX_LEN: usize> Encode for Bounded<Cow<'_, [T]>, MAX_LEN> {
+    fn encode(&self, w: impl Write) -> anyhow::Result<()> {
+        Bounded::<_, MAX_LEN>(self.0.as_ref()).encode(w)
+    }
+}
+
+impl<'de, T: Decode<'de> + Clone, const MAX_LEN: usize> Decode<'de>
+    for Bounded<Cow<'_, [T]>, MAX_LEN>
+{
+    fn decode(r: &mut &'de [u8]) -> anyhow::Result<Self> {
+        Ok(Bounded(Cow::Owned(
+            Bounded::<Vec<T>, MAX_LEN>::decode(r)?.0,
+        )))
     }
 }

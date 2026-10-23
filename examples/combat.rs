@@ -130,12 +130,16 @@ fn handle_combat_messages(
         }
     }
 
-    for &InteractEntityMessage {
-        client: attacker_client,
-        entity: victim_client,
-        ..
-    } in interact_entity.read()
-    {
+    for &message in interact_entity.read() {
+        let InteractEntityMessage {
+            client: attacker_client,
+            entity: victim_client,
+            kind: EntityInteractionKind::Attack,
+            ..
+        } = message
+        else {
+            continue;
+        };
         let Ok([mut attacker, mut victim]) = clients.get_many_mut([attacker_client, victim_client])
         else {
             // Victim or attacker does not exist, or the attacker is attacking itself.

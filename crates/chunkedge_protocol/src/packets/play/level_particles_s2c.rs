@@ -1,6 +1,6 @@
 use chunkedge_binary::{Decode, Encode, VarInt};
 use chunkedge_generated::block::BlockState;
-use chunkedge_item::ItemStack;
+use chunkedge_item::ItemStackTemplate;
 use chunkedge_math::{DVec3, Vec3};
 
 use crate::{BlockPos, Packet};
@@ -16,9 +16,15 @@ pub struct LevelParticlesS2c {
     pub particle: Particle,
 }
 
-#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+// The format of the enum below currently needs to be manually maintained.
+// This means that when we update MC versions, we need to check if the
+// particle types below are still correct.
+// The current particle payloads follow the stream codecs in net.minecraft.core.particles.
+// Or check the wiki:
+// https://minecraft.wiki/w/Java_Edition_protocol/Particles
+#[derive(Clone, PartialEq, Debug, Encode, Decode, chunkedge_protocol_macros::RegistryId)]
+#[packet(registry = chunkedge_generated::particle_type)]
 pub enum Particle {
-    // TODO: Move to registry?
     AngryVillager,
     Block(BlockState),
     BlockMarker(BlockState),
@@ -26,7 +32,10 @@ pub enum Particle {
     Cloud,
     Crit,
     DamageIndicator,
-    DragonBreath,
+    DragonBreath {
+        /// Particle power.
+        power: f32,
+    },
     DrippingLava,
     FallingLava,
     LandingLava,
@@ -48,7 +57,12 @@ pub enum Particle {
         /// The scale, will be clamped between 0.01 and 4.
         scale: f32,
     },
-    Effect,
+    Effect {
+        /// The color encoded as 0xRRGGBB.
+        color: i32,
+        /// Particle power.
+        power: f32,
+    },
     ElderGuardian,
     EnchantedHit,
     Enchant,
@@ -83,13 +97,21 @@ pub enum Particle {
     SculkChargePop,
     SoulFireFlame,
     Soul,
-    Flash,
+    Flash {
+        /// The ARGB components of the color encoded as an Int.
+        color: i32,
+    },
     HappyVillager,
     Composter,
     Heart,
-    InstantEffect,
-    /// If the item is air or its count is 0, the client might crash.
-    Item(Box<ItemStack>),
+    InstantEffect {
+        /// The color encoded as 0xRRGGBB.
+        color: i32,
+        /// Particle power.
+        power: f32,
+    },
+    /// A non-empty item stack.
+    Item(Box<ItemStackTemplate>),
     Vibration {
         /// The type of the vibration source defined by the
         /// `minecraft:position_source_type` builtin registry.
@@ -173,6 +195,27 @@ pub enum Particle {
     TrialOmen,
     BlockCrumble(BlockState),
     Firefly,
+    SulfurBubbles,
+    NoxiousGas,
+    NoxiousGasCloud,
+    Geyser {
+        water_blocks: i32,
+    },
+    GeyserBase {
+        water_blocks: i32,
+        burst_impulse_base: f32,
+    },
+    GeyserPoof {
+        water_blocks: i32,
+        burst_impulse_base: f32,
+    },
+    GeyserPlume {
+        water_blocks: i32,
+    },
+    CopperFireFlame,
+    PauseMobGrowth,
+    ResetMobGrowth,
+    SulfurCubeGoo,
 }
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
@@ -189,125 +232,4 @@ pub enum VibrationSourceType {
         /// Entity eye height.
         eye_height: f32,
     },
-}
-
-impl Particle {
-    pub const fn id(&self) -> i32 {
-        match self {
-            Particle::AngryVillager => 0,
-            Particle::Block(_) => 1,
-            Particle::BlockMarker(_) => 2,
-            Particle::Bubble => 3,
-            Particle::Cloud => 4,
-            Particle::Crit => 5,
-            Particle::DamageIndicator => 6,
-            Particle::DragonBreath => 7,
-            Particle::DrippingLava => 8,
-            Particle::FallingLava => 9,
-            Particle::LandingLava => 10,
-            Particle::DrippingWater => 11,
-            Particle::FallingWater => 12,
-            Particle::Dust { .. } => 13,
-            Particle::DustColorTransition { .. } => 14,
-            Particle::Effect => 15,
-            Particle::ElderGuardian => 16,
-            Particle::EnchantedHit => 17,
-            Particle::Enchant => 18,
-            Particle::EndRod => 19,
-            Particle::EntityEffect { .. } => 20,
-            Particle::ExplosionEmitter => 21,
-            Particle::Explosion => 22,
-            Particle::Gust => 23,
-            Particle::SmallGust => 24,
-            Particle::GustEmitterLarge => 25,
-            Particle::GustEmitterSmall => 26,
-            Particle::SonicBoom => 27,
-            Particle::FallingDust(_) => 28,
-            Particle::Firework => 29,
-            Particle::Fishing => 30,
-            Particle::Flame => 31,
-            Particle::Infested => 32,
-            Particle::CherryLeaves => 33,
-            Particle::PaleOakLeaves => 34,
-            Particle::TintedLeaves { .. } => 35,
-            Particle::SculkSoul => 36,
-            Particle::SculkCharge { .. } => 37,
-            Particle::SculkChargePop => 38,
-            Particle::SoulFireFlame => 39,
-            Particle::Soul => 40,
-            Particle::Flash => 41,
-            Particle::HappyVillager => 42,
-            Particle::Composter => 43,
-            Particle::Heart => 44,
-            Particle::InstantEffect => 45,
-            Particle::Item(..) => 46,
-            Particle::Vibration { .. } => 47,
-            Particle::Trail { .. } => 48,
-            Particle::ItemSlime => 49,
-            Particle::ItemCobweb => 50,
-            Particle::ItemSnowball => 51,
-            Particle::LargeSmoke => 52,
-            Particle::Lava => 53,
-            Particle::Mycelium => 54,
-            Particle::Note => 55,
-            Particle::Poof => 56,
-            Particle::Portal => 57,
-            Particle::Rain => 58,
-            Particle::Smoke => 59,
-            Particle::WhiteSmoke => 60,
-            Particle::Sneeze => 61,
-            Particle::Spit => 62,
-            Particle::SquidInk => 63,
-            Particle::SweepAttack => 64,
-            Particle::TotemOfUndying => 65,
-            Particle::Underwater => 66,
-            Particle::Splash => 67,
-            Particle::Witch => 68,
-            Particle::BubblePop => 69,
-            Particle::CurrentDown => 70,
-            Particle::BubbleColumnUp => 71,
-            Particle::Nautilus => 72,
-            Particle::Dolphin => 73,
-            Particle::CampfireCosySmoke => 74,
-            Particle::CampfireSignalSmoke => 75,
-            Particle::DrippingHoney => 76,
-            Particle::FallingHoney => 77,
-            Particle::LandingHoney => 78,
-            Particle::FallingNectar => 79,
-            Particle::FallingSporeBlossom => 80,
-            Particle::Ash => 81,
-            Particle::CrimsonSpore => 82,
-            Particle::WarpedSpore => 83,
-            Particle::SporeBlossomAir => 84,
-            Particle::DrippingObsidianTear => 85,
-            Particle::FallingObsidianTear => 86,
-            Particle::LandingObsidianTear => 87,
-            Particle::ReversePortal => 88,
-            Particle::WhiteAsh => 89,
-            Particle::SmallFlame => 90,
-            Particle::Snowflake => 91,
-            Particle::DrippingDripstoneLava => 92,
-            Particle::FallingDripstoneLava => 93,
-            Particle::DrippingDripstoneWater => 94,
-            Particle::FallingDripstoneWater => 95,
-            Particle::GlowSquidInk => 96,
-            Particle::Glow => 97,
-            Particle::WaxOn => 98,
-            Particle::WaxOff => 99,
-            Particle::ElectricSpark => 100,
-            Particle::Scrape => 101,
-            Particle::Shriek { .. } => 102,
-            Particle::EggCrack => 103,
-            Particle::DustPlume => 104,
-            Particle::TrialSpawnerDetection => 105,
-            Particle::TrialSpawnerDetectionOminous => 106,
-            Particle::VaultConnection => 107,
-            Particle::DustPillar(_) => 108,
-            Particle::OminousSpawning => 109,
-            Particle::RaidOmen => 110,
-            Particle::TrialOmen => 111,
-            Particle::BlockCrumble(_) => 112,
-            Particle::Firefly => 113,
-        }
-    }
 }

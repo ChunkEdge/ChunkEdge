@@ -22,4 +22,5 @@ pub enum SoundCategory {
     Player,
     Ambient,
     Voice,
+    Ui,
 }

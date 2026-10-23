@@ -109,6 +109,7 @@ impl PacketIo {
     pub(crate) fn into_client_args(
         mut self,
         info: NewClientInfo,
+        online_mode: bool,
         incoming_byte_limit: usize,
         outgoing_byte_limit: usize,
         cleanup: CleanupOnDrop,
@@ -208,6 +209,7 @@ impl PacketIo {
         });
 
         ClientBundleArgs {
+            online_mode,
             username: info.username,
             uuid: info.uuid,
             ip: info.ip,

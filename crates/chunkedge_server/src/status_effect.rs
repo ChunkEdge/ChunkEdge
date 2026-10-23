@@ -56,9 +56,9 @@ fn update_active_status_effects(
     }
 }
 
-fn create_packet(effect: &ActiveStatusEffect) -> UpdateMobEffectS2c {
+fn create_packet(entity_id: i32, effect: &ActiveStatusEffect) -> UpdateMobEffectS2c {
     UpdateMobEffectS2c {
-        entity_id: VarInt(0), // We reserve ID 0 for clients.
+        entity_id: VarInt(entity_id),
         effect_id: VarInt(i32::from(effect.status_effect().to_raw())),
         amplifier: VarInt(effect.amplifier()),
         duration: VarInt(effect.remaining_duration().unwrap_or(-1)),
@@ -118,11 +118,12 @@ fn update_status_effect(query: &mut StatusEffectQueryItem, status_effect: Status
     let current_effect = query.active_effects.get_current_effect(status_effect);
 
     if let Some(ref mut client) = query.client {
+        let entity_id = client.entity_id.get();
         if let Some(updated_effect) = current_effect {
-            client.write_packet(&create_packet(updated_effect));
+            client.write_packet(&create_packet(entity_id, updated_effect));
         } else {
             client.write_packet(&RemoveMobEffectS2c {
-                entity_id: VarInt(0),
+                entity_id: VarInt(entity_id),
                 effect_id: VarInt(i32::from(status_effect.to_raw())),
             });
         }

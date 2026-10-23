@@ -97,6 +97,10 @@ fn test_interpolation() {
     // Check if a world border interpolate size packet was sent
     let frames = helper.collect_received();
     frames.assert_count::<SetBorderLerpSizeS2c>(1);
+    let packet = frames.first::<SetBorderLerpSizeS2c>();
+    assert_eq!(packet.old_diameter, 10.0);
+    assert_eq!(packet.new_diameter, 20.0);
+    assert_eq!(packet.duration_ticks.0, 20);
 
     // Check if the interpolation is finished
     let lerp = app.world_mut().get_mut::<WorldBorderLerp>(layer).unwrap();

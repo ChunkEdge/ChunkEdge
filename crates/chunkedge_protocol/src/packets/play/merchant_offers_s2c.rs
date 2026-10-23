@@ -1,5 +1,5 @@
 use chunkedge_binary::{Decode, Encode, VarInt};
-use chunkedge_item::ItemStack;
+use chunkedge_item::{ItemCost, ItemStack};
 
 use crate::Packet;
 
@@ -15,9 +15,9 @@ pub struct MerchantOffersS2c {
 
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct TradeOffer {
-    pub input_one: ItemStack,
+    pub input_one: ItemCost,
     pub output_item: ItemStack,
-    pub input_two: ItemStack,
+    pub input_two: Option<ItemCost>,
     pub trade_disabled: bool,
     pub number_of_trade_uses: i32,
     pub max_trade_uses: i32,

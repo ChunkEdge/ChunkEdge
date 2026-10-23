@@ -7,11 +7,13 @@
 //!   instances or clients spawned before mutating.
 
 use std::ops::{Deref, DerefMut};
+use std::sync::LazyLock;
 
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
 use chunkedge_ident::{Ident, ident};
 use chunkedge_nbt::serde::ser::CompoundSerializer;
+use chunkedge_nbt::{Compound, Value};
 use serde::{Deserialize, Serialize};
 use tracing::error;
 
@@ -36,9 +38,7 @@ fn load_default_dimension_types(mut reg: ResMut<DimensionTypeRegistry>, codec: R
         for value in codec.registry(DimensionTypeRegistry::KEY) {
             let mut dimension_type = DimensionType::deserialize(value.element.clone())?;
 
-            // HACK: We don't have a lighting engine implemented. To avoid shrouding the
-            // world in darkness, give all dimensions the max ambient light.
-            dimension_type.ambient_light = 1.0;
+            dimension_type.make_full_bright();
 
             reg.insert(value.name.clone(), dimension_type);
         }
@@ -121,64 +121,69 @@ impl DerefMut for DimensionTypeRegistry {
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
-#[serde(deny_unknown_fields)]
 pub struct DimensionType {
     pub ambient_light: f32,
-    pub bed_works: bool,
     pub coordinate_scale: f64,
-    pub effects: DimensionEffects,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub fixed_time: Option<i32>,
-    pub has_ceiling: bool,
-    pub has_raids: bool,
+    #[serde(default)]
+    pub has_fixed_time: bool,
     pub has_skylight: bool,
+    pub has_ceiling: bool,
+    #[serde(default)]
+    pub has_ender_dragon_fight: bool,
     pub height: i32,
     pub infiniburn: String,
     pub logical_height: i32,
     pub min_y: i32,
     pub monster_spawn_block_light_limit: i32,
     pub monster_spawn_light_level: MonsterSpawnLightLevel,
-    pub natural: bool,
-    pub piglin_safe: bool,
-    pub respawn_anchor_works: bool,
-    pub ultrawarm: bool,
+    /// Environment attributes (sky/fog colors, light factors, music, ...).
+    /// Forwarded opaquely so the client receives the dimension's visual and audio settings.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub attributes: Option<Compound>,
+    /// Timelines (world clocks) reference, e.g. `"#minecraft:in_overworld"`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timelines: Option<String>,
+    /// Default world clock, e.g. `"minecraft:overworld"`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_clock: Option<String>,
+    /// Skybox override, e.g. `"end"` or `"none"`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub skybox: Option<String>,
+    /// Cardinal lighting override, e.g. `"nether"`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cardinal_light: Option<String>,
 }
 
-impl Default for DimensionType {
-    fn default() -> Self {
-        Self {
-            ambient_light: 0.0,
-            bed_works: true,
-            coordinate_scale: 1.0,
-            effects: DimensionEffects::default(),
-            fixed_time: None,
-            has_ceiling: false,
-            has_raids: true,
-            has_skylight: true,
-            height: 384,
-            infiniburn: "#minecraft:infiniburn_overworld".into(),
-            logical_height: 384,
-            min_y: -64,
-            monster_spawn_block_light_limit: 0,
-            monster_spawn_light_level: MonsterSpawnLightLevel::Int(7),
-            natural: true,
-            piglin_safe: false,
-            respawn_anchor_works: false,
-            ultrawarm: false,
-        }
+impl DimensionType {
+    fn make_full_bright(&mut self) {
+        // HACK: We don't have a lighting engine implemented. To avoid shrouding the
+        // world in darkness, give all dimensions the max ambient light.
+        // This allows even zero-light chunks to be visible.
+        self.ambient_light = 1.0;
+        self.attributes.get_or_insert_with(Compound::new).insert(
+            "minecraft:visual/ambient_light_color",
+            Value::String("#ffffff".into()),
+        );
     }
 }
 
-/// Determines what skybox/fog effects to use in dimensions.
-#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Default, Debug)]
-pub enum DimensionEffects {
-    #[serde(rename = "minecraft:overworld")]
-    #[default]
-    Overworld,
-    #[serde(rename = "minecraft:the_nether")]
-    TheNether,
-    #[serde(rename = "minecraft:the_end")]
-    TheEnd,
+impl Default for DimensionType {
+    /// Extracted overworld settings from the registry codec, with full bright hack applied.
+    fn default() -> Self {
+        static DEFAULT: LazyLock<DimensionType> = LazyLock::new(|| {
+            let codec = RegistryCodec::default();
+            let overworld = codec
+                .registry(DimensionTypeRegistry::KEY)
+                .iter()
+                .find(|value| value.name.as_str() == "minecraft:overworld")
+                .expect("extracted overworld dimension");
+            let mut dimension = DimensionType::deserialize(overworld.element.clone())
+                .expect("valid extracted overworld dimension");
+            dimension.make_full_bright();
+            dimension
+        });
+        DEFAULT.clone()
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Debug, Serialize, Deserialize)]
@@ -201,5 +206,44 @@ pub enum MonsterSpawnLightLevelTagged {
 impl From<i32> for MonsterSpawnLightLevel {
     fn from(value: i32) -> Self {
         Self::Int(value)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Dimension environment attributes must survive deserialization and serialization
+    /// so clients receive the configured sky colors, light factors, and fog.
+    #[test]
+    fn dimension_attributes_round_trip() {
+        let codec = include_bytes!("../extracted/registry_codec.json");
+        let compound = serde_json::from_slice::<Compound>(codec).expect("valid registry codec");
+
+        let Value::Compound(dimensions) = compound
+            .get("minecraft:dimension_type")
+            .expect("dimension_type registry")
+            .clone()
+        else {
+            panic!("expected compound");
+        };
+        let Value::Compound(overworld) = dimensions
+            .get("minecraft:overworld")
+            .expect("overworld entry")
+            .clone()
+        else {
+            panic!("expected compound");
+        };
+
+        let dimension_type = DimensionType::deserialize(overworld).expect("overworld deserializes");
+        assert!(dimension_type.attributes.is_some());
+
+        let reserialized = dimension_type
+            .serialize(CompoundSerializer)
+            .expect("serializes");
+        let Some(Value::Compound(attrs)) = reserialized.get("attributes") else {
+            panic!("attributes dropped from dimension type");
+        };
+        assert!(attrs.contains_key("minecraft:visual/sky_color"));
     }
 }

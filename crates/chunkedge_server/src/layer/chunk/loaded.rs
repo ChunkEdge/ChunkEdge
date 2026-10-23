@@ -67,6 +67,33 @@ pub struct Section {
 }
 
 impl Section {
+    fn count_fluids(&self) -> u16 {
+        let mut count = 0;
+
+        match &self.block_states {
+            PalettedContainer::Single(s) => {
+                if s.has_fluid() {
+                    count += SECTION_BLOCK_COUNT as u16;
+                }
+            }
+            PalettedContainer::Indirect(ind) => {
+                for i in 0..SECTION_BLOCK_COUNT {
+                    if ind.get(i).has_fluid() {
+                        count += 1;
+                    }
+                }
+            }
+            PalettedContainer::Direct(dir) => {
+                for s in dir.as_ref() {
+                    if s.has_fluid() {
+                        count += 1;
+                    }
+                }
+            }
+        }
+        count
+    }
+
     fn count_non_air_blocks(&self) -> u16 {
         let mut count = 0;
 
@@ -549,6 +576,8 @@ impl LoadedChunk {
                 sect.count_non_air_blocks()
                     .encode(&mut blocks_and_biomes)
                     .unwrap();
+
+                sect.count_fluids().encode(&mut blocks_and_biomes).unwrap();
 
                 sect.block_states
                     .encode_mc_format(

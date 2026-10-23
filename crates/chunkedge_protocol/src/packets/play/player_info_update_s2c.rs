@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::io::Write;
 
 use bitfield_struct::bitfield;
-use chunkedge_binary::{Decode, Encode, TextComponent, VarInt};
+use chunkedge_binary::{Bounded, Decode, Encode, TextComponent, VarInt};
 use uuid::Uuid;
 
 use crate::profile::Property;
@@ -60,8 +60,8 @@ impl Encode for PlayerInfoUpdateS2c<'_> {
             entry.player_uuid.encode(&mut w)?;
 
             if self.actions.add_player() {
-                entry.username.encode(&mut w)?;
-                entry.properties.encode(&mut w)?;
+                Bounded::<_, 16>(entry.username).encode(&mut w)?;
+                Bounded::<_, 16>(entry.properties.as_ref()).encode(&mut w)?;
             }
 
             if self.actions.initialize_chat() {
@@ -110,8 +110,8 @@ impl<'a> Decode<'a> for PlayerInfoUpdateS2c<'a> {
             };
 
             if actions.add_player() {
-                entry.username = Decode::decode(r)?;
-                entry.properties = Decode::decode(r)?;
+                entry.username = Bounded::<&str, 16>::decode(r)?.0;
+                entry.properties = Bounded::<Vec<_>, 16>::decode(r)?.0.into();
             }
 
             if actions.initialize_chat() {

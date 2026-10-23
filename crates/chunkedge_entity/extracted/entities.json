@@ -6658,7 +6658,7 @@
       {
         "default_value": false,
         "index": 18,
-        "name": "baby",
+        "name": "immune_to_zombification",
         "type": "boolean"
       }
     ],

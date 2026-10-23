@@ -305,10 +305,9 @@ public final class LegacyNames {
             Map.entry("Goat.data_is_screaming_goat", "screaming"),
             Map.entry("Guardian.data_id_attack_target", "beam_target_id"),
             Map.entry("Guardian.data_id_moving", "spikes_retracted"),
-            // Yarn called this BABY, although it controls zombification immunity.
-            // Preserve the legacy component name, not the misleading meaning.
-            // Should be revisited in the future.
-            Map.entry("Hoglin.data_immune_to_zombification", "baby"),
+            // Yarn called this BABY, but it controls zombification immunity.
+            // Hoglin babies use AgeableMob's "child" field.
+            Map.entry("Hoglin.data_immune_to_zombification", "immune_to_zombification"),
             Map.entry("Horse.data_id_type_variant", "variant"),
             Map.entry("Interaction.data_height_id", "height"),
             Map.entry("Interaction.data_response_id", "response"),

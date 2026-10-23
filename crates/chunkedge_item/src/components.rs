@@ -1128,7 +1128,7 @@ pub struct PotionEffect {
 
 /// The parameters of a [`PotionEffect`], matching vanilla's
 /// `MobEffectInstance.Details`.
-#[derive(Clone, PartialEq, Debug, Decode)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct PotionEffectDetails {
     /// The level of the effect (0 = Level 1, 1 = Level 2).
     pub amplifier: VarInt,
@@ -1149,6 +1149,33 @@ pub struct PotionEffectDetails {
     /// A weaker, longer effect of the same type that resumes once this one
     /// expires.
     pub hidden_effect: Option<Box<PotionEffectDetails>>,
+}
+
+impl PotionEffectDetails {
+    fn decode_recursive(r: &mut &[u8], depth: usize) -> anyhow::Result<Self> {
+        anyhow::ensure!(
+            depth <= crate::MAX_RECURSION_DEPTH,
+            "potion effect recursion limit exceeded"
+        );
+        Ok(Self {
+            amplifier: VarInt::decode(r)?,
+            duration: VarInt::decode(r)?,
+            ambient: bool::decode(r)?,
+            show_particles: bool::decode(r)?,
+            show_icon: bool::decode(r)?,
+            hidden_effect: if bool::decode(r)? {
+                Some(Box::new(Self::decode_recursive(r, depth + 1)?))
+            } else {
+                None
+            },
+        })
+    }
+}
+
+impl Decode<'_> for PotionEffectDetails {
+    fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
+        Self::decode_recursive(r, 0)
+    }
 }
 
 impl Encode for PotionEffectDetails {

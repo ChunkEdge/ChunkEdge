@@ -39,7 +39,7 @@ impl<T> Patchable<T> {
 }
 
 // Keep payload variants and their wire IDs in one declaration. The generated kind
-// enum checks registry coverage; matching it exhaustively requires a decoder for
+// enum checks registry coverage, matching it exhaustively requires a decoder for
 // every component, just as matching ItemComponent requires every encoder.
 macro_rules! item_components {
     ($(
@@ -666,7 +666,7 @@ pub struct Property {
 pub enum PropertyValue {
     /// An exact string value.
     Exact(String),
-    /// An inclusive range; a missing bound is unbounded.
+    /// An inclusive range. `None` means no limit in that direction.
     MinMax {
         min: Option<String>,
         max: Option<String>,
@@ -1034,7 +1034,7 @@ pub struct PlayerSkinPatch {
     pub texture: Option<Ident<String>>,
     pub cape: Option<Ident<String>>,
     pub elytra: Option<Ident<String>>,
-    /// `true` selects the slim model; `false` selects the wide model.
+    /// `true` for slim player model, `false` for wide
     pub slim: Option<bool>,
 }
 

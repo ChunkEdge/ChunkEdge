@@ -3,7 +3,7 @@
   "features": {
     "ghcr.io/devcontainers/features/rust:1": {},
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "17",
+      "version": "25",
       "installGradle": true
     }
   }

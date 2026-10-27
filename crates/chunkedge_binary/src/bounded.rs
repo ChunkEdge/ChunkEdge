@@ -1,4 +1,4 @@
-use std::borrow::Borrow;
+use std::borrow::{Borrow, Cow};
 use std::fmt::Display;
 
 use derive_more::{AsRef, Deref, DerefMut, From};
@@ -38,5 +38,11 @@ impl<T, const MAX: usize> Borrow<T> for Bounded<T, MAX> {
 impl<T: Display, const MAX: usize> Display for Bounded<T, MAX> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.0.fmt(f)
+    }
+}
+
+impl<T: Clone, const MAX: usize> From<Vec<T>> for Bounded<Cow<'_, [T]>, MAX> {
+    fn from(value: Vec<T>) -> Self {
+        Self(Cow::Owned(value))
     }
 }

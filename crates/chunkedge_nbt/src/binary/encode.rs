@@ -47,6 +47,20 @@ where
     Ok(())
 }
 
+/// Encodes any NBT value as an unnamed root tag: the tag byte followed by the
+/// payload. This matches the network form used by `FriendlyByteBuf.writeNbt`
+/// for tags of any type, not only compounds.
+pub fn to_unnamed_value_binary<W, S>(val: &Value<S>, writer: W) -> Result<()>
+where
+    W: Write,
+    S: ToModifiedUtf8 + Hash + Ord,
+{
+    let mut state = EncodeState { writer };
+
+    state.write_tag(val.tag())?;
+    state.write_value(val)
+}
+
 /// Returns the number of bytes that will be written when
 /// [`to_binary`] is called with this compound and root name.
 ///

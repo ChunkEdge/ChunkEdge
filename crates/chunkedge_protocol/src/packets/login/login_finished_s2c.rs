@@ -15,5 +15,6 @@ use crate::{Packet, PacketState};
 pub struct LoginFinishedS2c<'a> {
     pub uuid: Uuid,
     pub username: Bounded<&'a str, 16>,
-    pub properties: Cow<'a, [Property<&'a str>]>,
+    pub properties: Bounded<Cow<'a, [Property<&'a str>]>, 16>,
+    pub session_id: Uuid,
 }

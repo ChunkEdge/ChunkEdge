@@ -1,4 +1,5 @@
 use chunkedge_binary::{Decode, Encode, TextComponent, VarInt};
+use chunkedge_ident::Ident;
 
 use crate::packets::play::set_structure_block_c2s::Rotation;
 use crate::{BlockPos, Packet};
@@ -7,8 +8,8 @@ use crate::{BlockPos, Packet};
 pub struct TestInstanceBlockActionC2s {
     pub position: BlockPos,
     pub action: TestInstanceBlockAction,
-    /// ID in the `minecraft:test_instance_kind` registry.
-    pub test: Option<VarInt>,
+    /// ID in the `minecraft:test_instance` registry.
+    pub test: Option<Ident<String>>,
     pub size_x: VarInt,
     pub size_y: VarInt,
     pub size_z: VarInt,

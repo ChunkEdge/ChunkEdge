@@ -9,7 +9,7 @@ use chunkedge::protocol::packets::play::{AddEntityS2c, LevelChunkWithLightS2c, T
 use chunkedge::protocol::{ByteAngle, FixedArray, IntoTextComponent, VarInt, VariableBitSet};
 use chunkedge::text::IntoText;
 use chunkedge_server::CompressionThreshold;
-use chunkedge_server::protocol::Velocity;
+use chunkedge_server::protocol::LpVec3;
 use divan::Bencher;
 
 pub(crate) fn setup<'a>() -> (
@@ -59,7 +59,7 @@ pub(crate) fn setup<'a>() -> (
         yaw: ByteAngle(100),
         head_yaw: ByteAngle(50),
         data: VarInt(i32::MIN),
-        velocity: Velocity([12, 34, 56]),
+        velocity: LpVec3([0.0015, 0.00425, 0.007]),
     };
 
     (

@@ -28,5 +28,6 @@ pub struct LoginS2c<'a> {
     pub last_death_location: Option<GlobalPos<'a>>,
     pub portal_cooldown: VarInt,
     pub sea_level: VarInt,
+    pub online_mode: bool,
     pub enforeces_secure_chat: bool,
 }

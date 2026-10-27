@@ -29,6 +29,7 @@ pub struct EntityInitQuery {
     pub head_yaw: &'static HeadYaw,
     pub on_ground: &'static OnGround,
     pub object_data: &'static ObjectData,
+    pub facing: Option<&'static crate::abstract_decoration::DataDirection>,
     pub velocity: &'static Velocity,
     pub tracked_data: &'static TrackedData,
 }
@@ -48,7 +49,10 @@ impl EntityInitQueryItem<'_, '_> {
                 pitch: ByteAngle::from_degrees(self.look.pitch),
                 yaw: ByteAngle::from_degrees(self.look.yaw),
                 head_yaw: ByteAngle::from_degrees(self.head_yaw.0),
-                data: self.object_data.0.into(),
+                data: self
+                    .facing
+                    .map_or(self.object_data.0, |facing| facing.0 as i32)
+                    .into(),
                 velocity: self.velocity.to_packet_units(),
             }),
         }

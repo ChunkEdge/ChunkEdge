@@ -6,4 +6,5 @@ use crate::Packet;
 pub enum ClientCommandC2s {
     PerformRespawn,
     RequestStats,
+    RequestGameruleValues,
 }

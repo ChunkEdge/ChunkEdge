@@ -783,8 +783,51 @@ impl<'de> Deserialize<'de> for Text {
             fn visit_map<A: de::MapAccess<'de>>(self, map: A) -> Result<Self::Value, A::Error> {
                 use de::value::MapAccessDeserializer;
 
+                // Vanilla wraps heterogeneous NBT list elements in a compound
+                // with a single empty-name entry. Its value can itself be a list.
+                let mut map = map;
+                let key = map.next_key::<String>()?;
+                if key.as_deref() == Some("") {
+                    let text = map.next_value::<Text>()?;
+                    if map.next_key::<de::IgnoredAny>()?.is_some() {
+                        return Err(de::Error::custom(
+                            "text wrapper must contain a single entry",
+                        ));
+                    }
+                    return Ok(text);
+                }
+
+                // Replay the first key without buffering values: NBT must retain
+                // its byte-to-boolean conversion for style fields.
+                struct PrefixedMap<A> {
+                    key: Option<String>,
+                    map: A,
+                }
+
+                impl<'de, A: de::MapAccess<'de>> de::MapAccess<'de> for PrefixedMap<A> {
+                    type Error = A::Error;
+
+                    fn next_key_seed<K: de::DeserializeSeed<'de>>(
+                        &mut self,
+                        seed: K,
+                    ) -> Result<Option<K::Value>, Self::Error> {
+                        use de::IntoDeserializer;
+                        match self.key.take() {
+                            Some(key) => seed.deserialize(key.into_deserializer()).map(Some),
+                            None => self.map.next_key_seed(seed),
+                        }
+                    }
+
+                    fn next_value_seed<V: de::DeserializeSeed<'de>>(
+                        &mut self,
+                        seed: V,
+                    ) -> Result<V::Value, Self::Error> {
+                        self.map.next_value_seed(seed)
+                    }
+                }
+
                 Ok(Text(Box::new(TextInner::deserialize(
-                    MapAccessDeserializer::new(map),
+                    MapAccessDeserializer::new(PrefixedMap { key, map }),
                 )?)))
             }
         }

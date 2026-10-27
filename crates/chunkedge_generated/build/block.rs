@@ -54,6 +54,7 @@ struct State {
     luminance: u8,
     opaque: bool,
     replaceable: bool,
+    has_fluid: bool,
     blocks_motion: bool,
     collision_shapes: Vec<u16>,
     block_entity_type: Option<u32>,
@@ -79,6 +80,14 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     } = serde_json::from_str(include_str!("../extracted/blocks.json"))?;
 
     let max_state_id = blocks.iter().map(|b| b.max_state_id()).max().unwrap();
+
+    let mut fluid_states = vec![0_u64; (usize::from(max_state_id) + 1).div_ceil(64)];
+    for state in blocks.iter().flat_map(|block| &block.states) {
+        if state.has_fluid {
+            fluid_states[usize::from(state.id) / 64] |= 1_u64 << (state.id % 64);
+        }
+    }
+    let fluid_states_len = fluid_states.len();
 
     let kind_to_translation_key_arms = blocks
         .iter()
@@ -674,6 +683,12 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             #[doc = "If this block is water or lava."]
             pub const fn is_liquid(self) -> bool {
                 matches!(self.to_kind(), BlockKind::Water | BlockKind::Lava)
+            }
+
+            #[doc = "Whether this block state's fluid state is non-empty, including aquatic plants and waterlogged blocks."]
+            pub const fn has_fluid(self) -> bool {
+                const FLUID_STATES: [u64; #fluid_states_len] = [#(#fluid_states),*];
+                FLUID_STATES[self.0 as usize / 64] & (1_u64 << (self.0 % 64)) != 0
             }
 
             pub const fn is_opaque(self) -> bool {

@@ -10,13 +10,11 @@ pub struct PlayerCommandC2s {
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
 pub enum PlayerCommand {
-    StartSneaking,
-    StopSneaking,
-    LeaveBed,
+    StopSleeping,
     StartSprinting,
     StopSprinting,
-    StartJumpWithHorse,
-    StopJumpWithHorse,
-    OpenHorseInventory,
-    StartFlyingWithElytra,
+    StartRidingJump,
+    StopRidingJump,
+    OpenInventory,
+    StartFallFlying,
 }

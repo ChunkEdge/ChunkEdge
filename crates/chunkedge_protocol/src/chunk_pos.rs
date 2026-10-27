@@ -28,6 +28,23 @@ impl ChunkPos {
     }
 }
 
+/// Field codec for vanilla's packed chunk-position long (Z above X).
+/// The default [`ChunkPos`] codec writes separate X and Z integers instead.
+pub mod packed {
+    use super::*;
+
+    pub fn encode<W: std::io::Write>(pos: &ChunkPos, mut w: W) -> anyhow::Result<()> {
+        pos.z.encode(&mut w)?;
+        pos.x.encode(w)
+    }
+
+    pub fn decode(r: &mut &[u8]) -> anyhow::Result<ChunkPos> {
+        let z = i32::decode(r)?;
+        let x = i32::decode(r)?;
+        Ok(ChunkPos::new(x, z))
+    }
+}
+
 impl From<BlockPos> for ChunkPos {
     fn from(pos: BlockPos) -> Self {
         Self {

@@ -5,13 +5,13 @@ use std::collections::BTreeSet;
 
 use bevy_ecs::prelude::*;
 use bevy_ecs::query::QueryData;
-use chunkedge_entity::EntityLayerId;
+use chunkedge_entity::EntityId;
 use chunkedge_protocol::packets::play::game_event_s2c::GameEventKind;
 use chunkedge_protocol::packets::play::respawn_s2c::DataKeptFlags;
 use chunkedge_protocol::packets::play::{
     GameEventS2c, LoginS2c, RespawnS2c, SetDefaultSpawnPositionS2c,
 };
-use chunkedge_protocol::{BlockPos, GameMode, GlobalPos, Ident, VarInt, WritePacket};
+use chunkedge_protocol::{BlockPos, GameMode, GlobalPos, Ident, VarInt, WritePacket, ident};
 use chunkedge_registry::tags::TagsRegistry;
 use chunkedge_registry::{DimensionTypeRegistry, RegistryCodec};
 use derive_more::{Deref, DerefMut};
@@ -60,13 +60,30 @@ impl Default for HasRespawnScreen {
 
 /// The position and angle that clients will respawn with. Also
 /// controls the position that compasses point towards.
-#[derive(Component, Copy, Clone, PartialEq, Default, Debug)]
+#[derive(Component, Clone, PartialEq, Debug)]
 pub struct RespawnPosition {
+    /// The dimension containing the spawn position. Defaults to
+    /// `minecraft:overworld` and is independent of the client's current layer.
+    /// This is a world identifier, not a dimension type identifier.
+    pub dimension: Ident<String>,
     /// The position that clients will respawn at. This can be changed at any
     /// time to set the position that compasses point towards.
     pub pos: BlockPos,
     /// The yaw angle that clients will respawn with (in degrees).
     pub yaw: f32,
+    /// The pitch angle that clients will respawn with (in degrees).
+    pub pitch: f32,
+}
+
+impl Default for RespawnPosition {
+    fn default() -> Self {
+        Self {
+            dimension: ident!("overworld").into(),
+            pos: BlockPos::default(),
+            yaw: 0.0,
+            pitch: 0.0,
+        }
+    }
 }
 
 /// A convenient [`QueryData`] for obtaining client spawn components. Also see
@@ -90,10 +107,18 @@ pub struct ClientSpawnQuery {
 pub(super) fn initial_join(
     codec: Res<RegistryCodec>,
     tags: Res<TagsRegistry>,
-    mut clients: Query<(&mut Client, &VisibleChunkLayer, ClientSpawnQueryReadOnly), Added<Client>>,
+    mut clients: Query<
+        (
+            &mut Client,
+            &EntityId,
+            &VisibleChunkLayer,
+            ClientSpawnQueryReadOnly,
+        ),
+        Added<Client>,
+    >,
     chunk_layers: Query<&ChunkLayer>,
 ) {
-    for (mut client, visible_chunk_layer, spawn) in &mut clients {
+    for (mut client, entity_id, visible_chunk_layer, spawn) in &mut clients {
         let Ok(chunk_layer) = chunk_layers.get(visible_chunk_layer.0) else {
             continue;
         };
@@ -111,10 +136,12 @@ pub(super) fn initial_join(
             position: *pos,
         });
 
+        let online_mode = client.online_mode;
+
         // The login packet is prepended so that it's sent before all the other packets.
         // Some packets don't work correctly when sent before the game join packet.
         _ = client.enc.prepend_packet(&LoginS2c {
-            entity_id: 0, // We reserve ID 0 for clients.
+            entity_id: entity_id.get(),
             is_hardcore: spawn.is_hardcore.0,
             game_mode: *spawn.game_mode,
             previous_game_mode: spawn.prev_game_mode.0.into(),
@@ -132,6 +159,7 @@ pub(super) fn initial_join(
             portal_cooldown: VarInt(spawn.portal_cooldown.0),
             do_limited_crafting: false, // TODO
             dimension_type: VarInt(dimension_type.get_value().into()),
+            online_mode,
             enforeces_secure_chat: true,
             // FIXME: add missing sea_level
             sea_level: VarInt(0),
@@ -157,7 +185,7 @@ pub(super) fn respawn(
     mut clients: Query<
         (
             &mut Client,
-            &EntityLayerId,
+            &VisibleChunkLayer,
             &DeathLocation,
             &HashedSeed,
             &GameMode,
@@ -218,8 +246,12 @@ pub(super) fn update_respawn_position(
 ) {
     for (mut client, respawn_pos) in &mut clients {
         client.write_packet(&SetDefaultSpawnPositionS2c {
-            position: respawn_pos.pos,
-            angle: respawn_pos.yaw,
+            position: GlobalPos {
+                dimension_name: respawn_pos.dimension.as_str_ident().into(),
+                position: respawn_pos.pos,
+            },
+            yaw: respawn_pos.yaw,
+            pitch: respawn_pos.pitch,
         });
     }
 }

@@ -5,7 +5,7 @@ use crate::{Packet, PacketState};
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 #[packet(state = PacketState::Configuration)]
 pub struct CustomReportDetailsS2c<'a> {
-    pub details: Vec<CustomReportDetail<'a>>,
+    pub details: Bounded<Vec<CustomReportDetail<'a>>, 32>,
 }
 
 #[derive(Clone, Debug, Encode, Decode)]

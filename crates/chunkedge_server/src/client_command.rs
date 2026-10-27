@@ -4,6 +4,7 @@ use chunkedge_entity::entity::Flags;
 use chunkedge_entity::{Pose, entity};
 use chunkedge_protocol::packets::play::PlayerCommandC2s;
 pub use chunkedge_protocol::packets::play::player_command_c2s::PlayerCommand;
+use chunkedge_protocol::packets::play::player_input_c2s::{PlayerInputC2s, PlayerInputFlags};
 
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 
@@ -15,7 +16,10 @@ impl Plugin for ClientCommandPlugin {
             .add_message::<SneakMessage>()
             .add_message::<JumpWithHorseMessage>()
             .add_message::<LeaveBedMessage>()
-            .add_systems(EventLoopPreUpdate, handle_client_command);
+            .add_systems(
+                EventLoopPreUpdate,
+                (handle_client_command, handle_player_input),
+            );
     }
 }
 
@@ -67,36 +71,13 @@ fn handle_client_command(
     mut packets: MessageReader<PacketMessage>,
     mut clients: Query<(&mut entity::Pose, &mut Flags)>,
     mut sprinting_messages: MessageWriter<SprintMessage>,
-    mut sneaking_messages: MessageWriter<SneakMessage>,
     mut jump_with_horse_messages: MessageWriter<JumpWithHorseMessage>,
     mut leave_bed_messages: MessageWriter<LeaveBedMessage>,
 ) {
     for packet in packets.read() {
         if let Some(pkt) = packet.decode::<PlayerCommandC2s>() {
             match pkt.action {
-                PlayerCommand::StartSneaking => {
-                    if let Ok((mut pose, mut flags)) = clients.get_mut(packet.client) {
-                        pose.0 = Pose::Sneaking;
-                        flags.set_sneaking(true);
-                    }
-
-                    sneaking_messages.write(SneakMessage {
-                        client: packet.client,
-                        state: SneakState::Start,
-                    });
-                }
-                PlayerCommand::StopSneaking => {
-                    if let Ok((mut pose, mut flags)) = clients.get_mut(packet.client) {
-                        pose.0 = Pose::Standing;
-                        flags.set_sneaking(false);
-                    }
-
-                    sneaking_messages.write(SneakMessage {
-                        client: packet.client,
-                        state: SneakState::Stop,
-                    });
-                }
-                PlayerCommand::LeaveBed => {
+                PlayerCommand::StopSleeping => {
                     leave_bed_messages.write(LeaveBedMessage {
                         client: packet.client,
                     });
@@ -121,7 +102,7 @@ fn handle_client_command(
                         state: SprintState::Stop,
                     });
                 }
-                PlayerCommand::StartJumpWithHorse => {
+                PlayerCommand::StartRidingJump => {
                     jump_with_horse_messages.write(JumpWithHorseMessage {
                         client: packet.client,
                         state: JumpWithHorseState::Start {
@@ -129,14 +110,14 @@ fn handle_client_command(
                         },
                     });
                 }
-                PlayerCommand::StopJumpWithHorse => {
+                PlayerCommand::StopRidingJump => {
                     jump_with_horse_messages.write(JumpWithHorseMessage {
                         client: packet.client,
                         state: JumpWithHorseState::Stop,
                     });
                 }
-                PlayerCommand::OpenHorseInventory => {} // TODO
-                PlayerCommand::StartFlyingWithElytra => {
+                PlayerCommand::OpenInventory => {} // TODO
+                PlayerCommand::StartFallFlying => {
                     if let Ok((mut pose, _)) = clients.get_mut(packet.client) {
                         pose.0 = Pose::FallFlying;
                     }
@@ -144,6 +125,42 @@ fn handle_client_command(
                     // TODO.
                 }
             }
+        }
+    }
+}
+
+#[derive(Component, Default)]
+pub(crate) struct LastPlayerInput(PlayerInputFlags);
+
+/// Tracks sneaking from input, while actual sprinting comes from player commands.
+pub(crate) fn handle_player_input(
+    mut packets: MessageReader<PacketMessage>,
+    mut clients: Query<(&mut entity::Pose, &mut Flags, &mut LastPlayerInput)>,
+    mut sneaking_messages: MessageWriter<SneakMessage>,
+) {
+    for packet in packets.read() {
+        if let Some(pkt) = packet.decode::<PlayerInputC2s>() {
+            let Ok((mut pose, mut flags, mut last_input)) = clients.get_mut(packet.client) else {
+                continue;
+            };
+            let sneak = pkt.flags.sneak();
+            if sneak != last_input.0.sneak() {
+                pose.0 = if sneak {
+                    Pose::Sneaking
+                } else {
+                    Pose::Standing
+                };
+                flags.set_sneaking(sneak);
+                sneaking_messages.write(SneakMessage {
+                    client: packet.client,
+                    state: if sneak {
+                        SneakState::Start
+                    } else {
+                        SneakState::Stop
+                    },
+                });
+            }
+            last_input.0 = pkt.flags;
         }
     }
 }

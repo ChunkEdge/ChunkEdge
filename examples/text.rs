@@ -133,14 +133,14 @@ fn init_clients(
         // NBT examples
         client.send_chat_message("\nNBT");
         client.send_chat_message(
-            " - Block NBT: ".into_text() + Text::block_nbt("{}", "0 1 0", None, None),
+            " - Block NBT: ".into_text() + Text::block_nbt("0 1 0", "{}", None, None),
         );
         client.send_chat_message(
-            " - Entity NBT: ".into_text() + Text::entity_nbt("{}", "@a", None, None),
+            " - Entity NBT: ".into_text() + Text::entity_nbt("@a", "{}", None, None),
         );
         client.send_chat_message(
             " - Storage NBT: ".into_text()
-                + Text::storage_nbt(ident!("storage.key"), "@a", None, None),
+                + Text::storage_nbt(ident!("storage.key"), "{}", None, None),
         );
 
         client.send_chat_message(

@@ -2,9 +2,8 @@ use chunkedge_binary::{Decode, Encode, VarInt};
 
 use crate::Packet;
 
+/// Sent when a player attacks an entity.
 #[derive(Copy, Clone, Debug, Encode, Decode, Packet)]
-pub struct HorseScreenOpenS2c {
-    pub window_id: VarInt,
-    pub slot_count: VarInt,
-    pub entity_id: i32,
+pub struct AttackC2s {
+    pub entity_id: VarInt,
 }

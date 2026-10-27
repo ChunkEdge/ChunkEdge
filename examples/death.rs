@@ -1,5 +1,6 @@
 #![allow(clippy::type_complexity)]
 
+use chunkedge::entity::Velocity;
 use chunkedge::prelude::*;
 use chunkedge::status::RequestRespawnMessage;
 
@@ -103,6 +104,8 @@ fn necromancy(
         &mut VisibleChunkLayer,
         &mut VisibleEntityLayers,
         &mut RespawnPosition,
+        &mut Position,
+        &mut Velocity,
     )>,
     mut messages: MessageReader<RequestRespawnMessage>,
     layers: Query<Entity, (With<ChunkLayer>, With<EntityLayer>)>,
@@ -113,9 +116,13 @@ fn necromancy(
             mut visible_chunk_layer,
             mut visible_entity_layers,
             mut respawn_pos,
+            mut pos,
+            mut velocity,
         )) = clients.get_mut(message.client)
         {
             respawn_pos.pos = BlockPos::new(0, SPAWN_Y, 0);
+            pos.set([0.0, f64::from(SPAWN_Y) + 1.0, 0.0]);
+            velocity.0 = DVec3::ZERO;
 
             // make the client respawn in another chunk layer.
 

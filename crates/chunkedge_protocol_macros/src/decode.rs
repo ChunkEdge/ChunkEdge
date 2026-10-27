@@ -1,7 +1,7 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::spanned::Spanned;
-use syn::{Data, DeriveInput, Error, Fields, Result, parse_quote, parse2};
+use syn::{Data, DeriveInput, Error, Field, Fields, Result, parse_quote, parse2};
 
 use crate::{add_trait_bounds, decode_split_for_impl, pair_variants_with_discriminants};
 
@@ -29,13 +29,16 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
         Data::Struct(struct_) => {
             let decode_fields = match struct_.fields {
                 Fields::Named(fields) => {
-                    let init = fields.named.iter().map(|f| {
-                        let name = f.ident.as_ref().unwrap();
-                        let ctx = format!("failed to decode field `{name}` in `{input_name}`");
-                        quote! {
-                            #name: Decode::decode(_r).context(#ctx)?,
-                        }
-                    });
+                    let init = fields
+                        .named
+                        .iter()
+                        .map(|f| {
+                            let name = f.ident.as_ref().unwrap();
+                            let ctx = format!("failed to decode field `{name}` in `{input_name}`");
+                            let decode = decode_field(f, &ctx)?;
+                            Ok(quote!(#name: #decode,))
+                        })
+                        .collect::<Result<Vec<_>>>()?;
 
                     quote! {
                         Self {
@@ -44,14 +47,16 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
                     }
                 }
                 Fields::Unnamed(fields) => {
-                    let init = (0..fields.unnamed.len())
-                        .map(|i| {
+                    let init = fields
+                        .unnamed
+                        .iter()
+                        .enumerate()
+                        .map(|(i, field)| {
                             let ctx = format!("failed to decode field `{i}` in `{input_name}`");
-                            quote! {
-                                Decode::decode(_r).context(#ctx)?,
-                            }
+                            let decode = decode_field(field, &ctx)?;
+                            Ok(quote!(#decode,))
                         })
-                        .collect::<TokenStream>();
+                        .collect::<Result<TokenStream>>()?;
 
                     quote! {
                         Self(#init)
@@ -82,14 +87,26 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
             })
         }
         Data::Enum(enum_) => {
-            let variants = pair_variants_with_discriminants(enum_.variants)?;
+            let variants = pair_variants_with_discriminants(&input.attrs, enum_.variants)?;
 
             let decode_arms = variants
                 .iter()
                 .map(|(disc, variant)| {
                     let name = &variant.ident;
 
-                    match &variant.fields {
+                    if let Some(codec) = crate::variant_options(&variant.attrs)?.with {
+                        crate::check_variant_field_codecs(variant)?;
+                        let (pattern, fields) = crate::variant_bindings(variant);
+                        let ctx = format!("failed to decode payload for variant `{name}`");
+                        return Ok(quote! {
+                            #disc => {
+                                let (#(#fields,)*) = #codec::decode(_r).context(#ctx)?;
+                                Ok(#pattern)
+                            }
+                        });
+                    }
+
+                    Ok(match &variant.fields {
                         Fields::Named(fields) => {
                             let fields = fields
                                 .named
@@ -100,37 +117,38 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
                                         "failed to decode field `{field}` in variant `{name}` in \
                                          `{input_name}`",
                                     );
-                                    quote! {
-                                        #field: Decode::decode(_r).context(#ctx)?,
-                                    }
+                                    let decode = decode_field(f, &ctx)?;
+                                    Ok(quote!(#field: #decode,))
                                 })
-                                .collect::<TokenStream>();
+                                .collect::<Result<TokenStream>>()?;
 
                             quote! {
                                 #disc => Ok(Self::#name { #fields }),
                             }
                         }
                         Fields::Unnamed(fields) => {
-                            let init = (0..fields.unnamed.len())
-                                .map(|i| {
+                            let init = fields
+                                .unnamed
+                                .iter()
+                                .enumerate()
+                                .map(|(i, field)| {
                                     let ctx = format!(
                                         "failed to decode field `{i}` in variant `{name}` in \
                                          `{input_name}`",
                                     );
-                                    quote! {
-                                        Decode::decode(_r).context(#ctx)?,
-                                    }
+                                    let decode = decode_field(field, &ctx)?;
+                                    Ok(quote!(#decode,))
                                 })
-                                .collect::<TokenStream>();
+                                .collect::<Result<TokenStream>>()?;
 
                             quote! {
                                 #disc => Ok(Self::#name(#init)),
                             }
                         }
                         Fields::Unit => quote!(#disc => Ok(Self::#name),),
-                    }
+                    })
                 })
-                .collect::<TokenStream>();
+                .collect::<Result<Vec<_>>>()?;
 
             add_trait_bounds(
                 &mut input.generics,
@@ -151,7 +169,7 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
                         let ctx = concat!("failed to decode enum discriminant in `", stringify!(#input_name), "`");
                         let disc = VarInt::decode(_r).context(ctx)?.0;
                         match disc {
-                            #decode_arms
+                            #(#decode_arms)*
                             n => bail!("unexpected enum discriminant {} in `{}`", disc, stringify!(#input_name)),
                         }
                     }
@@ -163,4 +181,12 @@ pub(super) fn derive_decode(item: TokenStream) -> Result<TokenStream> {
             "cannot derive `Decode` on unions",
         )),
     }
+}
+
+fn decode_field(field: &Field, ctx: &str) -> Result<TokenStream> {
+    let decode = match crate::field_codec(&field.attrs)? {
+        Some(codec) => quote!(#codec::decode(_r)),
+        None => quote!(Decode::decode(_r)),
+    };
+    Ok(quote!(#decode.context(#ctx)?))
 }

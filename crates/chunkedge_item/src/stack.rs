@@ -217,63 +217,76 @@ impl ItemStack {
             VarInt(i32::from(self.count)).encode(&mut *w)?;
             self.item.encode(&mut *w)?;
 
-            let mut added = Vec::new();
-            let mut removed = Vec::new();
-
-            for (i, patch) in self.components.iter().enumerate() {
-                match patch {
-                    Patchable::Added((comp, _)) => added.push((i, comp)),
-                    Patchable::Removed => removed.push(i),
-                    _ => {}
-                }
-            }
-
-            // Encode Added & removed
-            VarInt(added.len() as i32).encode(&mut *w)?;
-            VarInt(removed.len() as i32).encode(&mut *w)?;
-
-            for (id, comp) in added {
-                VarInt(id as i32).encode(&mut *w)?;
-                if prefixed {
-                    // We need to record the length of the component data.
-                    // Then we encode len then the data.
-                    //
-                    // We use a dummy writer to avoid allocator pressure at the cost of cpu.
-
-                    struct ByteCounter {
-                        count: usize,
-                    }
-
-                    impl Write for ByteCounter {
-                        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
-                            self.count += buf.len();
-                            Ok(buf.len())
-                        }
-
-                        fn flush(&mut self) -> std::io::Result<()> {
-                            Ok(())
-                        }
-                    }
-
-                    // Encode to the counter to determine the length
-                    let mut counter = ByteCounter { count: 0 };
-                    comp.encode(&mut counter)?;
-
-                    // Write the length prefix
-                    VarInt(counter.count as i32).encode(&mut *w)?;
-
-                    // Real run: Encode the data to the actual writer
-                    comp.encode(&mut *w)?;
-                } else {
-                    comp.encode(&mut *w)?;
-                }
-            }
-
-            for id in removed {
-                VarInt(id as i32).encode(&mut *w)?;
-            }
-
-            Ok(())
+            self.encode_components(w, prefixed)
         }
+    }
+
+    pub(crate) fn encode_template(&self, mut w: impl Write) -> anyhow::Result<()> {
+        anyhow::ensure!(!self.is_empty(), "Item stack template must be non-empty");
+        self.item.encode(&mut w)?;
+        VarInt(i32::from(self.count)).encode(&mut w)?;
+        self.encode_components(w, false)
+    }
+
+    fn encode_components(&self, mut w: impl Write, prefixed: bool) -> anyhow::Result<()> {
+        let w: &mut dyn Write = &mut w;
+
+        let mut added = Vec::new();
+        let mut removed = Vec::new();
+
+        for (i, patch) in self.components.iter().enumerate() {
+            match patch {
+                Patchable::Added((comp, _)) => added.push((i, comp)),
+                Patchable::Removed => removed.push(i),
+                _ => {}
+            }
+        }
+
+        // Encode Added & removed
+        VarInt(added.len() as i32).encode(&mut *w)?;
+        VarInt(removed.len() as i32).encode(&mut *w)?;
+
+        for (id, comp) in added {
+            VarInt(id as i32).encode(&mut *w)?;
+            if prefixed {
+                // We need to record the length of the component data.
+                // Then we encode len then the data.
+                //
+                // We use a dummy writer to avoid allocator pressure at the cost of cpu.
+
+                struct ByteCounter {
+                    count: usize,
+                }
+
+                impl Write for ByteCounter {
+                    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+                        self.count += buf.len();
+                        Ok(buf.len())
+                    }
+
+                    fn flush(&mut self) -> std::io::Result<()> {
+                        Ok(())
+                    }
+                }
+
+                // Encode to the counter to determine the length
+                let mut counter = ByteCounter { count: 0 };
+                comp.encode(&mut counter)?;
+
+                // Write the length prefix
+                VarInt(counter.count as i32).encode(&mut *w)?;
+
+                // Real run: Encode the data to the actual writer
+                comp.encode(&mut *w)?;
+            } else {
+                comp.encode(&mut *w)?;
+            }
+        }
+
+        for id in removed {
+            VarInt(id as i32).encode(&mut *w)?;
+        }
+
+        Ok(())
     }
 }

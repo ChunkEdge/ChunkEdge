@@ -27,6 +27,8 @@ use tracked_data::TrackedData;
 use crate::attributes::TrackedEntityAttributes;
 
 include!(concat!(env!("OUT_DIR"), "/entity.rs"));
+include!(concat!(env!("OUT_DIR"), "/entity_enums.rs"));
+include!(concat!(env!("OUT_DIR"), "/painting_kind.rs"));
 
 pub struct EntityPlugin;
 
@@ -338,8 +340,8 @@ pub struct HeadYaw(pub f32);
 pub struct Velocity(pub DVec3);
 
 impl Velocity {
-    pub fn to_packet_units(self) -> chunkedge_protocol::Velocity {
-        chunkedge_protocol::Velocity::from_ms_f64(self.0.into())
+    pub fn to_packet_units(self) -> chunkedge_protocol::LpVec3 {
+        chunkedge_protocol::LpVec3((self.0 / 20.0).to_array())
     }
 }
 
@@ -437,270 +439,6 @@ impl Decode<'_> for VillagerData {
     }
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum VillagerKind {
-    Desert,
-    Jungle,
-    #[default]
-    Plains,
-    Savanna,
-    Snow,
-    Swamp,
-    Taiga,
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum VillagerProfession {
-    #[default]
-    None,
-    Armorer,
-    Butcher,
-    Cartographer,
-    Cleric,
-    Farmer,
-    Fisherman,
-    Fletcher,
-    Leatherworker,
-    Librarian,
-    Mason,
-    Nitwit,
-    Shepherd,
-    Toolsmith,
-    Weaponsmith,
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum Pose {
-    #[default]
-    Standing,
-    FallFlying,
-    Sleeping,
-    Swimming,
-    SpinAttack,
-    Sneaking,
-    LongJumping,
-    Dying,
-    Croaking,
-    UsingTongue,
-    Sitting,
-    Roaring,
-    Sniffing,
-    Emerging,
-    Digging,
-    Sliding,
-    Shooting,
-    Inhaling,
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum BoatKind {
-    #[default]
-    Oak,
-    Spruce,
-    Birch,
-    Jungle,
-    Acacia,
-    DarkOak,
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum CatKind {
-    AllBlack,
-    #[default]
-    Black,
-    BritishShorthair,
-    Calico,
-    Jellie,
-    Persian,
-    Ragdoll,
-    Red,
-    Siamese,
-    Tabby,
-    White,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum CowKind {
-    Cold,
-    #[default]
-    Temperate,
-    Warm,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum WolfKind {
-    Ashen,
-    Black,
-    Chestnut,
-    #[default]
-    Pale,
-    Rusty,
-    Snowy,
-    Spotted,
-    Striped,
-    Woods,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum WolfSoundKind {
-    Angry,
-    Big,
-    #[default]
-    Classic,
-    Cute,
-    Grumpy,
-    Puglin,
-    Sad,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum ArmadilloState {
-    #[default]
-    Idle,
-    Rolling,
-    Scared,
-    Unrolling,
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum FrogKind {
-    Cold,
-    #[default]
-    Temperate,
-    Warm,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum PigKind {
-    Cold,
-    #[default]
-    Temperate,
-    Warm,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum ChickenKind {
-    Cold,
-    #[default]
-    Temperate,
-    Warm,
-}
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum PaintingKind {
-    #[default]
-    Alban,
-    Aztec,
-    Aztec2,
-    Backyard,
-    Baroque,
-    Bomb,
-    Bouquet,
-    BurningSkull,
-    Bust,
-    Cavebird,
-    Changing,
-    Cotan,
-    Courbet,
-    Creebet,
-    DonkeyKong,
-    Earth,
-    Endboss,
-    Fern,
-    Fighters,
-    Finding,
-    Fire,
-    Graham,
-    Humble,
-    Kebab,
-    Lowmist,
-    Match,
-    Meditative,
-    Orb,
-    Owlemons,
-    Passage,
-    Pointer,
-    Pigscene,
-    Plant,
-    Pond,
-    Pool,
-    PrairieRide,
-    Sea,
-    Skeleton,
-    SkullAndRoses,
-    Stage,
-    Sunflowers,
-    Sunset,
-    Tides,
-    Unpacked,
-    Void,
-    Wanderer,
-    Wasteland,
-    Water,
-    Wind,
-    Wither,
-}
-
-impl PaintingKind {
-    pub const ALL: [Self; 50] = [
-        Self::Alban,
-        Self::Aztec,
-        Self::Aztec2,
-        Self::Backyard,
-        Self::Baroque,
-        Self::Bomb,
-        Self::Bouquet,
-        Self::BurningSkull,
-        Self::Bust,
-        Self::Cavebird,
-        Self::Changing,
-        Self::Cotan,
-        Self::Courbet,
-        Self::Creebet,
-        Self::DonkeyKong,
-        Self::Earth,
-        Self::Endboss,
-        Self::Fern,
-        Self::Fighters,
-        Self::Finding,
-        Self::Fire,
-        Self::Graham,
-        Self::Humble,
-        Self::Kebab,
-        Self::Lowmist,
-        Self::Match,
-        Self::Meditative,
-        Self::Orb,
-        Self::Owlemons,
-        Self::Passage,
-        Self::Pointer,
-        Self::Pigscene,
-        Self::Plant,
-        Self::Pond,
-        Self::Pool,
-        Self::PrairieRide,
-        Self::Sea,
-        Self::Skeleton,
-        Self::SkullAndRoses,
-        Self::Stage,
-        Self::Sunflowers,
-        Self::Sunset,
-        Self::Tides,
-        Self::Unpacked,
-        Self::Void,
-        Self::Wanderer,
-        Self::Wasteland,
-        Self::Water,
-        Self::Wind,
-        Self::Wither,
-    ];
-
-    pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
-        chunkedge_protocol::RegistryId::new(self as i32)
-    }
-
-    pub fn from_registry_id(id: chunkedge_protocol::RegistryId) -> Option<Self> {
-        let Ok(idx) = usize::try_from(id.id()) else {
-            return None;
-        };
-
-        Self::ALL.get(idx).copied()
-    }
-}
-
 #[derive(Clone, PartialEq, Debug)]
 pub struct PaintingVariantDefinition {
     pub width: i32,
@@ -720,18 +458,6 @@ impl Encode for PaintingVariantDefinition {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-pub enum SnifferState {
-    #[default]
-    Idling,
-    FeelingHappy,
-    Scenting,
-    Sniffing,
-    Searching,
-    Digging,
-    Rising,
-}
-
 #[derive(Clone, Copy, PartialEq, PartialOrd, Debug, Encode, Decode)]
 pub struct EulerAngle {
     pub pitch: f32,
@@ -739,7 +465,7 @@ pub struct EulerAngle {
     pub roll: f32,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 struct OptionalInt(Option<i32>);
 
 impl Encode for OptionalInt {
@@ -765,7 +491,7 @@ impl Decode<'_> for OptionalInt {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 struct OptionalBlockState(Option<chunkedge_protocol::BlockState>);
 
 impl Encode for OptionalBlockState {

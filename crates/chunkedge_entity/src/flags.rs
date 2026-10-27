@@ -5,7 +5,7 @@ macro_rules! flags {
     (
         $(
             $component:path {
-                $($flag:ident: $offset:literal),* $(,)?
+                $($(#[$meta:meta])* $flag:ident: $offset:literal),* $(,)?
             }
         )*
 
@@ -13,6 +13,7 @@ macro_rules! flags {
         $(
             impl $component {
                 $(
+                    $(#[$meta])*
                     #[doc = "Gets the bit at offset "]
                     #[doc = stringify!($offset)]
                     #[doc = "."]
@@ -22,6 +23,7 @@ macro_rules! flags {
                     }
 
                     paste! {
+                        $(#[$meta])*
                         #[doc = "Sets the bit at offset "]
                         #[doc = stringify!($offset)]
                         #[doc = "."]
@@ -36,6 +38,9 @@ macro_rules! flags {
     }
 }
 
+// This set of flags should be checked against the Minecraft source
+// code and or wiki when we update the version of Minecraft we support
+// so that we can ensure these flags stay in sync with the game.
 flags! {
     entity::Flags {
         on_fire: 0,
@@ -55,7 +60,7 @@ flags! {
         off_hand_active: 1,
         using_riptide: 2,
     }
-    player::PlayerModelParts {
+    avatar::PlayerModelParts {
         cape: 0,
         jacket: 1,
         left_sleeve: 2,
@@ -64,42 +69,46 @@ flags! {
         right_pants_leg: 5,
         hat: 6,
     }
-    player::MainArm {
-        right: 0,
-    }
     armor_stand::ArmorStandFlags {
         small: 0,
-        show_arms: 1,
-        hide_base_plate: 2,
-        marker: 3,
+        show_arms: 2,
+        hide_base_plate: 3,
+        marker: 4,
     }
     mob::MobFlags {
         ai_disabled: 0,
         left_handed: 1,
+        /// The mob's aggressive state, rather than an individual attack animation.
         attacking: 2,
     }
     bat::BatFlags {
         hanging: 0,
     }
     abstract_horse::HorseFlags {
+        // Saddle state comes from EquipmentSlot::Saddle, not this flags byte.
         tamed: 1,
-        saddled: 2,
         bred: 3,
         eating_grass: 4,
+        /// The horse is rearing (vanilla's standing flag).
         angry: 5,
+        /// The horse's mouth is open; grazing uses `eating_grass` instead.
         eating: 6,
     }
     fox::FoxFlags {
         sitting: 0,
         crouching: 2,
+        /// The fox is interested and tilts its head.
         rolling_head: 3,
+        /// The fox is pouncing.
         chasing: 4,
         sleeping: 5,
-        walking: 6,
+        faceplanted: 6,
+        /// The fox is defending a trusted entity.
         aggressive: 7,
     }
     panda::PandaFlags {
         sneezing: 1,
+        /// The panda is rolling.
         playing: 2,
         sitting: 3,
         lying_on_back: 4,

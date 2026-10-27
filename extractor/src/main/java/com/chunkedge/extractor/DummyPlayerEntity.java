@@ -1,38 +1,29 @@
 package com.chunkedge.extractor;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.encryption.PlayerPublicKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 
-public class DummyPlayerEntity extends PlayerEntity {
+public class DummyPlayerEntity extends Player {
 
     public static final DummyPlayerEntity INSTANCE;
 
     static {
         INSTANCE = Main.magicallyInstantiate(DummyPlayerEntity.class);
 
-        INSTANCE.initDataTracker(new DataTracker.Builder(INSTANCE));
+        INSTANCE.defineSynchedData(new SynchedEntityData.Builder(INSTANCE));
     }
 
-    public DummyPlayerEntity(
-        World world,
-        BlockPos pos,
-        float yaw,
-        GameProfile gameProfile,
-        @Nullable PlayerPublicKey publicKey
-    ) {
-        super(world, pos, yaw, gameProfile);
+    public DummyPlayerEntity(ServerLevel world, GameProfile gameProfile) {
+        super(world, gameProfile);
+        this.setPos(0, 70, 0);
     }
 
-    @Nullable
     @Override
-    public GameMode getGameMode() {
-        return GameMode.SURVIVAL;
+    public GameType gameMode() {
+        return GameType.SURVIVAL;
     }
 
     @Override

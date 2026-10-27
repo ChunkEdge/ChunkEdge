@@ -7,7 +7,7 @@ use chunkedge_protocol::packets::play::player_position_s2c::TeleportRelativeFlag
 use chunkedge_protocol::packets::play::{AcceptTeleportationC2s, PlayerPositionS2c};
 use tracing::warn;
 
-use crate::client::{Client, UpdateClientsSet, update_view_and_layers};
+use crate::client::{Client, UpdateClientsSet, VisibleChunkLayer, update_view_and_layers};
 use crate::event_loop::{EventLoopPreUpdate, PacketMessage};
 use crate::spawn::update_respawn_position;
 
@@ -71,15 +71,30 @@ impl TeleportState {
 #[allow(clippy::type_complexity)]
 fn teleport(
     mut clients: Query<
-        (&mut Client, &mut TeleportState, &Position, &Velocity, &Look),
-        Or<(Changed<Position>, Changed<Velocity>, Changed<Look>)>,
+        (
+            &mut Client,
+            &mut TeleportState,
+            &Position,
+            &Velocity,
+            &Look,
+            Ref<VisibleChunkLayer>,
+        ),
+        Or<(
+            Changed<Position>,
+            Changed<Velocity>,
+            Changed<Look>,
+            Changed<VisibleChunkLayer>,
+        )>,
     >,
 ) {
-    for (mut client, mut state, pos, velocity, look) in &mut clients {
-        let changed_pos = pos.0 != state.synced_pos;
-        let changed_velocity = velocity.0 != state.synced_velocity;
-        let changed_yaw = look.yaw != state.synced_look.yaw;
-        let changed_pitch = look.pitch != state.synced_look.pitch;
+    for (mut client, mut state, pos, velocity, look, layer) in &mut clients {
+        // Respawn creates a client-side player, so restore every transform field
+        // with absolute values even when the server values have not changed.
+        let reset = layer.is_changed();
+        let changed_pos = reset || pos.0 != state.synced_pos;
+        let changed_velocity = reset || velocity.0 != state.synced_velocity;
+        let changed_yaw = reset || look.yaw != state.synced_look.yaw;
+        let changed_pitch = reset || look.pitch != state.synced_look.pitch;
 
         if changed_pos || changed_velocity || changed_yaw || changed_pitch {
             state.synced_pos = pos.0;

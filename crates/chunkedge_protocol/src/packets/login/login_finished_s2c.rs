@@ -16,6 +16,5 @@ pub struct LoginFinishedS2c<'a> {
     pub uuid: Uuid,
     pub username: Bounded<&'a str, 16>,
     pub properties: Bounded<Cow<'a, [Property<&'a str>]>, 16>,
-    /// Session ID sent after the profile.
     pub session_id: Uuid,
 }

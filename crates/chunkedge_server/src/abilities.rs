@@ -90,7 +90,6 @@ fn update_client_player_abilities(
             Changed<PlayerAbilitiesFlags>,
             Changed<FlyingSpeed>,
             Changed<FovModifier>,
-            // Respawn creates client-side abilities
             Changed<VisibleChunkLayer>,
         )>,
     >,

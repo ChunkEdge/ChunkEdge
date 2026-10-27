@@ -25,8 +25,8 @@ pub struct RequestStatsMessage {
     pub client: Entity,
 }
 
-/// Emitted when a vanilla client asks for the current gamerule values.
-/// No gamerule storage exists yet; user code can answer with a
+/// Emitted when a client asks for the current gamerule values.
+/// Can be answered by sending a
 /// [`GameRuleValuesS2c`](chunkedge_protocol::packets::play::GameRuleValuesS2c).
 #[derive(Message, Copy, Clone, PartialEq, Eq, Debug)]
 pub struct RequestGameruleValuesMessage {

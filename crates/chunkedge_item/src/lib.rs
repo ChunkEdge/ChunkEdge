@@ -12,18 +12,7 @@ pub(crate) const MAX_RECURSION_DEPTH: usize = 16;
 
 pub use chunkedge_generated::item::ItemKind;
 
-pub use crate::components::{
-    AttackRange, AttributeModifier, AttributeModifierDisplay, AttributeSlot, AxolotlType,
-    BannerLayer, BannerPattern, BeeData, BlockPredicate, ComponentPredicateType,
-    ConsumableAnimation, ConsumeEffect, DamageReduction, DyeColor, EquipSlot,
-    ExactComponentMatcher, FireworkExplosionData, FoxType, HorseColor, InstrumentDefinition,
-    ItemComponent, JukeboxSong, KineticWeapon, KineticWeaponCondition, LlamaColor, LodestoneTarget,
-    MapPostProcessingType, MooshroomType, PaintingVariantDefinition, ParrotType,
-    PartialComponentMatcher, PiercingWeapon, PlayerSkinPatch, PotionEffect, PotionEffectDetails,
-    ProfileProperty, Property, PropertyValue, RabbitType, Rarity, ResolvableProfile, SalmonScale,
-    SoundEventDefinition, SwingAnimation, SwingAnimationType, ToolRule, TrimMaterial, TrimPattern,
-    TropicalFishPattern, UseEffects, WritablePage, WrittenPage,
-};
+pub use crate::components::*;
 pub use crate::cost::ItemCost;
 pub use crate::impls::decode_item_stack_recursive;
 pub use crate::stack::{HashedItemStack, ItemStack};

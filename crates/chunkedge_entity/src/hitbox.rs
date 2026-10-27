@@ -142,7 +142,7 @@ struct HitboxTemplate {
 
 #[derive(QueryData)]
 #[query_data(mutable)]
-struct HitboxEntity {
+struct HitboxEntityQuery {
     shape: &'static mut HitboxShape,
     kind: &'static EntityKind,
     pose: &'static entity::Pose,
@@ -168,7 +168,7 @@ struct HitboxEntity {
     shulker_face: Option<&'static shulker::AttachedFace>,
 }
 
-fn update_hitbox_shape(mut query: Query<HitboxEntity>) {
+fn update_hitbox_shape(mut query: Query<HitboxEntityQuery>) {
     for mut entity in &mut query {
         let kind = *entity.kind;
         if kind == EntityKind::MARKER {

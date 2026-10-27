@@ -1040,10 +1040,11 @@ pub struct PlayerSkinPatch {
 
 impl Encode for ResolvableProfile {
     fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
-        // The right branch contains optional profile fields; the left contains a full profile.
-        false.encode(&mut w)?;
-        self.name.encode(&mut w)?;
-        self.id.encode(&mut w)?;
+        let profile = match (&self.name, &self.id) {
+            (Some(name), Some(id)) => Either::Left((id, name)),
+            _ => Either::Right((&self.name, &self.id)),
+        };
+        profile.encode(&mut w)?;
         self.properties.encode(&mut w)?;
         self.skin_patch.encode(w)
     }
@@ -1051,11 +1052,10 @@ impl Encode for ResolvableProfile {
 
 impl<'a> Decode<'a> for ResolvableProfile {
     fn decode(r: &mut &'a [u8]) -> anyhow::Result<Self> {
-        let (name, id) = if bool::decode(r)? {
-            let id = Uuid::decode(r)?;
-            (Some(String::decode(r)?), Some(id))
-        } else {
-            (Option::<String>::decode(r)?, Option::<Uuid>::decode(r)?)
+        let (name, id) = match Either::<(Uuid, String), (Option<String>, Option<Uuid>)>::decode(r)?
+        {
+            Either::Left((id, name)) => (Some(name), Some(id)),
+            Either::Right((name, id)) => (name, id),
         };
         Ok(Self {
             name,

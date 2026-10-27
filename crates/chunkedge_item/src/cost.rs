@@ -5,8 +5,6 @@ use chunkedge_binary::{Decode, Encode, VarInt, cautious_capacity};
 use crate::{ItemComponent, ItemKind, impls::decode_item_component};
 
 /// An item and exact component predicates required by a merchant offer.
-/// Unlike an `ItemStack`, the wire format starts with the item ID and contains
-/// typed component values, with no removed-component list.
 #[derive(Clone, PartialEq, Debug)]
 pub struct ItemCost {
     pub item: ItemKind,

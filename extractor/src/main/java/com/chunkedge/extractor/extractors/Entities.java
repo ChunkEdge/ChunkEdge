@@ -2,7 +2,7 @@ package com.chunkedge.extractor.extractors;
 
 import com.chunkedge.extractor.ClassComparator;
 import com.chunkedge.extractor.DummyPlayerEntity;
-import com.chunkedge.extractor.LegacyNames;
+import com.chunkedge.extractor.EntityNames;
 import com.chunkedge.extractor.Main;
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
@@ -76,7 +76,7 @@ public class Entities implements Main.Extractor {
         if (handler == EntityDataSerializers.BYTE) {
             return new Main.Pair<>("byte", new JsonPrimitive((Byte) val));
         } else if (handler == EntityDataSerializers.INT) {
-            return new Main.Pair<>("integer", new JsonPrimitive((Integer) val));
+            return new Main.Pair<>("int", new JsonPrimitive((Integer) val));
         } else if (handler == EntityDataSerializers.LONG) {
             return new Main.Pair<>("long", new JsonPrimitive((Long) val));
         } else if (handler == EntityDataSerializers.FLOAT) {
@@ -86,7 +86,7 @@ public class Entities implements Main.Extractor {
         } else if (handler == EntityDataSerializers.COMPONENT) {
             // TODO: return text as json element.
             return new Main.Pair<>(
-                "text_component",
+                "component",
                 new JsonPrimitive(((Component) val).getString())
             );
         } else if (
@@ -99,7 +99,7 @@ public class Entities implements Main.Extractor {
                     )
                 )
                 .orElse(JsonNull.INSTANCE);
-            return new Main.Pair<>("optional_text_component", res);
+            return new Main.Pair<>("optional_component", res);
         } else if (handler == EntityDataSerializers.ITEM_STACK) {
             return new Main.Pair<>(
                 "item_stack",
@@ -116,7 +116,7 @@ public class Entities implements Main.Extractor {
             json.addProperty("pitch", ea.x());
             json.addProperty("yaw", ea.y());
             json.addProperty("roll", ea.z());
-            return new Main.Pair<>("rotation", json);
+            return new Main.Pair<>("rotations", json);
         } else if (handler == EntityDataSerializers.BLOCK_POS) {
             var bp = (BlockPos) val;
             var json = new JsonObject();
@@ -140,7 +140,7 @@ public class Entities implements Main.Extractor {
             );
         } else if (handler == EntityDataSerializers.DIRECTION) {
             return new Main.Pair<>(
-                "facing",
+                "direction",
                 new JsonPrimitive(val.toString())
             );
         } else if (handler == EntityDataSerializers.BLOCK_STATE) {
@@ -174,7 +174,7 @@ public class Entities implements Main.Extractor {
                 );
                 json.add(new JsonPrimitive(id.getPath()));
             }
-            return new Main.Pair<>("particle_list", json);
+            return new Main.Pair<>("particles", json);
         } else if (handler == EntityDataSerializers.VILLAGER_DATA) {
             var vd = (VillagerData) val;
             var json = new JsonObject();
@@ -191,14 +191,14 @@ public class Entities implements Main.Extractor {
         } else if (handler == EntityDataSerializers.OPTIONAL_UNSIGNED_INT) {
             var opt = (OptionalInt) val;
             return new Main.Pair<>(
-                "optional_int",
+                "optional_unsigned_int",
                 opt.isPresent()
                     ? new JsonPrimitive(opt.getAsInt())
                     : JsonNull.INSTANCE
             );
         } else if (handler == EntityDataSerializers.POSE) {
             return new Main.Pair<>(
-                "entity_pose",
+                "pose",
                 new JsonPrimitive(
                     ((Pose) val).name().toLowerCase(Locale.ROOT)
                 )
@@ -304,7 +304,7 @@ public class Entities implements Main.Extractor {
             json.addProperty("x", vec.x);
             json.addProperty("y", vec.y);
             json.addProperty("z", vec.z);
-            return new Main.Pair<>("vector3f", json);
+            return new Main.Pair<>("vector3", json);
         } else if (handler == EntityDataSerializers.QUATERNION) {
             final Quaternionf quat;
             if (val instanceof Quaternionf q) {
@@ -318,12 +318,12 @@ public class Entities implements Main.Extractor {
             json.addProperty("y", quat.y);
             json.addProperty("z", quat.z);
             json.addProperty("w", quat.w);
-            return new Main.Pair<>("quaternionf", json);
+            return new Main.Pair<>("quaternion", json);
         } else if (
             handler == EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE
         ) {
             return new Main.Pair<>(
-                "lazy_entity_reference",
+                "optional_living_entity_reference",
                 ((Optional<?>) val)
                     .map(o -> (JsonElement) new JsonObject())
                     .orElse(JsonNull.INSTANCE)
@@ -465,7 +465,7 @@ public class Entities implements Main.Extractor {
                 if (hasParent) {
                     entityJson.addProperty(
                         "parent",
-                        LegacyNames.className(parent)
+                        EntityNames.className(parent)
                     );
                 }
 
@@ -484,6 +484,7 @@ public class Entities implements Main.Extractor {
                 }
 
                 var fieldsJson = new JsonArray();
+                var fieldNames = new HashSet<String>();
                 var declaredFields = entityClass.getDeclaredFields();
                 Arrays.sort(declaredFields, Comparator.comparing(field -> field.getName()));
                 for (var entityField : declaredFields) {
@@ -501,10 +502,12 @@ public class Entities implements Main.Extractor {
                             .getName()
                             .toLowerCase(Locale.ROOT);
                         // JSON keys determine the public Rust component names.
-                        var fieldName = LegacyNames.fieldName(
-                            entityClass,
-                            officialFieldName
-                        );
+                        var fieldName = EntityNames.fieldName(officialFieldName);
+                        if (!fieldNames.add(fieldName)) {
+                            throw new IllegalStateException(
+                                "Duplicate field in " + entityClass + ": " + fieldName
+                            );
+                        }
                         fieldJson.addProperty("name", fieldName);
                         fieldJson.addProperty("index", trackedData.id());
 
@@ -590,13 +593,13 @@ public class Entities implements Main.Extractor {
             }
         }
 
-        LegacyNames.validateEntityMappings(entitiesMap.keySet());
         var entitiesJson = new JsonObject();
         for (var entry : entitiesMap.entrySet()) {
-            entitiesJson.add(
-                LegacyNames.className(entry.getKey()),
-                entry.getValue()
-            );
+            var name = EntityNames.className(entry.getKey());
+            if (entitiesJson.has(name)) {
+                throw new IllegalStateException("Duplicate entity name: " + name);
+            }
+            entitiesJson.add(name, entry.getValue());
         }
 
         return entitiesJson;

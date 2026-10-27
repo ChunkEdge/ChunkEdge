@@ -1,6 +1,6 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge_entity::{EntityManager, entity::Flags};
+use chunkedge_entity::{EntityManager, entity::SharedFlags};
 use chunkedge_math::DVec3;
 use chunkedge_protocol::Hand;
 use chunkedge_protocol::packets::play::{AttackC2s, InteractC2s};
@@ -44,7 +44,7 @@ pub struct InteractEntityMessage {
 fn handle_interact_entity(
     mut packets: MessageReader<PacketMessage>,
     entities: Res<EntityManager>,
-    clients: Query<&Flags>,
+    clients: Query<&SharedFlags>,
     mut messages: MessageWriter<InteractEntityMessage>,
 ) {
     for packet in packets.read() {
@@ -70,7 +70,7 @@ fn handle_interact_entity(
                 client: packet.client,
                 entity,
                 kind: EntityInteractionKind::Attack,
-                sneaking: clients.get(packet.client).is_ok_and(Flags::sneaking),
+                sneaking: clients.get(packet.client).is_ok_and(SharedFlags::sneaking),
                 hand: Hand::Main,
                 target: DVec3::ZERO,
             });

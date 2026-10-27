@@ -2,15 +2,15 @@ use std::collections::HashMap;
 
 use chunkedge::entity::breeze::BreezeEntity;
 use chunkedge::entity::cat::{self, CatEntity};
-use chunkedge::entity::enderman::{self, EndermanEntity};
+use chunkedge::entity::ender_man::{self, EnderManEntity};
 use chunkedge::entity::frog::FrogEntity;
 use chunkedge::entity::painting::{self, PaintingEntity};
 use chunkedge::entity::player::PlayerEntity;
 use chunkedge::entity::warden::WardenEntity;
 use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::{
-    CatKind, EntityLayerId, ObjectData, OnGround, PaintingKind, PaintingVariantDefinition, Pose,
-    entity,
+    CatVariant, EntityLayerId, ObjectData, OnGround, PaintingVariant, PaintingVariantDefinition,
+    Pose, entity,
 };
 use chunkedge::nbt::{List, compound};
 use chunkedge::player_list::{Listed, PlayerListEntryBundle};
@@ -33,7 +33,7 @@ const POSE_CASES: &[MetadataCase] = &[
     MetadataCase::pose(PoseEntity::Mob(MobDemo::Zombie), Pose::FallFlying, true),
     MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Sleeping, false),
     MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Swimming, true),
-    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Sneaking, false),
+    MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Crouching, false),
     MetadataCase::pose(PoseEntity::Mob(MobDemo::Breeze), Pose::LongJumping, true),
     MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Dying, false),
     MetadataCase::pose(PoseEntity::PlayerNpc, Pose::Sitting, false),
@@ -126,7 +126,7 @@ enum MetadataCase {
         pose: Pose,
         has_pressure_plate: bool,
     },
-    Cat(CatKind),
+    Cat(CatVariant),
     Painting(IdOr<PaintingVariantDefinition>),
     Enderman(Option<BlockState>),
 }
@@ -178,7 +178,7 @@ impl MetadataCase {
                         IdOr::Id(id) => {
                             format!(
                                 "{:?}",
-                                PaintingKind::from_registry_id(*id).expect("Wrong paining ID")
+                                PaintingVariant::from_registry_id(*id).expect("Wrong paining ID")
                             )
                         }
                         IdOr::Inline(def) => def
@@ -307,10 +307,10 @@ fn setup(
     biomes: Res<BiomeRegistry>,
 ) {
     let other_cases: &[MetadataCase] = &[
-        MetadataCase::Cat(CatKind::AllBlack),
-        MetadataCase::Cat(CatKind::Tabby),
-        MetadataCase::Painting(IdOr::id(PaintingKind::Aztec.registry_id())),
-        MetadataCase::Painting(IdOr::id(PaintingKind::Bouquet.registry_id())),
+        MetadataCase::Cat(CatVariant::AllBlack),
+        MetadataCase::Cat(CatVariant::Tabby),
+        MetadataCase::Painting(IdOr::id(PaintingVariant::Aztec.registry_id())),
+        MetadataCase::Painting(IdOr::id(PaintingVariant::Bouquet.registry_id())),
         MetadataCase::Painting(IdOr::inline(PaintingVariantDefinition {
             width: 2,
             height: 1,
@@ -413,7 +413,7 @@ fn spawn_cat_variant(
     commands: &mut Commands,
     position: Position,
     layer: EntityLayerId,
-    variant: CatKind,
+    variant: CatVariant,
 ) -> Entity {
     commands
         .spawn((
@@ -422,7 +422,7 @@ fn spawn_cat_variant(
             position,
             Look::new(DEMO_ENTITY_YAW, 0.0),
             HeadYaw(DEMO_ENTITY_YAW),
-            cat::CatVariant(variant),
+            cat::Variant(variant),
         ))
         .id()
 }
@@ -439,7 +439,7 @@ fn spawn_painting_variant(
             layer,
             Position::new((position.0.x, position.0.y + 1.0, position.0.z)),
             ObjectData(2),
-            painting::Variant(variant),
+            painting::PaintingVariant(variant),
         ))
         .id()
 }
@@ -459,12 +459,12 @@ fn spawn_enderman(
 
     commands
         .spawn((
-            EndermanEntity,
+            EnderManEntity,
             layer,
             position,
             Look::new(DEMO_ENTITY_YAW, 0.0),
             HeadYaw(DEMO_ENTITY_YAW),
-            enderman::CarriedBlock(carried_block),
+            ender_man::CarryState(carried_block),
         ))
         .id()
 }

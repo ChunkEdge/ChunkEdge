@@ -29,7 +29,7 @@ pub struct EntityInitQuery {
     pub head_yaw: &'static HeadYaw,
     pub on_ground: &'static OnGround,
     pub object_data: &'static ObjectData,
-    pub facing: Option<&'static crate::abstract_decoration::DataDirection>,
+    pub facing: Option<&'static crate::hanging::Direction>,
     pub velocity: &'static Velocity,
     pub tracked_data: &'static TrackedData,
 }

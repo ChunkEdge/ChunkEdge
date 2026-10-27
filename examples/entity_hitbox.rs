@@ -12,7 +12,7 @@ use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::zombie_horse::ZombieHorseEntity;
 use chunkedge::entity::{Pose, entity};
 use chunkedge::prelude::*;
-use entity::NameVisible;
+use entity::CustomNameVisible;
 use rand::RngExt;
 
 pub fn main() {
@@ -97,19 +97,19 @@ fn spawn_entity(
         let layer = *layer;
 
         match rand::rng().random_range(0..7) {
-            0 => commands.spawn((SheepEntity, position, layer, NameVisible(true))),
-            1 => commands.spawn((PigEntity, position, layer, NameVisible(true))),
-            2 => commands.spawn((ZombieEntity, position, layer, NameVisible(true))),
-            3 => commands.spawn((ZombieHorseEntity, position, layer, NameVisible(true))),
+            0 => commands.spawn((SheepEntity, position, layer, CustomNameVisible(true))),
+            1 => commands.spawn((PigEntity, position, layer, CustomNameVisible(true))),
+            2 => commands.spawn((ZombieEntity, position, layer, CustomNameVisible(true))),
+            3 => commands.spawn((ZombieHorseEntity, position, layer, CustomNameVisible(true))),
             4 => commands.spawn((
                 WardenEntity,
                 position,
                 layer,
-                NameVisible(true),
+                CustomNameVisible(true),
                 entity::Pose(Pose::Digging),
             )),
-            5 => commands.spawn((WardenEntity, position, layer, NameVisible(true))),
-            6 => commands.spawn((HoglinEntity, position, layer, NameVisible(true))),
+            5 => commands.spawn((WardenEntity, position, layer, CustomNameVisible(true))),
+            6 => commands.spawn((HoglinEntity, position, layer, CustomNameVisible(true))),
             _ => unreachable!(),
         };
     }

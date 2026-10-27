@@ -148,24 +148,24 @@ struct HitboxEntityQuery {
     pose: &'static entity::Pose,
     attributes: Option<&'static EntityAttributes>,
     living: Option<&'static living::LivingEntity>,
-    child: Option<&'static passive::Child>,
+    child: Option<&'static ageable_mob::Baby>,
     zombie: Option<&'static zombie::Baby>,
     piglin: Option<&'static piglin::Baby>,
     zoglin: Option<&'static zoglin::Baby>,
-    cube: Option<&'static abstract_cube_mob::SlimeSize>,
+    cube: Option<&'static abstract_cube_mob::Size>,
     phantom: Option<&'static phantom::Size>,
     pufferfish: Option<&'static pufferfish::PuffState>,
-    salmon: Option<&'static salmon::Variant>,
+    salmon: Option<&'static salmon::Type>,
     sniffer: Option<&'static sniffer::State>,
-    armor_stand: Option<&'static armor_stand::ArmorStandFlags>,
+    armor_stand: Option<&'static armor_stand::ClientFlags>,
     cloud: Option<&'static area_effect_cloud::Radius>,
     interaction_width: Option<&'static interaction::Width>,
     interaction_height: Option<&'static interaction::Height>,
-    frame_item: Option<&'static item_frame::ItemStack>,
-    facing: Option<&'static abstract_decoration::DataDirection>,
-    painting: Option<&'static painting::Variant>,
-    shulker_peek: Option<&'static shulker::PeekAmount>,
-    shulker_face: Option<&'static shulker::AttachedFace>,
+    frame_item: Option<&'static item_frame::Item>,
+    facing: Option<&'static hanging::Direction>,
+    painting: Option<&'static painting::PaintingVariant>,
+    shulker_peek: Option<&'static shulker::Peek>,
+    shulker_face: Option<&'static shulker::AttachFace>,
 }
 
 fn update_hitbox_shape(mut query: Query<HitboxEntityQuery>) {
@@ -281,8 +281,8 @@ fn direction_vector(direction: Direction) -> DVec3 {
 
 fn painting_hitbox(variant: &IdOr<PaintingVariantDefinition>, facing: Direction) -> Aabb {
     let size = match variant {
-        IdOr::Id(id) => PaintingKind::from_registry_id(*id)
-            .map_or_else(|| UVec3::splat(1), PaintingKind::hitbox_bounds),
+        IdOr::Id(id) => PaintingVariant::from_registry_id(*id)
+            .map_or_else(|| UVec3::splat(1), PaintingVariant::hitbox_bounds),
         IdOr::Inline(inline) => inline_painting_hitbox_bounds(inline),
     };
     let normal = match facing {

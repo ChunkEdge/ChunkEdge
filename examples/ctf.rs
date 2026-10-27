@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use bevy_ecs::query::QueryData;
 use chunkedge::entity::cow::CowEntity;
-use chunkedge::entity::entity::Flags;
+use chunkedge::entity::entity::SharedFlags;
 use chunkedge::entity::living::Health;
 use chunkedge::entity::pig::PigEntity;
 use chunkedge::entity::player::PlayerEntity;
@@ -139,7 +139,7 @@ fn setup(
     let ctf_team_layers = CtfLayers::init(&mut commands, &server);
 
     // add some debug entities to the ctf entity layers
-    let mut flags = Flags::default();
+    let mut flags = SharedFlags::default();
     flags.set_glowing(true);
     let mut pig = commands.spawn((
         PigEntity,
@@ -655,7 +655,7 @@ fn do_team_selector_portals(
             ent_layers.as_mut().0.insert(friendly_layer);
 
             // Copy the player entity to the friendly layer, and make them glow.
-            let mut flags = Flags::default();
+            let mut flags = SharedFlags::default();
             flags.set_glowing(true);
             let mut player_glowing = commands.spawn((
                 PlayerEntity,
@@ -1010,8 +1010,8 @@ fn handle_combat_messages(
 
         attacker.state.has_bonus_knockback = false;
 
-        victim.client.trigger_status(EntityStatus::PlayAttackSound);
-        victim.statuses.trigger(EntityStatus::PlayAttackSound);
+        victim.client.trigger_status(EntityStatus::StartAttacking);
+        victim.statuses.trigger(EntityStatus::StartAttacking);
 
         let stack = attacker.inventory.slot(attacker.held_item.slot());
 

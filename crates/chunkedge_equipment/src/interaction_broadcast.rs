@@ -1,6 +1,6 @@
 use chunkedge_inventory::{HeldItem, Inventory, PlayerAction};
 use chunkedge_server::ItemKind;
-use chunkedge_server::entity::living::LivingFlags;
+use chunkedge_server::entity::living::LivingEntityFlags;
 use chunkedge_server::event_loop::PacketMessage;
 use chunkedge_server::interact_item::InteractItemMessage;
 use chunkedge_server::protocol::packets::play::PlayerActionC2s;
@@ -8,7 +8,7 @@ use chunkedge_server::protocol::packets::play::PlayerActionC2s;
 use super::*;
 
 /// This component will broadcast item interactions (e.g. drawing a bow, eating
-/// food) to other players using `LivingFlags::set_using_item`.
+/// food) to other players using `LivingEntityFlags::set_using_item`.
 #[derive(Debug, Default, Clone, Component)]
 pub struct EquipmentInteractionBroadcast;
 
@@ -16,7 +16,7 @@ pub struct EquipmentInteractionBroadcast;
 // item.
 pub(crate) fn start_interaction(
     mut clients: Query<
-        (&Inventory, &HeldItem, &mut LivingFlags),
+        (&Inventory, &HeldItem, &mut LivingEntityFlags),
         (With<Client>, With<EquipmentInteractionBroadcast>),
     >,
     mut messages: MessageReader<InteractItemMessage>,
@@ -40,7 +40,7 @@ pub(crate) fn start_interaction(
 // Sets flag to false when the client stops interacting with an
 // item.
 pub(crate) fn stop_interaction(
-    mut clients: Query<&mut LivingFlags, (With<Client>, With<EquipmentInteractionBroadcast>)>,
+    mut clients: Query<&mut LivingEntityFlags, (With<Client>, With<EquipmentInteractionBroadcast>)>,
     mut packets: MessageReader<PacketMessage>,
 ) {
     for packet in packets.read() {

@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use anyhow::Context;
 use chunkedge_build_utils::{ident, rerun_if_changed, write_generated_file};
@@ -76,35 +76,35 @@ struct PaintingVariantInline {
 #[allow(dead_code)]
 enum Value {
     Byte(i8),
-    Integer(i32),
+    Int(i32),
     Long(i64),
     Float(f32),
     String(String),
-    TextComponent(String),
-    OptionalTextComponent(Option<String>),
+    Component(String),
+    OptionalComponent(Option<String>),
     ItemStack(String),
     Boolean(bool),
-    Rotation {
+    Rotations {
         pitch: f32,
         yaw: f32,
         roll: f32,
     },
     BlockPos(BlockPos),
     OptionalBlockPos(Option<BlockPos>),
-    Facing(String),
-    LazyEntityReference(Option<()>), // TODO
+    Direction(String),
+    OptionalLivingEntityReference(Option<()>), // TODO
     BlockState(String),
     OptionalBlockState(Option<String>),
     Particle(String),
-    ParticleList(Vec<String>),
+    Particles(Vec<String>),
     VillagerData {
         #[serde(rename = "type")]
         typ: String,
         profession: String,
         level: i32,
     },
-    OptionalInt(Option<i32>),
-    EntityPose(String),
+    OptionalUnsignedInt(Option<i32>),
+    Pose(String),
     CatVariant(String),
     CatSoundVariant(String),
     CowVariant(String),
@@ -123,12 +123,12 @@ enum Value {
     ArmadilloState(String),
     CopperGolemState(String),
     WeatheringCopperState(String),
-    Vector3f {
+    Vector3 {
         x: f32,
         y: f32,
         z: f32,
     },
-    Quaternionf {
+    Quaternion {
         x: f32,
         y: f32,
         z: f32,
@@ -152,22 +152,6 @@ impl Value {
             .as_str()
             .context("serialized tracked-data value has no type")?;
 
-        // The extracted entity field tags predate these handler names. We keep those
-        // tags for compatibility with entities.json and translate only the exceptions.
-        let name = match name {
-            "integer" => "int",
-            "text_component" => "component",
-            "optional_text_component" => "optional_component",
-            "rotation" => "rotations",
-            "facing" => "direction",
-            "lazy_entity_reference" => "optional_living_entity_reference",
-            "particle_list" => "particles",
-            "optional_int" => "optional_unsigned_int",
-            "entity_pose" => "pose",
-            "vector3f" => "vector3",
-            "quaternionf" => "quaternion",
-            name => name,
-        };
         handlers
             .get(name)
             .copied()
@@ -177,42 +161,42 @@ impl Value {
     fn field_type(&self) -> TokenStream {
         match self {
             Value::Byte(_) => quote!(i8),
-            Value::Integer(_) => quote!(i32),
+            Value::Int(_) => quote!(i32),
             Value::Long(_) => quote!(i64),
             Value::Float(_) => quote!(f32),
             Value::String(_) => quote!(String),
-            Value::TextComponent(_) => quote!(chunkedge_protocol::Text),
-            Value::OptionalTextComponent(_) => quote!(Option<chunkedge_protocol::Text>),
+            Value::Component(_) => quote!(chunkedge_protocol::Text),
+            Value::OptionalComponent(_) => quote!(Option<chunkedge_protocol::Text>),
             Value::ItemStack(_) => quote!(chunkedge_protocol::ItemStack),
             Value::Boolean(_) => quote!(bool),
-            Value::Rotation { .. } => quote!(crate::EulerAngle),
+            Value::Rotations { .. } => quote!(crate::EulerAngle),
             Value::BlockPos(_) => quote!(chunkedge_protocol::BlockPos),
             Value::OptionalBlockPos(_) => quote!(Option<chunkedge_protocol::BlockPos>),
-            Value::Facing(_) => quote!(chunkedge_protocol::Direction),
-            Value::LazyEntityReference(_) => quote!(()), // TODO
+            Value::Direction(_) => quote!(chunkedge_protocol::Direction),
+            Value::OptionalLivingEntityReference(_) => quote!(()), // TODO
             Value::BlockState(_) => quote!(chunkedge_protocol::BlockState),
             Value::OptionalBlockState(_) => quote!(Option<chunkedge_protocol::BlockState>),
             Value::Particle(_) => {
                 quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle)
             }
-            Value::ParticleList(_) => {
+            Value::Particles(_) => {
                 quote!(Vec<chunkedge_protocol::packets::play::level_particles_s2c::Particle>)
             }
             Value::VillagerData { .. } => quote!(crate::VillagerData),
-            Value::OptionalInt(_) => quote!(Option<i32>),
-            Value::EntityPose(_) => quote!(crate::Pose),
-            Value::CatVariant(_) => quote!(crate::CatKind),
-            Value::CatSoundVariant(_) => quote!(crate::CatSoundKind),
-            Value::CowVariant(_) => quote!(crate::CowKind),
-            Value::CowSoundVariant(_) => quote!(crate::CowSoundKind),
-            Value::WolfVariant(_) => quote!(crate::WolfKind),
-            Value::WolfSoundVariant(_) => quote!(crate::WolfSoundKind),
-            Value::FrogVariant(_) => quote!(crate::FrogKind),
-            Value::PigVariant(_) => quote!(crate::PigKind),
-            Value::PigSoundVariant(_) => quote!(crate::PigSoundKind),
-            Value::ChickenVariant(_) => quote!(crate::ChickenKind),
-            Value::ChickenSoundVariant(_) => quote!(crate::ChickenSoundKind),
-            Value::ZombieNautilusVariant(_) => quote!(crate::ZombieNautilusKind),
+            Value::OptionalUnsignedInt(_) => quote!(Option<i32>),
+            Value::Pose(_) => quote!(crate::Pose),
+            Value::CatVariant(_) => quote!(crate::CatVariant),
+            Value::CatSoundVariant(_) => quote!(crate::CatSoundVariant),
+            Value::CowVariant(_) => quote!(crate::CowVariant),
+            Value::CowSoundVariant(_) => quote!(crate::CowSoundVariant),
+            Value::WolfVariant(_) => quote!(crate::WolfVariant),
+            Value::WolfSoundVariant(_) => quote!(crate::WolfSoundVariant),
+            Value::FrogVariant(_) => quote!(crate::FrogVariant),
+            Value::PigVariant(_) => quote!(crate::PigVariant),
+            Value::PigSoundVariant(_) => quote!(crate::PigSoundVariant),
+            Value::ChickenVariant(_) => quote!(crate::ChickenVariant),
+            Value::ChickenSoundVariant(_) => quote!(crate::ChickenSoundVariant),
+            Value::ZombieNautilusVariant(_) => quote!(crate::ZombieNautilusVariant),
             Value::OptionalGlobalPos(_) => quote!(()), // TODO
             Value::PaintingVariant(_) => {
                 quote!(chunkedge_binary::IdOr<crate::PaintingVariantDefinition>)
@@ -223,22 +207,22 @@ impl Value {
             Value::WeatheringCopperState(_) => quote!(crate::WeatheringCopperState),
             Value::ResolvableProfile(_) => quote!(()), // TODO
             Value::HumanoidArm(_) => quote!(crate::HumanoidArm),
-            Value::Vector3f { .. } => quote!(chunkedge_math::Vec3),
-            Value::Quaternionf { .. } => quote!(chunkedge_math::Quat),
+            Value::Vector3 { .. } => quote!(chunkedge_math::Vec3),
+            Value::Quaternion { .. } => quote!(chunkedge_math::Quat),
         }
     }
 
     fn default_expr(&self) -> TokenStream {
         match self {
             Value::Byte(b) => quote!(#b),
-            Value::Integer(i) => quote!(#i),
+            Value::Int(i) => quote!(#i),
             Value::Long(l) => quote!(#l),
             Value::Float(f) => quote!(#f),
             Value::String(s) => quote!(#s.to_owned()),
-            Value::TextComponent(txt) => {
+            Value::Component(txt) => {
                 quote!(chunkedge_protocol::Text::text(#txt))
             }
-            Value::OptionalTextComponent(t) => match t {
+            Value::OptionalComponent(t) => match t {
                 Some(txt) => quote!(Some(chunkedge_protocol::Text::text(#txt))),
                 None => quote!(None),
             },
@@ -246,7 +230,7 @@ impl Value {
                 quote!(chunkedge_protocol::ItemStack::default())
             }
             Value::Boolean(b) => quote!(#b),
-            Value::Rotation { pitch, yaw, roll } => quote! {
+            Value::Rotations { pitch, yaw, roll } => quote! {
                 crate::EulerAngle {
                     pitch: #pitch,
                     yaw: #yaw,
@@ -260,11 +244,11 @@ impl Value {
                 assert!(pos.is_none());
                 quote!(None)
             }
-            Value::Facing(f) => {
+            Value::Direction(f) => {
                 let variant = ident(f.to_pascal_case());
                 quote!(chunkedge_protocol::Direction::#variant)
             }
-            Value::LazyEntityReference(_) => {
+            Value::OptionalLivingEntityReference(_) => {
                 quote!(())
             }
             Value::BlockState(_) => {
@@ -285,7 +269,7 @@ impl Value {
                     quote!(chunkedge_protocol::packets::play::level_particles_s2c::Particle::#variant)
                 }
             },
-            Value::ParticleList(_) => quote!(Vec::new()),
+            Value::Particles(_) => quote!(Vec::new()),
             Value::VillagerData {
                 typ,
                 profession,
@@ -295,79 +279,67 @@ impl Value {
                 let profession = ident(profession.to_pascal_case());
                 quote! {
                     crate::VillagerData {
-                        kind: crate::VillagerKind::#typ,
+                        kind: crate::VillagerType::#typ,
                         profession: crate::VillagerProfession::#profession,
                         level: #level,
                     }
                 }
             }
-            Value::OptionalInt(i) => {
+            Value::OptionalUnsignedInt(i) => {
                 assert!(i.is_none());
                 quote!(None)
             }
-            Value::EntityPose(p) => {
-                let variant = ident(entity_enums::variant_name("entity_pose", p));
+            Value::Pose(p) => {
+                let variant = ident(entity_enums::variant_name(p));
                 quote!(crate::Pose::#variant)
             }
             Value::CatVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::CatKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::CatVariant::#variant)
             }
             Value::CatSoundVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft:");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::CatSoundKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::CatSoundVariant::#variant)
             }
             Value::CowVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::CowKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::CowVariant::#variant)
             }
             Value::CowSoundVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft:");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::CowSoundKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::CowSoundVariant::#variant)
             }
             Value::WolfVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::WolfKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::WolfVariant::#variant)
             }
             Value::WolfSoundVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::WolfSoundKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::WolfSoundVariant::#variant)
             }
             Value::FrogVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::FrogKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::FrogVariant::#variant)
             }
             Value::PigVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::PigKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::PigVariant::#variant)
             }
             Value::PigSoundVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft:");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::PigSoundKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::PigSoundVariant::#variant)
             }
             Value::ChickenVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::ChickenKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::ChickenVariant::#variant)
             }
             Value::ChickenSoundVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft:");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::ChickenSoundKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::ChickenSoundVariant::#variant)
             }
             Value::ZombieNautilusVariant(c) => {
-                let stripped_variant = c.trim_start_matches("minecraft:");
-                let variant = ident(stripped_variant.to_pascal_case());
-                quote!(crate::ZombieNautilusKind::#variant)
+                let variant = ident(entity_enums::variant_name(c));
+                quote!(crate::ZombieNautilusVariant::#variant)
             }
             Value::OptionalGlobalPos(gp) => {
                 assert!(gp.is_none());
@@ -375,9 +347,8 @@ impl Value {
             }
             Value::PaintingVariant(p) => match p {
                 PaintingVariantValue::Identifier(painting) => {
-                    let stripped_variant = painting.trim_start_matches("minecraft:");
-                    let variant = ident(stripped_variant.to_pascal_case());
-                    quote!(chunkedge_binary::IdOr::id(crate::PaintingKind::#variant as i32))
+                    let variant = ident(entity_enums::variant_name(painting));
+                    quote!(chunkedge_binary::IdOr::id(crate::PaintingVariant::#variant as i32))
                 }
                 PaintingVariantValue::Inline(inline) => {
                     let PaintingVariantInline {
@@ -434,8 +405,8 @@ impl Value {
                 let arm = ident(s.to_pascal_case());
                 quote!(crate::HumanoidArm::#arm)
             }
-            Value::Vector3f { x, y, z } => quote!(chunkedge_math::Vec3::new(#x, #y, #z)),
-            Value::Quaternionf { x, y, z, w } => quote! {
+            Value::Vector3 { x, y, z } => quote!(chunkedge_math::Vec3::new(#x, #y, #z)),
+            Value::Quaternion { x, y, z, w } => quote! {
                 chunkedge_math::Quat::from_xyzw(#x, #y, #z, #w)
             },
         }
@@ -444,14 +415,14 @@ impl Value {
     fn encodable_expr(&self, self_lvalue: TokenStream) -> TokenStream {
         match self {
             Value::Long(_) => quote!(chunkedge_protocol::VarLong(#self_lvalue)),
-            Value::Integer(_) => quote!(VarInt(#self_lvalue)),
-            Value::OptionalInt(_) => quote!(OptionalInt(#self_lvalue)),
+            Value::Int(_) => quote!(VarInt(#self_lvalue)),
+            Value::OptionalUnsignedInt(_) => quote!(OptionalInt(#self_lvalue)),
             Value::OptionalBlockState(_) => quote!(OptionalBlockState(#self_lvalue)),
-            Value::PaintingVariant(_) => quote!(PaintingVariant(&#self_lvalue)),
-            Value::TextComponent(_) => {
+            Value::PaintingVariant(_) => quote!(TrackedPaintingVariant(&#self_lvalue)),
+            Value::Component(_) => {
                 quote!(chunkedge_binary::TextComponent::from(#self_lvalue.clone()))
             }
-            Value::OptionalTextComponent(_) => {
+            Value::OptionalComponent(_) => {
                 quote!(
                     #self_lvalue
                         .clone()
@@ -474,13 +445,13 @@ pub fn main() -> anyhow::Result<()> {
 
     write_generated_file(build_entities()?, "entity.rs")?;
     write_generated_file(entity_enums::build()?, "entity_enums.rs")?;
-    write_generated_file(build_painting_kind()?, "painting_kind.rs")?;
+    write_generated_file(build_painting_variant()?, "painting_variant.rs")?;
     write_generated_file(build_entity_hitbox_defaults()?, "entity_hitbox_defaults.rs")?;
 
     Ok(())
 }
 
-fn build_painting_kind() -> anyhow::Result<TokenStream> {
+fn build_painting_variant() -> anyhow::Result<TokenStream> {
     let paintings: PaintingVariants =
         serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)
             .context("failed to deserialize painting variants from misc.json")?;
@@ -538,11 +509,11 @@ fn build_painting_kind() -> anyhow::Result<TokenStream> {
     Ok(quote! {
         #[repr(i32)]
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Debug, Encode, Decode)]
-        pub enum PaintingKind {
+        pub enum PaintingVariant {
             #(#variants)*
         }
 
-        impl PaintingKind {
+        impl PaintingVariant {
             pub const ALL: [Self; #count] = [#(Self::#names,)*];
 
             pub fn registry_id(self) -> chunkedge_protocol::RegistryId {
@@ -612,7 +583,7 @@ fn build_entity_hitbox_defaults() -> anyhow::Result<TokenStream> {
                     if pose == "standing" {
                         standing = Some(index);
                     } else {
-                        let variant = ident(entity_enums::variant_name("entity_pose", pose));
+                        let variant = ident(entity_enums::variant_name(pose));
                         pose_arms.push(quote! { crate::Pose::#variant => #index, });
                     }
                 }
@@ -686,13 +657,19 @@ fn build_entities() -> anyhow::Result<TokenStream> {
     let mut system_names = vec![];
     let mut derived_system_names = vec![];
 
+    let mut module_names = BTreeSet::new();
     for (entity_name, entity) in entities {
-        let entity_name_ident = ident(&entity_name);
+        let entity_name_ident = ident(entity_name.to_pascal_case());
         let stripped_shouty_entity_name = strip_entity_suffix(&entity_name).to_shouty_snake_case();
         let stripped_shouty_entity_name_ident = ident(&stripped_shouty_entity_name);
         let stripped_snake_entity_name = strip_entity_suffix(&entity_name).to_snake_case();
         let stripped_snake_entity_name_ident = ident(&stripped_snake_entity_name);
 
+        anyhow::ensure!(
+            module_names.insert(stripped_snake_entity_name.clone()),
+            "duplicate Rust entity module {stripped_snake_entity_name}"
+        );
+        let mut component_names = BTreeSet::from([entity_name_ident.to_string()]);
         let mut module_body = TokenStream::new();
 
         let mut requires: Vec<TokenStream> = vec![];
@@ -700,7 +677,7 @@ fn build_entities() -> anyhow::Result<TokenStream> {
         if let Some(parent_name) = &entity.parent {
             let stripped_snake_parent_name = strip_entity_suffix(parent_name).to_snake_case();
             let stripped_snake_parent_name_ident = ident(&stripped_snake_parent_name);
-            let pascal_parent_name_ident = ident(parent_name);
+            let pascal_parent_name_ident = ident(parent_name.to_pascal_case());
 
             let module_doc = format!(
                 "Parent class: \
@@ -782,6 +759,10 @@ fn build_entities() -> anyhow::Result<TokenStream> {
 
         for field in &entity.fields {
             let pascal_field_name_ident = ident(field.name.to_pascal_case());
+            anyhow::ensure!(
+                component_names.insert(pascal_field_name_ident.to_string()),
+                "duplicate Rust component {pascal_field_name_ident} in {entity_name}"
+            );
             let snake_field_name = field.name.to_snake_case();
             let inner_type = field.default_value.field_type();
             let default_expr = field.default_value.default_expr();
@@ -905,9 +886,9 @@ fn build_entities() -> anyhow::Result<TokenStream> {
 
     systems.extend([quote! {
         #[doc = "Special case for `living::Absorption`."]
-        #[doc = "Updates the `AbsorptionAmount` component of the player entity."]
+        #[doc = "Updates the `PlayerAbsorption` component of the player entity."]
         fn update_living_and_player_absorption(
-            mut query: Query<(&living::Absorption, &mut player::AbsorptionAmount), Changed<living::Absorption>>
+            mut query: Query<(&living::Absorption, &mut player::PlayerAbsorption), Changed<living::Absorption>>
         ) {
             for (living_absorption, mut player_absorption) in &mut query {
                 player_absorption.0 = living_absorption.0;

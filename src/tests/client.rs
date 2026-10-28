@@ -3,7 +3,7 @@ use chunkedge_server::protocol::movement_flags::MovementFlags;
 use crate::abilities::PlayerAbilitiesFlags;
 use crate::client::Client;
 use crate::entity::EntityId;
-use crate::entity::avatar::PlayerModelParts;
+use crate::entity::avatar::PlayerModeCustomisation;
 use crate::layer::ChunkLayer;
 use crate::layer::chunk::UnloadedChunk;
 use crate::math::DVec3;
@@ -191,7 +191,7 @@ fn client_skin_layers_are_sent_to_other_clients() {
     bundle.layer.0 = layer_ent;
     bundle.visible_chunk_layer.0 = layer_ent;
     bundle.visible_entity_layers.0.insert(layer_ent);
-    bundle.player_model_parts = PlayerModelParts(0x7f);
+    bundle.player_model_parts = PlayerModeCustomisation(0x7f);
     let other = app.world_mut().spawn(bundle).id();
 
     app.update();

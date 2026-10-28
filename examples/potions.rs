@@ -5,7 +5,7 @@ use chunkedge::network::ConnectionMode;
 use chunkedge::prelude::*;
 use chunkedge::status_effects::{AttributeModifier, StatusEffect};
 use chunkedge_server::entity::attributes::{EntityAttribute, EntityAttributes};
-use chunkedge_server::entity::entity::Flags;
+use chunkedge_server::entity::entity::SharedFlags;
 use chunkedge_server::entity::living::{Absorption, Health};
 use chunkedge_server::status_effect::{StatusEffectAddedMessage, StatusEffectRemovedMessage};
 use rand::RngExt;
@@ -206,7 +206,7 @@ pub fn handle_status_effect_added(
         &mut EntityAttributes,
         Option<&mut Health>,
         Option<&mut Absorption>,
-        &mut Flags,
+        &mut SharedFlags,
     )>,
     mut messages: MessageReader<StatusEffectAddedMessage>,
 ) {
@@ -262,7 +262,7 @@ pub fn handle_status_effect_removed(
         &mut EntityAttributes,
         Option<&mut Health>,
         Option<&mut Absorption>,
-        &mut Flags,
+        &mut SharedFlags,
     )>,
     mut messages: MessageReader<StatusEffectRemovedMessage>,
 ) {

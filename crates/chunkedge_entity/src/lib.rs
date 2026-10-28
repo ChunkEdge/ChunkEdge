@@ -28,7 +28,7 @@ use crate::attributes::TrackedEntityAttributes;
 
 include!(concat!(env!("OUT_DIR"), "/entity.rs"));
 include!(concat!(env!("OUT_DIR"), "/entity_enums.rs"));
-include!(concat!(env!("OUT_DIR"), "/painting_kind.rs"));
+include!(concat!(env!("OUT_DIR"), "/painting_variant.rs"));
 
 pub struct EntityPlugin;
 
@@ -396,13 +396,13 @@ pub struct ObjectData(pub i32);
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct VillagerData {
-    pub kind: VillagerKind,
+    pub kind: VillagerType,
     pub profession: VillagerProfession,
     pub level: i32,
 }
 
 impl VillagerData {
-    pub const fn new(kind: VillagerKind, profession: VillagerProfession, level: i32) -> Self {
+    pub const fn new(kind: VillagerType, profession: VillagerProfession, level: i32) -> Self {
         Self {
             kind,
             profession,
@@ -432,7 +432,7 @@ impl Encode for VillagerData {
 impl Decode<'_> for VillagerData {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
         Ok(Self {
-            kind: VillagerKind::decode(r)?,
+            kind: VillagerType::decode(r)?,
             profession: VillagerProfession::decode(r)?,
             level: VarInt::decode(r)?.0,
         })
@@ -529,9 +529,9 @@ impl Decode<'_> for OptionalBlockState {
 }
 
 #[derive(Clone, Copy)]
-struct PaintingVariant<'a>(&'a IdOr<PaintingVariantDefinition>);
+struct TrackedPaintingVariant<'a>(&'a IdOr<PaintingVariantDefinition>);
 
-impl Encode for PaintingVariant<'_> {
+impl Encode for TrackedPaintingVariant<'_> {
     fn encode(&self, w: impl std::io::Write) -> anyhow::Result<()> {
         self.0.encode(w)
     }

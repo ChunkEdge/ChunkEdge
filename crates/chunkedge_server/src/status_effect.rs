@@ -3,8 +3,8 @@ use bevy_ecs::prelude::*;
 use bevy_ecs::query::QueryData;
 use bevy_ecs::system::SystemState;
 use chunkedge_entity::active_status_effects::{ActiveStatusEffect, ActiveStatusEffects};
-use chunkedge_entity::entity::Flags;
-use chunkedge_entity::living::PotionSwirlsAmbient;
+use chunkedge_entity::entity::SharedFlags;
+use chunkedge_entity::living::EffectAmbience;
 use chunkedge_protocol::packets::play::{
     RemoveMobEffectS2c, UpdateMobEffectS2c, update_mob_effect_s2c,
 };
@@ -75,8 +75,8 @@ struct StatusEffectQuery {
     entity: Entity,
     active_effects: &'static mut ActiveStatusEffects,
     client: Option<&'static mut Client>,
-    entity_flags: Option<&'static mut Flags>,
-    swirl_ambient: Option<&'static mut PotionSwirlsAmbient>,
+    entity_flags: Option<&'static mut SharedFlags>,
+    swirl_ambient: Option<&'static mut EffectAmbience>,
 }
 
 fn add_status_effects(
@@ -132,7 +132,7 @@ fn update_status_effect(query: &mut StatusEffectQueryItem, status_effect: Status
 
 fn set_swirl(
     active_status_effects: &ActiveStatusEffects,
-    swirl_ambient: &mut Option<Mut<'_, PotionSwirlsAmbient>>,
+    swirl_ambient: &mut Option<Mut<'_, EffectAmbience>>,
 ) {
     if let Some(swirl_ambient) = swirl_ambient {
         swirl_ambient.0 = active_status_effects

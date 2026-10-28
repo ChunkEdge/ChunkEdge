@@ -175,9 +175,9 @@ fn handle_combat_messages(
 
         attacker.state.has_bonus_knockback = false;
 
-        victim.client.trigger_status(EntityStatus::PlayAttackSound);
+        victim.client.trigger_status(EntityStatus::StartAttacking);
 
-        victim.statuses.trigger(EntityStatus::PlayAttackSound);
+        victim.statuses.trigger(EntityStatus::StartAttacking);
     }
 }
 

@@ -12,7 +12,7 @@ use byteorder::{NativeEndian, ReadBytesExt};
 use bytes::{Bytes, BytesMut};
 use chunkedge_binary::Encode;
 use chunkedge_entity::attributes::{EntityAttributes, TrackedEntityAttributes};
-use chunkedge_entity::avatar::{MainArm as TrackedMainArm, PlayerModelParts};
+use chunkedge_entity::avatar::{PlayerMainHand as TrackedMainArm, PlayerModeCustomisation};
 use chunkedge_entity::living::Health;
 use chunkedge_entity::player::{Food, PlayerEntity, Saturation};
 use chunkedge_entity::tracked_data::TrackedData;
@@ -152,7 +152,7 @@ pub struct ClientBundle {
     pub player: PlayerEntity,
     pub uuid: UniqueId,
     pub layer: EntityLayerId,
-    pub player_model_parts: PlayerModelParts,
+    pub player_model_parts: PlayerModeCustomisation,
     pub main_arm: TrackedMainArm,
 }
 
@@ -209,7 +209,7 @@ impl ClientBundle {
             player: PlayerEntity,
             uuid: UniqueId(args.uuid),
             layer: Default::default(),
-            player_model_parts: PlayerModelParts(u8::from(args.displayed_skin_parts) as i8),
+            player_model_parts: PlayerModeCustomisation(u8::from(args.displayed_skin_parts) as i8),
             main_arm: TrackedMainArm(map_main_arm(args.main_arm)),
         }
     }

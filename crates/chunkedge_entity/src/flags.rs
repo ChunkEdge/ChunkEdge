@@ -42,7 +42,7 @@ macro_rules! flags {
 // code and or wiki when we update the version of Minecraft we support
 // so that we can ensure these flags stay in sync with the game.
 flags! {
-    entity::Flags {
+    entity::SharedFlags {
         on_fire: 0,
         sneaking: 1,
         sprinting: 3,
@@ -51,16 +51,16 @@ flags! {
         glowing: 6,
         fall_flying: 7,
     }
-    persistent_projectile::ProjectileFlags {
+    abstract_arrow::Flags {
         critical: 0,
         no_clip: 1,
     }
-    living::LivingFlags {
+    living::LivingEntityFlags {
         using_item: 0,
         off_hand_active: 1,
         using_riptide: 2,
     }
-    avatar::PlayerModelParts {
+    avatar::PlayerModeCustomisation {
         cape: 0,
         jacket: 1,
         left_sleeve: 2,
@@ -69,7 +69,7 @@ flags! {
         right_pants_leg: 5,
         hat: 6,
     }
-    armor_stand::ArmorStandFlags {
+    armor_stand::ClientFlags {
         small: 0,
         show_arms: 2,
         hide_base_plate: 3,
@@ -81,10 +81,10 @@ flags! {
         /// The mob's aggressive state, rather than an individual attack animation.
         attacking: 2,
     }
-    bat::BatFlags {
+    bat::Flags {
         hanging: 0,
     }
-    abstract_horse::HorseFlags {
+    abstract_horse::Flags {
         // Saddle state comes from EquipmentSlot::Saddle, not this flags byte.
         tamed: 1,
         bred: 3,
@@ -94,7 +94,7 @@ flags! {
         /// The horse's mouth is open; grazing uses `eating_grass` instead.
         eating: 6,
     }
-    fox::FoxFlags {
+    fox::Flags {
         sitting: 0,
         crouching: 2,
         /// The fox is interested and tilts its head.
@@ -106,30 +106,30 @@ flags! {
         /// The fox is defending a trusted entity.
         aggressive: 7,
     }
-    panda::PandaFlags {
+    panda::Flags {
         sneezing: 1,
         /// The panda is rolling.
         playing: 2,
         sitting: 3,
         lying_on_back: 4,
     }
-    tameable::TameableFlags {
+    tamable_animal::Flags {
         sitting_pose: 0,
         tamed: 2,
     }
-    iron_golem::IronGolemFlags {
+    iron_golem::Flags {
         player_created: 0,
     }
-    snow_golem::SnowGolemFlags {
+    snow_golem::Pumpkin {
         has_pumpkin: 4,
     }
-    blaze::BlazeFlags {
+    blaze::Flags {
         fire_active: 0,
     }
-    vex::VexFlags {
+    vex::Flags {
         charging: 0,
     }
-    spider::SpiderFlags {
+    spider::Flags {
         climbing_wall: 0,
     }
 }
@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn get_set_flags() {
-        let mut flags = entity::Flags(0);
+        let mut flags = entity::SharedFlags(0);
 
         flags.set_on_fire(true);
         let before = flags.clone();

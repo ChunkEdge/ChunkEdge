@@ -1,6 +1,6 @@
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
-use chunkedge_entity::entity::Flags;
+use chunkedge_entity::entity::SharedFlags;
 use chunkedge_entity::{Pose, entity};
 use chunkedge_protocol::packets::play::PlayerCommandC2s;
 pub use chunkedge_protocol::packets::play::player_command_c2s::PlayerCommand;
@@ -69,7 +69,7 @@ pub struct LeaveBedMessage {
 
 fn handle_client_command(
     mut packets: MessageReader<PacketMessage>,
-    mut clients: Query<(&mut entity::Pose, &mut Flags)>,
+    mut clients: Query<(&mut entity::Pose, &mut SharedFlags)>,
     mut sprinting_messages: MessageWriter<SprintMessage>,
     mut jump_with_horse_messages: MessageWriter<JumpWithHorseMessage>,
     mut leave_bed_messages: MessageWriter<LeaveBedMessage>,
@@ -135,7 +135,7 @@ pub(crate) struct LastPlayerInput(PlayerInputFlags);
 /// Tracks sneaking from input, while actual sprinting comes from player commands.
 pub(crate) fn handle_player_input(
     mut packets: MessageReader<PacketMessage>,
-    mut clients: Query<(&mut entity::Pose, &mut Flags, &mut LastPlayerInput)>,
+    mut clients: Query<(&mut entity::Pose, &mut SharedFlags, &mut LastPlayerInput)>,
     mut sneaking_messages: MessageWriter<SneakMessage>,
 ) {
     for packet in packets.read() {
@@ -146,7 +146,7 @@ pub(crate) fn handle_player_input(
             let sneak = pkt.flags.sneak();
             if sneak != last_input.0.sneak() {
                 pose.0 = if sneak {
-                    Pose::Sneaking
+                    Pose::Crouching
                 } else {
                     Pose::Standing
                 };

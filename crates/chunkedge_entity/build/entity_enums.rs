@@ -24,14 +24,14 @@ pub(super) fn build() -> anyhow::Result<TokenStream> {
         serde_json::from_str(chunkedge_generated::extracted::MISC_JSON)?;
     let enum_keys: BTreeSet<_> = misc
         .keys()
-        .filter(|name| enum_name(name).is_some())
+        .filter(|name| metadata_enum_name(name).is_some())
         .cloned()
         .collect();
     let defaults = extracted_defaults(&enum_keys)?;
     let mut output = TokenStream::new();
 
     for (registry_name, entries) in &misc {
-        let Some(rust_name) = enum_name(registry_name) else {
+        let Some(rust_name) = metadata_enum_name(registry_name) else {
             continue;
         };
         let default_name = defaults
@@ -50,7 +50,7 @@ pub(super) fn build() -> anyhow::Result<TokenStream> {
             anyhow::ensure!(ids.insert(*id), "duplicate ID {id} in {registry_name}");
 
             let local_name = name.strip_prefix("minecraft:").unwrap_or(name);
-            let rust_variant = variant_name(registry_name, name);
+            let rust_variant = variant_name(name);
             anyhow::ensure!(
                 names.insert(rust_variant.clone()),
                 "duplicate Rust variant {rust_variant} in {registry_name}"
@@ -85,21 +85,15 @@ pub(super) fn build() -> anyhow::Result<TokenStream> {
     Ok(output)
 }
 
-fn enum_name(registry_name: &str) -> Option<String> {
-    // Initially, these enums were hardcoded instead of generated as they are now.
-    // The names below are kept for backwards compatibility with the existing public API.
-    // We should probably break backwards compatibility at some point to simplify this and
-    // avoid confusion, but for now we keep the old names.
+fn metadata_enum_name(registry_name: &str) -> Option<String> {
     match registry_name {
-        "villager_type" => Some("VillagerKind".to_owned()),
-        "entity_pose" => Some("Pose".to_owned()),
-        "villager_profession" | "humanoid_arm" => Some(registry_name.to_pascal_case()),
-        "painting_variant" => None, // Generated with dimensions in painting_kind.rs.
-        name if name.ends_with("_variant") => Some(format!(
-            "{}Kind",
-            name.trim_end_matches("_variant").to_pascal_case()
-        )),
-        name if name.ends_with("_state") => Some(name.to_pascal_case()),
+        "villager_type" | "villager_profession" | "humanoid_arm" | "pose" => {
+            Some(registry_name.to_pascal_case())
+        }
+        "painting_variant" => None, // Generated together with painting dimensions.
+        name if name.ends_with("_variant") || name.ends_with("_state") => {
+            Some(name.to_pascal_case())
+        }
         _ => None,
     }
 }
@@ -152,12 +146,8 @@ fn record_default(
     Ok(())
 }
 
-pub(super) fn variant_name(registry_name: &str, name: &str) -> String {
-    let local_name = name.strip_prefix("minecraft:").unwrap_or(name);
-    // Keep the existing public Rust name while using Mojang's registry ID.
-    if registry_name == "entity_pose" && local_name == "crouching" {
-        "Sneaking".to_owned()
-    } else {
-        local_name.to_pascal_case()
-    }
+pub(super) fn variant_name(name: &str) -> String {
+    name.strip_prefix("minecraft:")
+        .unwrap_or(name)
+        .to_pascal_case()
 }

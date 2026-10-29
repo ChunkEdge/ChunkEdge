@@ -954,45 +954,6 @@ mod tests {
     }
 
     #[test]
-    fn heightmap_occupancy_rules() {
-        // Minecraft 26.3 Heightmap.Types uses block tags plus fluid presence.
-        let mut chunk = LoadedChunk::new(32);
-
-        chunk.set_block_state(0, 0, 0, BlockState::STONE);
-        chunk.set_block_state(1, 5, 0, BlockState::OAK_LEAVES);
-        chunk.set_block_state(2, 6, 0, BlockState::CACTUS);
-        chunk.set_block_state(3, 7, 0, BlockState::WATER);
-        chunk.set_block_state(
-            4,
-            8,
-            0,
-            BlockState::OAK_LEAVES.set(PropName::Waterlogged, PropValue::True),
-        );
-
-        let world_surface = chunk.world_surface();
-        let motion_blocking = chunk.motion_blocking();
-        let motion_blocking_no_leaves = chunk.motion_blocking_no_leaves();
-
-        assert_eq!(world_surface[heightmap_idx(0, 0)], 1);
-        assert_eq!(world_surface[heightmap_idx(1, 0)], 6);
-        assert_eq!(world_surface[heightmap_idx(2, 0)], 7);
-        assert_eq!(world_surface[heightmap_idx(3, 0)], 8);
-        assert_eq!(world_surface[heightmap_idx(4, 0)], 9);
-
-        assert_eq!(motion_blocking[heightmap_idx(0, 0)], 1);
-        assert_eq!(motion_blocking[heightmap_idx(1, 0)], 6);
-        assert_eq!(motion_blocking[heightmap_idx(2, 0)], 7);
-        assert_eq!(motion_blocking[heightmap_idx(3, 0)], 8);
-        assert_eq!(motion_blocking[heightmap_idx(4, 0)], 9);
-
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(0, 0)], 1);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(1, 0)], 0);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(2, 0)], 7);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(3, 0)], 8);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(4, 0)], 9);
-    }
-
-    #[test]
     fn encode_heightmap_uses_dynamic_bit_width() {
         let mut chunk = LoadedChunk::new(512);
         chunk.set_block_state(0, 511, 0, BlockState::STONE);

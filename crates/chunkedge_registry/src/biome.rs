@@ -217,7 +217,7 @@ where
     serializer.serialize_str(&format!("#{:06x}", color & 0xff_ffff))
 }
 
-/// Biome colors that remain separate from environment attributes in 26.3.
+/// Biome colors separate from environment attributes
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct BiomeEffects {

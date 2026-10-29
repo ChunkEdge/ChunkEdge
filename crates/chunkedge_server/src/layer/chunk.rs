@@ -1,3 +1,4 @@
+mod block_entity;
 #[allow(clippy::module_inception)]
 mod chunk;
 pub mod loaded;

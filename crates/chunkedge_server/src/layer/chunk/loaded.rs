@@ -22,6 +22,7 @@ use chunkedge_registry::RegistryIdx;
 use chunkedge_registry::biome::BiomeId;
 use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
 
+use super::block_entity::client_update_tag;
 use super::chunk::{
     BiomeContainer, BlockStateContainer, Chunk, SECTION_BLOCK_COUNT, bit_width, check_biome_oob,
     check_block_oob, check_section_oob,
@@ -326,7 +327,7 @@ impl LoadedChunk {
                 writer.write_packet(&BlockEntityDataS2c {
                     location: BlockPos::new(global_x, global_y, global_z),
                     kind,
-                    data: Cow::Borrowed(nbt),
+                    data: client_update_tag(state, nbt),
                 });
             });
         }
@@ -582,16 +583,15 @@ impl LoadedChunk {
                     let z = idx / 16 % 16;
                     let y = idx / 16 / 16;
 
-                    let kind = self.sections[y as usize / 16]
+                    let state = self.sections[y as usize / 16]
                         .block_states
-                        .get(idx as usize % SECTION_BLOCK_COUNT)
-                        .block_entity_kind();
+                        .get(idx as usize % SECTION_BLOCK_COUNT);
 
-                    kind.map(|kind| ChunkDataBlockEntity {
+                    state.block_entity_kind().map(|kind| ChunkDataBlockEntity {
                         packed_xz: ((x << 4) | z) as i8,
                         y: y as i16 + info.min_y as i16,
                         kind,
-                        data: Cow::Borrowed(nbt),
+                        data: client_update_tag(state, nbt),
                     })
                 })
                 .collect();

@@ -372,7 +372,7 @@ pub struct EntityAnimations {
 }
 
 impl EntityAnimations {
-    /// Queues the hand and item animation sent by the 26.3 swing packet.
+    /// Queues the hand and item animation sent by the swing packet.
     pub fn trigger_swing(
         &mut self,
         hand: chunkedge_protocol::Hand,

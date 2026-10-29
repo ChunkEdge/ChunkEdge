@@ -9,8 +9,8 @@ use chunkedge::entity::player::PlayerEntity;
 use chunkedge::entity::warden::WardenEntity;
 use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::{
-    CatVariant, EntityLayerId, ObjectData, OnGround, PaintingVariant, PaintingVariantDefinition,
-    Pose, entity,
+    CatVariant, EntityLayerId, OnGround, PaintingVariant, PaintingVariantDefinition, Pose, entity,
+    hanging,
 };
 use chunkedge::nbt::{List, compound};
 use chunkedge::player_list::{Listed, PlayerListEntryBundle};
@@ -438,7 +438,7 @@ fn spawn_painting_variant(
             PaintingEntity,
             layer,
             Position::new((position.0.x, position.0.y + 1.0, position.0.z)),
-            ObjectData(2),
+            hanging::Direction(Direction::North),
             painting::PaintingVariant(variant),
         ))
         .id()

@@ -1,7 +1,8 @@
 use std::borrow::Cow;
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashMap};
 use std::fmt;
 use std::net::IpAddr;
+use std::sync::Arc;
 use std::time::Instant;
 
 use bevy_app::prelude::*;
@@ -80,7 +81,6 @@ impl Plugin for ClientPlugin {
                     update_view_and_layers
                         .after(crate::spawn::initial_join)
                         .after(handle_layer_messages),
-                    cleanup_chunks_after_client_despawn.after(update_view_and_layers),
                     crate::spawn::update_respawn_position.after(update_view_and_layers),
                     crate::spawn::respawn.before(update_view_and_layers),
                     update_old_view_dist.after(update_view_and_layers),
@@ -168,6 +168,7 @@ impl ClientBundle {
                 enc: args.enc,
                 entity_id,
                 online_mode: args.online_mode,
+                viewed_chunks: HashMap::new(),
             },
             settings: crate::client_settings::ClientSettings {
                 locale: args.locale.into_boxed_str(),
@@ -259,6 +260,7 @@ pub struct ClientMarker;
 #[require(crate::client_command::LastPlayerInput)]
 pub struct Client {
     conn: Box<dyn ClientConnection>,
+    viewed_chunks: HashMap<(Entity, ChunkPos), Arc<()>>,
     pub(crate) online_mode: bool,
     pub(crate) enc: PacketEncoder,
     /// Copy of the client's [`EntityId`] component, allocated at construction, so
@@ -788,11 +790,17 @@ fn handle_layer_messages(
                                 // Load chunk.
                                 let chunk = chunk_layer.chunk(pos).expect("chunk must exist");
                                 chunk.write_init_packets(&mut *client, pos, chunk_layer.info());
-                                chunk.inc_viewer_count();
+                                client.viewed_chunks.insert(
+                                    (old_visible_chunk_layer.get(), pos),
+                                    chunk.viewer_token(),
+                                );
                             }
                             [.., ChunkLayer::UNLOAD] => {
                                 // Unload chunk.
                                 client.write_packet(&ForgetLevelChunkS2c { pos });
+                                client
+                                    .viewed_chunks
+                                    .remove(&(old_visible_chunk_layer.get(), pos));
                                 debug_assert!(chunk_layer.chunk(pos).is_none());
                             }
                             _ => unreachable!("invalid message data while changing chunk state"),
@@ -1027,23 +1035,28 @@ pub(crate) fn update_view_and_layers(
 
                 if let Ok(layer) = chunk_layers.get(old_chunk_layer.0) {
                     for pos in old_view.iter() {
-                        if let Some(chunk) = layer.chunk(pos) {
+                        if layer.chunk(pos).is_some() {
                             let stays_loaded = view.contains(pos)
                                 && new_chunk_layer.is_some_and(|layer| layer.chunk(pos).is_some());
                             if !stays_loaded {
                                 client.write_packet(&ForgetLevelChunkS2c { pos });
                             }
-                            chunk.dec_viewer_count();
                         }
                     }
                 }
+
+                client
+                    .viewed_chunks
+                    .retain(|(layer, _), _| *layer != old_chunk_layer.0);
 
                 // Load all chunks in the new view.
                 if let Some(layer) = new_chunk_layer {
                     for pos in view.iter() {
                         if let Some(chunk) = layer.chunk(pos) {
                             chunk.write_init_packets(&mut *client, pos, layer.info());
-                            chunk.inc_viewer_count();
+                            client
+                                .viewed_chunks
+                                .insert((chunk_layer.0, pos), chunk.viewer_token());
                         }
                     }
                 }
@@ -1163,10 +1176,10 @@ pub(crate) fn update_view_and_layers(
                     // Unload chunks in the old view.
                     if let Ok(layer) = chunk_layers.get(chunk_layer.0) {
                         for pos in old_view.diff(view) {
-                            if let Some(chunk) = layer.chunk(pos) {
+                            if layer.chunk(pos).is_some() {
                                 client.write_packet(&ForgetLevelChunkS2c { pos });
-                                chunk.dec_viewer_count();
                             }
+                            client.viewed_chunks.remove(&(chunk_layer.0, pos));
                         }
                     }
 
@@ -1175,7 +1188,9 @@ pub(crate) fn update_view_and_layers(
                         for pos in view.diff(old_view) {
                             if let Some(chunk) = layer.chunk(pos) {
                                 chunk.write_init_packets(&mut *client, pos, layer.info());
-                                chunk.inc_viewer_count();
+                                client
+                                    .viewed_chunks
+                                    .insert((chunk_layer.0, pos), chunk.viewer_token());
                             }
                         }
                     }
@@ -1347,22 +1362,6 @@ fn update_tracked_attributes(
                 entity_id: VarInt(id.get()),
                 properties,
             });
-        }
-    }
-}
-
-/// Decrement viewer count of chunks when the client is despawned.
-fn cleanup_chunks_after_client_despawn(
-    mut clients: Query<(View, &VisibleChunkLayer), (With<ClientMarker>, With<Despawned>)>,
-    chunk_layers: Query<&ChunkLayer>,
-) {
-    for (view, layer) in &mut clients {
-        if let Ok(layer) = chunk_layers.get(layer.0) {
-            for pos in view.get().iter() {
-                if let Some(chunk) = layer.chunk(pos) {
-                    chunk.dec_viewer_count();
-                }
-            }
         }
     }
 }

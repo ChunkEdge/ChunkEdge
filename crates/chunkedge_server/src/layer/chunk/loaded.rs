@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::mem;
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::Arc;
 
 use chunkedge_binary::Encode;
 #[cfg(test)]
@@ -32,10 +32,9 @@ use super::{ChunkLayerInfo, ChunkLayerMessages, LocalMsg};
 
 #[derive(Debug)]
 pub struct LoadedChunk {
-    /// A count of the clients viewing this chunk. Useful for knowing if it's
-    /// necessary to record changes, since no client would be in view to receive
-    /// the changes if this were zero.
-    viewer_count: AtomicU32,
+    /// Each client that received this chunk owns one additional strong reference.
+    /// This chunk owns the original reference, which is excluded from the count.
+    viewers: Arc<()>,
     /// Block and biome data for the chunk.
     sections: Box<[Section]>,
     /// Sky light data for the chunk. Light sections have one extra section at
@@ -150,7 +149,7 @@ impl LoadedChunk {
         let section_count = height as usize / 16;
         let light_section_count = section_count + 2;
         Self {
-            viewer_count: AtomicU32::new(0),
+            viewers: Arc::new(()),
             sections: vec![Section::default(); section_count].into(),
             // We don't have a full lighting engine implemented so we set all sky light to be
             // NotSet so that no light data is sent to the client and we rely
@@ -231,26 +230,13 @@ impl LoadedChunk {
         }
     }
 
-    /// Returns the number of clients in view of this chunk.
+    /// Returns the number of clients that have this chunk loaded.
     pub fn viewer_count(&self) -> u32 {
-        self.viewer_count.load(Ordering::Relaxed)
+        (Arc::strong_count(&self.viewers) - 1) as u32
     }
 
-    /// Like [`Self::viewer_count`], but avoids an atomic operation.
-    pub fn viewer_count_mut(&mut self) -> u32 {
-        *self.viewer_count.get_mut()
-    }
-
-    /// Increments the viewer count.
-    pub(crate) fn inc_viewer_count(&self) {
-        self.viewer_count.fetch_add(1, Ordering::Relaxed);
-    }
-
-    /// Decrements the viewer count.
-    #[track_caller]
-    pub(crate) fn dec_viewer_count(&self) {
-        let old = self.viewer_count.fetch_sub(1, Ordering::Relaxed);
-        debug_assert_ne!(old, 0, "viewer count underflow!");
+    pub(crate) fn viewer_token(&self) -> Arc<()> {
+        Arc::clone(&self.viewers)
     }
 
     /// Performs the changes necessary to prepare this chunk for client updates.
@@ -262,11 +248,14 @@ impl LoadedChunk {
         info: &ChunkLayerInfo,
         messages: &mut ChunkLayerMessages,
     ) {
-        if *self.viewer_count.get_mut() == 0 {
-            // Nobody is viewing the chunk, so no need to send any update packets. There
-            // also shouldn't be any changes that need to be cleared.
-            self.assert_no_changes();
-
+        if self.viewer_count() == 0 {
+            // The last viewer may have disconnected after these changes were
+            // recorded. Future viewers receive the current state in full.
+            for section in &mut self.sections {
+                section.updates.clear();
+            }
+            self.changed_block_entities.clear();
+            self.changed_biomes = false;
             return;
         }
 
@@ -667,7 +656,7 @@ impl Chunk for LoadedChunk {
         if block != old_block {
             self.cached_init_packets.get_mut().clear();
 
-            if *self.viewer_count.get_mut() > 0 {
+            if Arc::strong_count(&self.viewers) > 1 {
                 sect.updates.push(
                     ChunkDeltaUpdateEntry::new()
                         .with_off_x(x as u8)
@@ -690,7 +679,7 @@ impl Chunk for LoadedChunk {
             if *b != block {
                 self.cached_init_packets.get_mut().clear();
 
-                if *self.viewer_count.get_mut() > 0 {
+                if Arc::strong_count(&self.viewers) > 1 {
                     // The whole section is being modified, so any previous modifications would
                     // be overwritten.
                     sect.updates.clear();
@@ -721,7 +710,7 @@ impl Chunk for LoadedChunk {
                         if block != sect.block_states.get(idx as usize) {
                             self.cached_init_packets.get_mut().clear();
 
-                            if *self.viewer_count.get_mut() > 0 {
+                            if Arc::strong_count(&self.viewers) > 1 {
                                 sect.updates.push(
                                     ChunkDeltaUpdateEntry::new()
                                         .with_off_x(x as u8)
@@ -752,7 +741,7 @@ impl Chunk for LoadedChunk {
         let idx = x + z * 16 + y * 16 * 16;
 
         if let Some(be) = self.block_entities.get_mut(&idx) {
-            if *self.viewer_count.get_mut() > 0 {
+            if Arc::strong_count(&self.viewers) > 1 {
                 self.changed_block_entities.insert(idx);
             }
             self.cached_init_packets.get_mut().clear();
@@ -776,7 +765,7 @@ impl Chunk for LoadedChunk {
 
         match block_entity {
             Some(nbt) => {
-                if *self.viewer_count.get_mut() > 0 {
+                if Arc::strong_count(&self.viewers) > 1 {
                     self.changed_block_entities.insert(idx);
                 }
                 self.cached_init_packets.get_mut().clear();
@@ -802,7 +791,7 @@ impl Chunk for LoadedChunk {
 
         self.cached_init_packets.get_mut().clear();
 
-        if *self.viewer_count.get_mut() > 0 {
+        if Arc::strong_count(&self.viewers) > 1 {
             self.changed_block_entities
                 .extend(mem::take(&mut self.block_entities).into_keys());
         } else {
@@ -828,7 +817,7 @@ impl Chunk for LoadedChunk {
         if biome != old_biome {
             self.cached_init_packets.get_mut().clear();
 
-            if *self.viewer_count.get_mut() > 0 {
+            if Arc::strong_count(&self.viewers) > 1 {
                 self.changed_biomes = true;
             }
         }
@@ -844,11 +833,11 @@ impl Chunk for LoadedChunk {
         if let PalettedContainer::Single(b) = &sect.biomes {
             if *b != biome {
                 self.cached_init_packets.get_mut().clear();
-                self.changed_biomes = *self.viewer_count.get_mut() > 0;
+                self.changed_biomes = Arc::strong_count(&self.viewers) > 1;
             }
         } else {
             self.cached_init_packets.get_mut().clear();
-            self.changed_biomes = *self.viewer_count.get_mut() > 0;
+            self.changed_biomes = Arc::strong_count(&self.viewers) > 1;
         }
 
         sect.biomes.fill(biome);

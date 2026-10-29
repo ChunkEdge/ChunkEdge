@@ -38,8 +38,6 @@ public class TranslationKeys implements Main.Extractor {
     }
 
     private static Map<String, String> extractTranslations() {
-        // Read vanilla directly: Fabric 26.3 injects translation keys whose
-        // normalized Rust constant names collide with each other.
         var translations = new TreeMap<String, String>();
         try (var stream = Language.class.getResourceAsStream("/assets/minecraft/lang/en_us.json")) {
             Language.loadFromJson(stream, translations::put);

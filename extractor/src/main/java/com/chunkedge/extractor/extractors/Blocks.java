@@ -90,7 +90,6 @@ public class Blocks implements Main.Extractor {
                 stateJson.addProperty("opaque", state.canOcclude());
                 stateJson.addProperty("replaceable", state.canBeReplaced());
                 stateJson.addProperty("has_fluid", !state.getFluidState().isEmpty());
-                // 26.3 heightmaps use a data-driven block tag instead of blocksMotion().
                 stateJson.addProperty("blocks_motion", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP));
                 stateJson.addProperty("blocks_motion_no_leaves", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP_NO_LEAVES));
 

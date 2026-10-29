@@ -398,7 +398,7 @@ const fn bit_width(n: usize) -> usize {
 }
 
 #[cfg(test)]
-mod version_26_3_tests {
+mod tests {
     use chunkedge_server::nbt::compound;
     use chunkedge_server::protocol::BlockState;
 

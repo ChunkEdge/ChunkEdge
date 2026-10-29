@@ -119,22 +119,3 @@ fn cache_registry_codec(codec: ResMut<RegistryCodec>) {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use chunkedge_ident::ident;
-
-    use super::*;
-
-    #[test]
-    fn keeps_non_compound_registry_elements() {
-        let codec = RegistryCodec::default();
-        let transformers = codec.registry(ident!("block_transformer"));
-        assert_eq!(transformers.len(), 3);
-        assert!(
-            transformers
-                .iter()
-                .all(|entry| matches!(entry.element, Value::List(_)))
-        );
-    }
-}

@@ -55,6 +55,9 @@ fn client_teleport_and_move() {
     // Confirm the initial teleport from the server.
     helper_1.send(&AcceptTeleportationC2s {
         teleport_id: 0.into(),
+        position: DVec3::ZERO,
+        yaw: 0.0,
+        pitch: 0.0,
     });
 
     // Move a little.

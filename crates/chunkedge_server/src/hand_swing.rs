@@ -31,6 +31,10 @@ fn handle_hand_swing(
             if let Ok(mut anim) = clients.get_mut(packet.client) {
                 anim.trigger_swing(
                     Hand::Main,
+                    // TODO: the kind and duration of this should not be hardcoded.
+                    // We probably need to get this from the item in the player's hand
+                    // but this should be done after item component defaults are implemented
+                    // for now, hardcoding it as below is fine.
                     chunkedge_item::SwingAnimation {
                         kind: chunkedge_item::SwingAnimationType::Whack,
                         duration: chunkedge_protocol::VarInt(6),

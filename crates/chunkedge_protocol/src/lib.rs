@@ -27,6 +27,7 @@ mod lp_vec3;
 pub mod movement_flags;
 pub mod packets;
 pub mod profile;
+mod sign_text_slot;
 pub mod sound;
 
 use std::io::Write;
@@ -68,6 +69,7 @@ pub use ident::ident;
 pub use lp_vec3::LpVec3;
 pub use packets::play::level_particles_s2c::Particle;
 use serde::{Deserialize, Serialize};
+pub use sign_text_slot::SignTextSlot;
 pub use sound::Sound;
 pub use text::{JsonText, Text};
 pub use uuid;

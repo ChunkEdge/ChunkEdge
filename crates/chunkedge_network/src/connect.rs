@@ -181,6 +181,7 @@ async fn handle_handshake(
                         matches!(shared.connection_mode(), ConnectionMode::Online { .. }),
                         shared.0.incoming_byte_limit,
                         shared.0.outgoing_byte_limit,
+                        shared.0.outgoing_pending_byte_limit,
                         cleanup,
                     );
 

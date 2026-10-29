@@ -272,7 +272,10 @@ pub struct Client {
 /// in the "play" state.
 pub trait ClientConnection: Send + Sync + 'static {
     /// Sends encoded clientbound packet data. This function must not block and
-    /// the data should be sent as soon as possible.
+    /// the data should be sent as soon as possible. Implementations must retain
+    /// unsent bytes in order when the transport is temporarily full.
+    ///
+    /// Called every tick, including with an empty buffer, to retry pending data.
     fn try_send(&mut self, bytes: BytesMut) -> anyhow::Result<()>;
     /// Receives the next pending serverbound packet. This must return
     /// immediately without blocking.
@@ -327,20 +330,16 @@ impl Client {
         self.conn.as_mut()
     }
 
-    /// Flushes the packet queue to the underlying connection.
+    /// Queues newly encoded packets and retries pending output on the connection.
     ///
     /// This is called automatically at the end of the tick and when the client
     /// is dropped. Unless you're in a hurry, there's usually no reason to
     /// call this method yourself.
     ///
-    /// Returns an error if flushing was unsuccessful.
+    /// Temporary backpressure may leave bytes pending for a later tick. Returns
+    /// an error if the connection failed or its pending-output limit was exceeded.
     pub fn flush_packets(&mut self) -> anyhow::Result<()> {
-        let bytes = self.enc.take();
-        if !bytes.is_empty() {
-            self.conn.try_send(bytes)
-        } else {
-            Ok(())
-        }
+        self.conn.try_send(self.enc.take())
     }
 
     /// Kills the client and shows `message` on the death screen. If an entity
@@ -1305,12 +1304,9 @@ fn update_old_view_dist(
     }
 }
 
-fn flush_packets(
-    mut clients: Query<(Entity, &mut Client), Changed<Client>>,
-    mut commands: Commands,
-) {
+fn flush_packets(mut clients: Query<(Entity, &mut Client)>, mut commands: Commands) {
     for (entity, mut client) in &mut clients {
-        if let Err(e) = client.flush_packets() {
+        if let Err(e) = client.bypass_change_detection().flush_packets() {
             warn!("Failed to flush packet queue for client {entity:?}: {e:#}.");
             commands.entity(entity).remove::<Client>();
         }

@@ -7,10 +7,10 @@ use chunkedge::layer::LayerBundle;
 use chunkedge::layer::chunk::UnloadedChunk;
 use chunkedge::math::DVec3;
 use chunkedge::protocol::movement_flags::MovementFlags;
-use chunkedge::protocol::packets::play::{MovePlayerPosRotC2s, SwingC2s};
+use chunkedge::protocol::packets::play::{MovePlayerPosRotC2s, PunchC2s};
 use chunkedge::registry::{BiomeRegistry, DimensionTypeRegistry};
 use chunkedge::testing::{self, create_mock_client};
-use chunkedge::{ChunkPos, Hand, Server, ServerSettings, ident};
+use chunkedge::{ChunkPos, Server, ServerSettings, ident};
 use chunkedge_server::CompressionThreshold;
 use divan::Bencher;
 use rand::RngExt;
@@ -116,7 +116,7 @@ fn run_many_players(bencher: Bencher, client_count: usize, view_dist: u8, world_
                 flags: MovementFlags::new().with_on_ground(true),
             });
 
-            helper.send(&SwingC2s { hand: Hand::Main });
+            helper.send(&PunchC2s);
         }
 
         drop(rng);

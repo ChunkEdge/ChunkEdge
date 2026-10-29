@@ -7,7 +7,7 @@
 <p align="center">
 
 ![License](https://img.shields.io/github/license/ChunkEdge/ChunkEdge)
-![Minecraft version](https://img.shields.io/badge/Minecraft_version-26.2-blue)
+![Minecraft version](https://img.shields.io/badge/Minecraft_version-26.3-blue)
 [![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://docs.chunkedge.com/chunkedge/)
 ![Tests](https://github.com/ChunkEdge/ChunkEdge/actions/workflows/ci.yml/badge.svg)
 ![ChunkEdge Repo stars](https://img.shields.io/github/stars/ChunkEdge/ChunkEdge)
@@ -21,7 +21,7 @@ Built on top of [Bevy ECS](https://bevy.org/learn/quick-start/getting-started/ec
 Opinionated features like dynamic scripting, dedicated executables, and vanilla game mechanics are all expected to be built as optional plugins. This level of modularity is desirable for those looking to build highly custom experiences in Minecraft such as minigame servers.
 
 > [!WARNING]  
-> ChunkEdge is still early in development with many features unimplemented or incomplete. Expect to encounter bugs, limitations, and breaking changes. At the moment, ChunkEdge is only compatible with Minecraft `26.2`. The aim is to support the latest stable version of Minecraft. For now, you can use a proxy (for example [ViaProxy](https://github.com/ViaVersion/ViaProxy) combined with [Velocity](https://papermc.io/software/velocity/)) to allow players on both older and newer clients to connect to your server.
+> ChunkEdge is still early in development with many features unimplemented or incomplete. Expect to encounter bugs, limitations, and breaking changes. At the moment, ChunkEdge is only compatible with Minecraft `26.3`. The aim is to support the latest stable version of Minecraft. For now, you can use a proxy (for example [ViaProxy](https://github.com/ViaVersion/ViaProxy) combined with [Velocity](https://papermc.io/software/velocity/)) to allow players on both older and newer clients to connect to your server.
 
 ## Goals
 
@@ -32,7 +32,7 @@ ChunkEdge aims to be the following:
 - **Modular**. Pick and choose the components you need. Some crates can also be reused in projects that don't use the full ChunkEdge framework.
 - **Intuitive**. An API that is easy to use and difficult to misuse. Extensive documentation and examples are important.
 - **Efficient**. Optimal use of system resources with multiple CPU cores in mind.
-- **Up-to-date**. Tries to be up-to-date with the most recent stable version of Minecraft. Currently Minecraft `26.2` is supported. Support for multiple versions at once is not planned. However, you can use a proxy (for example [ViaProxy](https://github.com/ViaVersion/ViaProxy) combined with [Velocity](https://papermc.io/software/velocity/)) to allow players on both older and newer clients to connect to your server.
+- **Up-to-date**. Tries to be up-to-date with the most recent stable version of Minecraft. Currently Minecraft `26.3` is supported. Support for multiple versions at once is not planned. However, you can use a proxy (for example [ViaProxy](https://github.com/ViaVersion/ViaProxy) combined with [Velocity](https://papermc.io/software/velocity/)) to allow players on both older and newer clients to connect to your server.
 
 ### Current Status
 

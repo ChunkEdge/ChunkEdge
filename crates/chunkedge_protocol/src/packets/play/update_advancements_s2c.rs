@@ -10,8 +10,15 @@ use chunkedge_item::ItemStackTemplate;
 
 use crate::Packet;
 
-pub type UpdateAdvancementsS2c<'a> =
-    GenericUpdateAdvancementsS2c<'a, (Ident<Cow<'a, str>>, Advancement<'a, ItemStackTemplate>)>;
+pub type UpdateAdvancementsS2c<'a> = GenericUpdateAdvancementsS2c<'a, PositionedAdvancement<'a>>;
+
+#[derive(Clone, Debug, Encode, Decode)]
+pub struct PositionedAdvancement<'a> {
+    pub id: Ident<Cow<'a, str>>,
+    pub advancement: Advancement<'a, ItemStackTemplate>,
+    pub x: f32,
+    pub y: f32,
+}
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 #[packet(id = packet_id::PLAY_UPDATE_ADVANCEMENTS_S2C)]
@@ -45,8 +52,6 @@ pub struct AdvancementDisplay<'a, I> {
     pub frame_type: VarInt,
     pub flags: i32,
     pub background_texture: Option<Ident<Cow<'a, str>>>,
-    pub x_coord: f32,
-    pub y_coord: f32,
 }
 
 #[derive(Clone, PartialEq, Eq, Debug, Encode, Decode)]
@@ -70,9 +75,6 @@ impl<I: Encode> Encode for AdvancementDisplay<'_, I> {
             Some(texture) => texture.encode(&mut w)?,
         }
 
-        self.x_coord.encode(&mut w)?;
-        self.y_coord.encode(&mut w)?;
-
         Ok(())
     }
 }
@@ -91,9 +93,6 @@ impl<'a, I: Decode<'a>> Decode<'a> for AdvancementDisplay<'a, I> {
             None
         };
 
-        let x_coord = f32::decode(r)?;
-        let y_coord = f32::decode(r)?;
-
         Ok(Self {
             title,
             description,
@@ -101,8 +100,6 @@ impl<'a, I: Decode<'a>> Decode<'a> for AdvancementDisplay<'a, I> {
             frame_type,
             flags,
             background_texture,
-            x_coord,
-            y_coord,
         })
     }
 }

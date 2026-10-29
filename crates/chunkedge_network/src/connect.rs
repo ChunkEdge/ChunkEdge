@@ -394,7 +394,8 @@ async fn handle_login(
                     Some(
                         biome
                             .serialize(CompoundSerializer)
-                            .expect("failed to serialize biome"),
+                            .expect("failed to serialize biome")
+                            .into(),
                     ),
                 )
             })
@@ -414,7 +415,8 @@ async fn handle_login(
                     Some(
                         dimension_type
                             .serialize(CompoundSerializer)
-                            .expect("failed to serialize dimension type"),
+                            .expect("failed to serialize dimension type")
+                            .into(),
                     ),
                 )
             })

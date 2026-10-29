@@ -56,6 +56,7 @@ struct State {
     replaceable: bool,
     has_fluid: bool,
     blocks_motion: bool,
+    blocks_motion_no_leaves: bool,
     collision_shapes: Vec<u16>,
     block_entity_type: Option<u32>,
 }
@@ -168,6 +169,21 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
                     #id => true,
                 }
             })
+        })
+        .collect::<TokenStream>();
+
+    let state_to_blocks_motion_no_leaves_arms = blocks
+        .iter()
+        .flat_map(|b| {
+            b.states
+                .iter()
+                .filter(|s| s.blocks_motion_no_leaves)
+                .map(|s| {
+                    let id = s.id;
+                    quote! {
+                        #id => true,
+                    }
+                })
         })
         .collect::<TokenStream>();
 
@@ -708,6 +724,13 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             pub const fn blocks_motion(self) -> bool {
                 match self.0 {
                     #state_to_blocks_motion_arms
+                    _ => false,
+                }
+            }
+
+            pub const fn blocks_motion_no_leaves(self) -> bool {
+                match self.0 {
+                    #state_to_blocks_motion_no_leaves_arms
                     _ => false,
                 }
             }

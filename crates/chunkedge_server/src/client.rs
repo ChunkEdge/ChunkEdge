@@ -379,8 +379,9 @@ impl Client {
             particle: particle.clone(),
             position: position.into(),
             offset: offset.into(),
-            max_speed,
-            count,
+            max_speed: chunkedge_math::Vec3::splat(max_speed),
+            count: chunkedge_protocol::VarInt(count),
+            randomization: Default::default(),
         })
     }
 

@@ -162,8 +162,17 @@ fn parse_chunk(
             return Err(ParseChunkError::MissingBlockStates);
         };
 
-        let Some(Value::List(List::Compound(palette))) = block_states.remove("palette") else {
-            return Err(ParseChunkError::MissingBlockPalette);
+        let palette = match block_states.remove("palette") {
+            Some(Value::List(List::Compound(palette))) => palette,
+            Some(Value::List(List::String(palette))) => palette
+                .into_iter()
+                .map(|id| {
+                    let mut block = Compound::new();
+                    block.insert("id", id);
+                    block
+                })
+                .collect(),
+            _ => return Err(ParseChunkError::MissingBlockPalette),
         };
 
         if !(1..BLOCKS_PER_SECTION).contains(&palette.len()) {
@@ -173,7 +182,13 @@ fn parse_chunk(
         converted_block_palette.clear();
 
         for mut block in palette {
-            let Some(Value::String(name)) = block.remove("Name") else {
+            // NBT wraps strings in a compound when a palette mixes compact
+            // default states and full states with properties.
+            if let Some(Value::String(id)) = block.remove("") {
+                block.insert("id", id);
+            }
+            let Some(Value::String(name)) = block.remove("id").or_else(|| block.remove("Name"))
+            else {
                 return Err(ParseChunkError::MissingBlockName);
             };
 
@@ -183,7 +198,10 @@ fn parse_chunk(
 
             let mut state = block_kind.to_state();
 
-            if let Some(Value::Compound(properties)) = block.remove("Properties") {
+            if let Some(Value::Compound(properties)) = block
+                .remove("properties")
+                .or_else(|| block.remove("Properties"))
+            {
                 for (key, value) in properties {
                     let Value::String(value) = value else {
                         return Err(ParseChunkError::BadPropValueType);
@@ -377,4 +395,63 @@ fn ident_path(ident: &str) -> &str {
 /// Returns the minimum number of bits needed to represent the integer `n`.
 const fn bit_width(n: usize) -> usize {
     (usize::BITS - n.leading_zeros()) as usize
+}
+
+#[cfg(test)]
+mod version_26_3_tests {
+    use chunkedge_server::nbt::compound;
+    use chunkedge_server::protocol::BlockState;
+
+    use super::*;
+
+    fn read_palette(palette: List, data: Vec<i64>) -> UnloadedChunk {
+        let nbt = compound! {
+            "sections" => List::Compound(vec![compound! {
+                "Y" => 0_i8,
+                "block_states" => compound! { "palette" => palette, "data" => data },
+                "biomes" => compound! { "palette" => List::String(vec!["minecraft:plains".into()]) },
+            }]),
+            "block_entities" => List::Compound(vec![]),
+        };
+        let biomes: BTreeMap<Ident<String>, BiomeId> = BTreeMap::from([(
+            Ident::new("minecraft:plains".to_owned()).unwrap().into(),
+            BiomeId::default(),
+        )]);
+        parse_chunk(nbt, &biomes).unwrap()
+    }
+
+    #[test]
+    fn compact_and_full_block_states() {
+        let compact = read_palette(List::String(vec!["minecraft:stone".into()]), vec![]);
+        assert_eq!(compact.block_state(0, 0, 0), BlockState::STONE);
+        let full = read_palette(
+            List::Compound(vec![compound! {
+                "id" => "minecraft:oak_log",
+                "properties" => compound! { "axis" => "x" },
+            }]),
+            vec![],
+        );
+        assert_eq!(
+            full.block_state(0, 0, 0),
+            BlockState::OAK_LOG.set(PropName::Axis, PropValue::X)
+        );
+    }
+
+    #[test]
+    fn mixed_palette_unwraps_compact_states() {
+        let mut data = vec![0; 256];
+        data[0] = 0x10; // stone at index 0, horizontal log at index 1.
+        let chunk = read_palette(
+            List::Compound(vec![
+                compound! { "" => "minecraft:stone" },
+                compound! { "id" => "minecraft:oak_log", "properties" => compound! { "axis" => "x" } },
+            ]),
+            data,
+        );
+        assert_eq!(chunk.block_state(0, 0, 0), BlockState::STONE);
+        assert_eq!(
+            chunk.block_state(1, 0, 0),
+            BlockState::OAK_LOG.set(PropName::Axis, PropValue::X)
+        );
+    }
 }

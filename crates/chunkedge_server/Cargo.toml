@@ -30,5 +30,6 @@ chunkedge_generated.workspace = true
 chunkedge_math.workspace = true
 chunkedge_nbt.workspace = true
 chunkedge_protocol.workspace = true
+chunkedge_item.workspace = true
 chunkedge_registry.workspace = true
 chunkedge_server_common.workspace = true

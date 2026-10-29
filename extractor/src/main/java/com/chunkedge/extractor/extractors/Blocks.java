@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.EmptyBlockGetter;
@@ -89,8 +90,9 @@ public class Blocks implements Main.Extractor {
                 stateJson.addProperty("opaque", state.canOcclude());
                 stateJson.addProperty("replaceable", state.canBeReplaced());
                 stateJson.addProperty("has_fluid", !state.getFluidState().isEmpty());
-                // This uses a deprecated api, but minecraft uses the same deprecated api, so we use it for now
-                stateJson.addProperty("blocks_motion", state.blocksMotion());
+                // 26.3 heightmaps use a data-driven block tag instead of blocksMotion().
+                stateJson.addProperty("blocks_motion", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP));
+                stateJson.addProperty("blocks_motion_no_leaves", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP_NO_LEAVES));
 
                 if (block.defaultBlockState().equals(state)) {
                     blockJson.addProperty("default_state_id", id);

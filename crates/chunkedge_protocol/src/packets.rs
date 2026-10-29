@@ -35,6 +35,8 @@ pub mod login {
 }
 
 pub mod configuration {
+    pub mod post_effects_s2c;
+    pub use post_effects_s2c::PostEffectsS2c;
     pub mod cookie_request_s2c;
     pub use cookie_request_s2c::CookieRequestS2c;
     pub mod cookie_response_c2s;
@@ -98,6 +100,8 @@ pub mod configuration {
 }
 
 pub mod play {
+    pub mod post_effects_s2c;
+    pub use post_effects_s2c::PostEffectsS2c;
     pub mod player_loaded_c2s;
     pub use player_loaded_c2s::PlayerLoadedC2s;
     pub mod bundle_item_selected_c2s;
@@ -284,8 +288,12 @@ pub mod play {
     pub use system_chat_s2c::SystemChatS2c;
     pub mod game_event_s2c;
     pub use game_event_s2c::GameEventS2c;
-    pub mod swing_c2s;
-    pub use swing_c2s::SwingC2s;
+    pub mod punch_c2s;
+    pub use punch_c2s::PunchC2s;
+    pub mod swing_animation_s2c;
+    pub use swing_animation_s2c::SwingAnimationS2c;
+    pub mod add_transient_block_s2c;
+    pub use add_transient_block_s2c::AddTransientBlockS2c;
     pub mod set_health_s2c;
     pub use set_health_s2c::SetHealthS2c;
     pub mod container_set_content_s2c;

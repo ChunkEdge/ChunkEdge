@@ -157,7 +157,8 @@ fn clear_animation_changes(
     mut animations: Query<&mut EntityAnimations, Changed<EntityAnimations>>,
 ) {
     for mut animations in &mut animations {
-        animations.0 = 0;
+        animations.animations = 0;
+        animations.swings.clear();
     }
 }
 
@@ -364,20 +365,32 @@ impl EntityStatuses {
     }
 }
 
-#[derive(Component, Default, Debug, Copy, Clone, Deref, DerefMut)]
-pub struct EntityAnimations(pub u8);
+#[derive(Component, Default, Debug, Clone)]
+pub struct EntityAnimations {
+    pub(crate) animations: u8,
+    pub(crate) swings: Vec<(chunkedge_protocol::Hand, chunkedge_item::SwingAnimation)>,
+}
 
 impl EntityAnimations {
+    /// Queues the hand and item animation sent by the 26.3 swing packet.
+    pub fn trigger_swing(
+        &mut self,
+        hand: chunkedge_protocol::Hand,
+        animation: chunkedge_item::SwingAnimation,
+    ) {
+        self.swings.push((hand, animation));
+    }
+
     pub fn trigger(&mut self, anim: EntityAnimation) {
         self.set(anim, true);
     }
 
     pub fn set(&mut self, anim: EntityAnimation, triggered: bool) {
-        self.0 |= u8::from(triggered) << anim as u8;
+        self.animations |= u8::from(triggered) << anim as u8;
     }
 
     pub fn get(&self, anim: EntityAnimation) -> bool {
-        (self.0 >> anim as u8) & 1 == 1
+        (self.animations >> anim as u8) & 1 == 1
     }
 }
 

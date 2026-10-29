@@ -32,7 +32,18 @@ impl Encode for ItemComponent {
             ItemComponent::AttackRange(v) => v.encode(w),
             ItemComponent::PiercingWeapon(v) => v.encode(w),
             ItemComponent::KineticWeapon(v) => v.encode(w),
-            ItemComponent::SwingAnimation(v) => v.encode(w),
+            ItemComponent::BlockTransformer(v) => v.encode(w),
+            ItemComponent::VillagerFood(v) => v.encode(w),
+            ItemComponent::Compostable(v) => v.encode(w),
+            ItemComponent::CookingFuel(v) => v.encode(w),
+            ItemComponent::BrewingFuel(v) => v.encode(w),
+            ItemComponent::MobVisibility(v) => v.encode(w),
+            ItemComponent::ProvidesPotteryPattern(v) => v.encode(w),
+            ItemComponent::SignTextFront(v) => v.encode(w),
+            ItemComponent::SignTextBack(v) => v.encode(w),
+            ItemComponent::CushionColor(v) => v.encode(w),
+            ItemComponent::Waxed => Ok(()),
+            ItemComponent::AttackAnimation(v) | ItemComponent::InteractAnimation(v) => v.encode(w),
             ItemComponent::AdditionalTradeCost(v) => v.encode(w),
             ItemComponent::Dye(v) => v.encode(w),
             ItemComponent::PigSoundVariant(v) => v.encode(w),
@@ -178,7 +189,6 @@ impl Encode for ItemComponent {
             }
             ItemComponent::StoredEnchantments(v) => v.encode(w),
             ItemComponent::DyedColor { color } => color.encode(w),
-            ItemComponent::MapColor(v) => v.encode(w),
             ItemComponent::MapId(v) => v.encode(w),
             ItemComponent::MapDecorations(v) => v.encode(w),
             ItemComponent::MapPostProcessing(v) => v.encode(w),
@@ -251,7 +261,7 @@ impl Encode for ItemComponent {
             ItemComponent::NoteBlockSound(v) => v.encode(w),
             ItemComponent::BannerPatterns(v) => v.encode(w),
             ItemComponent::BaseColor(v) => v.encode(w),
-            ItemComponent::PotDecorations(v) => Bounded::<_, 4>(v.as_slice()).encode(w),
+            ItemComponent::PotDecorations(v) => v.encode(w),
             ItemComponent::Container(v) => Bounded::<_, 256>(v.as_slice()).encode(w),
             ItemComponent::BlockState(v) => v.encode(w),
             ItemComponent::Bees(v) => v.encode(w),
@@ -448,7 +458,23 @@ pub(crate) fn decode_item_component(
         ItemComponentKind::AttackRange => ItemComponent::AttackRange(Decode::decode(r)?),
         ItemComponentKind::PiercingWeapon => ItemComponent::PiercingWeapon(Decode::decode(r)?),
         ItemComponentKind::KineticWeapon => ItemComponent::KineticWeapon(Decode::decode(r)?),
-        ItemComponentKind::SwingAnimation => ItemComponent::SwingAnimation(Decode::decode(r)?),
+        ItemComponentKind::BlockTransformer => ItemComponent::BlockTransformer(Decode::decode(r)?),
+        ItemComponentKind::VillagerFood => ItemComponent::VillagerFood(Decode::decode(r)?),
+        ItemComponentKind::Compostable => ItemComponent::Compostable(Decode::decode(r)?),
+        ItemComponentKind::CookingFuel => ItemComponent::CookingFuel(Decode::decode(r)?),
+        ItemComponentKind::BrewingFuel => ItemComponent::BrewingFuel(Decode::decode(r)?),
+        ItemComponentKind::MobVisibility => ItemComponent::MobVisibility(Decode::decode(r)?),
+        ItemComponentKind::ProvidesPotteryPattern => {
+            ItemComponent::ProvidesPotteryPattern(Decode::decode(r)?)
+        }
+        ItemComponentKind::SignTextFront => ItemComponent::SignTextFront(Decode::decode(r)?),
+        ItemComponentKind::SignTextBack => ItemComponent::SignTextBack(Decode::decode(r)?),
+        ItemComponentKind::CushionColor => ItemComponent::CushionColor(Decode::decode(r)?),
+        ItemComponentKind::Waxed => ItemComponent::Waxed,
+        ItemComponentKind::AttackAnimation => ItemComponent::AttackAnimation(Decode::decode(r)?),
+        ItemComponentKind::InteractAnimation => {
+            ItemComponent::InteractAnimation(Decode::decode(r)?)
+        }
         ItemComponentKind::AdditionalTradeCost => {
             ItemComponent::AdditionalTradeCost(Decode::decode(r)?)
         }
@@ -577,7 +603,6 @@ pub(crate) fn decode_item_component(
         ItemComponentKind::DyedColor => ItemComponent::DyedColor {
             color: Decode::decode(r)?,
         },
-        ItemComponentKind::MapColor => ItemComponent::MapColor(Decode::decode(r)?),
         ItemComponentKind::MapId => ItemComponent::MapId(Decode::decode(r)?),
         ItemComponentKind::MapDecorations => ItemComponent::MapDecorations(Decode::decode(r)?),
         ItemComponentKind::MapPostProcessing => {
@@ -673,9 +698,15 @@ pub(crate) fn decode_item_component(
         ItemComponentKind::NoteBlockSound => ItemComponent::NoteBlockSound(Decode::decode(r)?),
         ItemComponentKind::BannerPatterns => ItemComponent::BannerPatterns(Decode::decode(r)?),
         ItemComponentKind::BaseColor => ItemComponent::BaseColor(Decode::decode(r)?),
-        ItemComponentKind::PotDecorations => {
-            ItemComponent::PotDecorations(Bounded::<_, 4>::decode(r)?.0)
-        }
+        ItemComponentKind::PotDecorations => ItemComponent::PotDecorations(Box::new({
+            let mut sides = [const { None }; 4];
+            for side in &mut sides {
+                if bool::decode(r)? {
+                    *side = Some(ItemStackTemplate(decode_item_stack_template(r, depth + 1)?));
+                }
+            }
+            sides
+        })),
         ItemComponentKind::Container => {
             let count = VarInt::decode(r)?.0;
             anyhow::ensure!((0..=256).contains(&count), "invalid Container length");

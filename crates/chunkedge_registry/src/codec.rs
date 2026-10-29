@@ -28,7 +28,7 @@ pub struct RegistryCodec {
 #[derive(Clone, Debug)]
 pub struct RegistryValue {
     pub name: Ident<String>,
-    pub element: Compound,
+    pub element: Value,
 }
 
 impl RegistryCodec {
@@ -79,15 +79,7 @@ impl Default for RegistryCodec {
                     }
                 };
 
-                let Value::Compound(value) = v else {
-                    error!("registry value {name} is not a compound");
-                    continue;
-                };
-
-                reg_values.push(RegistryValue {
-                    name,
-                    element: value,
-                });
+                reg_values.push(RegistryValue { name, element: v });
             }
 
             registries.insert(reg_name, reg_values);
@@ -125,5 +117,24 @@ fn cache_registry_codec(codec: ResMut<RegistryCodec>) {
 
             codec.cached_codec.insert(reg_name.as_str(), registry);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use chunkedge_ident::ident;
+
+    use super::*;
+
+    #[test]
+    fn keeps_non_compound_registry_elements() {
+        let codec = RegistryCodec::default();
+        let transformers = codec.registry(ident!("block_transformer"));
+        assert_eq!(transformers.len(), 3);
+        assert!(
+            transformers
+                .iter()
+                .all(|entry| matches!(entry.element, Value::List(_)))
+        );
     }
 }

@@ -5,15 +5,15 @@ use crate::Packet;
 use crate::packets::play::update_recipes_s2c::SlotDisplay;
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
-pub struct RecipeBookAddS2c<'a> {
-    pub recipes: Vec<RecipeEntry<'a>>,
+pub struct RecipeBookAddS2c {
+    pub recipes: Vec<RecipeEntry>,
     pub replace: bool,
 }
 
 #[derive(Clone, Debug, Encode, Decode)]
-pub struct RecipeEntry<'a> {
+pub struct RecipeEntry {
     pub id: VarInt,
-    pub display: RecipeDisplay<'a>,
+    pub display: RecipeDisplay,
     pub group: OptionalVarInt,
     pub category: RegistryId,
     pub ingredients: Option<Vec<IDSet>>,
@@ -22,42 +22,42 @@ pub struct RecipeEntry<'a> {
 }
 
 #[derive(Clone, Debug, Encode, Decode)]
-pub struct RecipeDisplay<'a> {
-    pub kind: RecipeDisplayKind<'a>,
+pub struct RecipeDisplay {
+    pub kind: RecipeDisplayKind,
 }
 
 #[derive(Clone, Debug, Encode, Decode)]
-pub enum RecipeDisplayKind<'a> {
+pub enum RecipeDisplayKind {
     CraftingShapeless {
-        ingredients: Vec<SlotDisplay<'a>>,
-        result: SlotDisplay<'a>,
-        crafting_station: SlotDisplay<'a>,
+        ingredients: Vec<SlotDisplay>,
+        result: SlotDisplay,
+        crafting_station: SlotDisplay,
     },
     CraftingShaped {
         width: VarInt,
         height: VarInt,
-        ingredients: Vec<SlotDisplay<'a>>,
-        result: SlotDisplay<'a>,
-        crafting_station: SlotDisplay<'a>,
+        ingredients: Vec<SlotDisplay>,
+        result: SlotDisplay,
+        crafting_station: SlotDisplay,
     },
     Furnace {
-        ingredient: SlotDisplay<'a>,
-        fuel: SlotDisplay<'a>,
-        result: SlotDisplay<'a>,
-        crafting_station: SlotDisplay<'a>,
+        ingredient: SlotDisplay,
+        fuel: SlotDisplay,
+        result: SlotDisplay,
+        crafting_station: SlotDisplay,
         duration: VarInt,
         experience: f32,
     },
     Stonecutter {
-        ingredient: SlotDisplay<'a>,
-        result: SlotDisplay<'a>,
-        crafting_station: SlotDisplay<'a>,
+        ingredient: SlotDisplay,
+        result: SlotDisplay,
+        crafting_station: SlotDisplay,
     },
     Smithing {
-        template: SlotDisplay<'a>,
-        base: SlotDisplay<'a>,
-        addition: SlotDisplay<'a>,
-        result: SlotDisplay<'a>,
-        crafting_station: SlotDisplay<'a>,
+        template: SlotDisplay,
+        base: SlotDisplay,
+        addition: SlotDisplay,
+        result: SlotDisplay,
+        crafting_station: SlotDisplay,
     },
 }

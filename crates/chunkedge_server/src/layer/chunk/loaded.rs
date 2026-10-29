@@ -4,7 +4,8 @@ use std::mem;
 use std::sync::atomic::{AtomicU32, Ordering};
 
 use chunkedge_binary::Encode;
-use chunkedge_generated::block::{BlockKind, PropName, PropValue};
+#[cfg(test)]
+use chunkedge_generated::block::{PropName, PropValue};
 use chunkedge_nbt::Compound;
 use chunkedge_protocol::encode::{PacketWriter, WritePacket};
 use chunkedge_protocol::packets::play::level_chunk_with_light_s2c::{
@@ -437,27 +438,11 @@ impl LoadedChunk {
     }
 
     fn is_motion_blocking_occupied(state: BlockState) -> bool {
-        let kind = state.to_kind();
-
-        if matches!(kind, BlockKind::BambooSapling | BlockKind::Cactus) {
-            return false;
-        }
-
-        state.blocks_motion()
-            || state.is_liquid()
-            || state.get(PropName::Waterlogged) == Some(PropValue::True)
+        state.blocks_motion() || state.has_fluid()
     }
 
     fn is_motion_blocking_no_leaves_occupied(state: BlockState) -> bool {
-        if Self::is_leaf_block(state) {
-            return false;
-        }
-
-        Self::is_motion_blocking_occupied(state)
-    }
-
-    fn is_leaf_block(state: BlockState) -> bool {
-        state.to_kind().to_str().ends_with("_leaves")
+        state.blocks_motion_no_leaves() || state.has_fluid()
     }
 
     /// Encodes a given heightmap into the packed long-array format used in
@@ -981,7 +966,7 @@ mod tests {
 
     #[test]
     fn heightmap_occupancy_rules() {
-        // Based on: https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure
+        // Minecraft 26.3 Heightmap.Types uses block tags plus fluid presence.
         let mut chunk = LoadedChunk::new(32);
 
         chunk.set_block_state(0, 0, 0, BlockState::STONE);
@@ -1007,15 +992,15 @@ mod tests {
 
         assert_eq!(motion_blocking[heightmap_idx(0, 0)], 1);
         assert_eq!(motion_blocking[heightmap_idx(1, 0)], 6);
-        assert_eq!(motion_blocking[heightmap_idx(2, 0)], 0);
+        assert_eq!(motion_blocking[heightmap_idx(2, 0)], 7);
         assert_eq!(motion_blocking[heightmap_idx(3, 0)], 8);
         assert_eq!(motion_blocking[heightmap_idx(4, 0)], 9);
 
         assert_eq!(motion_blocking_no_leaves[heightmap_idx(0, 0)], 1);
         assert_eq!(motion_blocking_no_leaves[heightmap_idx(1, 0)], 0);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(2, 0)], 0);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(2, 0)], 7);
         assert_eq!(motion_blocking_no_leaves[heightmap_idx(3, 0)], 8);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(4, 0)], 0);
+        assert_eq!(motion_blocking_no_leaves[heightmap_idx(4, 0)], 9);
     }
 
     #[test]

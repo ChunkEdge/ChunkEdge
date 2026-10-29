@@ -19,6 +19,7 @@ pub mod decode;
 mod difficulty;
 mod direction;
 pub mod encode;
+pub mod entity_movement;
 pub mod game_mode;
 mod global_pos;
 mod hand;
@@ -75,11 +76,11 @@ pub use uuid;
 pub const MAX_PACKET_SIZE: i32 = 2_i32.pow(21) - 1; // (the maximum that can be sent in a 3-byte VarInt)
 
 /// The Minecraft protocol version this library currently targets.
-pub const PROTOCOL_VERSION: i32 = 776;
+pub const PROTOCOL_VERSION: i32 = 777;
 
 /// The stringified name of the Minecraft version this library currently
 /// targets.
-pub const MINECRAFT_VERSION: &str = "26.2";
+pub const MINECRAFT_VERSION: &str = "26.3";
 
 /// How large a packet should be before it is compressed by the packet encoder.
 ///

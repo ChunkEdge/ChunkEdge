@@ -13,6 +13,7 @@ pub struct PlayerActionC2s {
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Encode, Decode)]
 pub enum PlayerAction {
     StartDestroyBlock,
+    ChangeDestroyDirection,
     AbortDestroyBlock,
     StopDestroyBlock,
     DropAllItems,

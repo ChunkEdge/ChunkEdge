@@ -4,8 +4,6 @@ use std::mem;
 use std::sync::Arc;
 
 use chunkedge_binary::Encode;
-#[cfg(test)]
-use chunkedge_generated::block::{PropName, PropValue};
 use chunkedge_nbt::Compound;
 use chunkedge_protocol::encode::{PacketWriter, WritePacket};
 use chunkedge_protocol::packets::play::level_chunk_with_light_s2c::{

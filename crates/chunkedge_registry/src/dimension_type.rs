@@ -67,7 +67,8 @@ fn update_dimension_type_registry(
                 name: name.into(),
                 element: dim
                     .serialize(CompoundSerializer)
-                    .expect("failed to serialize dimension type"),
+                    .expect("failed to serialize dimension type")
+                    .into(),
             }
         }));
     }

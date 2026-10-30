@@ -301,7 +301,7 @@ mod tests {
         roundtrip(&stack);
     }
 
-    /// Each component encodes to the bytes of vanilla 26.2's network codec
+    /// Each component encodes to the bytes of vanilla network codec
     /// and decodes back from them.
     #[test]
     fn test_components_match_vanilla_wire_format() {

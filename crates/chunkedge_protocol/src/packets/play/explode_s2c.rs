@@ -13,6 +13,7 @@ pub struct ExplodeS2c {
     pub particle: Particle,
     pub sound: SoundId,
     pub block_particles: Vec<WeightedExplosionParticle>,
+    pub play_sound: bool,
 }
 
 #[derive(Clone, Debug, Encode, Decode)]

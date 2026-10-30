@@ -273,17 +273,16 @@ impl MockClientHelper {
     }
 
     pub fn confirm_initial_pending_teleports(&mut self) {
-        let mut counter = 0;
-
         for pkt in self.collect_received().0 {
             if pkt.id == PlayerPositionS2c::ID {
-                pkt.decode::<PlayerPositionS2c>().unwrap();
+                let teleport = pkt.decode::<PlayerPositionS2c>().unwrap();
 
                 self.send(&AcceptTeleportationC2s {
-                    teleport_id: counter.into(),
+                    teleport_id: teleport.teleport_id,
+                    position: teleport.position,
+                    yaw: teleport.yaw,
+                    pitch: teleport.pitch,
                 });
-
-                counter += 1;
             }
         }
     }

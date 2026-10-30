@@ -309,7 +309,8 @@ item_components! {
     /// Damage, knockback and dismount conditions for a kinetic attack.
     KineticWeapon(KineticWeapon),
     /// The item's swing animation and duration in ticks.
-    SwingAnimation(SwingAnimation),
+    AttackAnimation(SwingAnimation),
+    InteractAnimation(SwingAnimation),
     /// Additional item count required by a merchant offer.
     AdditionalTradeCost(VarInt),
     /// The dye color supplied by this item.
@@ -325,7 +326,7 @@ item_components! {
     },
 
     /// The color used for markings on a Map item.
-    MapColor(i32),
+
 
     /// The numerical ID associated with a filled Map.
     MapId(VarInt),
@@ -451,7 +452,7 @@ item_components! {
     BaseColor(VarInt),
 
     /// The four item IDs used as patterns on a Decorated Pot.
-    PotDecorations(Vec<RegistryId>),
+    PotDecorations(Box<[Option<ItemStackTemplate>; 4]>),
 
     /// The inventory contents of a block (like a Chest or Shulker Box).
     Container(Vec<Option<ItemStackTemplate>>),
@@ -552,6 +553,18 @@ item_components! {
     ChickenSoundVariant(RegistryId),
     ZombieNautilusVariant(RegistryId),
     CatSoundVariant(RegistryId),
+    /// A registered block transformer; this codec does not allow inline values.
+    BlockTransformer(RegistryId),
+    VillagerFood(VarInt),
+    Compostable(ResolvableInt),
+    CookingFuel(CookingFuel),
+    BrewingFuel(BrewingFuel),
+    MobVisibility(MobVisibility),
+    ProvidesPotteryPattern(RegistryId),
+    SignTextFront(Box<SignText>),
+    SignTextBack(Box<SignText>),
+    Waxed,
+    CushionColor(DyeColor),
 }
 
 impl ItemComponent {
@@ -870,21 +883,7 @@ pub struct SoundEventDefinition {
 /// Defines a material used to trim armor (e.g., Gold, Amethyst).
 #[derive(Clone, PartialEq, Debug, Encode, Decode)]
 pub struct TrimMaterial {
-    /// Corresponds to "Suffix" in the Wiki.
-    /// This string is appended to the texture path (e.g., "amethyst" ->
-    /// "`trims/items/leggings_trim_amethyst`").
-    pub asset_name: String,
-
-    /// Allows specific armor materials to use a different texture suffix.
-    ///
-    /// Structure:
-    /// - Key: Armor Material Model Name (Identifier, e.g.,
-    ///   "minecraft:netherite")
-    /// - Value: Overridden Asset Name (String, e.g., "`amethyst_darker`")
-    pub overrides: Vec<(Ident<String>, String)>,
-
-    /// Corresponds to "Description" in the Wiki.
-    /// The text displayed in the item tooltip (e.g., "Amethyst Material").
+    pub palette_id: Ident<String>,
     pub description: TextComponent,
 }
 
@@ -1381,4 +1380,35 @@ pub enum AxolotlType {
     Gold,
     Cyan,
     Blue,
+}
+
+/// A constant integer or a registry key for a contextual integer provider.
+pub type ResolvableInt = Either<i32, Ident<String>>;
+/// A constant float or a registry key for a contextual float provider.
+pub type ResolvableFloat = Either<f32, Ident<String>>;
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct CookingFuel {
+    pub burn_time: ResolvableInt,
+    pub speed_multiplier: ResolvableFloat,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct BrewingFuel {
+    pub uses: ResolvableInt,
+    pub speed_multiplier: ResolvableFloat,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct MobVisibility {
+    pub targeting_entity_types: IDSet,
+    pub visibility: f32,
+}
+
+#[derive(Clone, PartialEq, Debug, Encode, Decode)]
+pub struct SignText {
+    pub messages: [TextComponent; 4],
+    pub filtered_messages: Option<[TextComponent; 4]>,
+    pub color: DyeColor,
+    pub has_glowing_text: bool,
 }

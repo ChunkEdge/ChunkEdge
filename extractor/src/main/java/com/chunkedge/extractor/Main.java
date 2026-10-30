@@ -72,7 +72,6 @@ public class Main implements ModInitializer {
             new Attributes(),
             new CommandArgumentTypes(),
             new ItemComponentTypes(),
-            new Blocks(),
             new Effects(),
             new Packets(),
             new Sounds(),
@@ -134,6 +133,7 @@ public class Main implements ModInitializer {
             }
 
             var startupExtractors = new Extractor[] {
+                new Blocks(),
                 new Tags(server),
                 new Paintings(server),
                 new Enchants(server),

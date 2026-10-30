@@ -28,7 +28,7 @@ pub struct RegistryCodec {
 #[derive(Clone, Debug)]
 pub struct RegistryValue {
     pub name: Ident<String>,
-    pub element: Compound,
+    pub element: Value,
 }
 
 impl RegistryCodec {
@@ -79,15 +79,7 @@ impl Default for RegistryCodec {
                     }
                 };
 
-                let Value::Compound(value) = v else {
-                    error!("registry value {name} is not a compound");
-                    continue;
-                };
-
-                reg_values.push(RegistryValue {
-                    name,
-                    element: value,
-                });
+                reg_values.push(RegistryValue { name, element: v });
             }
 
             registries.insert(reg_name, reg_values);

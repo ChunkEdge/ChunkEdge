@@ -38,7 +38,7 @@ public class Recipe implements Main.Extractor {
             .forEach(holder -> {
                 recipesJson.add(
                     holder.id().identifier().getPath(),
-                    net.minecraft.world.item.crafting.Recipe.CODEC.encodeStart(ops, holder.value()).getOrThrow()
+                    net.minecraft.world.item.crafting.Recipe.DIRECT_CODEC.encodeStart(ops, holder.value()).getOrThrow()
                 );
             });
 

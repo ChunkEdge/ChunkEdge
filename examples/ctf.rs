@@ -915,7 +915,7 @@ fn update_clones(
         *clone.head_yaw = *src.head_yaw;
         *clone.velocity = *src.velocity;
         *clone.look = *src.look;
-        *clone.animations = *src.animations;
+        clone.animations.clone_from(src.animations);
         *clone.on_ground = *src.on_ground;
         *clone.statuses = *src.statuses;
     }

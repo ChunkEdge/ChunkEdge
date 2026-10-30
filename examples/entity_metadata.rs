@@ -2,15 +2,15 @@ use std::collections::HashMap;
 
 use chunkedge::entity::breeze::BreezeEntity;
 use chunkedge::entity::cat::{self, CatEntity};
-use chunkedge::entity::ender_man::{self, EnderManEntity};
+use chunkedge::entity::enderman::{self, EndermanEntity};
 use chunkedge::entity::frog::FrogEntity;
 use chunkedge::entity::painting::{self, PaintingEntity};
 use chunkedge::entity::player::PlayerEntity;
 use chunkedge::entity::warden::WardenEntity;
 use chunkedge::entity::zombie::ZombieEntity;
 use chunkedge::entity::{
-    CatVariant, EntityLayerId, ObjectData, OnGround, PaintingVariant, PaintingVariantDefinition,
-    Pose, entity,
+    CatVariant, EntityLayerId, OnGround, PaintingVariant, PaintingVariantDefinition, Pose, entity,
+    hanging,
 };
 use chunkedge::nbt::{List, compound};
 use chunkedge::player_list::{Listed, PlayerListEntryBundle};
@@ -438,7 +438,7 @@ fn spawn_painting_variant(
             PaintingEntity,
             layer,
             Position::new((position.0.x, position.0.y + 1.0, position.0.z)),
-            ObjectData(2),
+            hanging::Direction(Direction::North),
             painting::PaintingVariant(variant),
         ))
         .id()
@@ -459,12 +459,12 @@ fn spawn_enderman(
 
     commands
         .spawn((
-            EnderManEntity,
+            EndermanEntity,
             layer,
             position,
             Look::new(DEMO_ENTITY_YAW, 0.0),
             HeadYaw(DEMO_ENTITY_YAW),
-            ender_man::CarryState(carried_block),
+            enderman::CarryState(carried_block),
         ))
         .id()
 }

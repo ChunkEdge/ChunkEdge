@@ -12,7 +12,7 @@ env:
 
 jobs:
   chunkedge-fmt:
-    name: Formatting
+    name: Rust Formatting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Actions Repository
@@ -137,6 +137,23 @@ jobs:
 
       - name: Run doctests
         run: cargo miri test --workspace --all-features --doc
+
+  extractor-fmt:
+    name: Java Formatting (Extractor)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Actions Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "25"
+
+      - name: Check Java formatting
+        run: ./gradlew spotlessCheck
+        working-directory: extractor
 
   extractor-build:
     name: Build Extractor

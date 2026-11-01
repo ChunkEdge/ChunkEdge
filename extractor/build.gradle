@@ -1,5 +1,6 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'com.diffplug.spotless' version '8.10.4'
 }
 
 base {
@@ -50,5 +51,12 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archives_base_name}"}
+	}
+}
+
+spotless {
+	java {
+		target 'src/**/*.java'
+		googleJavaFormat('1.30.0')
 	}
 }

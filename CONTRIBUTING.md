@@ -37,6 +37,17 @@ cargo watch -c -x "run -p playground" # run the playground and watch for changes
 
 When you submit a pull request, your code will automatically run through clippy, rustfmt, etc. to check for any errors or mistakes. If an error does occur, it must be fixed before the pull request can be merged.
 
+## Formatting
+
+In a `nix develop` shell, run these commands from anywhere inside the repository to apply formatting:
+
+```sh
+fmt-rust # Format the Rust workspace with the pinned Rust toolchain
+fmt-java # Format the extractor's Java sources with Spotless/google-java-format
+```
+
+Without Nix, use `cargo fmt --all` from the repository root and `./gradlew spotlessApply` from `extractor/`. CI automatically checks formatting.
+
 ## Code Conventions
 
 Here are some rules you should follow for your code. Generally the goal here is to be consistent with existing code, the standard library, and the Rust ecosystem as a whole. Nonconforming code is not necessarily a blocker for accepting your contribution, but conformance is advised.

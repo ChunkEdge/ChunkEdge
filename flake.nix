@@ -27,6 +27,23 @@
       appNativeBuildInputs = with pkgs; [
           # required for the packet inspector on nix
           pkg-config
+          (writeShellApplication {
+            name = "fmt-java";
+            runtimeInputs = [ git jdk25 ];
+            text = ''
+              repo_root="$(git rev-parse --show-toplevel)"
+              export JAVA_HOME="${pkgs.jdk25}"
+              exec "$repo_root/extractor/gradlew" -p "$repo_root/extractor" spotlessApply "$@"
+            '';
+          })
+          (writeShellApplication {
+            name = "fmt-rust";
+            runtimeInputs = [ git rust ];
+            text = ''
+              repo_root="$(git rev-parse --show-toplevel)"
+              exec ${rust}/bin/cargo fmt --manifest-path "$repo_root/Cargo.toml" --all "$@"
+            '';
+          })
       ];
       appBuildInputs = with pkgs; [
           rust

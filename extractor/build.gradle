@@ -55,6 +55,8 @@ jar {
 }
 
 spotless {
+	// Formatting is enforced by the dedicated CI job, independently of build/check.
+	enforceCheck false
 	java {
 		target 'src/**/*.java'
 		googleJavaFormat('1.30.0')

@@ -7,13 +7,22 @@ use crate::{BlockPos, Packet};
 
 #[derive(Clone, Debug, Packet, Encode, Decode)]
 pub struct LevelParticlesS2c {
+    pub particle: Particle,
     pub long_distance: bool,
     pub always_visible: bool,
     pub position: DVec3,
     pub offset: Vec3,
-    pub max_speed: f32,
-    pub count: i32,
-    pub particle: Particle,
+    pub max_speed: Vec3,
+    pub count: VarInt,
+    pub randomization: ParticleRandomization,
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Default, Encode, Decode)]
+pub enum ParticleRandomization {
+    #[default]
+    Default,
+    Alternative,
+    AlternativeWithSpeed,
 }
 
 // The format of the enum below currently needs to be manually maintained.
@@ -25,6 +34,9 @@ pub struct LevelParticlesS2c {
 #[derive(Clone, PartialEq, Debug, Encode, Decode, chunkedge_protocol_macros::RegistryId)]
 #[packet(registry = chunkedge_generated::particle_type)]
 pub enum Particle {
+    RedPoplarLeaves,
+    OrangePoplarLeaves,
+    YellowPoplarLeaves,
     AngryVillager,
     Block(BlockState),
     BlockMarker(BlockState),

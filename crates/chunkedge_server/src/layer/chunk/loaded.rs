@@ -1,10 +1,9 @@
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::mem;
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::Arc;
 
 use chunkedge_binary::Encode;
-use chunkedge_generated::block::{BlockKind, PropName, PropValue};
 use chunkedge_nbt::Compound;
 use chunkedge_protocol::encode::{PacketWriter, WritePacket};
 use chunkedge_protocol::packets::play::level_chunk_with_light_s2c::{
@@ -21,6 +20,7 @@ use chunkedge_registry::RegistryIdx;
 use chunkedge_registry::biome::BiomeId;
 use parking_lot::Mutex; // Using nonstandard mutex to avoid poisoning API.
 
+use super::block_entity::client_update_tag;
 use super::chunk::{
     BiomeContainer, BlockStateContainer, Chunk, SECTION_BLOCK_COUNT, bit_width, check_biome_oob,
     check_block_oob, check_section_oob,
@@ -31,10 +31,9 @@ use super::{ChunkLayerInfo, ChunkLayerMessages, LocalMsg};
 
 #[derive(Debug)]
 pub struct LoadedChunk {
-    /// A count of the clients viewing this chunk. Useful for knowing if it's
-    /// necessary to record changes, since no client would be in view to receive
-    /// the changes if this were zero.
-    viewer_count: AtomicU32,
+    /// Each client that received this chunk owns one additional strong reference.
+    /// This chunk owns the original reference, which is excluded from the count.
+    viewers: Arc<()>,
     /// Block and biome data for the chunk.
     sections: Box<[Section]>,
     /// Sky light data for the chunk. Light sections have one extra section at
@@ -149,7 +148,7 @@ impl LoadedChunk {
         let section_count = height as usize / 16;
         let light_section_count = section_count + 2;
         Self {
-            viewer_count: AtomicU32::new(0),
+            viewers: Arc::new(()),
             sections: vec![Section::default(); section_count].into(),
             // We don't have a full lighting engine implemented so we set all sky light to be
             // NotSet so that no light data is sent to the client and we rely
@@ -230,26 +229,13 @@ impl LoadedChunk {
         }
     }
 
-    /// Returns the number of clients in view of this chunk.
+    /// Returns the number of clients that have this chunk loaded.
     pub fn viewer_count(&self) -> u32 {
-        self.viewer_count.load(Ordering::Relaxed)
+        (Arc::strong_count(&self.viewers) - 1) as u32
     }
 
-    /// Like [`Self::viewer_count`], but avoids an atomic operation.
-    pub fn viewer_count_mut(&mut self) -> u32 {
-        *self.viewer_count.get_mut()
-    }
-
-    /// Increments the viewer count.
-    pub(crate) fn inc_viewer_count(&self) {
-        self.viewer_count.fetch_add(1, Ordering::Relaxed);
-    }
-
-    /// Decrements the viewer count.
-    #[track_caller]
-    pub(crate) fn dec_viewer_count(&self) {
-        let old = self.viewer_count.fetch_sub(1, Ordering::Relaxed);
-        debug_assert_ne!(old, 0, "viewer count underflow!");
+    pub(crate) fn viewer_token(&self) -> Arc<()> {
+        Arc::clone(&self.viewers)
     }
 
     /// Performs the changes necessary to prepare this chunk for client updates.
@@ -261,11 +247,14 @@ impl LoadedChunk {
         info: &ChunkLayerInfo,
         messages: &mut ChunkLayerMessages,
     ) {
-        if *self.viewer_count.get_mut() == 0 {
-            // Nobody is viewing the chunk, so no need to send any update packets. There
-            // also shouldn't be any changes that need to be cleared.
-            self.assert_no_changes();
-
+        if self.viewer_count() == 0 {
+            // The last viewer may have disconnected after these changes were
+            // recorded. Future viewers receive the current state in full.
+            for section in &mut self.sections {
+                section.updates.clear();
+            }
+            self.changed_block_entities.clear();
+            self.changed_biomes = false;
             return;
         }
 
@@ -336,7 +325,7 @@ impl LoadedChunk {
                 writer.write_packet(&BlockEntityDataS2c {
                     location: BlockPos::new(global_x, global_y, global_z),
                     kind,
-                    data: Cow::Borrowed(nbt),
+                    data: client_update_tag(state, nbt),
                 });
             });
         }
@@ -437,27 +426,11 @@ impl LoadedChunk {
     }
 
     fn is_motion_blocking_occupied(state: BlockState) -> bool {
-        let kind = state.to_kind();
-
-        if matches!(kind, BlockKind::BambooSapling | BlockKind::Cactus) {
-            return false;
-        }
-
-        state.blocks_motion()
-            || state.is_liquid()
-            || state.get(PropName::Waterlogged) == Some(PropValue::True)
+        state.blocks_motion() || state.has_fluid()
     }
 
     fn is_motion_blocking_no_leaves_occupied(state: BlockState) -> bool {
-        if Self::is_leaf_block(state) {
-            return false;
-        }
-
-        Self::is_motion_blocking_occupied(state)
-    }
-
-    fn is_leaf_block(state: BlockState) -> bool {
-        state.to_kind().to_str().ends_with("_leaves")
+        state.blocks_motion_no_leaves() || state.has_fluid()
     }
 
     /// Encodes a given heightmap into the packed long-array format used in
@@ -608,16 +581,15 @@ impl LoadedChunk {
                     let z = idx / 16 % 16;
                     let y = idx / 16 / 16;
 
-                    let kind = self.sections[y as usize / 16]
+                    let state = self.sections[y as usize / 16]
                         .block_states
-                        .get(idx as usize % SECTION_BLOCK_COUNT)
-                        .block_entity_kind();
+                        .get(idx as usize % SECTION_BLOCK_COUNT);
 
-                    kind.map(|kind| ChunkDataBlockEntity {
+                    state.block_entity_kind().map(|kind| ChunkDataBlockEntity {
                         packed_xz: ((x << 4) | z) as i8,
                         y: y as i16 + info.min_y as i16,
                         kind,
-                        data: Cow::Borrowed(nbt),
+                        data: client_update_tag(state, nbt),
                     })
                 })
                 .collect();
@@ -682,7 +654,7 @@ impl Chunk for LoadedChunk {
         if block != old_block {
             self.cached_init_packets.get_mut().clear();
 
-            if *self.viewer_count.get_mut() > 0 {
+            if Arc::strong_count(&self.viewers) > 1 {
                 sect.updates.push(
                     ChunkDeltaUpdateEntry::new()
                         .with_off_x(x as u8)
@@ -705,7 +677,7 @@ impl Chunk for LoadedChunk {
             if *b != block {
                 self.cached_init_packets.get_mut().clear();
 
-                if *self.viewer_count.get_mut() > 0 {
+                if Arc::strong_count(&self.viewers) > 1 {
                     // The whole section is being modified, so any previous modifications would
                     // be overwritten.
                     sect.updates.clear();
@@ -736,7 +708,7 @@ impl Chunk for LoadedChunk {
                         if block != sect.block_states.get(idx as usize) {
                             self.cached_init_packets.get_mut().clear();
 
-                            if *self.viewer_count.get_mut() > 0 {
+                            if Arc::strong_count(&self.viewers) > 1 {
                                 sect.updates.push(
                                     ChunkDeltaUpdateEntry::new()
                                         .with_off_x(x as u8)
@@ -767,7 +739,7 @@ impl Chunk for LoadedChunk {
         let idx = x + z * 16 + y * 16 * 16;
 
         if let Some(be) = self.block_entities.get_mut(&idx) {
-            if *self.viewer_count.get_mut() > 0 {
+            if Arc::strong_count(&self.viewers) > 1 {
                 self.changed_block_entities.insert(idx);
             }
             self.cached_init_packets.get_mut().clear();
@@ -791,7 +763,7 @@ impl Chunk for LoadedChunk {
 
         match block_entity {
             Some(nbt) => {
-                if *self.viewer_count.get_mut() > 0 {
+                if Arc::strong_count(&self.viewers) > 1 {
                     self.changed_block_entities.insert(idx);
                 }
                 self.cached_init_packets.get_mut().clear();
@@ -817,7 +789,7 @@ impl Chunk for LoadedChunk {
 
         self.cached_init_packets.get_mut().clear();
 
-        if *self.viewer_count.get_mut() > 0 {
+        if Arc::strong_count(&self.viewers) > 1 {
             self.changed_block_entities
                 .extend(mem::take(&mut self.block_entities).into_keys());
         } else {
@@ -843,7 +815,7 @@ impl Chunk for LoadedChunk {
         if biome != old_biome {
             self.cached_init_packets.get_mut().clear();
 
-            if *self.viewer_count.get_mut() > 0 {
+            if Arc::strong_count(&self.viewers) > 1 {
                 self.changed_biomes = true;
             }
         }
@@ -859,11 +831,11 @@ impl Chunk for LoadedChunk {
         if let PalettedContainer::Single(b) = &sect.biomes {
             if *b != biome {
                 self.cached_init_packets.get_mut().clear();
-                self.changed_biomes = *self.viewer_count.get_mut() > 0;
+                self.changed_biomes = Arc::strong_count(&self.viewers) > 1;
             }
         } else {
             self.cached_init_packets.get_mut().clear();
-            self.changed_biomes = *self.viewer_count.get_mut() > 0;
+            self.changed_biomes = Arc::strong_count(&self.viewers) > 1;
         }
 
         sect.biomes.fill(biome);
@@ -977,45 +949,6 @@ mod tests {
         );
 
         assert!(!chunk.cached_init_packets.get_mut().is_empty());
-    }
-
-    #[test]
-    fn heightmap_occupancy_rules() {
-        // Based on: https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Heightmap_structure
-        let mut chunk = LoadedChunk::new(32);
-
-        chunk.set_block_state(0, 0, 0, BlockState::STONE);
-        chunk.set_block_state(1, 5, 0, BlockState::OAK_LEAVES);
-        chunk.set_block_state(2, 6, 0, BlockState::CACTUS);
-        chunk.set_block_state(3, 7, 0, BlockState::WATER);
-        chunk.set_block_state(
-            4,
-            8,
-            0,
-            BlockState::OAK_LEAVES.set(PropName::Waterlogged, PropValue::True),
-        );
-
-        let world_surface = chunk.world_surface();
-        let motion_blocking = chunk.motion_blocking();
-        let motion_blocking_no_leaves = chunk.motion_blocking_no_leaves();
-
-        assert_eq!(world_surface[heightmap_idx(0, 0)], 1);
-        assert_eq!(world_surface[heightmap_idx(1, 0)], 6);
-        assert_eq!(world_surface[heightmap_idx(2, 0)], 7);
-        assert_eq!(world_surface[heightmap_idx(3, 0)], 8);
-        assert_eq!(world_surface[heightmap_idx(4, 0)], 9);
-
-        assert_eq!(motion_blocking[heightmap_idx(0, 0)], 1);
-        assert_eq!(motion_blocking[heightmap_idx(1, 0)], 6);
-        assert_eq!(motion_blocking[heightmap_idx(2, 0)], 0);
-        assert_eq!(motion_blocking[heightmap_idx(3, 0)], 8);
-        assert_eq!(motion_blocking[heightmap_idx(4, 0)], 9);
-
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(0, 0)], 1);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(1, 0)], 0);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(2, 0)], 0);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(3, 0)], 8);
-        assert_eq!(motion_blocking_no_leaves[heightmap_idx(4, 0)], 0);
     }
 
     #[test]

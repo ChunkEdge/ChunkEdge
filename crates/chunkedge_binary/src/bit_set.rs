@@ -126,12 +126,12 @@ macro_rules! impl_default {
 
 impl_default!(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16);
 
-/// A dynamically-sized bit set encoded as a prefixed array of 64-bit words.
+/// A dynamically-sized bit set encoded as a [`VarInt`]-prefixed byte array.
 ///
 /// Minecraft's protocol calls this type `BitSet`. Bits are addressed from the
-/// least-significant bit of the first word.
+/// least-significant bit of the first byte.
 #[derive(Clone, PartialEq, Eq, Default)]
-pub struct VariableBitSet(pub Vec<i64>);
+pub struct VariableBitSet(pub Vec<u8>);
 
 impl VariableBitSet {
     /// Creates an empty bit set.
@@ -141,21 +141,19 @@ impl VariableBitSet {
 
     /// Returns whether the bit at `idx` is set.
     pub fn bit(&self, idx: usize) -> bool {
-        let word = idx / 64;
-        let bit = idx % 64;
+        let byte = idx / 8;
+        let bit = idx % 8;
 
-        self.0
-            .get(word)
-            .is_some_and(|word| ((*word as u64) >> bit) & 1 == 1)
+        self.0.get(byte).is_some_and(|byte| (*byte >> bit) & 1 == 1)
     }
 
     /// Sets the bit at `idx`.
     pub fn set(&mut self, idx: usize) {
-        let word = idx / 64;
-        let bit = idx % 64;
+        let byte = idx / 8;
+        let bit = idx % 8;
 
-        self.0.resize(self.0.len().max(word + 1), 0);
-        self.0[word] = (self.0[word] as u64 | (1 << bit)) as i64;
+        self.0.resize(self.0.len().max(byte + 1), 0);
+        self.0[byte] |= 1 << bit;
     }
 
     /// Clears the bit at `idx`.
@@ -163,11 +161,11 @@ impl VariableBitSet {
     /// Clearing a bit past the current end is a no-op. Clearing the highest set
     /// bit shrinks the packed representation to match Java's `BitSet`.
     pub fn clear(&mut self, idx: usize) {
-        let word = idx / 64;
-        let bit = idx % 64;
+        let byte = idx / 8;
+        let bit = idx % 8;
 
-        if let Some(word_value) = self.0.get_mut(word) {
-            *word_value = (*word_value as u64 & !(1 << bit)) as i64;
+        if let Some(byte_value) = self.0.get_mut(byte) {
+            *byte_value &= !(1 << bit);
 
             while self.0.last() == Some(&0) {
                 self.0.pop();
@@ -185,13 +183,13 @@ impl Encode for VariableBitSet {
         );
 
         VarInt(self.0.len() as i32).encode(&mut w)?;
-        i64::encode_slice(&self.0, w)
+        u8::encode_slice(&self.0, w)
     }
 }
 
 impl Decode<'_> for VariableBitSet {
     fn decode(r: &mut &[u8]) -> anyhow::Result<Self> {
-        Ok(Self(Vec::<i64>::decode(r)?))
+        Ok(Self(Vec::<u8>::decode(r)?))
     }
 }
 
@@ -209,7 +207,7 @@ impl fmt::Display for VariableBitSet {
 
         write!(f, "0b")?;
 
-        for i in (0..self.0.len() * 64).rev() {
+        for i in (0..self.0.len() * 8).rev() {
             write!(f, "{}", u8::from(self.bit(i)))?;
         }
 
@@ -261,7 +259,7 @@ mod tests {
         assert!(!bits.bit(70));
         bits.set(70);
         assert!(bits.bit(70));
-        assert_eq!(bits.0, vec![0, 0b0100_0000]);
+        assert_eq!(bits.0, vec![0, 0, 0, 0, 0, 0, 0, 0, 0b0100_0000]);
 
         bits.clear(70);
         assert!(!bits.bit(70));

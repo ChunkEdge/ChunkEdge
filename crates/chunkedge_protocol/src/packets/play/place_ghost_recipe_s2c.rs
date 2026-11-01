@@ -4,7 +4,7 @@ use super::recipe_book_add_s2c::RecipeDisplay;
 use crate::Packet;
 
 #[derive(Clone, Debug, Encode, Decode, Packet)]
-pub struct PlaceGhostRecipeS2c<'a> {
+pub struct PlaceGhostRecipeS2c {
     pub window_id: VarInt,
-    pub recipe_display: RecipeDisplay<'a>,
+    pub recipe_display: RecipeDisplay,
 }

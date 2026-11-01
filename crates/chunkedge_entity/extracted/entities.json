@@ -3530,6 +3530,24 @@
     "translation_key": "entity.minecraft.creeper",
     "type": "creeper"
   },
+  "CushionEntity": {
+    "default_bounding_box": {
+      "size_x": 1.0,
+      "size_y": 0.25,
+      "size_z": 1.0
+    },
+    "fields": [
+      {
+        "default_value": 0,
+        "index": 8,
+        "name": "color",
+        "type": "dye_color"
+      }
+    ],
+    "parent": "BlockAttachedEntity",
+    "translation_key": "entity.minecraft.cushion",
+    "type": "cushion"
+  },
   "DisplayEntity": {
     "fields": [
       {
@@ -4463,7 +4481,7 @@
     "translation_key": "entity.minecraft.ender_dragon",
     "type": "ender_dragon"
   },
-  "EnderManEntity": {
+  "EndermanEntity": {
     "attributes": [
       {
         "base_value": 1.0,

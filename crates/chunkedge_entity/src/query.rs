@@ -97,7 +97,10 @@ impl UpdateEntityQueryItem<'_, '_> {
         if changed_position && !needs_teleport && self.look.is_changed() {
             writer.write_packet(&MoveEntityPosRotS2c {
                 entity_id,
-                delta: (position_delta * 4096.0).to_array().map(|v| v as i16),
+                delta: (position_delta * 4096.0)
+                    .to_array()
+                    .map(|v| v as i16)
+                    .into(),
                 yaw: ByteAngle::from_degrees(self.look.yaw),
                 pitch: ByteAngle::from_degrees(self.look.pitch),
                 on_ground: self.on_ground.0,
@@ -106,7 +109,10 @@ impl UpdateEntityQueryItem<'_, '_> {
             if changed_position && !needs_teleport {
                 writer.write_packet(&MoveEntityPosS2c {
                     entity_id,
-                    delta: (position_delta * 4096.0).to_array().map(|v| v as i16),
+                    delta: (position_delta * 4096.0)
+                        .to_array()
+                        .map(|v| v as i16)
+                        .into(),
                     on_ground: self.on_ground.0,
                 });
             }
@@ -124,8 +130,7 @@ impl UpdateEntityQueryItem<'_, '_> {
         if needs_teleport {
             writer.write_packet(&EntityPositionSyncS2c {
                 entity_id,
-                position: self.pos.0,
-                velocity: self.velocity.0,
+                position: chunkedge_protocol::entity_movement::PositionPath::Linear(self.pos.0),
                 yaw: self.look.yaw,
                 pitch: self.look.pitch,
                 on_ground: self.on_ground.0,
@@ -164,15 +169,20 @@ impl UpdateEntityQueryItem<'_, '_> {
             }
         }
 
-        if self.animations.0 != 0 {
-            for i in 0..mem::size_of_val(self.animations) {
-                if (self.animations.0 >> i) & 1 == 1 {
-                    writer.write_packet(&AnimateS2c {
-                        entity_id,
-                        animation: i as u8,
-                    });
-                }
+        for i in 0..u8::BITS {
+            if (self.animations.animations >> i) & 1 == 1 {
+                writer.write_packet(&AnimateS2c {
+                    entity_id,
+                    animation: i as u8,
+                });
             }
+        }
+        for (hand, animation) in &self.animations.swings {
+            writer.write_packet(&chunkedge_protocol::packets::play::SwingAnimationS2c {
+                entity_id,
+                hand: *hand,
+                animation: animation.clone(),
+            });
         }
 
         if let Some(attributes) = self.tracked_attributes {

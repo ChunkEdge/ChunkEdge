@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use chunkedge_binary::{Decode, Encode};
 use chunkedge_ident::Ident;
-use chunkedge_nbt::Compound;
+use chunkedge_nbt::Value;
 use indexmap::IndexMap;
 
 use crate::{Packet, PacketState};
@@ -15,5 +15,5 @@ pub struct RegistryDataS2c<'a> {
     // The id of the registry
     pub id: Ident<Cow<'a, str>>,
     // The id of the entries and the entry data itself
-    pub entries: IndexMap<Ident<Cow<'a, str>>, Option<Compound>>,
+    pub entries: IndexMap<Ident<Cow<'a, str>>, Option<Value>>,
 }

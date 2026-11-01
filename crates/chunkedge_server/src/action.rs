@@ -72,6 +72,7 @@ fn handle_player_action(
                         state: DiggingState::Start,
                     });
                 }
+                PlayerAction::ChangeDestroyDirection => {}
                 PlayerAction::AbortDestroyBlock => {
                     digging_messages.write(DiggingMessage {
                         client: packet.client,

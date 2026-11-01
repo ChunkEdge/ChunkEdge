@@ -49,7 +49,7 @@ mod tests {
         assert_eq!(VarInt::decode(&mut r).unwrap().0, 1); // removed components
         assert_eq!(VarInt::decode(&mut r).unwrap().0, 3); // damage
         assert_eq!(VarInt::decode(&mut r).unwrap().0, 7);
-        assert_eq!(VarInt::decode(&mut r).unwrap().0, 46);
+        assert_eq!(VarInt::decode(&mut r).unwrap().0, 48); // map_id
         assert!(r.is_empty());
 
         let mut r = bytes.as_slice();

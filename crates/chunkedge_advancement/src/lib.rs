@@ -123,8 +123,6 @@ impl UpdateAdvancementCachedBytesQuery<'_, '_> {
                 frame_type: VarInt(a_display.frame_type as i32),
                 flags: a_display.flags(),
                 background_texture: a_display.background_texture.as_ref().map(|v| v.borrowed()),
-                x_coord: a_display.x_coord,
-                y_coord: a_display.y_coord,
             });
         }
 
@@ -139,7 +137,8 @@ impl UpdateAdvancementCachedBytesQuery<'_, '_> {
             });
         }
 
-        (&a_identifier.0, pkt).encode(w)
+        let (x, y) = a_display.map_or((0.0, 0.0), |display| (display.x_coord, display.y_coord));
+        (&a_identifier.0, pkt, x, y).encode(w)
     }
 }
 

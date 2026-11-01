@@ -1,7 +1,9 @@
 #![allow(clippy::type_complexity)]
 
+use chunkedge::hand_swing::HandSwingWriter;
 use chunkedge::interact_block::InteractBlockMessage;
 use chunkedge::inventory::HeldItem;
+use chunkedge::inventory::player_inventory::PlayerInventory;
 use chunkedge::prelude::*;
 
 const SPAWN_Y: i32 = 64;
@@ -125,6 +127,7 @@ fn place_blocks(
     mut clients: Query<(&mut Inventory, &GameMode, &HeldItem)>,
     mut layers: Query<&mut ChunkLayer>,
     mut messages: MessageReader<InteractBlockMessage>,
+    mut swings: HandSwingWriter,
 ) {
     let mut layer = layers.single_mut().unwrap();
 
@@ -132,12 +135,11 @@ fn place_blocks(
         let Ok((mut inventory, game_mode, held)) = clients.get_mut(message.client) else {
             continue;
         };
-        if message.hand != Hand::Main {
-            continue;
-        }
-
         // get the held item
-        let slot_id = held.slot();
+        let slot_id = match message.hand {
+            Hand::Main => held.slot(),
+            Hand::Off => PlayerInventory::SLOT_OFFHAND,
+        };
         let stack = inventory.slot(slot_id);
         if stack.is_empty() {
             // no item in the slot
@@ -149,16 +151,6 @@ fn place_blocks(
             continue;
         };
 
-        if *game_mode == GameMode::Survival {
-            // check if the player has the item in their inventory and remove
-            // it.
-            if stack.count > 1 {
-                let amount = stack.count - 1;
-                inventory.set_slot_amount(slot_id, amount);
-            } else {
-                inventory.set_slot(slot_id, ItemStack::EMPTY);
-            }
-        }
         let real_pos = message.position.get_in_direction(message.face);
         let state = block_kind.to_state().set(
             PropName::Axis,
@@ -168,6 +160,18 @@ fn place_blocks(
                 Direction::West | Direction::East => PropValue::X,
             },
         );
-        layer.set_block(real_pos, state);
+        if layer.set_block(real_pos, state).is_none() {
+            continue;
+        }
+        swings.swing(message.client, message.hand);
+
+        if *game_mode == GameMode::Survival {
+            let count = inventory.slot(slot_id).count;
+            if count > 1 {
+                inventory.set_slot_amount(slot_id, count - 1);
+            } else {
+                inventory.set_slot(slot_id, ItemStack::EMPTY);
+            }
+        }
     }
 }

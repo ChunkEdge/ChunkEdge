@@ -76,7 +76,7 @@
     "key": "advMode.setCommand.success"
   },
   {
-    "english_translation": "Track output",
+    "english_translation": "Track Output",
     "key": "advMode.trackOutput"
   },
   {
@@ -1044,7 +1044,7 @@
     "key": "advancements.story.iron_tools.description"
   },
   {
-    "english_translation": "Isn't It Iron Pick",
+    "english_translation": "Isn't It Iron Pick?",
     "key": "advancements.story.iron_tools.title"
   },
   {
@@ -1364,7 +1364,7 @@
     "key": "argument.entity.toomany"
   },
   {
-    "english_translation": "Invalid value \"%s\"",
+    "english_translation": "Invalid value '%s'",
     "key": "argument.enum.invalid"
   },
   {
@@ -1468,11 +1468,11 @@
     "key": "argument.pos.missing.int"
   },
   {
-    "english_translation": "Cannot mix world & local coordinates (everything must either use ^ or not)",
+    "english_translation": "Cannot mix world and local coordinates (everything must either use ^ or not)",
     "key": "argument.pos.mixed"
   },
   {
-    "english_translation": "That position is outside the allowed boundaries.",
+    "english_translation": "That position is outside the allowed boundaries",
     "key": "argument.pos.outofbounds"
   },
   {
@@ -1542,6 +1542,10 @@
   {
     "english_translation": "Invalid style: %s",
     "key": "argument.style.invalid"
+  },
+  {
+    "english_translation": "Unknown swing animation type: %s",
+    "key": "argument.swing_animation.invalid"
   },
   {
     "english_translation": "Invalid unit",
@@ -1866,6 +1870,10 @@
   {
     "english_translation": "Crimson Forest",
     "key": "biome.minecraft.crimson_forest"
+  },
+  {
+    "english_translation": "Dappled Forest",
+    "key": "biome.minecraft.dappled_forest"
   },
   {
     "english_translation": "Dark Forest",
@@ -5240,6 +5248,14 @@
     "key": "block.minecraft.black_concrete_powder"
   },
   {
+    "english_translation": "Black Concrete Slab",
+    "key": "block.minecraft.black_concrete_slab"
+  },
+  {
+    "english_translation": "Black Concrete Stairs",
+    "key": "block.minecraft.black_concrete_stairs"
+  },
+  {
     "english_translation": "Black Glazed Terracotta",
     "key": "block.minecraft.black_glazed_terracotta"
   },
@@ -5262,6 +5278,14 @@
   {
     "english_translation": "Black Wool",
     "key": "block.minecraft.black_wool"
+  },
+  {
+    "english_translation": "Black Wool Slab",
+    "key": "block.minecraft.black_wool_slab"
+  },
+  {
+    "english_translation": "Black Wool Stairs",
+    "key": "block.minecraft.black_wool_stairs"
   },
   {
     "english_translation": "Blackstone",
@@ -5312,6 +5336,14 @@
     "key": "block.minecraft.blue_concrete_powder"
   },
   {
+    "english_translation": "Blue Concrete Slab",
+    "key": "block.minecraft.blue_concrete_slab"
+  },
+  {
+    "english_translation": "Blue Concrete Stairs",
+    "key": "block.minecraft.blue_concrete_stairs"
+  },
+  {
     "english_translation": "Blue Glazed Terracotta",
     "key": "block.minecraft.blue_glazed_terracotta"
   },
@@ -5342,6 +5374,14 @@
   {
     "english_translation": "Blue Wool",
     "key": "block.minecraft.blue_wool"
+  },
+  {
+    "english_translation": "Blue Wool Slab",
+    "key": "block.minecraft.blue_wool_slab"
+  },
+  {
+    "english_translation": "Blue Wool Stairs",
+    "key": "block.minecraft.blue_wool_stairs"
   },
   {
     "english_translation": "Bone Block",
@@ -5416,6 +5456,14 @@
     "key": "block.minecraft.brown_concrete_powder"
   },
   {
+    "english_translation": "Brown Concrete Slab",
+    "key": "block.minecraft.brown_concrete_slab"
+  },
+  {
+    "english_translation": "Brown Concrete Stairs",
+    "key": "block.minecraft.brown_concrete_stairs"
+  },
+  {
     "english_translation": "Brown Glazed Terracotta",
     "key": "block.minecraft.brown_glazed_terracotta"
   },
@@ -5446,6 +5494,14 @@
   {
     "english_translation": "Brown Wool",
     "key": "block.minecraft.brown_wool"
+  },
+  {
+    "english_translation": "Brown Wool Slab",
+    "key": "block.minecraft.brown_wool_slab"
+  },
+  {
+    "english_translation": "Brown Wool Stairs",
+    "key": "block.minecraft.brown_wool_stairs"
   },
   {
     "english_translation": "Bubble Column",
@@ -6028,6 +6084,14 @@
     "key": "block.minecraft.cyan_concrete_powder"
   },
   {
+    "english_translation": "Cyan Concrete Slab",
+    "key": "block.minecraft.cyan_concrete_slab"
+  },
+  {
+    "english_translation": "Cyan Concrete Stairs",
+    "key": "block.minecraft.cyan_concrete_stairs"
+  },
+  {
     "english_translation": "Cyan Glazed Terracotta",
     "key": "block.minecraft.cyan_glazed_terracotta"
   },
@@ -6050,6 +6114,14 @@
   {
     "english_translation": "Cyan Wool",
     "key": "block.minecraft.cyan_wool"
+  },
+  {
+    "english_translation": "Cyan Wool Slab",
+    "key": "block.minecraft.cyan_wool_slab"
+  },
+  {
+    "english_translation": "Cyan Wool Stairs",
+    "key": "block.minecraft.cyan_wool_stairs"
   },
   {
     "english_translation": "Damaged Anvil",
@@ -6628,6 +6700,14 @@
     "key": "block.minecraft.gray_concrete_powder"
   },
   {
+    "english_translation": "Gray Concrete Slab",
+    "key": "block.minecraft.gray_concrete_slab"
+  },
+  {
+    "english_translation": "Gray Concrete Stairs",
+    "key": "block.minecraft.gray_concrete_stairs"
+  },
+  {
     "english_translation": "Gray Glazed Terracotta",
     "key": "block.minecraft.gray_glazed_terracotta"
   },
@@ -6650,6 +6730,14 @@
   {
     "english_translation": "Gray Wool",
     "key": "block.minecraft.gray_wool"
+  },
+  {
+    "english_translation": "Gray Wool Slab",
+    "key": "block.minecraft.gray_wool_slab"
+  },
+  {
+    "english_translation": "Gray Wool Stairs",
+    "key": "block.minecraft.gray_wool_stairs"
   },
   {
     "english_translation": "Green Banner",
@@ -6680,6 +6768,14 @@
     "key": "block.minecraft.green_concrete_powder"
   },
   {
+    "english_translation": "Green Concrete Slab",
+    "key": "block.minecraft.green_concrete_slab"
+  },
+  {
+    "english_translation": "Green Concrete Stairs",
+    "key": "block.minecraft.green_concrete_stairs"
+  },
+  {
     "english_translation": "Green Glazed Terracotta",
     "key": "block.minecraft.green_glazed_terracotta"
   },
@@ -6702,6 +6798,14 @@
   {
     "english_translation": "Green Wool",
     "key": "block.minecraft.green_wool"
+  },
+  {
+    "english_translation": "Green Wool Slab",
+    "key": "block.minecraft.green_wool_slab"
+  },
+  {
+    "english_translation": "Green Wool Stairs",
+    "key": "block.minecraft.green_wool_stairs"
   },
   {
     "english_translation": "Grindstone",
@@ -6976,6 +7080,14 @@
     "key": "block.minecraft.light_blue_concrete_powder"
   },
   {
+    "english_translation": "Light Blue Concrete Slab",
+    "key": "block.minecraft.light_blue_concrete_slab"
+  },
+  {
+    "english_translation": "Light Blue Concrete Stairs",
+    "key": "block.minecraft.light_blue_concrete_stairs"
+  },
+  {
     "english_translation": "Light Blue Glazed Terracotta",
     "key": "block.minecraft.light_blue_glazed_terracotta"
   },
@@ -6998,6 +7110,14 @@
   {
     "english_translation": "Light Blue Wool",
     "key": "block.minecraft.light_blue_wool"
+  },
+  {
+    "english_translation": "Light Blue Wool Slab",
+    "key": "block.minecraft.light_blue_wool_slab"
+  },
+  {
+    "english_translation": "Light Blue Wool Stairs",
+    "key": "block.minecraft.light_blue_wool_stairs"
   },
   {
     "english_translation": "Light Gray Banner",
@@ -7028,6 +7148,14 @@
     "key": "block.minecraft.light_gray_concrete_powder"
   },
   {
+    "english_translation": "Light Gray Concrete Slab",
+    "key": "block.minecraft.light_gray_concrete_slab"
+  },
+  {
+    "english_translation": "Light Gray Concrete Stairs",
+    "key": "block.minecraft.light_gray_concrete_stairs"
+  },
+  {
     "english_translation": "Light Gray Glazed Terracotta",
     "key": "block.minecraft.light_gray_glazed_terracotta"
   },
@@ -7050,6 +7178,14 @@
   {
     "english_translation": "Light Gray Wool",
     "key": "block.minecraft.light_gray_wool"
+  },
+  {
+    "english_translation": "Light Gray Wool Slab",
+    "key": "block.minecraft.light_gray_wool_slab"
+  },
+  {
+    "english_translation": "Light Gray Wool Stairs",
+    "key": "block.minecraft.light_gray_wool_stairs"
   },
   {
     "english_translation": "Light Weighted Pressure Plate",
@@ -7100,6 +7236,14 @@
     "key": "block.minecraft.lime_concrete_powder"
   },
   {
+    "english_translation": "Lime Concrete Slab",
+    "key": "block.minecraft.lime_concrete_slab"
+  },
+  {
+    "english_translation": "Lime Concrete Stairs",
+    "key": "block.minecraft.lime_concrete_stairs"
+  },
+  {
     "english_translation": "Lime Glazed Terracotta",
     "key": "block.minecraft.lime_glazed_terracotta"
   },
@@ -7122,6 +7266,14 @@
   {
     "english_translation": "Lime Wool",
     "key": "block.minecraft.lime_wool"
+  },
+  {
+    "english_translation": "Lime Wool Slab",
+    "key": "block.minecraft.lime_wool_slab"
+  },
+  {
+    "english_translation": "Lime Wool Stairs",
+    "key": "block.minecraft.lime_wool_stairs"
   },
   {
     "english_translation": "Lodestone",
@@ -7160,6 +7312,14 @@
     "key": "block.minecraft.magenta_concrete_powder"
   },
   {
+    "english_translation": "Magenta Concrete Slab",
+    "key": "block.minecraft.magenta_concrete_slab"
+  },
+  {
+    "english_translation": "Magenta Concrete Stairs",
+    "key": "block.minecraft.magenta_concrete_stairs"
+  },
+  {
     "english_translation": "Magenta Glazed Terracotta",
     "key": "block.minecraft.magenta_glazed_terracotta"
   },
@@ -7182,6 +7342,14 @@
   {
     "english_translation": "Magenta Wool",
     "key": "block.minecraft.magenta_wool"
+  },
+  {
+    "english_translation": "Magenta Wool Slab",
+    "key": "block.minecraft.magenta_wool_slab"
+  },
+  {
+    "english_translation": "Magenta Wool Stairs",
+    "key": "block.minecraft.magenta_wool_stairs"
   },
   {
     "english_translation": "Magma Block",
@@ -7528,8 +7696,20 @@
     "key": "block.minecraft.orange_concrete_powder"
   },
   {
+    "english_translation": "Orange Concrete Slab",
+    "key": "block.minecraft.orange_concrete_slab"
+  },
+  {
+    "english_translation": "Orange Concrete Stairs",
+    "key": "block.minecraft.orange_concrete_stairs"
+  },
+  {
     "english_translation": "Orange Glazed Terracotta",
     "key": "block.minecraft.orange_glazed_terracotta"
+  },
+  {
+    "english_translation": "Orange Poplar Leaves",
+    "key": "block.minecraft.orange_poplar_leaves"
   },
   {
     "english_translation": "Orange Shulker Box",
@@ -7554,6 +7734,14 @@
   {
     "english_translation": "Orange Wool",
     "key": "block.minecraft.orange_wool"
+  },
+  {
+    "english_translation": "Orange Wool Slab",
+    "key": "block.minecraft.orange_wool_slab"
+  },
+  {
+    "english_translation": "Orange Wool Stairs",
+    "key": "block.minecraft.orange_wool_stairs"
   },
   {
     "english_translation": "Oxeye Daisy",
@@ -7760,6 +7948,14 @@
     "key": "block.minecraft.pink_concrete_powder"
   },
   {
+    "english_translation": "Pink Concrete Slab",
+    "key": "block.minecraft.pink_concrete_slab"
+  },
+  {
+    "english_translation": "Pink Concrete Stairs",
+    "key": "block.minecraft.pink_concrete_stairs"
+  },
+  {
     "english_translation": "Pink Glazed Terracotta",
     "key": "block.minecraft.pink_glazed_terracotta"
   },
@@ -7790,6 +7986,14 @@
   {
     "english_translation": "Pink Wool",
     "key": "block.minecraft.pink_wool"
+  },
+  {
+    "english_translation": "Pink Wool Slab",
+    "key": "block.minecraft.pink_wool_slab"
+  },
+  {
+    "english_translation": "Pink Wool Stairs",
+    "key": "block.minecraft.pink_wool_stairs"
   },
   {
     "english_translation": "Piston",
@@ -7972,6 +8176,78 @@
     "key": "block.minecraft.polished_tuff_wall"
   },
   {
+    "english_translation": "Poplar Button",
+    "key": "block.minecraft.poplar_button"
+  },
+  {
+    "english_translation": "Poplar Door",
+    "key": "block.minecraft.poplar_door"
+  },
+  {
+    "english_translation": "Poplar Fence",
+    "key": "block.minecraft.poplar_fence"
+  },
+  {
+    "english_translation": "Poplar Fence Gate",
+    "key": "block.minecraft.poplar_fence_gate"
+  },
+  {
+    "english_translation": "Poplar Hanging Sign",
+    "key": "block.minecraft.poplar_hanging_sign"
+  },
+  {
+    "english_translation": "Poplar Leaves",
+    "key": "block.minecraft.poplar_leaves"
+  },
+  {
+    "english_translation": "Poplar Log",
+    "key": "block.minecraft.poplar_log"
+  },
+  {
+    "english_translation": "Poplar Planks",
+    "key": "block.minecraft.poplar_planks"
+  },
+  {
+    "english_translation": "Poplar Pressure Plate",
+    "key": "block.minecraft.poplar_pressure_plate"
+  },
+  {
+    "english_translation": "Poplar Sapling",
+    "key": "block.minecraft.poplar_sapling"
+  },
+  {
+    "english_translation": "Poplar Shelf",
+    "key": "block.minecraft.poplar_shelf"
+  },
+  {
+    "english_translation": "Poplar Sign",
+    "key": "block.minecraft.poplar_sign"
+  },
+  {
+    "english_translation": "Poplar Slab",
+    "key": "block.minecraft.poplar_slab"
+  },
+  {
+    "english_translation": "Poplar Stairs",
+    "key": "block.minecraft.poplar_stairs"
+  },
+  {
+    "english_translation": "Poplar Trapdoor",
+    "key": "block.minecraft.poplar_trapdoor"
+  },
+  {
+    "english_translation": "Poplar Wall Hanging Sign",
+    "key": "block.minecraft.poplar_wall_hanging_sign"
+  },
+  {
+    "english_translation": "Poplar Wall Sign",
+    "key": "block.minecraft.poplar_wall_sign"
+  },
+  {
+    "english_translation": "Poplar Wood",
+    "key": "block.minecraft.poplar_wood"
+  },
+  {
     "english_translation": "Poppy",
     "key": "block.minecraft.poppy"
   },
@@ -8100,6 +8376,10 @@
     "key": "block.minecraft.potted_pink_tulip"
   },
   {
+    "english_translation": "Potted Poplar Sapling",
+    "key": "block.minecraft.potted_poplar_sapling"
+  },
+  {
     "english_translation": "Potted Poppy",
     "key": "block.minecraft.potted_poppy"
   },
@@ -8212,6 +8492,14 @@
     "key": "block.minecraft.purple_concrete_powder"
   },
   {
+    "english_translation": "Purple Concrete Slab",
+    "key": "block.minecraft.purple_concrete_slab"
+  },
+  {
+    "english_translation": "Purple Concrete Stairs",
+    "key": "block.minecraft.purple_concrete_stairs"
+  },
+  {
     "english_translation": "Purple Glazed Terracotta",
     "key": "block.minecraft.purple_glazed_terracotta"
   },
@@ -8234,6 +8522,14 @@
   {
     "english_translation": "Purple Wool",
     "key": "block.minecraft.purple_wool"
+  },
+  {
+    "english_translation": "Purple Wool Slab",
+    "key": "block.minecraft.purple_wool_slab"
+  },
+  {
+    "english_translation": "Purple Wool Stairs",
+    "key": "block.minecraft.purple_wool_stairs"
   },
   {
     "english_translation": "Purpur Block",
@@ -8316,6 +8612,14 @@
     "key": "block.minecraft.red_concrete_powder"
   },
   {
+    "english_translation": "Red Concrete Slab",
+    "key": "block.minecraft.red_concrete_slab"
+  },
+  {
+    "english_translation": "Red Concrete Stairs",
+    "key": "block.minecraft.red_concrete_stairs"
+  },
+  {
     "english_translation": "Red Glazed Terracotta",
     "key": "block.minecraft.red_glazed_terracotta"
   },
@@ -8344,6 +8648,10 @@
     "key": "block.minecraft.red_nether_bricks"
   },
   {
+    "english_translation": "Red Poplar Leaves",
+    "key": "block.minecraft.red_poplar_leaves"
+  },
+  {
     "english_translation": "Red Sand",
     "key": "block.minecraft.red_sand"
   },
@@ -8362,6 +8670,10 @@
   {
     "english_translation": "Red Sandstone Wall",
     "key": "block.minecraft.red_sandstone_wall"
+  },
+  {
+    "english_translation": "Red Shrub",
+    "key": "block.minecraft.red_shrub"
   },
   {
     "english_translation": "Red Shulker Box",
@@ -8386,6 +8698,14 @@
   {
     "english_translation": "Red Wool",
     "key": "block.minecraft.red_wool"
+  },
+  {
+    "english_translation": "Red Wool Slab",
+    "key": "block.minecraft.red_wool_slab"
+  },
+  {
+    "english_translation": "Red Wool Stairs",
+    "key": "block.minecraft.red_wool_stairs"
   },
   {
     "english_translation": "Block of Redstone",
@@ -8518,6 +8838,10 @@
   {
     "english_translation": "Respawn point set",
     "key": "block.minecraft.set_spawn"
+  },
+  {
+    "english_translation": "Shelf Mushroom",
+    "key": "block.minecraft.shelf_mushroom"
   },
   {
     "english_translation": "Short Dry Grass",
@@ -8792,6 +9116,10 @@
     "key": "block.minecraft.stonecutter"
   },
   {
+    "english_translation": "Straw Bed",
+    "key": "block.minecraft.straw_bed"
+  },
+  {
     "english_translation": "Stripped Acacia Log",
     "key": "block.minecraft.stripped_acacia_log"
   },
@@ -8866,6 +9194,14 @@
   {
     "english_translation": "Stripped Pale Oak Wood",
     "key": "block.minecraft.stripped_pale_oak_wood"
+  },
+  {
+    "english_translation": "Stripped Poplar Log",
+    "key": "block.minecraft.stripped_poplar_log"
+  },
+  {
+    "english_translation": "Stripped Poplar Wood",
+    "key": "block.minecraft.stripped_poplar_wood"
   },
   {
     "english_translation": "Stripped Spruce Log",
@@ -9528,6 +9864,14 @@
     "key": "block.minecraft.white_concrete_powder"
   },
   {
+    "english_translation": "White Concrete Slab",
+    "key": "block.minecraft.white_concrete_slab"
+  },
+  {
+    "english_translation": "White Concrete Stairs",
+    "key": "block.minecraft.white_concrete_stairs"
+  },
+  {
     "english_translation": "White Glazed Terracotta",
     "key": "block.minecraft.white_glazed_terracotta"
   },
@@ -9554,6 +9898,14 @@
   {
     "english_translation": "White Wool",
     "key": "block.minecraft.white_wool"
+  },
+  {
+    "english_translation": "White Wool Slab",
+    "key": "block.minecraft.white_wool_slab"
+  },
+  {
+    "english_translation": "White Wool Stairs",
+    "key": "block.minecraft.white_wool_stairs"
   },
   {
     "english_translation": "Wildflowers",
@@ -9600,8 +9952,20 @@
     "key": "block.minecraft.yellow_concrete_powder"
   },
   {
+    "english_translation": "Yellow Concrete Slab",
+    "key": "block.minecraft.yellow_concrete_slab"
+  },
+  {
+    "english_translation": "Yellow Concrete Stairs",
+    "key": "block.minecraft.yellow_concrete_stairs"
+  },
+  {
     "english_translation": "Yellow Glazed Terracotta",
     "key": "block.minecraft.yellow_glazed_terracotta"
+  },
+  {
+    "english_translation": "Yellow Poplar Leaves",
+    "key": "block.minecraft.yellow_poplar_leaves"
   },
   {
     "english_translation": "Yellow Shulker Box",
@@ -9622,6 +9986,14 @@
   {
     "english_translation": "Yellow Wool",
     "key": "block.minecraft.yellow_wool"
+  },
+  {
+    "english_translation": "Yellow Wool Slab",
+    "key": "block.minecraft.yellow_wool_slab"
+  },
+  {
+    "english_translation": "Yellow Wool Stairs",
+    "key": "block.minecraft.yellow_wool_stairs"
   },
   {
     "english_translation": "Zombie Head",
@@ -9880,7 +10252,7 @@
     "key": "chat_restriction.chat_disabled_by_options.action"
   },
   {
-    "english_translation": "Chat is restricted by the launcher",
+    "english_translation": "Chat is restricted by the launcher.",
     "key": "chat_restriction.disabled_by_launcher"
   },
   {
@@ -9888,7 +10260,7 @@
     "key": "chat_restriction.disabled_by_profile"
   },
   {
-    "english_translation": "Go to your profile settings",
+    "english_translation": "Go to Your Profile Settings",
     "key": "chat_restriction.disabled_by_profile.action"
   },
   {
@@ -10010,6 +10382,30 @@
   {
     "english_translation": "Yellow",
     "key": "color.minecraft.yellow"
+  },
+  {
+    "english_translation": "%s returned value %s",
+    "key": "command.compute.result.named.exact"
+  },
+  {
+    "english_translation": "%s returned invalid value (%s)",
+    "key": "command.compute.result.named.invalid"
+  },
+  {
+    "english_translation": "%s returned value %s (rounded to %s)",
+    "key": "command.compute.result.named.rounded"
+  },
+  {
+    "english_translation": "Number provider returned value %s",
+    "key": "command.compute.result.unnamed.exact"
+  },
+  {
+    "english_translation": "Number provider returned invalid value (%s)",
+    "key": "command.compute.result.unnamed.invalid"
+  },
+  {
+    "english_translation": "Number provider returned value %s (rounded to %s)",
+    "key": "command.compute.result.unnamed.rounded"
   },
   {
     "english_translation": "<--[HERE]",
@@ -10260,7 +10656,7 @@
     "key": "commands.bossbar.get.visible.hidden"
   },
   {
-    "english_translation": "Custom bossbar %s is currently shown",
+    "english_translation": "Custom bossbar %s is currently visible",
     "key": "commands.bossbar.get.visible.visible"
   },
   {
@@ -10288,7 +10684,7 @@
     "key": "commands.bossbar.set.max.success"
   },
   {
-    "english_translation": "Nothing changed. That's already the max of this bossbar",
+    "english_translation": "Nothing changed. That's already the maximum of this bossbar",
     "key": "commands.bossbar.set.max.unchanged"
   },
   {
@@ -10506,10 +10902,6 @@
   {
     "english_translation": "Pack '%s' cannot be enabled, since required flags are not enabled in this world: %s!",
     "key": "commands.datapack.enable.failed.no_flags"
-  },
-  {
-    "english_translation": "Cannot enable or disable Fabric internal pack \"%s\".",
-    "key": "commands.datapack.fabric.internal"
   },
   {
     "english_translation": "There are no more data packs available",
@@ -10832,6 +11224,10 @@
     "key": "commands.fill.toobig"
   },
   {
+    "english_translation": "No biome entries were changed",
+    "key": "commands.fillbiome.no_changes"
+  },
+  {
     "english_translation": "%s biome entry/entries set between %s, %s, %s and %s, %s, %s",
     "key": "commands.fillbiome.success.count"
   },
@@ -10936,11 +11332,15 @@
     "key": "commands.gamemode.success.self"
   },
   {
-    "english_translation": "Gamerule %s is currently set to: %s",
+    "english_translation": "Game rule %s is already set to %s",
+    "key": "commands.gamerule.not_set"
+  },
+  {
+    "english_translation": "Game rule %s is currently set to %s",
     "key": "commands.gamerule.query"
   },
   {
-    "english_translation": "Gamerule %s is now set to: %s",
+    "english_translation": "Game rule %s is now set to %s",
     "key": "commands.gamerule.set"
   },
   {
@@ -10960,36 +11360,68 @@
     "key": "commands.help.failed"
   },
   {
-    "english_translation": "Replaced a slot at %s, %s, %s with %s",
-    "key": "commands.item.block.set.success"
+    "english_translation": "Modified %s slot(s) at %s, %s, %s",
+    "key": "commands.item.block.modify.success"
   },
   {
-    "english_translation": "Replaced a slot on %s entities with %s",
-    "key": "commands.item.entity.set.success.multiple"
+    "english_translation": "Replaced %s slot(s) at %s, %s, %s",
+    "key": "commands.item.block.replace.success"
   },
   {
-    "english_translation": "Replaced a slot on %s with %s",
-    "key": "commands.item.entity.set.success.single"
+    "english_translation": "Replaced %s slot(s) at %s, %s, %s with %s",
+    "key": "commands.item.block.replace.success.known_item"
+  },
+  {
+    "english_translation": "Modified slot(s) on %s entities",
+    "key": "commands.item.entity.modify.success.multiple"
+  },
+  {
+    "english_translation": "Modified %s slot(s) on %s",
+    "key": "commands.item.entity.modify.success.single"
+  },
+  {
+    "english_translation": "Replaced slot(s) on %s entities",
+    "key": "commands.item.entity.replace.success.multiple"
+  },
+  {
+    "english_translation": "Replaced slot(s) on %s entities with %s",
+    "key": "commands.item.entity.replace.success.multiple.known_item"
+  },
+  {
+    "english_translation": "Replaced %s slot(s) on %s",
+    "key": "commands.item.entity.replace.success.single"
+  },
+  {
+    "english_translation": "Replaced %s slot(s) on %s with %s",
+    "key": "commands.item.entity.replace.success.single.known_item"
   },
   {
     "english_translation": "The source does not have slot %s",
     "key": "commands.item.source.no_such_slot"
   },
   {
+    "english_translation": "The source does not have specified slots",
+    "key": "commands.item.source.no_such_slot.unnamed"
+  },
+  {
     "english_translation": "Source position %s, %s, %s is not a container",
     "key": "commands.item.source.not_a_container"
   },
   {
-    "english_translation": "No targets accepted item %s into slot %s",
-    "key": "commands.item.target.no_changed.known_item"
+    "english_translation": "No targets accepted items into specified slots",
+    "key": "commands.item.target.failed"
   },
   {
-    "english_translation": "No targets accepted item into slot %s",
-    "key": "commands.item.target.no_changes"
+    "english_translation": "No targets accepted item %s into specified slots",
+    "key": "commands.item.target.failed.known_item"
   },
   {
     "english_translation": "The target does not have slot %s",
     "key": "commands.item.target.no_such_slot"
+  },
+  {
+    "english_translation": "The target does not have specified slots",
+    "key": "commands.item.target.no_such_slot.unnamed"
   },
   {
     "english_translation": "Target position %s, %s, %s is not a container",
@@ -11012,7 +11444,7 @@
     "key": "commands.jfr.stopped"
   },
   {
-    "english_translation": "Cannot kick server owner in LAN game",
+    "english_translation": "Cannot kick the server owner in a LAN game",
     "key": "commands.kick.owner.failed"
   },
   {
@@ -11076,7 +11508,7 @@
     "key": "commands.message.display.outgoing"
   },
   {
-    "english_translation": "Nothing changed. The player already is an operator",
+    "english_translation": "Nothing changed. The player is already an operator",
     "key": "commands.op.failed"
   },
   {
@@ -11128,7 +11560,7 @@
     "key": "commands.perf.reportSaved"
   },
   {
-    "english_translation": "Started 10 second performance profiling run (use '/perf stop' to stop early)",
+    "english_translation": "Started a 10-second performance profiling run (use '/perf stop' to stop early)",
     "key": "commands.perf.started"
   },
   {
@@ -11140,12 +11572,12 @@
     "key": "commands.place.feature.failed"
   },
   {
-    "english_translation": "There is no feature with type \"%s\"",
-    "key": "commands.place.feature.invalid"
-  },
-  {
     "english_translation": "Placed \"%s\" at %s, %s, %s",
     "key": "commands.place.feature.success"
+  },
+  {
+    "english_translation": "Placed feature at %s, %s, %s",
+    "key": "commands.place.feature.success.inline"
   },
   {
     "english_translation": "Failed to generate jigsaw",
@@ -11196,6 +11628,50 @@
     "key": "commands.playsound.success.single"
   },
   {
+    "english_translation": "Player already has the specified post effect",
+    "key": "commands.posteffect.add.failed"
+  },
+  {
+    "english_translation": "Added post effect %s to %s players",
+    "key": "commands.posteffect.add.success.multiple"
+  },
+  {
+    "english_translation": "Added post effect %s to %s",
+    "key": "commands.posteffect.add.success.single"
+  },
+  {
+    "english_translation": "Player does not have any post effects to remove",
+    "key": "commands.posteffect.clear.failed"
+  },
+  {
+    "english_translation": "Removed all post effects from %s players",
+    "key": "commands.posteffect.clear.success.multiple"
+  },
+  {
+    "english_translation": "Removed all post effects from %s",
+    "key": "commands.posteffect.clear.success.single"
+  },
+  {
+    "english_translation": "Player %s does not have any post effects",
+    "key": "commands.posteffect.list.empty"
+  },
+  {
+    "english_translation": "Player %s has %s post effects: %s",
+    "key": "commands.posteffect.list.success"
+  },
+  {
+    "english_translation": "Player does not have the specified post effect",
+    "key": "commands.posteffect.remove.failed"
+  },
+  {
+    "english_translation": "Removed post effect %s from %s players",
+    "key": "commands.posteffect.remove.success.multiple"
+  },
+  {
+    "english_translation": "Removed post effect %s from %s",
+    "key": "commands.posteffect.remove.success.single"
+  },
+  {
     "english_translation": "Local game is already hosted on port %s",
     "key": "commands.publish.alreadyPublished.lan"
   },
@@ -11208,11 +11684,11 @@
     "key": "commands.publish.started.lan"
   },
   {
-    "english_translation": "The range of the random value must be at most 2147483646",
+    "english_translation": "The range of the random value must be at most 2147483647",
     "key": "commands.random.error.range_too_large"
   },
   {
-    "english_translation": "The range of the random value must be at least 2",
+    "english_translation": "The range of the random value must be at least 1",
     "key": "commands.random.error.range_too_small"
   },
   {
@@ -11632,7 +12108,7 @@
     "key": "commands.stopwatch.already_exists"
   },
   {
-    "english_translation": "Created Stopwatch '%s'",
+    "english_translation": "Created stopwatch '%s'",
     "key": "commands.stopwatch.create.success"
   },
   {
@@ -11644,11 +12120,11 @@
     "key": "commands.stopwatch.query"
   },
   {
-    "english_translation": "Removed Stopwatch '%s'",
+    "english_translation": "Removed stopwatch '%s'",
     "key": "commands.stopwatch.remove.success"
   },
   {
-    "english_translation": "Restarted Stopwatch '%s'",
+    "english_translation": "Restarted stopwatch '%s'",
     "key": "commands.stopwatch.restart.success"
   },
   {
@@ -11700,7 +12176,7 @@
     "key": "commands.tag.list.multiple.empty"
   },
   {
-    "english_translation": "The %s entities have %s total tags: %s",
+    "english_translation": "The %s entities have %s total tag(s): %s",
     "key": "commands.tag.list.multiple.success"
   },
   {
@@ -11708,7 +12184,7 @@
     "key": "commands.tag.list.single.empty"
   },
   {
-    "english_translation": "%s has %s tags: %s",
+    "english_translation": "%s has %s tag(s): %s",
     "key": "commands.tag.list.single.success"
   },
   {
@@ -12060,6 +12536,14 @@
     "key": "commands.time.pause"
   },
   {
+    "english_translation": "Clock %s is already paused",
+    "key": "commands.time.pause.already_paused"
+  },
+  {
+    "english_translation": "Clock %s is already running",
+    "key": "commands.time.pause.already_running"
+  },
+  {
     "english_translation": "Clock %s is at %s tick(s)",
     "key": "commands.time.query.absolute"
   },
@@ -12080,12 +12564,24 @@
     "key": "commands.time.rate"
   },
   {
+    "english_translation": "Clock %s is already advancing at %sx normal rate",
+    "key": "commands.time.rate.already_same"
+  },
+  {
     "english_translation": "Resumed clock %s",
     "key": "commands.time.resume"
   },
   {
     "english_translation": "Set %s to %s tick(s)",
     "key": "commands.time.set.absolute"
+  },
+  {
+    "english_translation": "Clock %s is already set to %s tick(s)",
+    "key": "commands.time.set.already_at_time"
+  },
+  {
+    "english_translation": "Clock %s is already at time marker %s",
+    "key": "commands.time.set.already_at_time_marker"
   },
   {
     "english_translation": "Set %s to time marker %s",
@@ -12256,7 +12752,7 @@
     "key": "commands.weather.set.rain"
   },
   {
-    "english_translation": "Set the weather to rain & thunder",
+    "english_translation": "Set the weather to rain and thunder",
     "key": "commands.weather.set.thunder"
   },
   {
@@ -12348,7 +12844,7 @@
     "key": "commands.worldborder.set.failed.small"
   },
   {
-    "english_translation": "Growing the world border to %s blocks wide over %s seconds",
+    "english_translation": "Growing the world border to %s block(s) wide over %s second(s)",
     "key": "commands.worldborder.set.grow"
   },
   {
@@ -12760,7 +13256,7 @@
     "key": "datapackFailure.safeMode.failed.description"
   },
   {
-    "english_translation": "Failed to load world in Safe Mode.",
+    "english_translation": "Failed to load world in Safe Mode",
     "key": "datapackFailure.safeMode.failed.title"
   },
   {
@@ -13088,6 +13584,10 @@
     "key": "death.attack.sulfurCubeHot"
   },
   {
+    "english_translation": "%2$s showed %1$s that not just the floor is lava using %3$s",
+    "key": "death.attack.sulfurCubeHot.item"
+  },
+  {
     "english_translation": "%2$s showed %1$s that not just the floor is lava",
     "key": "death.attack.sulfurCubeHot.player"
   },
@@ -13280,6 +13780,14 @@
     "key": "debug.gamemodes.select_next"
   },
   {
+    "english_translation": "Improved transparency: disabled",
+    "key": "debug.improvedTransparency.off"
+  },
+  {
+    "english_translation": "Improved transparency: enabled",
+    "key": "debug.improvedTransparency.on"
+  },
+  {
     "english_translation": "Copied client-side block data to clipboard",
     "key": "debug.inspect.client.block"
   },
@@ -13304,7 +13812,7 @@
     "key": "debug.options.category.text"
   },
   {
-    "english_translation": "Not visible when debug info is reduced",
+    "english_translation": "Not visible when debug info is reduced.",
     "key": "debug.options.notAllowed.tooltip"
   },
   {
@@ -13548,7 +14056,7 @@
     "key": "editGamerule.inGame.discardChanges.message"
   },
   {
-    "english_translation": "Game rule Changes",
+    "english_translation": "Game Rule Changes",
     "key": "editGamerule.inGame.discardChanges.title"
   },
   {
@@ -14076,6 +14584,10 @@
     "key": "entity.minecraft.creeper"
   },
   {
+    "english_translation": "Cushion",
+    "key": "entity.minecraft.cushion"
+  },
+  {
     "english_translation": "Dark Oak Boat",
     "key": "entity.minecraft.dark_oak_boat"
   },
@@ -14386,6 +14898,14 @@
   {
     "english_translation": "Polar Bear",
     "key": "entity.minecraft.polar_bear"
+  },
+  {
+    "english_translation": "Poplar Boat",
+    "key": "entity.minecraft.poplar_boat"
+  },
+  {
+    "english_translation": "Poplar Boat with Chest",
+    "key": "entity.minecraft.poplar_chest_boat"
   },
   {
     "english_translation": "Pufferfish",
@@ -14808,112 +15328,32 @@
     "key": "event.minecraft.raid.victory.full"
   },
   {
-    "english_translation": "Attachment identifier: %s",
-    "key": "fabric-data-attachment-api-v1.unknown-target.attachment-identifier"
+    "english_translation": "Bamboo Camp Map",
+    "key": "filled_map.bamboo_camp_map"
   },
   {
-    "english_translation": "Block entity position: %s",
-    "key": "fabric-data-attachment-api-v1.unknown-target.block-entity-position"
+    "english_translation": "Birch Forest Camp Map",
+    "key": "filled_map.birch_forest_camp_map"
   },
   {
-    "english_translation": "Chunk position: %s",
-    "key": "fabric-data-attachment-api-v1.unknown-target.chunk-position"
+    "english_translation": "Cherry Grove Camp Map",
+    "key": "filled_map.cherry_grove_camp_map"
   },
   {
-    "english_translation": "Entity network ID: %s",
-    "key": "fabric-data-attachment-api-v1.unknown-target.entity-network-id"
+    "english_translation": "Dappled Forest Camp Map",
+    "key": "filled_map.dappled_forest_camp_map"
   },
   {
-    "english_translation": "Level: %s",
-    "key": "fabric-data-attachment-api-v1.unknown-target.level"
-  },
-  {
-    "english_translation": "Target type: %s",
-    "key": "fabric-data-attachment-api-v1.unknown-target.target-type"
-  },
-  {
-    "english_translation": "Block entity",
-    "key": "fabric-data-attachment-api-v1.unknown-target.target-type.block-entity"
-  },
-  {
-    "english_translation": "Chunk",
-    "key": "fabric-data-attachment-api-v1.unknown-target.target-type.chunk"
-  },
-  {
-    "english_translation": "Entity",
-    "key": "fabric-data-attachment-api-v1.unknown-target.target-type.entity"
-  },
-  {
-    "english_translation": "Global",
-    "key": "fabric-data-attachment-api-v1.unknown-target.target-type.global"
-  },
-  {
-    "english_translation": "Level",
-    "key": "fabric-data-attachment-api-v1.unknown-target.target-type.level"
-  },
-  {
-    "english_translation": "Received attachment change for unknown target!",
-    "key": "fabric-data-attachment-api-v1.unknown-target.title"
-  },
-  {
-    "english_translation": "And %s more...",
-    "key": "fabric-registry-sync-v0.unknown-registry.footer"
-  },
-  {
-    "english_translation": "This is usually caused by a mismatched mod set between the client and server.",
-    "key": "fabric-registry-sync-v0.unknown-registry.subtitle.1"
-  },
-  {
-    "english_translation": " See the client logs for more details.\nThe following registries are not present on the client:\n\n",
-    "key": "fabric-registry-sync-v0.unknown-registry.subtitle.2"
-  },
-  {
-    "english_translation": "Received %s registries that are unknown to this client.\n",
-    "key": "fabric-registry-sync-v0.unknown-registry.title.plural"
-  },
-  {
-    "english_translation": "Received a registry that is unknown to this client.\n",
-    "key": "fabric-registry-sync-v0.unknown-registry.title.singular"
-  },
-  {
-    "english_translation": "And %s more...",
-    "key": "fabric-registry-sync-v0.unknown-remote.footer"
-  },
-  {
-    "english_translation": "This is usually caused by a mismatched mod set between the client and server.",
-    "key": "fabric-registry-sync-v0.unknown-remote.subtitle.1"
-  },
-  {
-    "english_translation": " See the client logs for more details.\nThe following registry entry namespaces may be related:\n\n",
-    "key": "fabric-registry-sync-v0.unknown-remote.subtitle.2"
-  },
-  {
-    "english_translation": "Received %s registry entries that are unknown to this client.\n",
-    "key": "fabric-registry-sync-v0.unknown-remote.title.plural"
-  },
-  {
-    "english_translation": "Received a registry entry that is unknown to this client.\n",
-    "key": "fabric-registry-sync-v0.unknown-remote.title.singular"
-  },
-  {
-    "english_translation": "Page %s/%s",
-    "key": "fabric.gui.creativeTabPage"
-  },
-  {
-    "english_translation": "Buried Treasure Map",
-    "key": "filled_map.buried_treasure"
-  },
-  {
-    "english_translation": "Jungle Explorer Map",
-    "key": "filled_map.explorer_jungle"
-  },
-  {
-    "english_translation": "Swamp Explorer Map",
-    "key": "filled_map.explorer_swamp"
+    "english_translation": "Flower Forest Camp Map",
+    "key": "filled_map.flower_forest_camp_map"
   },
   {
     "english_translation": "ID #%s",
     "key": "filled_map.id"
+  },
+  {
+    "english_translation": "Jungle Temple Map",
+    "key": "filled_map.jungle_temple"
   },
   {
     "english_translation": "(Level %s/%s)",
@@ -14924,44 +15364,24 @@
     "key": "filled_map.locked"
   },
   {
-    "english_translation": "Woodland Explorer Map",
-    "key": "filled_map.mansion"
-  },
-  {
-    "english_translation": "Ocean Explorer Map",
-    "key": "filled_map.monument"
+    "english_translation": "Pale Garden Camp Map",
+    "key": "filled_map.pale_garden_camp_map"
   },
   {
     "english_translation": "Scaling at 1:%s",
     "key": "filled_map.scale"
   },
   {
-    "english_translation": "Trial Explorer Map",
-    "key": "filled_map.trial_chambers"
+    "english_translation": "Swamp Camp Map",
+    "key": "filled_map.swamp_camp_map"
   },
   {
     "english_translation": "Unknown Map",
     "key": "filled_map.unknown"
   },
   {
-    "english_translation": "Desert Village Map",
-    "key": "filled_map.village_desert"
-  },
-  {
-    "english_translation": "Plains Village Map",
-    "key": "filled_map.village_plains"
-  },
-  {
-    "english_translation": "Savanna Village Map",
-    "key": "filled_map.village_savanna"
-  },
-  {
-    "english_translation": "Snowy Village Map",
-    "key": "filled_map.village_snowy"
-  },
-  {
-    "english_translation": "Taiga Village Map",
-    "key": "filled_map.village_taiga"
+    "english_translation": "Windswept Forest Camp Map",
+    "key": "filled_map.windswept_forest_camp_map"
   },
   {
     "english_translation": "Bottomless Pit",
@@ -15116,7 +15536,7 @@
     "key": "gamerule.minecraft.entity_drops"
   },
   {
-    "english_translation": "Controls drops from minecarts (including inventories), item frames, boats, etc.",
+    "english_translation": "Controls drops from Minecarts (including inventories), Item Frames, Boats, etc.",
     "key": "gamerule.minecraft.entity_drops.description"
   },
   {
@@ -15132,7 +15552,7 @@
     "key": "gamerule.minecraft.fire_spread_radius_around_player"
   },
   {
-    "english_translation": "The radius in blocks around a player in which fire can spread",
+    "english_translation": "The radius in blocks around a player in which fire can spread.",
     "key": "gamerule.minecraft.fire_spread_radius_around_player.description"
   },
   {
@@ -16016,7 +16436,7 @@
     "key": "gui.friends.error.temporary_unavailable"
   },
   {
-    "english_translation": "Invalid token supplied. Restart your game and launcher, then try again",
+    "english_translation": "Invalid token supplied. Restart your game and launcher, then try again.",
     "key": "gui.friends.error.unauthorized"
   },
   {
@@ -16336,7 +16756,7 @@
     "key": "gui.remove"
   },
   {
-    "english_translation": "Report To Server",
+    "english_translation": "Report to Server",
     "key": "gui.report_to_server"
   },
   {
@@ -16580,7 +17000,7 @@
     "key": "item.components"
   },
   {
-    "english_translation": "%s x%s",
+    "english_translation": "%s x %s",
     "key": "item.container.item_count"
   },
   {
@@ -16606,6 +17026,10 @@
   {
     "english_translation": "Intangible",
     "key": "item.intangible"
+  },
+  {
+    "english_translation": "Abandoned Camp Map",
+    "key": "item.minecraft.abandoned_camp_map"
   },
   {
     "english_translation": "Acacia Boat",
@@ -16712,6 +17136,10 @@
     "key": "item.minecraft.black_bundle"
   },
   {
+    "english_translation": "Black Cushion",
+    "key": "item.minecraft.black_cushion"
+  },
+  {
     "english_translation": "Black Dye",
     "key": "item.minecraft.black_dye"
   },
@@ -16738,6 +17166,10 @@
   {
     "english_translation": "Blue Bundle",
     "key": "item.minecraft.blue_bundle"
+  },
+  {
+    "english_translation": "Blue Cushion",
+    "key": "item.minecraft.blue_cushion"
   },
   {
     "english_translation": "Blue Dye",
@@ -16812,6 +17244,10 @@
     "key": "item.minecraft.brown_bundle"
   },
   {
+    "english_translation": "Brown Cushion",
+    "key": "item.minecraft.brown_cushion"
+  },
+  {
     "english_translation": "Brown Dye",
     "key": "item.minecraft.brown_dye"
   },
@@ -16846,6 +17282,22 @@
   {
     "english_translation": "Full",
     "key": "item.minecraft.bundle.full"
+  },
+  {
+    "english_translation": "Buried Ancient City Map",
+    "key": "item.minecraft.buried_ancient_city_map"
+  },
+  {
+    "english_translation": "Buried Mineshaft Map",
+    "key": "item.minecraft.buried_mineshaft_map"
+  },
+  {
+    "english_translation": "Buried Treasure Map",
+    "key": "item.minecraft.buried_treasure_map"
+  },
+  {
+    "english_translation": "Buried Trial Chambers Map",
+    "key": "item.minecraft.buried_trial_chambers_map"
   },
   {
     "english_translation": "Burn Pottery Sherd",
@@ -17088,6 +17540,10 @@
     "key": "item.minecraft.cyan_bundle"
   },
   {
+    "english_translation": "Cyan Cushion",
+    "key": "item.minecraft.cyan_cushion"
+  },
+  {
     "english_translation": "Cyan Dye",
     "key": "item.minecraft.cyan_dye"
   },
@@ -17122,6 +17578,14 @@
   {
     "english_translation": "\"%s\" to %s",
     "key": "item.minecraft.debug_stick.update"
+  },
+  {
+    "english_translation": "Desert Pyramid Map",
+    "key": "item.minecraft.desert_pyramid_map"
+  },
+  {
+    "english_translation": "Desert Village Map",
+    "key": "item.minecraft.desert_village_map"
   },
   {
     "english_translation": "Diamond",
@@ -17300,8 +17764,8 @@
     "key": "item.minecraft.firework_rocket"
   },
   {
-    "english_translation": "Flight Duration:",
-    "key": "item.minecraft.firework_rocket.flight"
+    "english_translation": "Flight Duration: %s",
+    "key": "item.minecraft.firework_rocket.flight_duration"
   },
   {
     "english_translation": "%s x %s",
@@ -17584,6 +18048,10 @@
     "key": "item.minecraft.gray_bundle"
   },
   {
+    "english_translation": "Gray Cushion",
+    "key": "item.minecraft.gray_cushion"
+  },
+  {
     "english_translation": "Gray Dye",
     "key": "item.minecraft.gray_dye"
   },
@@ -17594,6 +18062,10 @@
   {
     "english_translation": "Green Bundle",
     "key": "item.minecraft.green_bundle"
+  },
+  {
+    "english_translation": "Green Cushion",
+    "key": "item.minecraft.green_cushion"
   },
   {
     "english_translation": "Green Dye",
@@ -17748,6 +18220,10 @@
     "key": "item.minecraft.jungle_chest_boat"
   },
   {
+    "english_translation": "Jungle Pyramid Map",
+    "key": "item.minecraft.jungle_pyramid_map"
+  },
+  {
     "english_translation": "Knowledge Book",
     "key": "item.minecraft.knowledge_book"
   },
@@ -17792,6 +18268,10 @@
     "key": "item.minecraft.light_blue_bundle"
   },
   {
+    "english_translation": "Light Blue Cushion",
+    "key": "item.minecraft.light_blue_cushion"
+  },
+  {
     "english_translation": "Light Blue Dye",
     "key": "item.minecraft.light_blue_dye"
   },
@@ -17804,6 +18284,10 @@
     "key": "item.minecraft.light_gray_bundle"
   },
   {
+    "english_translation": "Light Gray Cushion",
+    "key": "item.minecraft.light_gray_cushion"
+  },
+  {
     "english_translation": "Light Gray Dye",
     "key": "item.minecraft.light_gray_dye"
   },
@@ -17814,6 +18298,10 @@
   {
     "english_translation": "Lime Bundle",
     "key": "item.minecraft.lime_bundle"
+  },
+  {
+    "english_translation": "Lime Cushion",
+    "key": "item.minecraft.lime_cushion"
   },
   {
     "english_translation": "Lime Dye",
@@ -17946,6 +18434,10 @@
   {
     "english_translation": "Magenta Bundle",
     "key": "item.minecraft.magenta_bundle"
+  },
+  {
+    "english_translation": "Magenta Cushion",
+    "key": "item.minecraft.magenta_cushion"
   },
   {
     "english_translation": "Magenta Dye",
@@ -18204,6 +18696,10 @@
     "key": "item.minecraft.oak_chest_boat"
   },
   {
+    "english_translation": "Ocean Monument Map",
+    "key": "item.minecraft.ocean_monument_map"
+  },
+  {
     "english_translation": "Ocelot Spawn Egg",
     "key": "item.minecraft.ocelot_spawn_egg"
   },
@@ -18218,6 +18714,10 @@
   {
     "english_translation": "Orange Bundle",
     "key": "item.minecraft.orange_bundle"
+  },
+  {
+    "english_translation": "Orange Cushion",
+    "key": "item.minecraft.orange_cushion"
   },
   {
     "english_translation": "Orange Dye",
@@ -18288,6 +18788,10 @@
     "key": "item.minecraft.pink_bundle"
   },
   {
+    "english_translation": "Pink Cushion",
+    "key": "item.minecraft.pink_cushion"
+  },
+  {
     "english_translation": "Pink Dye",
     "key": "item.minecraft.pink_dye"
   },
@@ -18304,6 +18808,10 @@
     "key": "item.minecraft.pitcher_pod"
   },
   {
+    "english_translation": "Plains Village Map",
+    "key": "item.minecraft.plains_village_map"
+  },
+  {
     "english_translation": "Plenty Pottery Sherd",
     "key": "item.minecraft.plenty_pottery_sherd"
   },
@@ -18314,6 +18822,14 @@
   {
     "english_translation": "Polar Bear Spawn Egg",
     "key": "item.minecraft.polar_bear_spawn_egg"
+  },
+  {
+    "english_translation": "Poplar Boat",
+    "key": "item.minecraft.poplar_boat"
+  },
+  {
+    "english_translation": "Poplar Boat with Chest",
+    "key": "item.minecraft.poplar_chest_boat"
   },
   {
     "english_translation": "Popped Chorus Fruit",
@@ -18476,6 +18992,10 @@
     "key": "item.minecraft.purple_bundle"
   },
   {
+    "english_translation": "Purple Cushion",
+    "key": "item.minecraft.purple_cushion"
+  },
+  {
     "english_translation": "Purple Dye",
     "key": "item.minecraft.purple_dye"
   },
@@ -18536,6 +19056,10 @@
     "key": "item.minecraft.red_bundle"
   },
   {
+    "english_translation": "Red Cushion",
+    "key": "item.minecraft.red_cushion"
+  },
+  {
     "english_translation": "Red Dye",
     "key": "item.minecraft.red_dye"
   },
@@ -18578,6 +19102,10 @@
   {
     "english_translation": "Salmon Spawn Egg",
     "key": "item.minecraft.salmon_spawn_egg"
+  },
+  {
+    "english_translation": "Savanna Village Map",
+    "key": "item.minecraft.savanna_village_map"
   },
   {
     "english_translation": "Scrape Pottery Sherd",
@@ -18788,6 +19316,10 @@
     "key": "item.minecraft.snowball"
   },
   {
+    "english_translation": "Snowy Village Map",
+    "key": "item.minecraft.snowy_village_map"
+  },
+  {
     "english_translation": "Spectral Arrow",
     "key": "item.minecraft.spectral_arrow"
   },
@@ -18956,6 +19488,10 @@
     "key": "item.minecraft.stone_sword"
   },
   {
+    "english_translation": "Straw Bed",
+    "key": "item.minecraft.straw_bed"
+  },
+  {
     "english_translation": "Stray Spawn Egg",
     "key": "item.minecraft.stray_spawn_egg"
   },
@@ -18984,6 +19520,10 @@
     "key": "item.minecraft.suspicious_stew"
   },
   {
+    "english_translation": "Swamp Hut Map",
+    "key": "item.minecraft.swamp_hut_map"
+  },
+  {
     "english_translation": "Sweet Berries",
     "key": "item.minecraft.sweet_berries"
   },
@@ -18994,6 +19534,10 @@
   {
     "english_translation": "Tadpole Spawn Egg",
     "key": "item.minecraft.tadpole_spawn_egg"
+  },
+  {
+    "english_translation": "Taiga Village Map",
+    "key": "item.minecraft.taiga_village_map"
   },
   {
     "english_translation": "Tide Armor Trim",
@@ -19184,6 +19728,10 @@
     "key": "item.minecraft.warden_spawn_egg"
   },
   {
+    "english_translation": "Warm Ocean Ruins Map",
+    "key": "item.minecraft.warm_ocean_ruins_map"
+  },
+  {
     "english_translation": "Warped Fungus on a Stick",
     "key": "item.minecraft.warped_fungus_on_a_stick"
   },
@@ -19206,6 +19754,10 @@
   {
     "english_translation": "White Bundle",
     "key": "item.minecraft.white_bundle"
+  },
+  {
+    "english_translation": "White Cushion",
+    "key": "item.minecraft.white_cushion"
   },
   {
     "english_translation": "White Dye",
@@ -19268,6 +19820,10 @@
     "key": "item.minecraft.wooden_sword"
   },
   {
+    "english_translation": "Woodland Mansion Map",
+    "key": "item.minecraft.woodland_mansion_map"
+  },
+  {
     "english_translation": "Book and Quill",
     "key": "item.minecraft.writable_book"
   },
@@ -19278,6 +19834,10 @@
   {
     "english_translation": "Yellow Bundle",
     "key": "item.minecraft.yellow_bundle"
+  },
+  {
+    "english_translation": "Yellow Cushion",
+    "key": "item.minecraft.yellow_cushion"
   },
   {
     "english_translation": "Yellow Dye",
@@ -19668,8 +20228,12 @@
     "key": "key.debug.focusPause"
   },
   {
-    "english_translation": "FPS Charts",
+    "english_translation": "Fps Charts",
     "key": "key.debug.fpsCharts"
+  },
+  {
+    "english_translation": "Toggle Improved Transparency",
+    "key": "key.debug.improvedTransparency"
   },
   {
     "english_translation": "Lightmap Texture",
@@ -19784,8 +20348,76 @@
     "key": "key.jump"
   },
   {
+    "english_translation": "AC Back",
+    "key": "key.keyboard.ac.back"
+  },
+  {
+    "english_translation": "AC Favorites",
+    "key": "key.keyboard.ac.bookmarks"
+  },
+  {
+    "english_translation": "AC Close",
+    "key": "key.keyboard.ac.close"
+  },
+  {
+    "english_translation": "AC Exit",
+    "key": "key.keyboard.ac.exit"
+  },
+  {
+    "english_translation": "AC Forward",
+    "key": "key.keyboard.ac.forward"
+  },
+  {
+    "english_translation": "AC Home",
+    "key": "key.keyboard.ac.home"
+  },
+  {
+    "english_translation": "New",
+    "key": "key.keyboard.ac.new"
+  },
+  {
+    "english_translation": "AC Open",
+    "key": "key.keyboard.ac.open"
+  },
+  {
+    "english_translation": "AC Print",
+    "key": "key.keyboard.ac.print"
+  },
+  {
+    "english_translation": "AC Properties",
+    "key": "key.keyboard.ac.properties"
+  },
+  {
+    "english_translation": "AC Refresh",
+    "key": "key.keyboard.ac.refresh"
+  },
+  {
+    "english_translation": "Save",
+    "key": "key.keyboard.ac.save"
+  },
+  {
+    "english_translation": "AC Search",
+    "key": "key.keyboard.ac.search"
+  },
+  {
+    "english_translation": "AC Stop",
+    "key": "key.keyboard.ac.stop"
+  },
+  {
+    "english_translation": "Again",
+    "key": "key.keyboard.again"
+  },
+  {
+    "english_translation": "Alternate Erase",
+    "key": "key.keyboard.alternate.erase"
+  },
+  {
     "english_translation": "'",
     "key": "key.keyboard.apostrophe"
+  },
+  {
+    "english_translation": "Application",
+    "key": "key.keyboard.application"
   },
   {
     "english_translation": "\\",
@@ -19796,12 +20428,60 @@
     "key": "key.keyboard.backspace"
   },
   {
+    "english_translation": "Call",
+    "key": "key.keyboard.call"
+  },
+  {
+    "english_translation": "Cancel",
+    "key": "key.keyboard.cancel"
+  },
+  {
     "english_translation": "Caps Lock",
     "key": "key.keyboard.caps.lock"
   },
   {
+    "english_translation": "Channel Down",
+    "key": "key.keyboard.channel.down"
+  },
+  {
+    "english_translation": "Channel Up",
+    "key": "key.keyboard.channel.up"
+  },
+  {
+    "english_translation": "Clear",
+    "key": "key.keyboard.clear"
+  },
+  {
+    "english_translation": "Clear Again",
+    "key": "key.keyboard.clear.again"
+  },
+  {
     "english_translation": ",",
     "key": "key.keyboard.comma"
+  },
+  {
+    "english_translation": "Copy",
+    "key": "key.keyboard.copy"
+  },
+  {
+    "english_translation": "CrSel",
+    "key": "key.keyboard.crsel"
+  },
+  {
+    "english_translation": "Currency Subunit",
+    "key": "key.keyboard.currency.subunit"
+  },
+  {
+    "english_translation": "Currency Unit",
+    "key": "key.keyboard.currency.unit"
+  },
+  {
+    "english_translation": "Cut",
+    "key": "key.keyboard.cut"
+  },
+  {
+    "english_translation": "Decimal Separator",
+    "key": "key.keyboard.decimal.separator"
   },
   {
     "english_translation": "Delete",
@@ -19816,8 +20496,16 @@
     "key": "key.keyboard.end"
   },
   {
+    "english_translation": "End Call",
+    "key": "key.keyboard.end.call"
+  },
+  {
     "english_translation": "Enter",
     "key": "key.keyboard.enter"
+  },
+  {
+    "english_translation": "Enter 2",
+    "key": "key.keyboard.enter2"
   },
   {
     "english_translation": "=",
@@ -19826,6 +20514,14 @@
   {
     "english_translation": "Escape",
     "key": "key.keyboard.escape"
+  },
+  {
+    "english_translation": "Execute",
+    "key": "key.keyboard.execute"
+  },
+  {
+    "english_translation": "ExSel",
+    "key": "key.keyboard.exsel"
   },
   {
     "english_translation": "F1",
@@ -19928,8 +20624,16 @@
     "key": "key.keyboard.f9"
   },
   {
+    "english_translation": "Find",
+    "key": "key.keyboard.find"
+  },
+  {
     "english_translation": "`",
     "key": "key.keyboard.grave.accent"
+  },
+  {
+    "english_translation": "Help",
+    "key": "key.keyboard.help"
   },
   {
     "english_translation": "Home",
@@ -19940,8 +20644,52 @@
     "key": "key.keyboard.insert"
   },
   {
+    "english_translation": "International 1",
+    "key": "key.keyboard.international1"
+  },
+  {
+    "english_translation": "International 2",
+    "key": "key.keyboard.international2"
+  },
+  {
+    "english_translation": "International 3",
+    "key": "key.keyboard.international3"
+  },
+  {
+    "english_translation": "International 4",
+    "key": "key.keyboard.international4"
+  },
+  {
+    "english_translation": "International 5",
+    "key": "key.keyboard.international5"
+  },
+  {
+    "english_translation": "International 6",
+    "key": "key.keyboard.international6"
+  },
+  {
+    "english_translation": "International 7",
+    "key": "key.keyboard.international7"
+  },
+  {
+    "english_translation": "International 8",
+    "key": "key.keyboard.international8"
+  },
+  {
+    "english_translation": "International 9",
+    "key": "key.keyboard.international9"
+  },
+  {
     "english_translation": "Keypad 0",
     "key": "key.keyboard.keypad.0"
+  },
+  {
+    "english_translation": "Keypad 00",
+    "key": "key.keyboard.keypad.00"
+  },
+  {
+    "english_translation": "Keypad 000",
+    "key": "key.keyboard.keypad.000"
   },
   {
     "english_translation": "Keypad 1",
@@ -19980,8 +20728,56 @@
     "key": "key.keyboard.keypad.9"
   },
   {
+    "english_translation": "Keypad A",
+    "key": "key.keyboard.keypad.a"
+  },
+  {
     "english_translation": "Keypad +",
     "key": "key.keyboard.keypad.add"
+  },
+  {
+    "english_translation": "Keypad &",
+    "key": "key.keyboard.keypad.ampersand"
+  },
+  {
+    "english_translation": "Keypad @",
+    "key": "key.keyboard.keypad.at"
+  },
+  {
+    "english_translation": "Keypad B",
+    "key": "key.keyboard.keypad.b"
+  },
+  {
+    "english_translation": "Keypad Backspace",
+    "key": "key.keyboard.keypad.backspace"
+  },
+  {
+    "english_translation": "Keypad Binary",
+    "key": "key.keyboard.keypad.binary"
+  },
+  {
+    "english_translation": "Keypad C",
+    "key": "key.keyboard.keypad.c"
+  },
+  {
+    "english_translation": "Keypad Clear",
+    "key": "key.keyboard.keypad.clear"
+  },
+  {
+    "english_translation": "Keypad Clear Entry",
+    "key": "key.keyboard.keypad.clear.entry"
+  },
+  {
+    "english_translation": "Keypad :",
+    "key": "key.keyboard.keypad.colon"
+  },
+  {
+    "english_translation": "Keypad ,",
+    "key": "key.keyboard.keypad.comma"
+  },
+  {
+    "english_translation": "Keypad D",
+    "key": "key.keyboard.keypad.d"
   },
   {
     "english_translation": "Keypad Decimal",
@@ -19992,6 +20788,18 @@
     "key": "key.keyboard.keypad.divide"
   },
   {
+    "english_translation": "Keypad &&",
+    "key": "key.keyboard.keypad.double.ampersand"
+  },
+  {
+    "english_translation": "Keypad ||",
+    "key": "key.keyboard.keypad.double.vertical.bar"
+  },
+  {
+    "english_translation": "Keypad E",
+    "key": "key.keyboard.keypad.e"
+  },
+  {
     "english_translation": "Keypad Enter",
     "key": "key.keyboard.keypad.enter"
   },
@@ -20000,12 +20808,156 @@
     "key": "key.keyboard.keypad.equal"
   },
   {
+    "english_translation": "Keypad = (AS400)",
+    "key": "key.keyboard.keypad.equals.as400"
+  },
+  {
+    "english_translation": "Keypad !",
+    "key": "key.keyboard.keypad.exclamation"
+  },
+  {
+    "english_translation": "Keypad F",
+    "key": "key.keyboard.keypad.f"
+  },
+  {
+    "english_translation": "Keypad >",
+    "key": "key.keyboard.keypad.greater"
+  },
+  {
+    "english_translation": "Keypad #",
+    "key": "key.keyboard.keypad.hash"
+  },
+  {
+    "english_translation": "Keypad Hexadecimal",
+    "key": "key.keyboard.keypad.hexadecimal"
+  },
+  {
+    "english_translation": "Keypad {",
+    "key": "key.keyboard.keypad.left.brace"
+  },
+  {
+    "english_translation": "Keypad (",
+    "key": "key.keyboard.keypad.left.parenthesis"
+  },
+  {
+    "english_translation": "Keypad <",
+    "key": "key.keyboard.keypad.less"
+  },
+  {
+    "english_translation": "Keypad M+",
+    "key": "key.keyboard.keypad.memory.add"
+  },
+  {
+    "english_translation": "Keypad MC",
+    "key": "key.keyboard.keypad.memory.clear"
+  },
+  {
+    "english_translation": "Keypad M/",
+    "key": "key.keyboard.keypad.memory.divide"
+  },
+  {
+    "english_translation": "Keypad M*",
+    "key": "key.keyboard.keypad.memory.multiply"
+  },
+  {
+    "english_translation": "Keypad MR",
+    "key": "key.keyboard.keypad.memory.recall"
+  },
+  {
+    "english_translation": "Keypad MS",
+    "key": "key.keyboard.keypad.memory.store"
+  },
+  {
+    "english_translation": "Keypad M-",
+    "key": "key.keyboard.keypad.memory.subtract"
+  },
+  {
     "english_translation": "Keypad *",
     "key": "key.keyboard.keypad.multiply"
   },
   {
+    "english_translation": "Keypad Octal",
+    "key": "key.keyboard.keypad.octal"
+  },
+  {
+    "english_translation": "Keypad %",
+    "key": "key.keyboard.keypad.percent"
+  },
+  {
+    "english_translation": "Keypad .",
+    "key": "key.keyboard.keypad.period"
+  },
+  {
+    "english_translation": "Keypad ±",
+    "key": "key.keyboard.keypad.plus.minus"
+  },
+  {
+    "english_translation": "Keypad ^",
+    "key": "key.keyboard.keypad.power"
+  },
+  {
+    "english_translation": "Keypad }",
+    "key": "key.keyboard.keypad.right.brace"
+  },
+  {
+    "english_translation": "Keypad )",
+    "key": "key.keyboard.keypad.right.parenthesis"
+  },
+  {
+    "english_translation": "Keypad Space",
+    "key": "key.keyboard.keypad.space"
+  },
+  {
     "english_translation": "Keypad -",
     "key": "key.keyboard.keypad.subtract"
+  },
+  {
+    "english_translation": "Keypad Tab",
+    "key": "key.keyboard.keypad.tab"
+  },
+  {
+    "english_translation": "Keypad |",
+    "key": "key.keyboard.keypad.vertical.bar"
+  },
+  {
+    "english_translation": "Keypad XOR",
+    "key": "key.keyboard.keypad.xor"
+  },
+  {
+    "english_translation": "Language 1",
+    "key": "key.keyboard.lang1"
+  },
+  {
+    "english_translation": "Language 2",
+    "key": "key.keyboard.lang2"
+  },
+  {
+    "english_translation": "Language 3",
+    "key": "key.keyboard.lang3"
+  },
+  {
+    "english_translation": "Language 4",
+    "key": "key.keyboard.lang4"
+  },
+  {
+    "english_translation": "Language 5",
+    "key": "key.keyboard.lang5"
+  },
+  {
+    "english_translation": "Language 6",
+    "key": "key.keyboard.lang6"
+  },
+  {
+    "english_translation": "Language 7",
+    "key": "key.keyboard.lang7"
+  },
+  {
+    "english_translation": "Language 8",
+    "key": "key.keyboard.lang8"
+  },
+  {
+    "english_translation": "Language 9",
+    "key": "key.keyboard.lang9"
   },
   {
     "english_translation": "Left Arrow",
@@ -20020,8 +20972,20 @@
     "key": "key.keyboard.left.bracket"
   },
   {
+    "english_translation": "Left Command",
+    "key": "key.keyboard.left.command"
+  },
+  {
     "english_translation": "Left Control",
     "key": "key.keyboard.left.control"
+  },
+  {
+    "english_translation": "Left Meta",
+    "key": "key.keyboard.left.meta"
+  },
+  {
+    "english_translation": "Left Option",
+    "key": "key.keyboard.left.option"
   },
   {
     "english_translation": "Left Shift",
@@ -20032,6 +20996,54 @@
     "key": "key.keyboard.left.win"
   },
   {
+    "english_translation": "Left Windows",
+    "key": "key.keyboard.left.windows"
+  },
+  {
+    "english_translation": "Eject",
+    "key": "key.keyboard.media.eject"
+  },
+  {
+    "english_translation": "Fast Forward",
+    "key": "key.keyboard.media.fast.forward"
+  },
+  {
+    "english_translation": "Next Track",
+    "key": "key.keyboard.media.next.track"
+  },
+  {
+    "english_translation": "Media Pause",
+    "key": "key.keyboard.media.pause"
+  },
+  {
+    "english_translation": "Media Play",
+    "key": "key.keyboard.media.play"
+  },
+  {
+    "english_translation": "Play/Pause",
+    "key": "key.keyboard.media.play.pause"
+  },
+  {
+    "english_translation": "Previous Track",
+    "key": "key.keyboard.media.previous.track"
+  },
+  {
+    "english_translation": "Record",
+    "key": "key.keyboard.media.record"
+  },
+  {
+    "english_translation": "Rewind",
+    "key": "key.keyboard.media.rewind"
+  },
+  {
+    "english_translation": "Media Select",
+    "key": "key.keyboard.media.select"
+  },
+  {
+    "english_translation": "Media Stop",
+    "key": "key.keyboard.media.stop"
+  },
+  {
     "english_translation": "Menu",
     "key": "key.keyboard.menu"
   },
@@ -20040,8 +21052,24 @@
     "key": "key.keyboard.minus"
   },
   {
+    "english_translation": "Mode",
+    "key": "key.keyboard.mode"
+  },
+  {
+    "english_translation": "Mute",
+    "key": "key.keyboard.mute"
+  },
+  {
     "english_translation": "Num Lock",
     "key": "key.keyboard.num.lock"
+  },
+  {
+    "english_translation": "Oper",
+    "key": "key.keyboard.oper"
+  },
+  {
+    "english_translation": "Out",
+    "key": "key.keyboard.out"
   },
   {
     "english_translation": "Page Down",
@@ -20052,6 +21080,10 @@
     "key": "key.keyboard.page.up"
   },
   {
+    "english_translation": "Paste",
+    "key": "key.keyboard.paste"
+  },
+  {
     "english_translation": "Pause",
     "key": "key.keyboard.pause"
   },
@@ -20060,8 +21092,16 @@
     "key": "key.keyboard.period"
   },
   {
+    "english_translation": "Power",
+    "key": "key.keyboard.power"
+  },
+  {
     "english_translation": "Print Screen",
     "key": "key.keyboard.print.screen"
+  },
+  {
+    "english_translation": "Prior",
+    "key": "key.keyboard.prior"
   },
   {
     "english_translation": "Right Arrow",
@@ -20076,8 +21116,20 @@
     "key": "key.keyboard.right.bracket"
   },
   {
+    "english_translation": "Right Command",
+    "key": "key.keyboard.right.command"
+  },
+  {
     "english_translation": "Right Control",
     "key": "key.keyboard.right.control"
+  },
+  {
+    "english_translation": "Right Meta",
+    "key": "key.keyboard.right.meta"
+  },
+  {
+    "english_translation": "Right Option",
+    "key": "key.keyboard.right.option"
   },
   {
     "english_translation": "Right Shift",
@@ -20088,24 +21140,64 @@
     "key": "key.keyboard.right.win"
   },
   {
+    "english_translation": "Right Windows",
+    "key": "key.keyboard.right.windows"
+  },
+  {
     "english_translation": "Scroll Lock",
     "key": "key.keyboard.scroll.lock"
+  },
+  {
+    "english_translation": "Select",
+    "key": "key.keyboard.select"
   },
   {
     "english_translation": ";",
     "key": "key.keyboard.semicolon"
   },
   {
+    "english_translation": "Separator",
+    "key": "key.keyboard.separator"
+  },
+  {
     "english_translation": "/",
     "key": "key.keyboard.slash"
+  },
+  {
+    "english_translation": "Sleep",
+    "key": "key.keyboard.sleep"
+  },
+  {
+    "english_translation": "Soft Left",
+    "key": "key.keyboard.soft.left"
+  },
+  {
+    "english_translation": "Soft Right",
+    "key": "key.keyboard.soft.right"
   },
   {
     "english_translation": "Space",
     "key": "key.keyboard.space"
   },
   {
+    "english_translation": "Stop",
+    "key": "key.keyboard.stop"
+  },
+  {
+    "english_translation": "SysRq",
+    "key": "key.keyboard.sys.req"
+  },
+  {
     "english_translation": "Tab",
     "key": "key.keyboard.tab"
+  },
+  {
+    "english_translation": "Thousands Separator",
+    "key": "key.keyboard.thousands.separator"
+  },
+  {
+    "english_translation": "Undo",
+    "key": "key.keyboard.undo"
   },
   {
     "english_translation": "Not Bound",
@@ -20114,6 +21206,18 @@
   {
     "english_translation": "Up Arrow",
     "key": "key.keyboard.up"
+  },
+  {
+    "english_translation": "Volume Down",
+    "key": "key.keyboard.volume.down"
+  },
+  {
+    "english_translation": "Volume Up",
+    "key": "key.keyboard.volume.up"
+  },
+  {
+    "english_translation": "Wake",
+    "key": "key.keyboard.wake"
   },
   {
     "english_translation": "World 1",
@@ -20604,6 +21708,10 @@
     "key": "mco.configure.world.buttons.invite"
   },
   {
+    "english_translation": "Invite Codes",
+    "key": "mco.configure.world.buttons.invite_codes"
+  },
+  {
     "english_translation": "More options",
     "key": "mco.configure.world.buttons.moreoptions"
   },
@@ -20648,7 +21756,7 @@
     "key": "mco.configure.world.buttons.switchminigame"
   },
   {
-    "english_translation": "You can temporarily close your Realm, preventing play while you make adjustments. Open it back up when you're ready. \n\nThis does not cancel your Realms Subscription.",
+    "english_translation": "You can temporarily close your Realm, preventing play while you make adjustments. Open it back up when you're ready.\n\nThis does not cancel your Realms subscription.",
     "key": "mco.configure.world.close.question.line1"
   },
   {
@@ -20698,6 +21806,78 @@
   {
     "english_translation": "Name",
     "key": "mco.configure.world.invite.profile.name"
+  },
+  {
+    "english_translation": "Copy",
+    "key": "mco.configure.world.invite_codes.copy"
+  },
+  {
+    "english_translation": "Create Invite Code",
+    "key": "mco.configure.world.invite_codes.create"
+  },
+  {
+    "english_translation": "Delete",
+    "key": "mco.configure.world.invite_codes.delete"
+  },
+  {
+    "english_translation": "Edit",
+    "key": "mco.configure.world.invite_codes.edit"
+  },
+  {
+    "english_translation": "Active",
+    "key": "mco.configure.world.invite_codes.edit.active"
+  },
+  {
+    "english_translation": "Expiration Date",
+    "key": "mco.configure.world.invite_codes.edit.expiration_date"
+  },
+  {
+    "english_translation": "Expires: %s",
+    "key": "mco.configure.world.invite_codes.edit.expires"
+  },
+  {
+    "english_translation": "Edit Invite Code",
+    "key": "mco.configure.world.invite_codes.edit.title"
+  },
+  {
+    "english_translation": "12 hours",
+    "key": "mco.configure.world.invite_codes.expiration.12_hours"
+  },
+  {
+    "english_translation": "1 day",
+    "key": "mco.configure.world.invite_codes.expiration.1_day"
+  },
+  {
+    "english_translation": "1 hour",
+    "key": "mco.configure.world.invite_codes.expiration.1_hour"
+  },
+  {
+    "english_translation": "30 minutes",
+    "key": "mco.configure.world.invite_codes.expiration.30_minutes"
+  },
+  {
+    "english_translation": "6 hours",
+    "key": "mco.configure.world.invite_codes.expiration.6_hours"
+  },
+  {
+    "english_translation": "7 days",
+    "key": "mco.configure.world.invite_codes.expiration.7_days"
+  },
+  {
+    "english_translation": "Never",
+    "key": "mco.configure.world.invite_codes.expiration.never"
+  },
+  {
+    "english_translation": "Loading invite codes",
+    "key": "mco.configure.world.invite_codes.loading"
+  },
+  {
+    "english_translation": "You can add up to %s invite codes and share them so people can join your Realm",
+    "key": "mco.configure.world.invite_codes.subtitle"
+  },
+  {
+    "english_translation": "Invite Codes (%s/%s)",
+    "key": "mco.configure.world.invite_codes.title"
   },
   {
     "english_translation": "Invited (%s)",
@@ -20768,6 +21948,14 @@
     "key": "mco.configure.world.region_preference.title"
   },
   {
+    "english_translation": "Render Distance Limit",
+    "key": "mco.configure.world.renderDistance"
+  },
+  {
+    "english_translation": "The maximum distance visible to Realm members. Higher values may impact performance.",
+    "key": "mco.configure.world.renderDistance.tooltip"
+  },
+  {
     "english_translation": "Your world will be regenerated and your current world will be lost",
     "key": "mco.configure.world.reset.question.line1"
   },
@@ -20794,6 +21982,14 @@
   {
     "english_translation": "Settings",
     "key": "mco.configure.world.settings.title"
+  },
+  {
+    "english_translation": "Simulation Distance",
+    "key": "mco.configure.world.simulationDistance"
+  },
+  {
+    "english_translation": "The range around players where the game loads and applies changes.",
+    "key": "mco.configure.world.simulationDistance.tooltip"
   },
   {
     "english_translation": "World %s",
@@ -20952,7 +22148,7 @@
     "key": "mco.download.failed"
   },
   {
-    "english_translation": "%s %%",
+    "english_translation": "%s%%",
     "key": "mco.download.percent"
   },
   {
@@ -20988,7 +22184,7 @@
     "key": "mco.errorMessage.6001"
   },
   {
-    "english_translation": "Terms of service not accepted",
+    "english_translation": "Terms of Service not accepted",
     "key": "mco.errorMessage.6002"
   },
   {
@@ -21180,6 +22376,54 @@
     "key": "mco.onlinePlayers"
   },
   {
+    "english_translation": "Your invited friends can play in your Realm for free, anytime - even when you're not online. Play with up to 10 at once!",
+    "key": "mco.pdp.friends.description"
+  },
+  {
+    "english_translation": "A better way to play together",
+    "key": "mco.pdp.friends.title"
+  },
+  {
+    "english_translation": "Explore the rotating library of minigames, adventure maps and more.",
+    "key": "mco.pdp.minigames.description"
+  },
+  {
+    "english_translation": "Minigames - Free creator content",
+    "key": "mco.pdp.minigames.title"
+  },
+  {
+    "english_translation": "• Automatic backups",
+    "key": "mco.pdp.private.backups"
+  },
+  {
+    "english_translation": "• Easy to set up, easy to manage",
+    "key": "mco.pdp.private.easyToManage"
+  },
+  {
+    "english_translation": "• Private and secure",
+    "key": "mco.pdp.private.secure"
+  },
+  {
+    "english_translation": "Personal server",
+    "key": "mco.pdp.private.title"
+  },
+  {
+    "english_translation": "• Three world slots",
+    "key": "mco.pdp.private.worldSlots"
+  },
+  {
+    "english_translation": "Free 30-day trial!",
+    "key": "mco.pdp.trial.description"
+  },
+  {
+    "english_translation": "Your own server, always online",
+    "key": "mco.pdp.trial.title"
+  },
+  {
+    "english_translation": "Try for free",
+    "key": "mco.pdp.tryForFree"
+  },
+  {
     "english_translation": "Realm is closed",
     "key": "mco.play.button.realm.closed"
   },
@@ -21218,14 +22462,6 @@
   {
     "english_translation": "This will replace the current world of your Realm",
     "key": "mco.reset.world.warning"
-  },
-  {
-    "english_translation": "Buy a Realm!",
-    "key": "mco.selectServer.buy"
-  },
-  {
-    "english_translation": "Close",
-    "key": "mco.selectServer.close"
   },
   {
     "english_translation": "Deactivated Realm",
@@ -21272,6 +22508,38 @@
     "key": "mco.selectServer.expires.soon"
   },
   {
+    "english_translation": "Free trial",
+    "key": "mco.selectServer.freeTrial"
+  },
+  {
+    "english_translation": "Join Code",
+    "key": "mco.selectServer.joinCode"
+  },
+  {
+    "english_translation": "Enter join code",
+    "key": "mco.selectServer.joinCode.hint"
+  },
+  {
+    "english_translation": "The code you entered is invalid.",
+    "key": "mco.selectServer.joinCode.invalid"
+  },
+  {
+    "english_translation": "Join Realm",
+    "key": "mco.selectServer.joinCode.select"
+  },
+  {
+    "english_translation": "Enter Join Code",
+    "key": "mco.selectServer.joinCode.title"
+  },
+  {
+    "english_translation": "Validating code",
+    "key": "mco.selectServer.joinCode.validating"
+  },
+  {
+    "english_translation": "Join Realm",
+    "key": "mco.selectServer.joinRealm"
+  },
+  {
     "english_translation": "Leave Realm",
     "key": "mco.selectServer.leave"
   },
@@ -21312,16 +22580,8 @@
     "key": "mco.selectServer.play"
   },
   {
-    "english_translation": "Realms is a safe, simple way to enjoy an online Minecraft world with up to ten friends at a time. It supports loads of minigames and plenty of custom worlds! Only the owner of the Realm needs to pay.",
-    "key": "mco.selectServer.popup"
-  },
-  {
     "english_translation": "Add Realm",
     "key": "mco.selectServer.purchase"
-  },
-  {
-    "english_translation": "Get a Trial!",
-    "key": "mco.selectServer.trial"
   },
   {
     "english_translation": "Click to start your new Realm!",
@@ -21356,7 +22616,7 @@
     "key": "mco.snapshot.start"
   },
   {
-    "english_translation": "This is a Snapshot Realm that is paired to the subscription of your Realm '%s'. It will stay active for as long as its paired Realm is.",
+    "english_translation": "This is a Snapshot Realm that is paired with the subscription of your Realm '%s'. It will stay active for as long as its paired Realm is.",
     "key": "mco.snapshot.subscription.info"
   },
   {
@@ -21508,7 +22768,7 @@
     "key": "mco.upload.failed.too_big.title"
   },
   {
-    "english_translation": "%s %%",
+    "english_translation": "%s%%",
     "key": "mco.upload.percent"
   },
   {
@@ -21620,10 +22880,6 @@
     "key": "menu.multiplayerOptions.network.off.tooltip"
   },
   {
-    "english_translation": "Settings for Other Players",
-    "key": "menu.multiplayerOptions.otherPlayers.header"
-  },
-  {
     "english_translation": "This world is now open to LAN. The port number is %s",
     "key": "menu.multiplayerOptions.publish.started.lan"
   },
@@ -21634,10 +22890,6 @@
   {
     "english_translation": "This world is no longer open to multiplayer",
     "key": "menu.multiplayerOptions.publish.stopped"
-  },
-  {
-    "english_translation": "LAN Options",
-    "key": "menu.multiplayerOptions.title"
   },
   {
     "english_translation": "Minecraft Realms",
@@ -21768,8 +23020,12 @@
     "key": "mirror.none"
   },
   {
-    "english_translation": "Press %1$s to Dismount",
+    "english_translation": "Press %1$s to dismount",
     "key": "mount.onboard"
+  },
+  {
+    "english_translation": "Press %1$s to get up",
+    "key": "mount.sit"
   },
   {
     "english_translation": "Applying resource pack",
@@ -21796,7 +23052,7 @@
     "key": "multiplayer.confirm_command.run_command"
   },
   {
-    "english_translation": "You are trying to execute a command that will send chat messages using your name.\nIt can only be run from the chat screen\nCommand: %s",
+    "english_translation": "You are trying to execute a command that will send chat messages using your name.\nIt can only be run from the chat screen.\nCommand: %s",
     "key": "multiplayer.confirm_command.signature_required"
   },
   {
@@ -23000,6 +24256,14 @@
     "key": "options.credits_and_attribution"
   },
   {
+    "english_translation": "Right Click Emulation",
+    "key": "options.ctrlClickEmulatesRightClick"
+  },
+  {
+    "english_translation": "When enabled, Control + left-click is treated as a right-click. Only applies on macOS.",
+    "key": "options.ctrlClickEmulatesRightClick.tooltip"
+  },
+  {
     "english_translation": "See-Through Leaves",
     "key": "options.cutoutLeaves"
   },
@@ -23030,6 +24294,14 @@
   {
     "english_translation": "Controls how much the Darkness effect pulses when a Warden or Sculk Shrieker gives it to you.",
     "key": "options.darknessEffectScale.tooltip"
+  },
+  {
+    "english_translation": "Overrides the debug overlay with a different GUI scale than the rest of the game",
+    "key": "options.debugGuiScale.tooltip"
+  },
+  {
+    "english_translation": "Unchanged",
+    "key": "options.debugGuiScale.unchanged"
   },
   {
     "english_translation": "Difficulty",
@@ -23192,6 +24464,14 @@
     "key": "options.fullscreen.entry"
   },
   {
+    "english_translation": "Exclusive Fullscreen Mode",
+    "key": "options.fullscreen.exclusive.mode"
+  },
+  {
+    "english_translation": "This setting only takes effect when Exclusive Fullscreen is enabled.",
+    "key": "options.fullscreen.exclusive.mode.tooltip"
+  },
+  {
     "english_translation": "Fullscreen Resolution",
     "key": "options.fullscreen.resolution"
   },
@@ -23352,8 +24632,8 @@
     "key": "options.improvedTransparency"
   },
   {
-    "english_translation": "An experimental approach that uses screen shaders for drawing weather, clouds, and particles behind translucent blocks and water.\nThis will impact GPU performance.",
-    "key": "options.improvedTransparency.tooltip"
+    "english_translation": "An experimental approach that uses an order-independent transparency algorithm to avoid graphical issues normally present when looking through multiple layers of translucent objects.\nThis will impact performance.",
+    "key": "options.improvedTransparency.oit.tooltip"
   },
   {
     "english_translation": "In-Game Notification",
@@ -23364,7 +24644,7 @@
     "key": "options.inGameNotification.tooltip"
   },
   {
-    "english_translation": "Reduce FPS when",
+    "english_translation": "Reduce fps when",
     "key": "options.inactivityFpsLimit"
   },
   {
@@ -23412,6 +24692,14 @@
     "key": "options.language"
   },
   {
+    "english_translation": "Translation file for %s was empty or missing. Restart your game and launcher, then try again.",
+    "key": "options.language.empty_or_missing_translation"
+  },
+  {
+    "english_translation": "Loading translations failed",
+    "key": "options.language.load_translations_failed"
+  },
+  {
     "english_translation": "Change Language",
     "key": "options.language.narration"
   },
@@ -23428,8 +24716,16 @@
     "key": "options.languageAccuracyWarning"
   },
   {
-    "english_translation": "Language translations may not be 100%% accurate",
+    "english_translation": "Language translations may not be 100%% accurate.",
     "key": "options.languageWarning"
+  },
+  {
+    "english_translation": "Menu/Dock Visibility",
+    "key": "options.macFullscreenMenuVisibility"
+  },
+  {
+    "english_translation": "Whether the macOS Menu bar and Dock can be revealed by moving the mouse to the edge of the screen while in non-exclusive fullscreen.",
+    "key": "options.macFullscreenMenuVisibility.tooltip"
   },
   {
     "english_translation": "Main Hand",
@@ -23494,10 +24790,6 @@
   {
     "english_translation": "Mouse Settings",
     "key": "options.mouse_settings.title"
-  },
-  {
-    "english_translation": "Open to LAN",
-    "key": "options.multiplayer.title"
   },
   {
     "english_translation": "%sx",
@@ -23676,7 +24968,7 @@
     "key": "options.prioritizeChunkUpdates.byPlayer"
   },
   {
-    "english_translation": "Some actions within a chunk will recompile the chunk immediately. This includes block placing & destroying.",
+    "english_translation": "Some actions within a chunk will recompile the chunk immediately. This includes block placing and destroying.",
     "key": "options.prioritizeChunkUpdates.byPlayer.tooltip"
   },
   {
@@ -23696,8 +24988,12 @@
     "key": "options.prioritizeChunkUpdates.none.tooltip"
   },
   {
-    "english_translation": "Raw Input",
-    "key": "options.rawMouseInput"
+    "english_translation": "Quit Shortcuts",
+    "key": "options.quitShortcuts"
+  },
+  {
+    "english_translation": "Whether keyboard shortcuts can close the game. When off, Alt + F4 on Windows and Linux, and Cmd + Q on macOS, will no longer quit the game.",
+    "key": "options.quitShortcuts.tooltip"
   },
   {
     "english_translation": "News & Invites",
@@ -23936,12 +25232,36 @@
     "key": "options.weatherRadius.tooltip"
   },
   {
+    "english_translation": "Cannot allow commands in a demo world.",
+    "key": "options.worldOptions.allow_commands.disabled.demo.tooltip"
+  },
+  {
     "english_translation": "Cannot allow commands in a hardcore world.",
     "key": "options.worldOptions.allow_commands.disabled.tooltip"
   },
   {
+    "english_translation": "Allows the use of commands in this world.",
+    "key": "options.worldOptions.allow_commands.tooltip"
+  },
+  {
     "english_translation": "World Options...",
     "key": "options.worldOptions.button"
+  },
+  {
+    "english_translation": "Cannot change the difficulty in a hardcore world.",
+    "key": "options.worldOptions.difficulty.disabled.hardcore.tooltip"
+  },
+  {
+    "english_translation": "Difficulty is locked.",
+    "key": "options.worldOptions.difficulty.disabled.locked.tooltip"
+  },
+  {
+    "english_translation": "Changing the difficulty requires operator permissions.",
+    "key": "options.worldOptions.difficulty.disabled.operator.tooltip"
+  },
+  {
+    "english_translation": "Default Game Mode",
+    "key": "options.worldOptions.game_mode"
   },
   {
     "english_translation": "Changing the game mode requires operator permissions.",
@@ -23950,6 +25270,66 @@
   {
     "english_translation": "Cannot change the game mode in a hardcore world.",
     "key": "options.worldOptions.game_mode.disabled.tooltip"
+  },
+  {
+    "english_translation": "Changes the default game mode of the world.",
+    "key": "options.worldOptions.game_mode.tooltip"
+  },
+  {
+    "english_translation": "General",
+    "key": "options.worldOptions.general.title"
+  },
+  {
+    "english_translation": "Command Access",
+    "key": "options.worldOptions.guest.command_access"
+  },
+  {
+    "english_translation": "Cannot change the command access of players joining your world when commands are not allowed.",
+    "key": "options.worldOptions.guest.command_access.disabled.commands.tooltip"
+  },
+  {
+    "english_translation": "Cannot change the command access of players joining your world when the world's multiplayer scope is set to \"Off\".",
+    "key": "options.worldOptions.guest.command_access.disabled.scope.tooltip"
+  },
+  {
+    "english_translation": "Controls whether players that join your world can use commands or not.",
+    "key": "options.worldOptions.guest.command_access.tooltip"
+  },
+  {
+    "english_translation": "Force Game Mode",
+    "key": "options.worldOptions.guest.force_game_mode"
+  },
+  {
+    "english_translation": "Other players can set their own game mode through commands.",
+    "key": "options.worldOptions.guest.force_game_mode.off.commands.tooltip"
+  },
+  {
+    "english_translation": "Cannot change this setting in a hardcore world.",
+    "key": "options.worldOptions.guest.force_game_mode.off.hardcore.tooltip"
+  },
+  {
+    "english_translation": "Cannot change this setting when the world's multiplayer scope is set to \"Off\".",
+    "key": "options.worldOptions.guest.force_game_mode.off.scope.tooltip"
+  },
+  {
+    "english_translation": "Other players will retain their current game mode regardless of the world's default game mode.",
+    "key": "options.worldOptions.guest.force_game_mode.off.tooltip"
+  },
+  {
+    "english_translation": "Other players will be forced to play the world's default game mode.",
+    "key": "options.worldOptions.guest.force_game_mode.on.tooltip"
+  },
+  {
+    "english_translation": "Multiplayer",
+    "key": "options.worldOptions.multiplayer.title"
+  },
+  {
+    "english_translation": "Personal Game Mode",
+    "key": "options.worldOptions.personal_game_mode"
+  },
+  {
+    "english_translation": "Changes your game mode in this world.",
+    "key": "options.worldOptions.personal_game_mode.tooltip"
   },
   {
     "english_translation": "World Options",
@@ -23972,10 +25352,6 @@
     "key": "pack.copyFailure"
   },
   {
-    "english_translation": "Mod resources.",
-    "key": "pack.description.modResources"
-  },
-  {
     "english_translation": "Do you want to add the following packs to Minecraft?",
     "key": "pack.dropConfirm"
   },
@@ -23984,7 +25360,7 @@
     "key": "pack.dropInfo"
   },
   {
-    "english_translation": "The following entries were not valid packs and were not copied:\n %s",
+    "english_translation": "The following entries were not valid packs and were not copied:\n%s",
     "key": "pack.dropRejected.message"
   },
   {
@@ -24028,14 +25404,6 @@
     "key": "pack.incompatible.unknown"
   },
   {
-    "english_translation": "Fabric Mod \"%s\"",
-    "key": "pack.name.fabricMod"
-  },
-  {
-    "english_translation": "Fabric Mod \"%s\" (%s)",
-    "key": "pack.name.fabricMod.subPack"
-  },
-  {
     "english_translation": "%s (%s)",
     "key": "pack.nameAndSource"
   },
@@ -24050,14 +25418,6 @@
   {
     "english_translation": "built-in",
     "key": "pack.source.builtin"
-  },
-  {
-    "english_translation": "built-in: %s",
-    "key": "pack.source.builtinMod"
-  },
-  {
-    "english_translation": "Fabric mod",
-    "key": "pack.source.fabricmod"
   },
   {
     "english_translation": "feature",
@@ -24580,11 +25940,11 @@
     "key": "potion.withDuration"
   },
   {
-    "english_translation": "Could not find world with the provided identifier",
+    "english_translation": "Could not find a world with the provided identifier",
     "key": "quickplay.error.invalid_identifier"
   },
   {
-    "english_translation": "Could not connect to Realm",
+    "english_translation": "Could not connect to this Realm",
     "key": "quickplay.error.realm_connect"
   },
   {
@@ -24606,6 +25966,10 @@
   {
     "english_translation": "Brazil",
     "key": "realms.configuration.region.brazil_south"
+  },
+  {
+    "english_translation": "Canada",
+    "key": "realms.configuration.region.canada_central"
   },
   {
     "english_translation": "India",
@@ -24644,12 +26008,20 @@
     "key": "realms.configuration.region.korea_central"
   },
   {
+    "english_translation": "Mexico",
+    "key": "realms.configuration.region.mexico_central"
+  },
+  {
     "english_translation": "Illinois, USA",
     "key": "realms.configuration.region.north_central_us"
   },
   {
     "english_translation": "Ireland",
     "key": "realms.configuration.region.north_europe"
+  },
+  {
+    "english_translation": "South Africa",
+    "key": "realms.configuration.region.south_africa_north"
   },
   {
     "english_translation": "Texas, USA",
@@ -24686,6 +26058,10 @@
   {
     "english_translation": "Washington, USA",
     "key": "realms.configuration.region.west_us_2"
+  },
+  {
+    "english_translation": "Arizona, USA",
+    "key": "realms.configuration.region.west_us_3"
   },
   {
     "english_translation": "Automatic (Realm owner ping)",
@@ -24980,7 +26356,7 @@
     "key": "selectWorld.conversion"
   },
   {
-    "english_translation": "This world must be opened in an older version (like 1.6.4) to be safely converted",
+    "english_translation": "This world must be opened in an older version (like 1.6.4) to be safely converted.",
     "key": "selectWorld.conversion.tooltip"
   },
   {
@@ -25040,7 +26416,7 @@
     "key": "selectWorld.edit.backupFolder"
   },
   {
-    "english_translation": "size: %s MB",
+    "english_translation": "Size: %s MB",
     "key": "selectWorld.edit.backupSize"
   },
   {
@@ -25172,7 +26548,7 @@
     "key": "selectWorld.incompatible_series"
   },
   {
-    "english_translation": "Unable to read or access folder where game worlds are saved!",
+    "english_translation": "Unable to read or access the folder where game worlds are saved!",
     "key": "selectWorld.load_folder_access"
   },
   {
@@ -25324,8 +26700,20 @@
     "key": "selectWorld.warning.lowDiskSpace.title"
   },
   {
+    "english_translation": "Back Text:",
+    "key": "sign.back_text"
+  },
+  {
+    "english_translation": "Click actions are disabled for this sign",
+    "key": "sign.click_actions_disabled"
+  },
+  {
     "english_translation": "Edit Sign Message",
     "key": "sign.edit"
+  },
+  {
+    "english_translation": "Front Text:",
+    "key": "sign.front_text"
   },
   {
     "english_translation": "No amount of rest can pass this night",
@@ -25474,6 +26862,10 @@
   {
     "english_translation": "Weather",
     "key": "soundCategory.weather"
+  },
+  {
+    "english_translation": "Unable to teleport. The other side is not generated yet.",
+    "key": "spectator.cannot_teleport"
   },
   {
     "english_translation": "Close Menu",
@@ -25760,6 +27152,10 @@
     "key": "stat.minecraft.sleep_in_bed"
   },
   {
+    "english_translation": "Times Slept in a Straw Bed",
+    "key": "stat.minecraft.sleep_in_straw_bed"
+  },
+  {
     "english_translation": "Sneak Time",
     "key": "stat.minecraft.sneak_time"
   },
@@ -25976,7 +27372,7 @@
     "key": "structure_block.position"
   },
   {
-    "english_translation": "relative Position x",
+    "english_translation": "relative position x",
     "key": "structure_block.position.x"
   },
   {
@@ -26136,7 +27532,7 @@
     "key": "subtitles.block.bubble_column.upwards_ambient"
   },
   {
-    "english_translation": "Bubbles woosh",
+    "english_translation": "Bubbles whoosh",
     "key": "subtitles.block.bubble_column.upwards_inside"
   },
   {
@@ -26432,6 +27828,10 @@
     "key": "subtitles.block.pointed_dripstone.land"
   },
   {
+    "english_translation": "Leaves rustling",
+    "key": "subtitles.block.poplar_leaves.ambient"
+  },
+  {
     "english_translation": "Portal whooshes",
     "key": "subtitles.block.portal.ambient"
   },
@@ -26532,6 +27932,10 @@
     "key": "subtitles.block.shelf.take_item"
   },
   {
+    "english_translation": "Something bounces on a Shelf Mushroom",
+    "key": "subtitles.block.shelf_mushroom.bounce"
+  },
+  {
     "english_translation": "Shulker box closes",
     "key": "subtitles.block.shulker_box.close"
   },
@@ -26566,6 +27970,10 @@
   {
     "english_translation": "Sponge sucks",
     "key": "subtitles.block.sponge.absorb"
+  },
+  {
+    "english_translation": "Straw Bed breaks",
+    "key": "subtitles.block.straw_bed.break_leave"
   },
   {
     "english_translation": "Berries pop",
@@ -27236,11 +28644,11 @@
     "key": "subtitles.entity.copper_golem.item_no_drop"
   },
   {
-    "english_translation": "Copper Golem is picking up item",
+    "english_translation": "Copper Golem is picking up an item",
     "key": "subtitles.entity.copper_golem.no_item_get"
   },
   {
-    "english_translation": "Copper Golem can't pick up item",
+    "english_translation": "Copper Golem can't pick up an item",
     "key": "subtitles.entity.copper_golem.no_item_no_get"
   },
   {
@@ -27346,6 +28754,22 @@
   {
     "english_translation": "Creeper hisses",
     "key": "subtitles.entity.creeper.primed"
+  },
+  {
+    "english_translation": "Cushion breaks",
+    "key": "subtitles.entity.cushion.break"
+  },
+  {
+    "english_translation": "Gets up from Cushion",
+    "key": "subtitles.entity.cushion.get_up"
+  },
+  {
+    "english_translation": "Cushion placed",
+    "key": "subtitles.entity.cushion.place"
+  },
+  {
+    "english_translation": "Sits on Cushion",
+    "key": "subtitles.entity.cushion.sit"
   },
   {
     "english_translation": "Dolphin chirps",
@@ -27876,6 +29300,10 @@
     "key": "subtitles.entity.happy_ghast.hurt"
   },
   {
+    "english_translation": "Wind rushes past",
+    "key": "subtitles.entity.happy_ghast.riding"
+  },
+  {
     "english_translation": "Harness unequips",
     "key": "subtitles.entity.happy_ghast.unequip"
   },
@@ -28182,6 +29610,10 @@
   {
     "english_translation": "Nautilus hurts",
     "key": "subtitles.entity.nautilus.hurt_land"
+  },
+  {
+    "english_translation": "Nautilus bubbles",
+    "key": "subtitles.entity.nautilus.riding"
   },
   {
     "english_translation": "Nautilus swims",
@@ -29988,2058 +31420,6 @@
     "key": "symlink_warning.title.world"
   },
   {
-    "english_translation": "Barrels",
-    "key": "tag.block.c.barrels"
-  },
-  {
-    "english_translation": "Wooden Barrels",
-    "key": "tag.block.c.barrels.wooden"
-  },
-  {
-    "english_translation": "Bars",
-    "key": "tag.block.c.bars"
-  },
-  {
-    "english_translation": "Copper Bars",
-    "key": "tag.block.c.bars.copper"
-  },
-  {
-    "english_translation": "Iron Bars",
-    "key": "tag.block.c.bars.iron"
-  },
-  {
-    "english_translation": "Bookshelves",
-    "key": "tag.block.c.bookshelves"
-  },
-  {
-    "english_translation": "Budding Blocks",
-    "key": "tag.block.c.budding_blocks"
-  },
-  {
-    "english_translation": "Buds",
-    "key": "tag.block.c.buds"
-  },
-  {
-    "english_translation": "Chains",
-    "key": "tag.block.c.chains"
-  },
-  {
-    "english_translation": "Chests",
-    "key": "tag.block.c.chests"
-  },
-  {
-    "english_translation": "Ender Chests",
-    "key": "tag.block.c.chests.ender"
-  },
-  {
-    "english_translation": "Trapped Chests",
-    "key": "tag.block.c.chests.trapped"
-  },
-  {
-    "english_translation": "Wooden Chests",
-    "key": "tag.block.c.chests.wooden"
-  },
-  {
-    "english_translation": "Clusters",
-    "key": "tag.block.c.clusters"
-  },
-  {
-    "english_translation": "Cobblestones",
-    "key": "tag.block.c.cobblestones"
-  },
-  {
-    "english_translation": "Deepslate Cobblestones",
-    "key": "tag.block.c.cobblestones.deepslate"
-  },
-  {
-    "english_translation": "Infested Cobblestones",
-    "key": "tag.block.c.cobblestones.infested"
-  },
-  {
-    "english_translation": "Mossy Cobblestones",
-    "key": "tag.block.c.cobblestones.mossy"
-  },
-  {
-    "english_translation": "Normal Cobblestones",
-    "key": "tag.block.c.cobblestones.normal"
-  },
-  {
-    "english_translation": "Concretes",
-    "key": "tag.block.c.concretes"
-  },
-  {
-    "english_translation": "Dyed Blocks",
-    "key": "tag.block.c.dyed"
-  },
-  {
-    "english_translation": "Black Dyed Blocks",
-    "key": "tag.block.c.dyed.black"
-  },
-  {
-    "english_translation": "Blue Dyed Blocks",
-    "key": "tag.block.c.dyed.blue"
-  },
-  {
-    "english_translation": "Brown Dyed Blocks",
-    "key": "tag.block.c.dyed.brown"
-  },
-  {
-    "english_translation": "Cyan Dyed Blocks",
-    "key": "tag.block.c.dyed.cyan"
-  },
-  {
-    "english_translation": "Gray Dyed Blocks",
-    "key": "tag.block.c.dyed.gray"
-  },
-  {
-    "english_translation": "Green Dyed Blocks",
-    "key": "tag.block.c.dyed.green"
-  },
-  {
-    "english_translation": "Light Blue Dyed Blocks",
-    "key": "tag.block.c.dyed.light_blue"
-  },
-  {
-    "english_translation": "Light Gray Dyed Blocks",
-    "key": "tag.block.c.dyed.light_gray"
-  },
-  {
-    "english_translation": "Lime Dyed Blocks",
-    "key": "tag.block.c.dyed.lime"
-  },
-  {
-    "english_translation": "Magenta Dyed Blocks",
-    "key": "tag.block.c.dyed.magenta"
-  },
-  {
-    "english_translation": "Orange Dyed Blocks",
-    "key": "tag.block.c.dyed.orange"
-  },
-  {
-    "english_translation": "Pink Dyed Blocks",
-    "key": "tag.block.c.dyed.pink"
-  },
-  {
-    "english_translation": "Purple Dyed Blocks",
-    "key": "tag.block.c.dyed.purple"
-  },
-  {
-    "english_translation": "Red Dyed Blocks",
-    "key": "tag.block.c.dyed.red"
-  },
-  {
-    "english_translation": "White Dyed Blocks",
-    "key": "tag.block.c.dyed.white"
-  },
-  {
-    "english_translation": "Yellow Dyed Blocks",
-    "key": "tag.block.c.dyed.yellow"
-  },
-  {
-    "english_translation": "End Stones",
-    "key": "tag.block.c.end_stones"
-  },
-  {
-    "english_translation": "Fence Gates",
-    "key": "tag.block.c.fence_gates"
-  },
-  {
-    "english_translation": "Wooden Fence Gates",
-    "key": "tag.block.c.fence_gates.wooden"
-  },
-  {
-    "english_translation": "Fences",
-    "key": "tag.block.c.fences"
-  },
-  {
-    "english_translation": "Nether Brick Fences",
-    "key": "tag.block.c.fences.nether_brick"
-  },
-  {
-    "english_translation": "Wooden Fences",
-    "key": "tag.block.c.fences.wooden"
-  },
-  {
-    "english_translation": "Flowers",
-    "key": "tag.block.c.flowers"
-  },
-  {
-    "english_translation": "Small Flowers",
-    "key": "tag.block.c.flowers.small"
-  },
-  {
-    "english_translation": "Tall Flowers",
-    "key": "tag.block.c.flowers.tall"
-  },
-  {
-    "english_translation": "Froglights",
-    "key": "tag.block.c.froglights"
-  },
-  {
-    "english_translation": "Glass Blocks",
-    "key": "tag.block.c.glass_blocks"
-  },
-  {
-    "english_translation": "Cheap Glass Blocks",
-    "key": "tag.block.c.glass_blocks.cheap"
-  },
-  {
-    "english_translation": "Colorless Glass Blocks",
-    "key": "tag.block.c.glass_blocks.colorless"
-  },
-  {
-    "english_translation": "Tinted Glass Blocks",
-    "key": "tag.block.c.glass_blocks.tinted"
-  },
-  {
-    "english_translation": "Glass Panes",
-    "key": "tag.block.c.glass_panes"
-  },
-  {
-    "english_translation": "Colorless Glass Panes",
-    "key": "tag.block.c.glass_panes.colorless"
-  },
-  {
-    "english_translation": "Glazed Terracottas",
-    "key": "tag.block.c.glazed_terracottas"
-  },
-  {
-    "english_translation": "Gravels",
-    "key": "tag.block.c.gravels"
-  },
-  {
-    "english_translation": "Hidden From Recipe Viewers",
-    "key": "tag.block.c.hidden_from_recipe_viewers"
-  },
-  {
-    "english_translation": "Natural Logs",
-    "key": "tag.block.c.natural_logs"
-  },
-  {
-    "english_translation": "Nether Natural Logs",
-    "key": "tag.block.c.natural_logs.nether"
-  },
-  {
-    "english_translation": "Overworld Natural Logs",
-    "key": "tag.block.c.natural_logs.overworld"
-  },
-  {
-    "english_translation": "Natural Woods",
-    "key": "tag.block.c.natural_woods"
-  },
-  {
-    "english_translation": "Netherracks",
-    "key": "tag.block.c.netherracks"
-  },
-  {
-    "english_translation": "Obsidians",
-    "key": "tag.block.c.obsidians"
-  },
-  {
-    "english_translation": "Crying Obsidians",
-    "key": "tag.block.c.obsidians.crying"
-  },
-  {
-    "english_translation": "Normal Obsidians",
-    "key": "tag.block.c.obsidians.normal"
-  },
-  {
-    "english_translation": "Deepslate Ore Bearing Ground",
-    "key": "tag.block.c.ore_bearing_ground.deepslate"
-  },
-  {
-    "english_translation": "Netherrack Ore Bearing Ground",
-    "key": "tag.block.c.ore_bearing_ground.netherrack"
-  },
-  {
-    "english_translation": "Stone Ore Bearing Ground",
-    "key": "tag.block.c.ore_bearing_ground.stone"
-  },
-  {
-    "english_translation": "Dense Ore Rates",
-    "key": "tag.block.c.ore_rates.dense"
-  },
-  {
-    "english_translation": "Singular Ore Rates",
-    "key": "tag.block.c.ore_rates.singular"
-  },
-  {
-    "english_translation": "Sparse Ore Rates",
-    "key": "tag.block.c.ore_rates.sparse"
-  },
-  {
-    "english_translation": "Ores",
-    "key": "tag.block.c.ores"
-  },
-  {
-    "english_translation": "Coal Ores",
-    "key": "tag.block.c.ores.coal"
-  },
-  {
-    "english_translation": "Copper Ores",
-    "key": "tag.block.c.ores.copper"
-  },
-  {
-    "english_translation": "Diamond Ores",
-    "key": "tag.block.c.ores.diamond"
-  },
-  {
-    "english_translation": "Emerald Ores",
-    "key": "tag.block.c.ores.emerald"
-  },
-  {
-    "english_translation": "Gold Ores",
-    "key": "tag.block.c.ores.gold"
-  },
-  {
-    "english_translation": "Iron Ores",
-    "key": "tag.block.c.ores.iron"
-  },
-  {
-    "english_translation": "Lapis Ores",
-    "key": "tag.block.c.ores.lapis"
-  },
-  {
-    "english_translation": "Netherite Scrap Ores",
-    "key": "tag.block.c.ores.netherite_scrap"
-  },
-  {
-    "english_translation": "Quartz Ores",
-    "key": "tag.block.c.ores.quartz"
-  },
-  {
-    "english_translation": "Redstone Ores",
-    "key": "tag.block.c.ores.redstone"
-  },
-  {
-    "english_translation": "Deepslate Ores In Ground",
-    "key": "tag.block.c.ores_in_ground.deepslate"
-  },
-  {
-    "english_translation": "Netherrack Ores In Ground",
-    "key": "tag.block.c.ores_in_ground.netherrack"
-  },
-  {
-    "english_translation": "Stone Ores In Ground",
-    "key": "tag.block.c.ores_in_ground.stone"
-  },
-  {
-    "english_translation": "Crafting Tables",
-    "key": "tag.block.c.player_workstations.crafting_tables"
-  },
-  {
-    "english_translation": "Furnaces",
-    "key": "tag.block.c.player_workstations.furnaces"
-  },
-  {
-    "english_translation": "Pumpkins",
-    "key": "tag.block.c.pumpkins"
-  },
-  {
-    "english_translation": "Carved Pumpkins",
-    "key": "tag.block.c.pumpkins.carved"
-  },
-  {
-    "english_translation": "Jack o'Lanterns",
-    "key": "tag.block.c.pumpkins.jack_o_lanterns"
-  },
-  {
-    "english_translation": "Normal Pumpkins",
-    "key": "tag.block.c.pumpkins.normal"
-  },
-  {
-    "english_translation": "Relocation Not Supported",
-    "key": "tag.block.c.relocation_not_supported"
-  },
-  {
-    "english_translation": "Ropes",
-    "key": "tag.block.c.ropes"
-  },
-  {
-    "english_translation": "Sands",
-    "key": "tag.block.c.sands"
-  },
-  {
-    "english_translation": "Colorless Sands",
-    "key": "tag.block.c.sands.colorless"
-  },
-  {
-    "english_translation": "Red Sands",
-    "key": "tag.block.c.sands.red"
-  },
-  {
-    "english_translation": "Sandstone Blocks",
-    "key": "tag.block.c.sandstone.blocks"
-  },
-  {
-    "english_translation": "Red Sandstone Blocks",
-    "key": "tag.block.c.sandstone.red_blocks"
-  },
-  {
-    "english_translation": "Red Sandstone Slabs",
-    "key": "tag.block.c.sandstone.red_slabs"
-  },
-  {
-    "english_translation": "Red Sandstone Stairs",
-    "key": "tag.block.c.sandstone.red_stairs"
-  },
-  {
-    "english_translation": "Sandstone Slabs",
-    "key": "tag.block.c.sandstone.slabs"
-  },
-  {
-    "english_translation": "Sandstone Stairs",
-    "key": "tag.block.c.sandstone.stairs"
-  },
-  {
-    "english_translation": "Uncolored Sandstone Blocks",
-    "key": "tag.block.c.sandstone.uncolored_blocks"
-  },
-  {
-    "english_translation": "Uncolored Sandstone Slabs",
-    "key": "tag.block.c.sandstone.uncolored_slabs"
-  },
-  {
-    "english_translation": "Uncolored Sandstone Stairs",
-    "key": "tag.block.c.sandstone.uncolored_stairs"
-  },
-  {
-    "english_translation": "Skulls",
-    "key": "tag.block.c.skulls"
-  },
-  {
-    "english_translation": "Stones",
-    "key": "tag.block.c.stones"
-  },
-  {
-    "english_translation": "Storage Blocks",
-    "key": "tag.block.c.storage_blocks"
-  },
-  {
-    "english_translation": "Bone Meal Storage Blocks",
-    "key": "tag.block.c.storage_blocks.bone_meal"
-  },
-  {
-    "english_translation": "Coal Storage Blocks",
-    "key": "tag.block.c.storage_blocks.coal"
-  },
-  {
-    "english_translation": "Copper Storage Blocks",
-    "key": "tag.block.c.storage_blocks.copper"
-  },
-  {
-    "english_translation": "Diamond Storage Blocks",
-    "key": "tag.block.c.storage_blocks.diamond"
-  },
-  {
-    "english_translation": "Dried Kelp Storage Blocks",
-    "key": "tag.block.c.storage_blocks.dried_kelp"
-  },
-  {
-    "english_translation": "Emerald Storage Blocks",
-    "key": "tag.block.c.storage_blocks.emerald"
-  },
-  {
-    "english_translation": "Gold Storage Blocks",
-    "key": "tag.block.c.storage_blocks.gold"
-  },
-  {
-    "english_translation": "Iron Storage Blocks",
-    "key": "tag.block.c.storage_blocks.iron"
-  },
-  {
-    "english_translation": "Lapis Storage Blocks",
-    "key": "tag.block.c.storage_blocks.lapis"
-  },
-  {
-    "english_translation": "Netherite Storage Blocks",
-    "key": "tag.block.c.storage_blocks.netherite"
-  },
-  {
-    "english_translation": "Raw Copper Storage Blocks",
-    "key": "tag.block.c.storage_blocks.raw_copper"
-  },
-  {
-    "english_translation": "Raw Gold Storage Blocks",
-    "key": "tag.block.c.storage_blocks.raw_gold"
-  },
-  {
-    "english_translation": "Raw Iron Storage Blocks",
-    "key": "tag.block.c.storage_blocks.raw_iron"
-  },
-  {
-    "english_translation": "Redstone Storage Blocks",
-    "key": "tag.block.c.storage_blocks.redstone"
-  },
-  {
-    "english_translation": "Resin Storage Blocks",
-    "key": "tag.block.c.storage_blocks.resin"
-  },
-  {
-    "english_translation": "Slime Storage Blocks",
-    "key": "tag.block.c.storage_blocks.slime"
-  },
-  {
-    "english_translation": "Wheat Storage Blocks",
-    "key": "tag.block.c.storage_blocks.wheat"
-  },
-  {
-    "english_translation": "Stripped Logs",
-    "key": "tag.block.c.stripped_logs"
-  },
-  {
-    "english_translation": "Stripped Woods",
-    "key": "tag.block.c.stripped_woods"
-  },
-  {
-    "english_translation": "Villager Job Sites",
-    "key": "tag.block.c.villager_job_sites"
-  },
-  {
-    "english_translation": "Entity Auxiliary Movement Enhancements",
-    "key": "tag.enchantment.c.entity_auxiliary_movement_enhancements"
-  },
-  {
-    "english_translation": "Entity Defense Enhancements",
-    "key": "tag.enchantment.c.entity_defense_enhancements"
-  },
-  {
-    "english_translation": "Entity Speed Enhancements",
-    "key": "tag.enchantment.c.entity_speed_enhancements"
-  },
-  {
-    "english_translation": "Hidden From Recipe Viewers",
-    "key": "tag.enchantment.c.hidden_from_recipe_viewers"
-  },
-  {
-    "english_translation": "Increases Block Drops",
-    "key": "tag.enchantment.c.increase_block_drops"
-  },
-  {
-    "english_translation": "Increases Entity Drops",
-    "key": "tag.enchantment.c.increase_entity_drops"
-  },
-  {
-    "english_translation": "Weapon Damage Enhancements",
-    "key": "tag.enchantment.c.weapon_damage_enhancements"
-  },
-  {
-    "english_translation": "Boats",
-    "key": "tag.entity_type.c.boats"
-  },
-  {
-    "english_translation": "Bosses",
-    "key": "tag.entity_type.c.bosses"
-  },
-  {
-    "english_translation": "Capturing Not Supported",
-    "key": "tag.entity_type.c.capturing_not_supported"
-  },
-  {
-    "english_translation": "Item Frames",
-    "key": "tag.entity_type.c.item_frames"
-  },
-  {
-    "english_translation": "Minecarts",
-    "key": "tag.entity_type.c.minecarts"
-  },
-  {
-    "english_translation": "Teleporting Not Supported",
-    "key": "tag.entity_type.c.teleporting_not_supported"
-  },
-  {
-    "english_translation": "Beetroot Soup",
-    "key": "tag.fluid.c.beetroot_soup"
-  },
-  {
-    "english_translation": "Experience",
-    "key": "tag.fluid.c.experience"
-  },
-  {
-    "english_translation": "Gaseous",
-    "key": "tag.fluid.c.gaseous"
-  },
-  {
-    "english_translation": "Hidden From Recipe Viewers",
-    "key": "tag.fluid.c.hidden_from_recipe_viewers"
-  },
-  {
-    "english_translation": "Honey",
-    "key": "tag.fluid.c.honey"
-  },
-  {
-    "english_translation": "Lava",
-    "key": "tag.fluid.c.lava"
-  },
-  {
-    "english_translation": "Milk",
-    "key": "tag.fluid.c.milk"
-  },
-  {
-    "english_translation": "Mushroom Stew",
-    "key": "tag.fluid.c.mushroom_stew"
-  },
-  {
-    "english_translation": "Potion",
-    "key": "tag.fluid.c.potion"
-  },
-  {
-    "english_translation": "Rabbit Stew",
-    "key": "tag.fluid.c.rabbit_stew"
-  },
-  {
-    "english_translation": "Suspicious Stew",
-    "key": "tag.fluid.c.suspicious_stew"
-  },
-  {
-    "english_translation": "Water",
-    "key": "tag.fluid.c.water"
-  },
-  {
-    "english_translation": "Animal Foods",
-    "key": "tag.item.c.animal_foods"
-  },
-  {
-    "english_translation": "Armors",
-    "key": "tag.item.c.armors"
-  },
-  {
-    "english_translation": "Horse Armors",
-    "key": "tag.item.c.armors.horse"
-  },
-  {
-    "english_translation": "Humanoid Armors",
-    "key": "tag.item.c.armors.humanoid"
-  },
-  {
-    "english_translation": "Nautilus Armors",
-    "key": "tag.item.c.armors.nautilus"
-  },
-  {
-    "english_translation": "Wolf Armors",
-    "key": "tag.item.c.armors.wolf"
-  },
-  {
-    "english_translation": "Barrels",
-    "key": "tag.item.c.barrels"
-  },
-  {
-    "english_translation": "Wooden Barrels",
-    "key": "tag.item.c.barrels.wooden"
-  },
-  {
-    "english_translation": "Bars",
-    "key": "tag.item.c.bars"
-  },
-  {
-    "english_translation": "Copper Bars",
-    "key": "tag.item.c.bars.copper"
-  },
-  {
-    "english_translation": "Iron Bars",
-    "key": "tag.item.c.bars.iron"
-  },
-  {
-    "english_translation": "Bones",
-    "key": "tag.item.c.bones"
-  },
-  {
-    "english_translation": "Bookshelves",
-    "key": "tag.item.c.bookshelves"
-  },
-  {
-    "english_translation": "Bricks",
-    "key": "tag.item.c.bricks"
-  },
-  {
-    "english_translation": "Nether Bricks",
-    "key": "tag.item.c.bricks.nether"
-  },
-  {
-    "english_translation": "Bricks",
-    "key": "tag.item.c.bricks.normal"
-  },
-  {
-    "english_translation": "Resin Bricks",
-    "key": "tag.item.c.bricks.resin"
-  },
-  {
-    "english_translation": "Buckets",
-    "key": "tag.item.c.buckets"
-  },
-  {
-    "english_translation": "Empty Buckets",
-    "key": "tag.item.c.buckets.empty"
-  },
-  {
-    "english_translation": "Entity Dry Buckets",
-    "key": "tag.item.c.buckets.entity_dry"
-  },
-  {
-    "english_translation": "Entity Water Buckets",
-    "key": "tag.item.c.buckets.entity_water"
-  },
-  {
-    "english_translation": "Lava Buckets",
-    "key": "tag.item.c.buckets.lava"
-  },
-  {
-    "english_translation": "Milk Buckets",
-    "key": "tag.item.c.buckets.milk"
-  },
-  {
-    "english_translation": "Powder Snow Buckets",
-    "key": "tag.item.c.buckets.powder_snow"
-  },
-  {
-    "english_translation": "Water Buckets",
-    "key": "tag.item.c.buckets.water"
-  },
-  {
-    "english_translation": "Budding Blocks",
-    "key": "tag.item.c.budding_blocks"
-  },
-  {
-    "english_translation": "Buds",
-    "key": "tag.item.c.buds"
-  },
-  {
-    "english_translation": "Chains",
-    "key": "tag.item.c.chains"
-  },
-  {
-    "english_translation": "Chests",
-    "key": "tag.item.c.chests"
-  },
-  {
-    "english_translation": "Ender Chests",
-    "key": "tag.item.c.chests.ender"
-  },
-  {
-    "english_translation": "Trapped Chests",
-    "key": "tag.item.c.chests.trapped"
-  },
-  {
-    "english_translation": "Wooden Chests",
-    "key": "tag.item.c.chests.wooden"
-  },
-  {
-    "english_translation": "Clumps",
-    "key": "tag.item.c.clumps"
-  },
-  {
-    "english_translation": "Resin Clumps",
-    "key": "tag.item.c.clumps.resin"
-  },
-  {
-    "english_translation": "Clusters",
-    "key": "tag.item.c.clusters"
-  },
-  {
-    "english_translation": "Cobblestones",
-    "key": "tag.item.c.cobblestones"
-  },
-  {
-    "english_translation": "Deepslate Cobblestones",
-    "key": "tag.item.c.cobblestones.deepslate"
-  },
-  {
-    "english_translation": "Infested Cobblestones",
-    "key": "tag.item.c.cobblestones.infested"
-  },
-  {
-    "english_translation": "Mossy Cobblestones",
-    "key": "tag.item.c.cobblestones.mossy"
-  },
-  {
-    "english_translation": "Normal Cobblestones",
-    "key": "tag.item.c.cobblestones.normal"
-  },
-  {
-    "english_translation": "Concrete Powders",
-    "key": "tag.item.c.concrete_powders"
-  },
-  {
-    "english_translation": "Concretes",
-    "key": "tag.item.c.concretes"
-  },
-  {
-    "english_translation": "Crops",
-    "key": "tag.item.c.crops"
-  },
-  {
-    "english_translation": "Beetroot Crops",
-    "key": "tag.item.c.crops.beetroot"
-  },
-  {
-    "english_translation": "Cactus Crops",
-    "key": "tag.item.c.crops.cactus"
-  },
-  {
-    "english_translation": "Carrot Crops",
-    "key": "tag.item.c.crops.carrot"
-  },
-  {
-    "english_translation": "Cocoa Bean Crops",
-    "key": "tag.item.c.crops.cocoa_bean"
-  },
-  {
-    "english_translation": "Melon Crops",
-    "key": "tag.item.c.crops.melon"
-  },
-  {
-    "english_translation": "Nether Wart Crops",
-    "key": "tag.item.c.crops.nether_wart"
-  },
-  {
-    "english_translation": "Potato Crops",
-    "key": "tag.item.c.crops.potato"
-  },
-  {
-    "english_translation": "Pumpkin Crops",
-    "key": "tag.item.c.crops.pumpkin"
-  },
-  {
-    "english_translation": "Sugar Cane Crops",
-    "key": "tag.item.c.crops.sugar_cane"
-  },
-  {
-    "english_translation": "Wheat Crops",
-    "key": "tag.item.c.crops.wheat"
-  },
-  {
-    "english_translation": "Drink Containing Bottles",
-    "key": "tag.item.c.drink_containing.bottle"
-  },
-  {
-    "english_translation": "Drink Containing Buckets",
-    "key": "tag.item.c.drink_containing.bucket"
-  },
-  {
-    "english_translation": "Drinks",
-    "key": "tag.item.c.drinks"
-  },
-  {
-    "english_translation": "Honey",
-    "key": "tag.item.c.drinks.honey"
-  },
-  {
-    "english_translation": "Juice",
-    "key": "tag.item.c.drinks.juice"
-  },
-  {
-    "english_translation": "Magical Drinks",
-    "key": "tag.item.c.drinks.magic"
-  },
-  {
-    "english_translation": "Milk",
-    "key": "tag.item.c.drinks.milk"
-  },
-  {
-    "english_translation": "Ominous Drinks",
-    "key": "tag.item.c.drinks.ominous"
-  },
-  {
-    "english_translation": "Water",
-    "key": "tag.item.c.drinks.water"
-  },
-  {
-    "english_translation": "Watery Drinks",
-    "key": "tag.item.c.drinks.watery"
-  },
-  {
-    "english_translation": "Dusts",
-    "key": "tag.item.c.dusts"
-  },
-  {
-    "english_translation": "Glowstone Dusts",
-    "key": "tag.item.c.dusts.glowstone"
-  },
-  {
-    "english_translation": "Redstone Dusts",
-    "key": "tag.item.c.dusts.redstone"
-  },
-  {
-    "english_translation": "Dyed Items",
-    "key": "tag.item.c.dyed"
-  },
-  {
-    "english_translation": "Black Dyed Items",
-    "key": "tag.item.c.dyed.black"
-  },
-  {
-    "english_translation": "Blue Dyed Items",
-    "key": "tag.item.c.dyed.blue"
-  },
-  {
-    "english_translation": "Brown Dyed Items",
-    "key": "tag.item.c.dyed.brown"
-  },
-  {
-    "english_translation": "Cyan Dyed Items",
-    "key": "tag.item.c.dyed.cyan"
-  },
-  {
-    "english_translation": "Gray Dyed Items",
-    "key": "tag.item.c.dyed.gray"
-  },
-  {
-    "english_translation": "Green Dyed Items",
-    "key": "tag.item.c.dyed.green"
-  },
-  {
-    "english_translation": "Light Blue Dyed Items",
-    "key": "tag.item.c.dyed.light_blue"
-  },
-  {
-    "english_translation": "Light Gray Dyed Items",
-    "key": "tag.item.c.dyed.light_gray"
-  },
-  {
-    "english_translation": "Lime Dyed Items",
-    "key": "tag.item.c.dyed.lime"
-  },
-  {
-    "english_translation": "Magenta Dyed Items",
-    "key": "tag.item.c.dyed.magenta"
-  },
-  {
-    "english_translation": "Orange Dyed Items",
-    "key": "tag.item.c.dyed.orange"
-  },
-  {
-    "english_translation": "Pink Dyed Items",
-    "key": "tag.item.c.dyed.pink"
-  },
-  {
-    "english_translation": "Purple Dyed Items",
-    "key": "tag.item.c.dyed.purple"
-  },
-  {
-    "english_translation": "Red Dyed Items",
-    "key": "tag.item.c.dyed.red"
-  },
-  {
-    "english_translation": "White Dyed Items",
-    "key": "tag.item.c.dyed.white"
-  },
-  {
-    "english_translation": "Yellow Dyed Items",
-    "key": "tag.item.c.dyed.yellow"
-  },
-  {
-    "english_translation": "Dyes",
-    "key": "tag.item.c.dyes"
-  },
-  {
-    "english_translation": "Black Dyes",
-    "key": "tag.item.c.dyes.black"
-  },
-  {
-    "english_translation": "Blue Dyes",
-    "key": "tag.item.c.dyes.blue"
-  },
-  {
-    "english_translation": "Brown Dyes",
-    "key": "tag.item.c.dyes.brown"
-  },
-  {
-    "english_translation": "Cyan Dyes",
-    "key": "tag.item.c.dyes.cyan"
-  },
-  {
-    "english_translation": "Gray Dyes",
-    "key": "tag.item.c.dyes.gray"
-  },
-  {
-    "english_translation": "Green Dyes",
-    "key": "tag.item.c.dyes.green"
-  },
-  {
-    "english_translation": "Light Blue Dyes",
-    "key": "tag.item.c.dyes.light_blue"
-  },
-  {
-    "english_translation": "Light Gray Dyes",
-    "key": "tag.item.c.dyes.light_gray"
-  },
-  {
-    "english_translation": "Lime Dyes",
-    "key": "tag.item.c.dyes.lime"
-  },
-  {
-    "english_translation": "Magenta Dyes",
-    "key": "tag.item.c.dyes.magenta"
-  },
-  {
-    "english_translation": "Orange Dyes",
-    "key": "tag.item.c.dyes.orange"
-  },
-  {
-    "english_translation": "Pink Dyes",
-    "key": "tag.item.c.dyes.pink"
-  },
-  {
-    "english_translation": "Purple Dyes",
-    "key": "tag.item.c.dyes.purple"
-  },
-  {
-    "english_translation": "Red Dyes",
-    "key": "tag.item.c.dyes.red"
-  },
-  {
-    "english_translation": "White Dyes",
-    "key": "tag.item.c.dyes.white"
-  },
-  {
-    "english_translation": "Yellow Dyes",
-    "key": "tag.item.c.dyes.yellow"
-  },
-  {
-    "english_translation": "Eggs",
-    "key": "tag.item.c.eggs"
-  },
-  {
-    "english_translation": "Enchantables",
-    "key": "tag.item.c.enchantables"
-  },
-  {
-    "english_translation": "End Stones",
-    "key": "tag.item.c.end_stones"
-  },
-  {
-    "english_translation": "Ender Pearls",
-    "key": "tag.item.c.ender_pearls"
-  },
-  {
-    "english_translation": "Feathers",
-    "key": "tag.item.c.feathers"
-  },
-  {
-    "english_translation": "Fence Gates",
-    "key": "tag.item.c.fence_gates"
-  },
-  {
-    "english_translation": "Wooden Fence Gates",
-    "key": "tag.item.c.fence_gates.wooden"
-  },
-  {
-    "english_translation": "Fences",
-    "key": "tag.item.c.fences"
-  },
-  {
-    "english_translation": "Nether Brick Fences",
-    "key": "tag.item.c.fences.nether_brick"
-  },
-  {
-    "english_translation": "Wooden Fences",
-    "key": "tag.item.c.fences.wooden"
-  },
-  {
-    "english_translation": "Fertilizers",
-    "key": "tag.item.c.fertilizers"
-  },
-  {
-    "english_translation": "Flowers",
-    "key": "tag.item.c.flowers"
-  },
-  {
-    "english_translation": "Small Flowers",
-    "key": "tag.item.c.flowers.small"
-  },
-  {
-    "english_translation": "Tall Flowers",
-    "key": "tag.item.c.flowers.tall"
-  },
-  {
-    "english_translation": "Foods",
-    "key": "tag.item.c.foods"
-  },
-  {
-    "english_translation": "Berries",
-    "key": "tag.item.c.foods.berry"
-  },
-  {
-    "english_translation": "Breads",
-    "key": "tag.item.c.foods.bread"
-  },
-  {
-    "english_translation": "Candies",
-    "key": "tag.item.c.foods.candy"
-  },
-  {
-    "english_translation": "Cooked Fishes",
-    "key": "tag.item.c.foods.cooked_fish"
-  },
-  {
-    "english_translation": "Cooked Meats",
-    "key": "tag.item.c.foods.cooked_meat"
-  },
-  {
-    "english_translation": "Cookies",
-    "key": "tag.item.c.foods.cookie"
-  },
-  {
-    "english_translation": "Doughs",
-    "key": "tag.item.c.foods.dough"
-  },
-  {
-    "english_translation": "Edible When Placed",
-    "key": "tag.item.c.foods.edible_when_placed"
-  },
-  {
-    "english_translation": "Food Poisoning",
-    "key": "tag.item.c.foods.food_poisoning"
-  },
-  {
-    "english_translation": "Fruits",
-    "key": "tag.item.c.foods.fruit"
-  },
-  {
-    "english_translation": "Golden Foods",
-    "key": "tag.item.c.foods.golden"
-  },
-  {
-    "english_translation": "Pies",
-    "key": "tag.item.c.foods.pie"
-  },
-  {
-    "english_translation": "Raw Fishes",
-    "key": "tag.item.c.foods.raw_fish"
-  },
-  {
-    "english_translation": "Raw Meats",
-    "key": "tag.item.c.foods.raw_meat"
-  },
-  {
-    "english_translation": "Soups",
-    "key": "tag.item.c.foods.soup"
-  },
-  {
-    "english_translation": "Vegetables",
-    "key": "tag.item.c.foods.vegetable"
-  },
-  {
-    "english_translation": "Froglights",
-    "key": "tag.item.c.froglights"
-  },
-  {
-    "english_translation": "Gems",
-    "key": "tag.item.c.gems"
-  },
-  {
-    "english_translation": "Amethyst Gems",
-    "key": "tag.item.c.gems.amethyst"
-  },
-  {
-    "english_translation": "Diamond Gems",
-    "key": "tag.item.c.gems.diamond"
-  },
-  {
-    "english_translation": "Emerald Gems",
-    "key": "tag.item.c.gems.emerald"
-  },
-  {
-    "english_translation": "Lapis Gems",
-    "key": "tag.item.c.gems.lapis"
-  },
-  {
-    "english_translation": "Prismarine Gems",
-    "key": "tag.item.c.gems.prismarine"
-  },
-  {
-    "english_translation": "Quartz Gems",
-    "key": "tag.item.c.gems.quartz"
-  },
-  {
-    "english_translation": "Glass Blocks",
-    "key": "tag.item.c.glass_blocks"
-  },
-  {
-    "english_translation": "Cheap Glass Blocks",
-    "key": "tag.item.c.glass_blocks.cheap"
-  },
-  {
-    "english_translation": "Colorless Glass Blocks",
-    "key": "tag.item.c.glass_blocks.colorless"
-  },
-  {
-    "english_translation": "Tinted Glass Blocks",
-    "key": "tag.item.c.glass_blocks.tinted"
-  },
-  {
-    "english_translation": "Glass Panes",
-    "key": "tag.item.c.glass_panes"
-  },
-  {
-    "english_translation": "Colorless Glass Panes",
-    "key": "tag.item.c.glass_panes.colorless"
-  },
-  {
-    "english_translation": "Glazed Terracottas",
-    "key": "tag.item.c.glazed_terracottas"
-  },
-  {
-    "english_translation": "Gravels",
-    "key": "tag.item.c.gravels"
-  },
-  {
-    "english_translation": "Gunpowders",
-    "key": "tag.item.c.gunpowders"
-  },
-  {
-    "english_translation": "Hidden From Recipe Viewers",
-    "key": "tag.item.c.hidden_from_recipe_viewers"
-  },
-  {
-    "english_translation": "Ingots",
-    "key": "tag.item.c.ingots"
-  },
-  {
-    "english_translation": "Copper Ingots",
-    "key": "tag.item.c.ingots.copper"
-  },
-  {
-    "english_translation": "Gold Ingots",
-    "key": "tag.item.c.ingots.gold"
-  },
-  {
-    "english_translation": "Iron Ingots",
-    "key": "tag.item.c.ingots.iron"
-  },
-  {
-    "english_translation": "Netherite Ingots",
-    "key": "tag.item.c.ingots.netherite"
-  },
-  {
-    "english_translation": "Leathers",
-    "key": "tag.item.c.leathers"
-  },
-  {
-    "english_translation": "Mushrooms",
-    "key": "tag.item.c.mushrooms"
-  },
-  {
-    "english_translation": "Music Discs",
-    "key": "tag.item.c.music_discs"
-  },
-  {
-    "english_translation": "Natural Log Blocks",
-    "key": "tag.item.c.natural_logs"
-  },
-  {
-    "english_translation": "Nether Natural Log Blocks",
-    "key": "tag.item.c.natural_logs.nether"
-  },
-  {
-    "english_translation": "Overworld Natural Log Blocks",
-    "key": "tag.item.c.natural_logs.overworld"
-  },
-  {
-    "english_translation": "Natural Wood Blocks",
-    "key": "tag.item.c.natural_woods"
-  },
-  {
-    "english_translation": "Nether Stars",
-    "key": "tag.item.c.nether_stars"
-  },
-  {
-    "english_translation": "Netherracks",
-    "key": "tag.item.c.netherracks"
-  },
-  {
-    "english_translation": "Nuggets",
-    "key": "tag.item.c.nuggets"
-  },
-  {
-    "english_translation": "Copper Nuggets",
-    "key": "tag.item.c.nuggets.copper"
-  },
-  {
-    "english_translation": "Gold Nuggets",
-    "key": "tag.item.c.nuggets.gold"
-  },
-  {
-    "english_translation": "Iron Nuggets",
-    "key": "tag.item.c.nuggets.iron"
-  },
-  {
-    "english_translation": "Obsidians",
-    "key": "tag.item.c.obsidians"
-  },
-  {
-    "english_translation": "Crying Obsidians",
-    "key": "tag.item.c.obsidians.crying"
-  },
-  {
-    "english_translation": "Normal Obsidians",
-    "key": "tag.item.c.obsidians.normal"
-  },
-  {
-    "english_translation": "Deepslate Ore Bearing Ground",
-    "key": "tag.item.c.ore_bearing_ground.deepslate"
-  },
-  {
-    "english_translation": "Netherrack Ore Bearing Ground",
-    "key": "tag.item.c.ore_bearing_ground.netherrack"
-  },
-  {
-    "english_translation": "Stone Ore Bearing Ground",
-    "key": "tag.item.c.ore_bearing_ground.stone"
-  },
-  {
-    "english_translation": "Dense Ore Rates",
-    "key": "tag.item.c.ore_rates.dense"
-  },
-  {
-    "english_translation": "Singular Ore Rates",
-    "key": "tag.item.c.ore_rates.singular"
-  },
-  {
-    "english_translation": "Sparse Ore Rates",
-    "key": "tag.item.c.ore_rates.sparse"
-  },
-  {
-    "english_translation": "Ores",
-    "key": "tag.item.c.ores"
-  },
-  {
-    "english_translation": "Coal Ores",
-    "key": "tag.item.c.ores.coal"
-  },
-  {
-    "english_translation": "Copper Ores",
-    "key": "tag.item.c.ores.copper"
-  },
-  {
-    "english_translation": "Diamond Ores",
-    "key": "tag.item.c.ores.diamond"
-  },
-  {
-    "english_translation": "Emerald Ores",
-    "key": "tag.item.c.ores.emerald"
-  },
-  {
-    "english_translation": "Gold Ores",
-    "key": "tag.item.c.ores.gold"
-  },
-  {
-    "english_translation": "Iron Ores",
-    "key": "tag.item.c.ores.iron"
-  },
-  {
-    "english_translation": "Lapis Ores",
-    "key": "tag.item.c.ores.lapis"
-  },
-  {
-    "english_translation": "Netherite Scrap Ores",
-    "key": "tag.item.c.ores.netherite_scrap"
-  },
-  {
-    "english_translation": "Quartz Ores",
-    "key": "tag.item.c.ores.quartz"
-  },
-  {
-    "english_translation": "Redstone Ores",
-    "key": "tag.item.c.ores.redstone"
-  },
-  {
-    "english_translation": "Deepslate Ores In Ground",
-    "key": "tag.item.c.ores_in_ground.deepslate"
-  },
-  {
-    "english_translation": "Netherrack Ores In Ground",
-    "key": "tag.item.c.ores_in_ground.netherrack"
-  },
-  {
-    "english_translation": "Stone Ores In Ground",
-    "key": "tag.item.c.ores_in_ground.stone"
-  },
-  {
-    "english_translation": "Crafting Tables",
-    "key": "tag.item.c.player_workstations.crafting_tables"
-  },
-  {
-    "english_translation": "Furnaces",
-    "key": "tag.item.c.player_workstations.furnaces"
-  },
-  {
-    "english_translation": "Potions",
-    "key": "tag.item.c.potions"
-  },
-  {
-    "english_translation": "Bottled Potions",
-    "key": "tag.item.c.potions.bottle"
-  },
-  {
-    "english_translation": "Pumpkins",
-    "key": "tag.item.c.pumpkins"
-  },
-  {
-    "english_translation": "Carved Pumpkins",
-    "key": "tag.item.c.pumpkins.carved"
-  },
-  {
-    "english_translation": "Jack o'Lanterns",
-    "key": "tag.item.c.pumpkins.jack_o_lanterns"
-  },
-  {
-    "english_translation": "Normal Pumpkins",
-    "key": "tag.item.c.pumpkins.normal"
-  },
-  {
-    "english_translation": "Raw Materials",
-    "key": "tag.item.c.raw_materials"
-  },
-  {
-    "english_translation": "Raw Copper Materials",
-    "key": "tag.item.c.raw_materials.copper"
-  },
-  {
-    "english_translation": "Raw Gold Materials",
-    "key": "tag.item.c.raw_materials.gold"
-  },
-  {
-    "english_translation": "Raw Iron Materials",
-    "key": "tag.item.c.raw_materials.iron"
-  },
-  {
-    "english_translation": "Rods",
-    "key": "tag.item.c.rods"
-  },
-  {
-    "english_translation": "Blaze Rods",
-    "key": "tag.item.c.rods.blaze"
-  },
-  {
-    "english_translation": "Breeze Rods",
-    "key": "tag.item.c.rods.breeze"
-  },
-  {
-    "english_translation": "Wooden Rods",
-    "key": "tag.item.c.rods.wooden"
-  },
-  {
-    "english_translation": "Ropes",
-    "key": "tag.item.c.ropes"
-  },
-  {
-    "english_translation": "Sands",
-    "key": "tag.item.c.sands"
-  },
-  {
-    "english_translation": "Colorless Sands",
-    "key": "tag.item.c.sands.colorless"
-  },
-  {
-    "english_translation": "Red Sands",
-    "key": "tag.item.c.sands.red"
-  },
-  {
-    "english_translation": "Sandstone Blocks",
-    "key": "tag.item.c.sandstone.blocks"
-  },
-  {
-    "english_translation": "Red Sandstone Blocks",
-    "key": "tag.item.c.sandstone.red_blocks"
-  },
-  {
-    "english_translation": "Red Sandstone Slabs",
-    "key": "tag.item.c.sandstone.red_slabs"
-  },
-  {
-    "english_translation": "Red Sandstone Stairs",
-    "key": "tag.item.c.sandstone.red_stairs"
-  },
-  {
-    "english_translation": "Sandstone Slabs",
-    "key": "tag.item.c.sandstone.slabs"
-  },
-  {
-    "english_translation": "Sandstone Stairs",
-    "key": "tag.item.c.sandstone.stairs"
-  },
-  {
-    "english_translation": "Uncolored Sandstone Blocks",
-    "key": "tag.item.c.sandstone.uncolored_blocks"
-  },
-  {
-    "english_translation": "Uncolored Sandstone Slabs",
-    "key": "tag.item.c.sandstone.uncolored_slabs"
-  },
-  {
-    "english_translation": "Uncolored Sandstone Stairs",
-    "key": "tag.item.c.sandstone.uncolored_stairs"
-  },
-  {
-    "english_translation": "Seeds",
-    "key": "tag.item.c.seeds"
-  },
-  {
-    "english_translation": "Beetroot Seeds",
-    "key": "tag.item.c.seeds.beetroot"
-  },
-  {
-    "english_translation": "Melon Seeds",
-    "key": "tag.item.c.seeds.melon"
-  },
-  {
-    "english_translation": "Pitcher Plant Seeds",
-    "key": "tag.item.c.seeds.pitcher_plant"
-  },
-  {
-    "english_translation": "Pumpkin Seeds",
-    "key": "tag.item.c.seeds.pumpkin"
-  },
-  {
-    "english_translation": "Torchflower Seeds",
-    "key": "tag.item.c.seeds.torchflower"
-  },
-  {
-    "english_translation": "Wheat Seeds",
-    "key": "tag.item.c.seeds.wheat"
-  },
-  {
-    "english_translation": "Shulker Boxes",
-    "key": "tag.item.c.shulker_boxes"
-  },
-  {
-    "english_translation": "Slimeballs",
-    "key": "tag.item.c.slime_balls"
-  },
-  {
-    "english_translation": "Stones",
-    "key": "tag.item.c.stones"
-  },
-  {
-    "english_translation": "Storage Blocks",
-    "key": "tag.item.c.storage_blocks"
-  },
-  {
-    "english_translation": "Bone Meal Storage Blocks",
-    "key": "tag.item.c.storage_blocks.bone_meal"
-  },
-  {
-    "english_translation": "Coal Storage Blocks",
-    "key": "tag.item.c.storage_blocks.coal"
-  },
-  {
-    "english_translation": "Copper Storage Blocks",
-    "key": "tag.item.c.storage_blocks.copper"
-  },
-  {
-    "english_translation": "Diamond Storage Blocks",
-    "key": "tag.item.c.storage_blocks.diamond"
-  },
-  {
-    "english_translation": "Dried Kelp Storage Blocks",
-    "key": "tag.item.c.storage_blocks.dried_kelp"
-  },
-  {
-    "english_translation": "Emerald Storage Blocks",
-    "key": "tag.item.c.storage_blocks.emerald"
-  },
-  {
-    "english_translation": "Gold Storage Blocks",
-    "key": "tag.item.c.storage_blocks.gold"
-  },
-  {
-    "english_translation": "Iron Storage Blocks",
-    "key": "tag.item.c.storage_blocks.iron"
-  },
-  {
-    "english_translation": "Lapis Storage Blocks",
-    "key": "tag.item.c.storage_blocks.lapis"
-  },
-  {
-    "english_translation": "Netherite Storage Blocks",
-    "key": "tag.item.c.storage_blocks.netherite"
-  },
-  {
-    "english_translation": "Raw Copper Storage Blocks",
-    "key": "tag.item.c.storage_blocks.raw_copper"
-  },
-  {
-    "english_translation": "Raw Gold Storage Blocks",
-    "key": "tag.item.c.storage_blocks.raw_gold"
-  },
-  {
-    "english_translation": "Raw Iron Storage Blocks",
-    "key": "tag.item.c.storage_blocks.raw_iron"
-  },
-  {
-    "english_translation": "Redstone Storage Blocks",
-    "key": "tag.item.c.storage_blocks.redstone"
-  },
-  {
-    "english_translation": "Resin Storage Blocks",
-    "key": "tag.item.c.storage_blocks.resin"
-  },
-  {
-    "english_translation": "Slime Storage Blocks",
-    "key": "tag.item.c.storage_blocks.slime"
-  },
-  {
-    "english_translation": "Wheat Storage Blocks",
-    "key": "tag.item.c.storage_blocks.wheat"
-  },
-  {
-    "english_translation": "Strings",
-    "key": "tag.item.c.strings"
-  },
-  {
-    "english_translation": "Stripped Log Blocks",
-    "key": "tag.item.c.stripped_logs"
-  },
-  {
-    "english_translation": "Stripped Wood Blocks",
-    "key": "tag.item.c.stripped_woods"
-  },
-  {
-    "english_translation": "Tools",
-    "key": "tag.item.c.tools"
-  },
-  {
-    "english_translation": "Bows",
-    "key": "tag.item.c.tools.bow"
-  },
-  {
-    "english_translation": "Brushes",
-    "key": "tag.item.c.tools.brush"
-  },
-  {
-    "english_translation": "Crossbows",
-    "key": "tag.item.c.tools.crossbow"
-  },
-  {
-    "english_translation": "Fishing Rods",
-    "key": "tag.item.c.tools.fishing_rod"
-  },
-  {
-    "english_translation": "Igniters",
-    "key": "tag.item.c.tools.igniter"
-  },
-  {
-    "english_translation": "Maces",
-    "key": "tag.item.c.tools.mace"
-  },
-  {
-    "english_translation": "Melee Weapons",
-    "key": "tag.item.c.tools.melee_weapon"
-  },
-  {
-    "english_translation": "Mining Tools",
-    "key": "tag.item.c.tools.mining_tool"
-  },
-  {
-    "english_translation": "Ranged Weapons",
-    "key": "tag.item.c.tools.ranged_weapon"
-  },
-  {
-    "english_translation": "Shears",
-    "key": "tag.item.c.tools.shear"
-  },
-  {
-    "english_translation": "Shields",
-    "key": "tag.item.c.tools.shield"
-  },
-  {
-    "english_translation": "Tridents",
-    "key": "tag.item.c.tools.trident"
-  },
-  {
-    "english_translation": "Wrenches",
-    "key": "tag.item.c.tools.wrench"
-  },
-  {
-    "english_translation": "Villager Job Sites",
-    "key": "tag.item.c.villager_job_sites"
-  },
-  {
-    "english_translation": "Hidden From Recipe Viewers",
-    "key": "tag.potion.c.hidden_from_recipe_viewers"
-  },
-  {
-    "english_translation": "Hidden From Locator Selection",
-    "key": "tag.worldgen.biome.c.hidden_from_locator_selection"
-  },
-  {
-    "english_translation": "Aquatic",
-    "key": "tag.worldgen.biome.c.is_aquatic"
-  },
-  {
-    "english_translation": "Icy Aquatic",
-    "key": "tag.worldgen.biome.c.is_aquatic_icy"
-  },
-  {
-    "english_translation": "Badlands",
-    "key": "tag.worldgen.biome.c.is_badlands"
-  },
-  {
-    "english_translation": "Beach",
-    "key": "tag.worldgen.biome.c.is_beach"
-  },
-  {
-    "english_translation": "Birch Forest",
-    "key": "tag.worldgen.biome.c.is_birch_forest"
-  },
-  {
-    "english_translation": "Cave",
-    "key": "tag.worldgen.biome.c.is_cave"
-  },
-  {
-    "english_translation": "Cold",
-    "key": "tag.worldgen.biome.c.is_cold"
-  },
-  {
-    "english_translation": "Cold End",
-    "key": "tag.worldgen.biome.c.is_cold.end"
-  },
-  {
-    "english_translation": "Cold Nether",
-    "key": "tag.worldgen.biome.c.is_cold.nether"
-  },
-  {
-    "english_translation": "Cold Overworld",
-    "key": "tag.worldgen.biome.c.is_cold.overworld"
-  },
-  {
-    "english_translation": "Dark Forest",
-    "key": "tag.worldgen.biome.c.is_dark_forest"
-  },
-  {
-    "english_translation": "Dead",
-    "key": "tag.worldgen.biome.c.is_dead"
-  },
-  {
-    "english_translation": "Deep Ocean",
-    "key": "tag.worldgen.biome.c.is_deep_ocean"
-  },
-  {
-    "english_translation": "Dense Vegetation",
-    "key": "tag.worldgen.biome.c.is_dense_vegetation"
-  },
-  {
-    "english_translation": "Dense End Vegetation",
-    "key": "tag.worldgen.biome.c.is_dense_vegetation.end"
-  },
-  {
-    "english_translation": "Dense Nether Vegetation",
-    "key": "tag.worldgen.biome.c.is_dense_vegetation.nether"
-  },
-  {
-    "english_translation": "Dense Overworld Vegetation",
-    "key": "tag.worldgen.biome.c.is_dense_vegetation.overworld"
-  },
-  {
-    "english_translation": "Desert",
-    "key": "tag.worldgen.biome.c.is_desert"
-  },
-  {
-    "english_translation": "Dry",
-    "key": "tag.worldgen.biome.c.is_dry"
-  },
-  {
-    "english_translation": "Dry End",
-    "key": "tag.worldgen.biome.c.is_dry.end"
-  },
-  {
-    "english_translation": "Dry Nether",
-    "key": "tag.worldgen.biome.c.is_dry.nether"
-  },
-  {
-    "english_translation": "Dry Overworld",
-    "key": "tag.worldgen.biome.c.is_dry.overworld"
-  },
-  {
-    "english_translation": "The End",
-    "key": "tag.worldgen.biome.c.is_end"
-  },
-  {
-    "english_translation": "Floral",
-    "key": "tag.worldgen.biome.c.is_floral"
-  },
-  {
-    "english_translation": "Flower Forest",
-    "key": "tag.worldgen.biome.c.is_flower_forest"
-  },
-  {
-    "english_translation": "Forest",
-    "key": "tag.worldgen.biome.c.is_forest"
-  },
-  {
-    "english_translation": "Hills",
-    "key": "tag.worldgen.biome.c.is_hill"
-  },
-  {
-    "english_translation": "Hot",
-    "key": "tag.worldgen.biome.c.is_hot"
-  },
-  {
-    "english_translation": "Hot End",
-    "key": "tag.worldgen.biome.c.is_hot.end"
-  },
-  {
-    "english_translation": "Hot Nether",
-    "key": "tag.worldgen.biome.c.is_hot.nether"
-  },
-  {
-    "english_translation": "Hot Overworld",
-    "key": "tag.worldgen.biome.c.is_hot.overworld"
-  },
-  {
-    "english_translation": "Icy",
-    "key": "tag.worldgen.biome.c.is_icy"
-  },
-  {
-    "english_translation": "Jungle",
-    "key": "tag.worldgen.biome.c.is_jungle"
-  },
-  {
-    "english_translation": "Lush",
-    "key": "tag.worldgen.biome.c.is_lush"
-  },
-  {
-    "english_translation": "Magical",
-    "key": "tag.worldgen.biome.c.is_magical"
-  },
-  {
-    "english_translation": "Mountain",
-    "key": "tag.worldgen.biome.c.is_mountain"
-  },
-  {
-    "english_translation": "Mountain Peak",
-    "key": "tag.worldgen.biome.c.is_mountain.peak"
-  },
-  {
-    "english_translation": "Mountain Slope",
-    "key": "tag.worldgen.biome.c.is_mountain.slope"
-  },
-  {
-    "english_translation": "Mushroom",
-    "key": "tag.worldgen.biome.c.is_mushroom"
-  },
-  {
-    "english_translation": "Nether",
-    "key": "tag.worldgen.biome.c.is_nether"
-  },
-  {
-    "english_translation": "Nether Forest",
-    "key": "tag.worldgen.biome.c.is_nether_forest"
-  },
-  {
-    "english_translation": "Ocean",
-    "key": "tag.worldgen.biome.c.is_ocean"
-  },
-  {
-    "english_translation": "Old Growth",
-    "key": "tag.worldgen.biome.c.is_old_growth"
-  },
-  {
-    "english_translation": "Outer End Island",
-    "key": "tag.worldgen.biome.c.is_outer_end_island"
-  },
-  {
-    "english_translation": "Overworld",
-    "key": "tag.worldgen.biome.c.is_overworld"
-  },
-  {
-    "english_translation": "Plains",
-    "key": "tag.worldgen.biome.c.is_plains"
-  },
-  {
-    "english_translation": "Plateau",
-    "key": "tag.worldgen.biome.c.is_plateau"
-  },
-  {
-    "english_translation": "Rare",
-    "key": "tag.worldgen.biome.c.is_rare"
-  },
-  {
-    "english_translation": "River",
-    "key": "tag.worldgen.biome.c.is_river"
-  },
-  {
-    "english_translation": "Sandy",
-    "key": "tag.worldgen.biome.c.is_sandy"
-  },
-  {
-    "english_translation": "Savanna",
-    "key": "tag.worldgen.biome.c.is_savanna"
-  },
-  {
-    "english_translation": "Shallow Ocean",
-    "key": "tag.worldgen.biome.c.is_shallow_ocean"
-  },
-  {
-    "english_translation": "Snowy",
-    "key": "tag.worldgen.biome.c.is_snowy"
-  },
-  {
-    "english_translation": "Snowy Plains",
-    "key": "tag.worldgen.biome.c.is_snowy_plains"
-  },
-  {
-    "english_translation": "Sparse Vegetation",
-    "key": "tag.worldgen.biome.c.is_sparse_vegetation"
-  },
-  {
-    "english_translation": "Sparse End Vegetation",
-    "key": "tag.worldgen.biome.c.is_sparse_vegetation.end"
-  },
-  {
-    "english_translation": "Sparse Nether Vegetation",
-    "key": "tag.worldgen.biome.c.is_sparse_vegetation.nether"
-  },
-  {
-    "english_translation": "Sparse Overworld Vegetation",
-    "key": "tag.worldgen.biome.c.is_sparse_vegetation.overworld"
-  },
-  {
-    "english_translation": "Spooky",
-    "key": "tag.worldgen.biome.c.is_spooky"
-  },
-  {
-    "english_translation": "Stony Shores",
-    "key": "tag.worldgen.biome.c.is_stony_shores"
-  },
-  {
-    "english_translation": "Swamp",
-    "key": "tag.worldgen.biome.c.is_swamp"
-  },
-  {
-    "english_translation": "Taiga",
-    "key": "tag.worldgen.biome.c.is_taiga"
-  },
-  {
-    "english_translation": "Temperate",
-    "key": "tag.worldgen.biome.c.is_temperate"
-  },
-  {
-    "english_translation": "Temperate End",
-    "key": "tag.worldgen.biome.c.is_temperate.end"
-  },
-  {
-    "english_translation": "Temperate Nether",
-    "key": "tag.worldgen.biome.c.is_temperate.nether"
-  },
-  {
-    "english_translation": "Temperate Overworld",
-    "key": "tag.worldgen.biome.c.is_temperate.overworld"
-  },
-  {
-    "english_translation": "Coniferous Tree",
-    "key": "tag.worldgen.biome.c.is_tree.coniferous"
-  },
-  {
-    "english_translation": "Deciduous Tree",
-    "key": "tag.worldgen.biome.c.is_tree.deciduous"
-  },
-  {
-    "english_translation": "Jungle Tree",
-    "key": "tag.worldgen.biome.c.is_tree.jungle"
-  },
-  {
-    "english_translation": "Savanna Tree",
-    "key": "tag.worldgen.biome.c.is_tree.savanna"
-  },
-  {
-    "english_translation": "Underground",
-    "key": "tag.worldgen.biome.c.is_underground"
-  },
-  {
-    "english_translation": "Void",
-    "key": "tag.worldgen.biome.c.is_void"
-  },
-  {
-    "english_translation": "Wasteland",
-    "key": "tag.worldgen.biome.c.is_wasteland"
-  },
-  {
-    "english_translation": "Wet",
-    "key": "tag.worldgen.biome.c.is_wet"
-  },
-  {
-    "english_translation": "Wet End",
-    "key": "tag.worldgen.biome.c.is_wet.end"
-  },
-  {
-    "english_translation": "Wet Nether",
-    "key": "tag.worldgen.biome.c.is_wet.nether"
-  },
-  {
-    "english_translation": "Wet Overworld",
-    "key": "tag.worldgen.biome.c.is_wet.overworld"
-  },
-  {
-    "english_translation": "Windswept",
-    "key": "tag.worldgen.biome.c.is_windswept"
-  },
-  {
-    "english_translation": "No Default Monsters",
-    "key": "tag.worldgen.biome.c.no_default_monsters"
-  },
-  {
-    "english_translation": "Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type"
-  },
-  {
-    "english_translation": "Acacia Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.acacia"
-  },
-  {
-    "english_translation": "Bamboo Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.bamboo"
-  },
-  {
-    "english_translation": "Birch Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.birch"
-  },
-  {
-    "english_translation": "Cherry Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.cherry"
-  },
-  {
-    "english_translation": "Crimson Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.crimson"
-  },
-  {
-    "english_translation": "Dark Oak Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.dark_oak"
-  },
-  {
-    "english_translation": "Jungle Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.jungle"
-  },
-  {
-    "english_translation": "Mangrove Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.mangrove"
-  },
-  {
-    "english_translation": "Oak Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.oak"
-  },
-  {
-    "english_translation": "Pale Oak Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.pale_oak"
-  },
-  {
-    "english_translation": "Spruce Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.spruce"
-  },
-  {
-    "english_translation": "Warped Primary Wood Type",
-    "key": "tag.worldgen.biome.c.primary_wood_type.warped"
-  },
-  {
-    "english_translation": "Hidden From Displayers",
-    "key": "tag.worldgen.structure.c.hidden_from_displayers"
-  },
-  {
-    "english_translation": "Hidden From Locator Selection",
-    "key": "tag.worldgen.structure.c.hidden_from_locator_selection"
-  },
-  {
     "english_translation": "Always",
     "key": "team.collision.always"
   },
@@ -32108,7 +31488,7 @@
     "key": "telemetry.event.optional.disabled"
   },
   {
-    "english_translation": "Knowing the overall performance profile of Minecraft helps us tune and optimize the game for a wide range of machine specifications and operating systems. \nGame version is included to help us compare the performance profile for new versions of Minecraft.",
+    "english_translation": "Knowing the overall performance profile of Minecraft helps us tune and optimize the game for a wide range of machine specifications and operating systems.\nGame version is included to help us compare the performance profile for new versions of Minecraft.",
     "key": "telemetry.event.performance_metrics.description"
   },
   {
@@ -32184,7 +31564,7 @@
     "key": "telemetry.property.event_timestamp_utc.title"
   },
   {
-    "english_translation": "Frame Rate Samples (FPS)",
+    "english_translation": "Frame Rate Samples (fps)",
     "key": "telemetry.property.frame_rate_samples.title"
   },
   {
@@ -32544,6 +31924,14 @@
     "key": "test.error.wrong_block_entity"
   },
   {
+    "english_translation": "Player coordinates: [%s, %s, %s] in %s",
+    "key": "test.player.coordinates"
+  },
+  {
+    "english_translation": "Test coordinates: [%s, %s, %s] in %s",
+    "key": "test.run.coordinates"
+  },
+  {
     "english_translation": "Test structure missing %s block",
     "key": "test_block.error.missing"
   },
@@ -32606,6 +31994,10 @@
   {
     "english_translation": "Environment: %s",
     "key": "test_instance.description.batch"
+  },
+  {
+    "english_translation": "Dimension: %s",
+    "key": "test_instance.description.dimension"
   },
   {
     "english_translation": "Failed: %s",
@@ -32914,6 +32306,10 @@
   {
     "english_translation": "Social Interactions",
     "key": "tutorial.socialInteractions.title"
+  },
+  {
+    "english_translation": "The world folder seems to already contain some upgraded files. The game is unable to correctly upgrade your world.",
+    "key": "upgradeWorld.aborted.file_already_exists"
   },
   {
     "english_translation": "This may happen if another program accessed the world during the upgrade.\nIt may help to restart your computer and try again. If the issue persists, please consider reporting a bug.",

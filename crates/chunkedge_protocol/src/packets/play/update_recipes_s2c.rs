@@ -10,7 +10,7 @@ use crate::Packet;
 #[derive(Clone, Debug, Encode, Decode, Packet)]
 pub struct UpdateRecipesS2c<'a> {
     pub property_sets: Vec<PropertySet<'a>>,
-    pub stonecutter_recipes: Vec<StonecutterRecipe<'a>>,
+    pub stonecutter_recipes: Vec<StonecutterRecipe>,
 }
 
 #[derive(Clone, Debug, Encode, Decode)]
@@ -20,38 +20,38 @@ pub struct PropertySet<'a> {
 }
 
 #[derive(Clone, Debug, Encode, Decode)]
-pub struct StonecutterRecipe<'a> {
+pub struct StonecutterRecipe {
     pub ingredients: IDSet,
-    pub result: SlotDisplay<'a>,
+    pub result: SlotDisplay,
 }
 
 #[derive(Clone, Debug, Encode, Decode)]
-pub enum SlotDisplay<'a> {
+pub enum SlotDisplay {
     Empty,
     AnyFuel,
     WithAnyPotion {
-        base: Box<SlotDisplay<'a>>,
+        base: Box<SlotDisplay>,
     },
     OnlyWithComponent {
-        base: Box<SlotDisplay<'a>>,
+        base: Box<SlotDisplay>,
         /// Raw ID in the data-component-type registry.
         component_type: VarInt,
     },
     Item(RegistryId),
     ItemStack(Box<ItemStackTemplate>),
-    Tag(Ident<Cow<'a, str>>),
+    Tag(chunkedge_binary::IDSet),
     DyedSlotDemo {
-        dye: Box<SlotDisplay<'a>>,
-        target: Box<SlotDisplay<'a>>,
+        dye: Box<SlotDisplay>,
+        target: Box<SlotDisplay>,
     },
     SmithingTrim {
-        base: Box<SlotDisplay<'a>>,
-        material: Box<SlotDisplay<'a>>,
+        base: Box<SlotDisplay>,
+        material: Box<SlotDisplay>,
         pattern: RegistryId, // ID in trim_pattern registry
     },
     WithRemainder {
-        ingredient: Box<SlotDisplay<'a>>,
-        remainder: Box<SlotDisplay<'a>>,
+        ingredient: Box<SlotDisplay>,
+        remainder: Box<SlotDisplay>,
     },
-    Composite(Vec<SlotDisplay<'a>>),
+    Composite(Vec<SlotDisplay>),
 }

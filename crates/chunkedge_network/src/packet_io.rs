@@ -3,7 +3,7 @@ use std::sync::Arc;
 use std::time::Instant;
 use std::{io, mem};
 
-use anyhow::bail;
+use anyhow::{bail, ensure};
 use bytes::BytesMut;
 use chunkedge_binary::{Decode, Encode};
 use chunkedge_protocol::{CompressionThreshold, Packet};
@@ -112,6 +112,7 @@ impl PacketIo {
         online_mode: bool,
         incoming_byte_limit: usize,
         outgoing_byte_limit: usize,
+        outgoing_pending_byte_limit: usize,
         cleanup: CleanupOnDrop,
     ) -> ClientBundleArgs {
         let (incoming_sender, incoming_receiver) = flume::unbounded();
@@ -225,7 +226,11 @@ impl PacketIo {
             particle_mode: info.particle_mode,
             properties: info.properties.0,
             conn: Box::new(RealClientConnection {
-                send: outgoing_sender,
+                send: OutgoingPackets {
+                    sender: outgoing_sender,
+                    pending: BytesMut::new(),
+                    pending_byte_limit: outgoing_pending_byte_limit,
+                },
                 recv: incoming_receiver,
                 recv_sem: recv_sem_clone,
                 reader_task,
@@ -238,7 +243,7 @@ impl PacketIo {
 }
 
 struct RealClientConnection {
-    send: ByteSender,
+    send: OutgoingPackets,
     recv: flume::Receiver<ReceivedPacket>,
     /// Limits the amount of data queued in the `recv` channel. Each permit
     /// represents one byte.
@@ -250,15 +255,7 @@ struct RealClientConnection {
 
 impl ClientConnection for RealClientConnection {
     fn try_send(&mut self, bytes: BytesMut) -> anyhow::Result<()> {
-        match self.send.try_send(bytes) {
-            Ok(()) => Ok(()),
-            Err(TrySendError::Full(_)) => bail!(
-                "reached configured outgoing limit of {} bytes. If compression is disabled, \
-                 consider enabling it.",
-                self.send.limit()
-            ),
-            Err(TrySendError::Disconnected(_)) => bail!("client disconnected"),
-        }
+        self.send.try_send(bytes)
     }
 
     fn try_recv(&mut self) -> anyhow::Result<Option<ReceivedPacket>> {
@@ -278,6 +275,34 @@ impl ClientConnection for RealClientConnection {
 
     fn len(&self) -> usize {
         self.recv.len()
+    }
+}
+
+/// Holds already encoded (and, in online mode, encrypted) stream bytes until
+/// the network channel accepts them. Retrying must not encode or encrypt again.
+struct OutgoingPackets {
+    sender: ByteSender,
+    pending: BytesMut,
+    pending_byte_limit: usize,
+}
+
+impl OutgoingPackets {
+    fn try_send(&mut self, bytes: BytesMut) -> anyhow::Result<()> {
+        self.pending.unsplit(bytes);
+        match self.sender.try_send(self.pending.split()) {
+            Ok(()) => Ok(()),
+            Err(TrySendError::Full(remaining)) => {
+                self.pending = remaining;
+                ensure!(
+                    self.pending.len() <= self.pending_byte_limit,
+                    "pending outgoing data exceeds configured limit of {} bytes ({} bytes remaining)",
+                    self.pending_byte_limit,
+                    self.pending.len()
+                );
+                Ok(())
+            }
+            Err(TrySendError::Disconnected(_)) => bail!("client disconnected"),
+        }
     }
 }
 

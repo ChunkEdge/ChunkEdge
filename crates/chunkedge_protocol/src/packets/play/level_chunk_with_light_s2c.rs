@@ -32,10 +32,10 @@ pub enum HeightMapKind {
     /// All blocks other than air, cave air and void air.
     #[packet(tag = 1)]
     WorldSurface,
-    /// "Solid" blocks, except bamboo saplings and cactuses; fluids.
+    /// Blocks in `blocks_motion_in_heightmap`, plus fluids.
     #[packet(tag = 4)]
     MotionBlocking,
-    /// Same as `MOTION_BLOCKING`, excluding leaf blocks.
+    /// Blocks in `blocks_motion_in_heightmap_no_leaves`, plus fluids.
     #[packet(tag = 5)]
     MotionBlockingNoLeaves,
 }

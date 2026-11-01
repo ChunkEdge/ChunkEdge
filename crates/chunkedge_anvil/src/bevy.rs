@@ -124,7 +124,7 @@ fn remove_unviewed_chunks(
 ) {
     for (entity, mut layer, anvil) in &mut chunk_layers {
         layer.retain_chunks(|pos, chunk| {
-            if chunk.viewer_count_mut() > 0 || anvil.ignored_chunks.contains(&pos) {
+            if chunk.viewer_count() > 0 || anvil.ignored_chunks.contains(&pos) {
                 true
             } else {
                 unload_messages.write(ChunkUnloadMessage {

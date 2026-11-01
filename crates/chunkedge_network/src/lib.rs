@@ -109,6 +109,7 @@ fn build_plugin(app: &mut App) -> anyhow::Result<()> {
         address: settings.address,
         incoming_byte_limit: settings.incoming_byte_limit,
         outgoing_byte_limit: settings.outgoing_byte_limit,
+        outgoing_pending_byte_limit: settings.outgoing_pending_byte_limit,
         connection_sema: Arc::new(Semaphore::new(
             settings.max_connections.min(Semaphore::MAX_PERMITS),
         )),
@@ -195,6 +196,7 @@ struct SharedNetworkStateInner {
     address: SocketAddr,
     incoming_byte_limit: usize,
     outgoing_byte_limit: usize,
+    outgoing_pending_byte_limit: usize,
     /// Limits the number of simultaneous connections to the server before the
     /// play state.
     connection_sema: Arc<Semaphore>,
@@ -301,14 +303,20 @@ pub struct NetworkSettings {
     /// The maximum capacity (in bytes) of the buffer used to hold outgoing
     /// packet data.
     ///
-    /// A larger capacity reduces the chance that a client needs to be
-    /// disconnected due to a full buffer, but increases potential
-    /// memory usage.
+    /// Bytes that do not fit are retained up to
+    /// [`Self::outgoing_pending_byte_limit`] and retried on later ticks.
     ///
     /// # Default Value
     ///
     /// The default value is left unspecified and may change in future versions.
     pub outgoing_byte_limit: usize,
+    /// Maximum encoded data retained per client while the outgoing channel is
+    /// full. Pending bytes are retried on later ticks before newer data.
+    /// Clients exceeding this limit are disconnected to bound memory usage.
+    /// This is additional to the channel capacity in [`Self::outgoing_byte_limit`].
+    ///
+    /// Defaults to 64 MiB.
+    pub outgoing_pending_byte_limit: usize,
 }
 
 impl Default for NetworkSettings {
@@ -322,8 +330,9 @@ impl Default for NetworkSettings {
             connection_mode: ConnectionMode::Online {
                 prevent_proxy_connections: false,
             },
-            incoming_byte_limit: 2097152, // 2 MiB
-            outgoing_byte_limit: 8388608, // 8 MiB
+            incoming_byte_limit: 2097152,          // 2 MiB
+            outgoing_byte_limit: 8388608,          // 8 MiB
+            outgoing_pending_byte_limit: 67108864, // 64 MiB
         }
     }
 }

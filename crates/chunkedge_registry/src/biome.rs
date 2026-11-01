@@ -62,7 +62,8 @@ fn update_biome_registry(reg: Res<BiomeRegistry>, mut codec: ResMut<RegistryCode
                 name: name.into(),
                 element: biome
                     .serialize(CompoundSerializer)
-                    .expect("failed to serialize biome"),
+                    .expect("failed to serialize biome")
+                    .into(),
             }
         }));
     }
@@ -216,7 +217,7 @@ where
     serializer.serialize_str(&format!("#{:06x}", color & 0xff_ffff))
 }
 
-/// Biome colors that remain separate from environment attributes in 26.2.
+/// Biome colors separate from environment attributes
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct BiomeEffects {
@@ -320,7 +321,10 @@ mod tests {
             for key in ["temperature_modifier", "effects"] {
                 assert_eq!(
                     reserialized.get(key),
-                    value.element.get(key),
+                    match &value.element {
+                        chunkedge_nbt::Value::Compound(element) => element.get(key),
+                        _ => panic!("biome must be a compound"),
+                    },
                     "{key} of {} changed",
                     value.name
                 );

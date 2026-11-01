@@ -287,6 +287,8 @@ public class Entities implements Main.Extractor {
                     ((Enum<?>) val).name().toLowerCase(Locale.ROOT)
                 )
             );
+        } else if (handler == EntityDataSerializers.DYE_COLOR) {
+            return new Main.Pair<>("dye_color", new JsonPrimitive(((net.minecraft.world.item.DyeColor) val).getId()));
         } else if (handler == EntityDataSerializers.RESOLVABLE_PROFILE) {
             return new Main.Pair<>(
                 "resolvable_profile",

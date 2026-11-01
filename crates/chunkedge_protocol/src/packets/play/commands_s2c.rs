@@ -144,6 +144,11 @@ pub enum Parser<'a> {
     LootPredicate,
     LootModifier,
     Dialog,
+    ContextIntProvider,
+    ContextFloatProvider,
+    SlotSource,
+    Feature,
+    SwingAnimation,
     Uuid,
 }
 

@@ -181,6 +181,7 @@ async fn handle_handshake(
                         matches!(shared.connection_mode(), ConnectionMode::Online { .. }),
                         shared.0.incoming_byte_limit,
                         shared.0.outgoing_byte_limit,
+                        shared.0.outgoing_pending_byte_limit,
                         cleanup,
                     );
 
@@ -394,7 +395,8 @@ async fn handle_login(
                     Some(
                         biome
                             .serialize(CompoundSerializer)
-                            .expect("failed to serialize biome"),
+                            .expect("failed to serialize biome")
+                            .into(),
                     ),
                 )
             })
@@ -414,7 +416,8 @@ async fn handle_login(
                     Some(
                         dimension_type
                             .serialize(CompoundSerializer)
-                            .expect("failed to serialize dimension type"),
+                            .expect("failed to serialize dimension type")
+                            .into(),
                     ),
                 )
             })

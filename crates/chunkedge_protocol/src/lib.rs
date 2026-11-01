@@ -19,6 +19,7 @@ pub mod decode;
 mod difficulty;
 mod direction;
 pub mod encode;
+pub mod entity_movement;
 pub mod game_mode;
 mod global_pos;
 mod hand;
@@ -26,6 +27,7 @@ mod lp_vec3;
 pub mod movement_flags;
 pub mod packets;
 pub mod profile;
+mod sign_text_slot;
 pub mod sound;
 
 use std::io::Write;
@@ -67,6 +69,7 @@ pub use ident::ident;
 pub use lp_vec3::LpVec3;
 pub use packets::play::level_particles_s2c::Particle;
 use serde::{Deserialize, Serialize};
+pub use sign_text_slot::SignTextSlot;
 pub use sound::Sound;
 pub use text::{JsonText, Text};
 pub use uuid;
@@ -75,11 +78,11 @@ pub use uuid;
 pub const MAX_PACKET_SIZE: i32 = 2_i32.pow(21) - 1; // (the maximum that can be sent in a 3-byte VarInt)
 
 /// The Minecraft protocol version this library currently targets.
-pub const PROTOCOL_VERSION: i32 = 776;
+pub const PROTOCOL_VERSION: i32 = 777;
 
 /// The stringified name of the Minecraft version this library currently
 /// targets.
-pub const MINECRAFT_VERSION: &str = "26.2";
+pub const MINECRAFT_VERSION: &str = "26.3";
 
 /// How large a packet should be before it is compressed by the packet encoder.
 ///

@@ -136,6 +136,7 @@ enum Value {
     },
     ResolvableProfile(String),
     HumanoidArm(String),
+    DyeColor(i32),
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, Copy)]
@@ -161,7 +162,7 @@ impl Value {
     fn field_type(&self) -> TokenStream {
         match self {
             Value::Byte(_) => quote!(i8),
-            Value::Int(_) => quote!(i32),
+            Value::Int(_) | Value::DyeColor(_) => quote!(i32),
             Value::Long(_) => quote!(i64),
             Value::Float(_) => quote!(f32),
             Value::String(_) => quote!(String),
@@ -215,7 +216,7 @@ impl Value {
     fn default_expr(&self) -> TokenStream {
         match self {
             Value::Byte(b) => quote!(#b),
-            Value::Int(i) => quote!(#i),
+            Value::Int(i) | Value::DyeColor(i) => quote!(#i),
             Value::Long(l) => quote!(#l),
             Value::Float(f) => quote!(#f),
             Value::String(s) => quote!(#s.to_owned()),
@@ -415,7 +416,7 @@ impl Value {
     fn encodable_expr(&self, self_lvalue: TokenStream) -> TokenStream {
         match self {
             Value::Long(_) => quote!(chunkedge_protocol::VarLong(#self_lvalue)),
-            Value::Int(_) => quote!(VarInt(#self_lvalue)),
+            Value::Int(_) | Value::DyeColor(_) => quote!(VarInt(#self_lvalue)),
             Value::OptionalUnsignedInt(_) => quote!(OptionalInt(#self_lvalue)),
             Value::OptionalBlockState(_) => quote!(OptionalBlockState(#self_lvalue)),
             Value::PaintingVariant(_) => quote!(TrackedPaintingVariant(&#self_lvalue)),

@@ -148,7 +148,7 @@ fn remove_unviewed_chunks(mut layers: Query<&mut ChunkLayer>) {
     layers
         .single_mut()
         .unwrap()
-        .retain_chunks(|_, chunk| chunk.viewer_count_mut() > 0);
+        .retain_chunks(|_, chunk| chunk.viewer_count() > 0);
 }
 
 fn update_client_views(

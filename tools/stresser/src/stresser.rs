@@ -121,6 +121,9 @@ pub async fn make_session(params: &SessionParams<'_>) -> anyhow::Result<()> {
 
                     enc.append_packet(&AcceptTeleportationC2s {
                         teleport_id: packet.teleport_id,
+                        position: packet.position,
+                        yaw: packet.yaw,
+                        pitch: packet.pitch,
                     })?;
 
                     enc.append_packet(&MovePlayerPosC2s {

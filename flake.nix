@@ -24,19 +24,21 @@
         extensions = [ "rust-src" "rust-analyzer" "rustfmt" "clippy" ];
       };
 
-      mkExtractorCommand = name: task: pkgs.writeShellApplication {
+      mkExtractorCommand = name: args: pkgs.writeShellApplication {
         inherit name;
         runtimeInputs = with pkgs; [ git jdk25 ];
         text = ''
           repo_root="$(git rev-parse --show-toplevel)"
           export JAVA_HOME="${pkgs.jdk25}"
-          exec "$repo_root/extractor/gradlew" -p "$repo_root/extractor" ${pkgs.lib.escapeShellArg task} "$@"
+          exec "$repo_root/extractor/gradlew" -p "$repo_root/extractor" ${pkgs.lib.escapeShellArgs args} "$@"
         '';
       };
 
-      fmt-java = mkExtractorCommand "fmt-java" "spotlessApply";
-      lint-java-pmd = mkExtractorCommand "lint-java-pmd" "lintPmd";
-      lint-java-error-prone = mkExtractorCommand "lint-java-error-prone" "lintErrorProne";
+      fmt-java = mkExtractorCommand "fmt-java" [ "spotlessApply" ];
+
+      lint-java-pmd = mkExtractorCommand "lint-java-pmd" [ "lintPmd" ];
+      lint-java-error-prone = mkExtractorCommand "lint-java-error-prone" [ "lintErrorProne" ];
+      lint-java-all = mkExtractorCommand "lint-java-all" [ "lintPmd" "lintErrorProne" "--continue" ];
 
       fmt-rust = pkgs.writeShellApplication {
         name = "fmt-rust";
@@ -54,6 +56,7 @@
           fmt-rust
           lint-java-pmd
           lint-java-error-prone
+          lint-java-all
       ];
       appBuildInputs = with pkgs; [
           rust

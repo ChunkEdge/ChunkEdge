@@ -14,6 +14,7 @@ Run these commands from this directory:
 These are also exposed through the Nix shell as:
 
 ```sh
+lint-java-all # Run both linters
 lint-java-pmd
 lint-java-error-prone
 ```

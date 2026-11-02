@@ -50,7 +50,7 @@ Without Nix, use `cargo fmt --all` from the repository root and `./gradlew spotl
 
 ## Java Linting
 
-In `nix develop`, run `lint-java-pmd` and `lint-java-error-prone`. Without Nix, run `./gradlew lintPmd` and `./gradlew lintErrorProne` from `extractor/`. CI automatically runs these checks.
+In `nix develop`, run `lint-java-all` to run both linters, or use `lint-java-pmd` and `lint-java-error-prone` individually. Without Nix, run `./gradlew lintPmd` and `./gradlew lintErrorProne` from `extractor/`. CI automatically runs these checks.
 
 ## Code Conventions
 

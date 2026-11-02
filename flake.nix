@@ -1,8 +1,11 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/master";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -10,7 +13,7 @@
   };
   outputs = { self, nixpkgs, flake-utils, rust-overlay, ... }:
   flake-utils.lib.eachSystem
-    [ "x86_64-linux" "aarch64-linux" ]
+    [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ]
     (system:
     let
       overlays = [ (import rust-overlay)  ];
@@ -147,12 +150,16 @@
       ];
       appBuildInputs = with pkgs; [
           rust
-          # dependencies for the packet inspector
-          udev alsa-lib vulkan-loader wayland
-          libX11 libXcursor libXi libXrandr
-          libxkbcommon wayland
+          openssl
           # Java: required for the extractor
           jdk25 jdt-language-server
+      ] ++ lib.optionals stdenv.hostPlatform.isLinux [
+          # Native dependencies for the packet inspector on Linux
+          udev alsa-lib vulkan-loader wayland
+          libX11 libXcursor libXi libXrandr
+          libxkbcommon
+      ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
+          libiconv
       ];
     in
     {
@@ -160,7 +167,9 @@
             nativeBuildInputs = appNativeBuildInputs;
             buildInputs = appBuildInputs;
             shellHook = ''
-                export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.lib.makeLibraryPath appBuildInputs}"
+                ${pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
+                  export LD_LIBRARY_PATH="''${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${pkgs.lib.makeLibraryPath appBuildInputs}"
+                ''}
                 export JAVA_HOME="${pkgs.jdk25}"
             '';
         };

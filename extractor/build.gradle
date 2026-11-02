@@ -1,6 +1,8 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'com.diffplug.spotless' version '8.10.4'
+	id 'pmd'
+	id 'net.ltgt.errorprone' version '5.2.0'
 }
 
 base {
@@ -22,6 +24,7 @@ loom {
 
 dependencies {
 	implementation 'com.google.code.gson:gson:2.11.0'
+	errorprone 'com.google.errorprone:error_prone_core:2.51.0'
 
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -39,6 +42,8 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
+	// Only the dedicated lint task enables Error Prone.
+	it.options.errorprone.enabled = false
 }
 
 java {
@@ -61,4 +66,37 @@ spotless {
 		target 'src/**/*.java'
 		googleJavaFormat('1.30.0')
 	}
+}
+
+// Lint tasks are explicit so ordinary build/check tasks remain independent.
+pmd {
+	toolVersion = '7.24.0'
+	sourceSets = []
+	consoleOutput = true
+	ruleSets = ['category/java/errorprone.xml', 'category/java/bestpractices.xml']
+}
+
+tasks.register('lintPmd', Pmd) {
+	group = 'verification'
+	description = 'Lint main and client Java sources with PMD.'
+	source sourceSets.main.allJava, sourceSets.client.allJava
+	classpath = sourceSets.main.compileClasspath + sourceSets.client.compileClasspath
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+def lintAnnotationProcessor = configurations.resolvable('lintAnnotationProcessor') {
+	extendsFrom configurations.errorprone
+}
+
+tasks.register('lintErrorProne', JavaCompile) {
+	group = 'verification'
+	description = 'Lint main and client Java sources with Error Prone.'
+	source sourceSets.main.allJava, sourceSets.client.allJava
+	classpath = sourceSets.main.compileClasspath + sourceSets.client.compileClasspath
+	destinationDirectory = layout.buildDirectory.dir('lint/errorprone')
+	options.annotationProcessorPath = lintAnnotationProcessor.get()
+	options.errorprone.enabled = true
 }

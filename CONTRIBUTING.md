@@ -48,6 +48,10 @@ fmt-java # Format the extractor's Java sources with Spotless/google-java-format
 
 Without Nix, use `cargo fmt --all` from the repository root and `./gradlew spotlessApply` from `extractor/`. CI automatically checks formatting.
 
+## Java Linting
+
+In `nix develop`, run `lint-java-pmd` and `lint-java-error-prone`. Without Nix, run `./gradlew lintPmd` and `./gradlew lintErrorProne` from `extractor/`. CI automatically runs these checks.
+
 ## Code Conventions
 
 Here are some rules you should follow for your code. Generally the goal here is to be consistent with existing code, the standard library, and the Rust ecosystem as a whole. Nonconforming code is not necessarily a blocker for accepting your contribution, but conformance is advised.

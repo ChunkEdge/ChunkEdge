@@ -9,8 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.EmptyBlockGetter;
 
@@ -35,32 +35,16 @@ public class Blocks implements Main.Extractor {
 
         for (var block : BuiltInRegistries.BLOCK) {
             var blockJson = new JsonObject();
-            blockJson.addProperty(
-                "id",
-                BuiltInRegistries.BLOCK.getId(block)
-            );
-            blockJson.addProperty(
-                "name",
-                BuiltInRegistries.BLOCK.getKey(block).getPath()
-            );
-            blockJson.addProperty(
-                "translation_key",
-                block.getDescriptionId()
-            );
-            blockJson.addProperty(
-                "item_id",
-                BuiltInRegistries.ITEM.getId(block.asItem())
-            );
+            blockJson.addProperty("id", BuiltInRegistries.BLOCK.getId(block));
+            blockJson.addProperty("name", BuiltInRegistries.BLOCK.getKey(block).getPath());
+            blockJson.addProperty("translation_key", block.getDescriptionId());
+            blockJson.addProperty("item_id", BuiltInRegistries.ITEM.getId(block.asItem()));
 
-            if (
-                block.asItem() instanceof StandingAndWallBlockItem wsbItem
-            ) {
+            if (block.asItem() instanceof StandingAndWallBlockItem wsbItem) {
                 if (wsbItem.getBlock() == block) {
                     var wallBlock = ((ExposeWallBlock) wsbItem).getWallBlock();
                     blockJson.addProperty(
-                        "wall_variant_id",
-                        BuiltInRegistries.BLOCK.getId(wallBlock)
-                    );
+                            "wall_variant_id", BuiltInRegistries.BLOCK.getId(wallBlock));
                 }
             }
 
@@ -90,50 +74,35 @@ public class Blocks implements Main.Extractor {
                 stateJson.addProperty("opaque", state.canOcclude());
                 stateJson.addProperty("replaceable", state.canBeReplaced());
                 stateJson.addProperty("has_fluid", !state.getFluidState().isEmpty());
-                stateJson.addProperty("blocks_motion", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP));
-                stateJson.addProperty("blocks_motion_no_leaves", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP_NO_LEAVES));
+                stateJson.addProperty(
+                        "blocks_motion", state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP));
+                stateJson.addProperty(
+                        "blocks_motion_no_leaves",
+                        state.is(BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP_NO_LEAVES));
 
                 if (block.defaultBlockState().equals(state)) {
                     blockJson.addProperty("default_state_id", id);
                 }
 
                 var collisionShapeIdxsJson = new JsonArray();
-                for (var box : state
-                    .getCollisionShape(
-                        EmptyBlockGetter.INSTANCE,
-                        BlockPos.ZERO
-                    )
-                    .toAabbs()) {
-                    var collisionShape = new Shape(
-                        box.minX,
-                        box.minY,
-                        box.minZ,
-                        box.maxX,
-                        box.maxY,
-                        box.maxZ
-                    );
+                for (var box :
+                        state.getCollisionShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO)
+                                .toAabbs()) {
+                    var collisionShape =
+                            new Shape(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
 
                     var idx = shapes.putIfAbsent(collisionShape, shapes.size());
                     collisionShapeIdxsJson.add(
-                        Objects.requireNonNullElseGet(
-                            idx,
-                            () -> shapes.size() - 1
-                        )
-                    );
+                            Objects.requireNonNullElseGet(idx, () -> shapes.size() - 1));
                 }
 
                 stateJson.add("collision_shapes", collisionShapeIdxsJson);
 
-                for (
-                    var blockEntity : BuiltInRegistries.BLOCK_ENTITY_TYPE
-                ) {
+                for (var blockEntity : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
                     if (blockEntity.isValid(state)) {
                         stateJson.addProperty(
-                            "block_entity_type",
-                            BuiltInRegistries.BLOCK_ENTITY_TYPE.getId(
-                                blockEntity
-                            )
-                        );
+                                "block_entity_type",
+                                BuiltInRegistries.BLOCK_ENTITY_TYPE.getId(blockEntity));
                     }
                 }
 
@@ -148,21 +117,11 @@ public class Blocks implements Main.Extractor {
         for (var blockEntity : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
             var blockEntityJson = new JsonObject();
             blockEntityJson.addProperty(
-                "id",
-                BuiltInRegistries.BLOCK_ENTITY_TYPE.getId(blockEntity)
-            );
+                    "id", BuiltInRegistries.BLOCK_ENTITY_TYPE.getId(blockEntity));
             blockEntityJson.addProperty(
-                "ident",
-                BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(
-                    blockEntity
-                ).toString()
-            );
+                    "ident", BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(blockEntity).toString());
             blockEntityJson.addProperty(
-                "name",
-                BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(
-                    blockEntity
-                ).getPath()
-            );
+                    "name", BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(blockEntity).getPath());
 
             blockEntitiesJson.add(blockEntityJson);
         }
@@ -187,11 +146,5 @@ public class Blocks implements Main.Extractor {
     }
 
     private record Shape(
-        double minX,
-        double minY,
-        double minZ,
-        double maxX,
-        double maxY,
-        double maxZ
-    ) {}
+            double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {}
 }

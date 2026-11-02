@@ -26,21 +26,16 @@ public class Enchants implements Main.Extractor {
     public JsonElement extract() {
         var enchantsJson = new JsonObject();
 
-        var lookup = server
-            .registryAccess()
-            .lookupOrThrow(Registries.ENCHANTMENT);
+        var lookup = server.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
         for (var enchant : lookup.listElements().toList()) {
             enchantsJson.add(
-                enchant.key().identifier().toString(),
-                Enchantment.DIRECT_CODEC.encodeStart(
-                    RegistryOps.create(
-                        JsonOps.INSTANCE,
-                        server.registryAccess()
-                    ),
-                    enchant.value()
-                ).getOrThrow()
-            );
+                    enchant.key().identifier().toString(),
+                    Enchantment.DIRECT_CODEC
+                            .encodeStart(
+                                    RegistryOps.create(JsonOps.INSTANCE, server.registryAccess()),
+                                    enchant.value())
+                            .getOrThrow());
         }
 
         return enchantsJson;

@@ -24,29 +24,24 @@ public class Paintings implements Main.Extractor {
 
     @Override
     public JsonElement extract() throws Exception {
-        var paintingRegistry = server
-            .registryAccess()
-            .lookupOrThrow(Registries.PAINTING_VARIANT);
+        var paintingRegistry = server.registryAccess().lookupOrThrow(Registries.PAINTING_VARIANT);
 
         var codec = PaintingVariant.DIRECT_CODEC;
 
         JsonObject json = new JsonObject();
         paintingRegistry
-            .listElements()
-            .forEach(entry -> {
-                json.add(
-                    entry.key().identifier().toString(),
-                    codec
-                        .encodeStart(
-                            RegistryOps.create(
-                                JsonOps.INSTANCE,
-                                server.registryAccess()
-                            ),
-                            entry.value()
-                        )
-                        .getOrThrow()
-                );
-            });
+                .listElements()
+                .forEach(
+                        entry -> {
+                            json.add(
+                                    entry.key().identifier().toString(),
+                                    codec.encodeStart(
+                                                    RegistryOps.create(
+                                                            JsonOps.INSTANCE,
+                                                            server.registryAccess()),
+                                                    entry.value())
+                                            .getOrThrow());
+                        });
 
         return json;
     }

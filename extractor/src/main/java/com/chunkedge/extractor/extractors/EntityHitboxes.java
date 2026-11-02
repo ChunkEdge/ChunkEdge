@@ -39,11 +39,14 @@ public final class EntityHitboxes implements Main.Extractor {
     public JsonElement extract() throws Exception {
         var result = new JsonObject();
         for (var type : BuiltInRegistries.ENTITY_TYPE) {
-            Entity entity = type == EntityTypes.PLAYER
-                ? new DummyPlayerEntity(world, new GameProfile(new UUID(0L, 0L), "hitbox"))
-                : type.create(world, EntitySpawnReason.COMMAND);
+            Entity entity =
+                    type == EntityTypes.PLAYER
+                            ? new DummyPlayerEntity(
+                                    world, new GameProfile(new UUID(0L, 0L), "hitbox"))
+                            : type.create(world, EntitySpawnReason.COMMAND);
             if (entity == null) {
-                throw new IllegalStateException("Cannot create entity for hitbox extraction: " + type);
+                throw new IllegalStateException(
+                        "Cannot create entity for hitbox extraction: " + type);
             }
             if (entity instanceof LivingEntity living) {
                 var scale = living.getAttribute(Attributes.SCALE);
@@ -52,24 +55,33 @@ public final class EntityHitboxes implements Main.Extractor {
             // Cube dimensions depend on size, not age. Runtime multiplies this
             // size-one template by the synchronized cube size.
             if (entity instanceof AbstractCubeMob cube) cube.setSize(1, false);
-            int variantCount = switch (entity) {
-                case Pufferfish ignored -> 3;
-                case Salmon ignored -> 3;
-                case Phantom ignored -> 65;
-                case Sniffer ignored -> 2;
-                case ArmorStand ignored -> 4;
-                default -> 1;
-            };
+            int variantCount =
+                    switch (entity) {
+                        case Pufferfish ignored -> 3;
+                        case Salmon ignored -> 3;
+                        case Phantom ignored -> 65;
+                        case Sniffer ignored -> 2;
+                        case ArmorStand ignored -> 4;
+                        default -> 1;
+                    };
             var variants = new JsonArray();
             for (int variant = 0; variant < variantCount; variant++) {
                 switch (entity) {
                     case Pufferfish fish -> fish.setPuffState(variant);
                     case Salmon fish -> setData(fish, Salmon.class, "DATA_TYPE", variant);
                     case Phantom phantom -> phantom.setPhantomSize(variant);
-                    case Sniffer sniffer -> setData(sniffer, Sniffer.class, "DATA_STATE",
-                        variant == 0 ? Sniffer.State.IDLING : Sniffer.State.DIGGING);
-                    case ArmorStand stand -> setData(stand, ArmorStand.class, "DATA_CLIENT_FLAGS",
-                        (byte) ((variant & 1) | ((variant & 2) << 3)));
+                    case Sniffer sniffer ->
+                            setData(
+                                    sniffer,
+                                    Sniffer.class,
+                                    "DATA_STATE",
+                                    variant == 0 ? Sniffer.State.IDLING : Sniffer.State.DIGGING);
+                    case ArmorStand stand ->
+                            setData(
+                                    stand,
+                                    ArmorStand.class,
+                                    "DATA_CLIENT_FLAGS",
+                                    (byte) ((variant & 1) | ((variant & 2) << 3)));
                     default -> {}
                 }
                 var sample = new JsonObject();
@@ -96,7 +108,7 @@ public final class EntityHitboxes implements Main.Extractor {
 
     @SuppressWarnings("unchecked")
     private static <T> void setData(Entity entity, Class<?> owner, String name, T value)
-        throws ReflectiveOperationException {
+            throws ReflectiveOperationException {
         var field = owner.getDeclaredField(name);
         field.setAccessible(true);
         entity.getEntityData().set((EntityDataAccessor<T>) field.get(null), value);

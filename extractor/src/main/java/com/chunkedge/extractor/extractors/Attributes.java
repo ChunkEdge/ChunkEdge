@@ -23,26 +23,12 @@ public class Attributes implements Main.Extractor {
         for (Attribute attribute : BuiltInRegistries.ATTRIBUTE) {
             var attributeJson = new JsonObject();
 
+            attributeJson.addProperty("id", BuiltInRegistries.ATTRIBUTE.getId(attribute));
             attributeJson.addProperty(
-                "id",
-                BuiltInRegistries.ATTRIBUTE.getId(attribute)
-            );
-            attributeJson.addProperty(
-                "name",
-                BuiltInRegistries.ATTRIBUTE.getKey(attribute).getPath()
-            );
-            attributeJson.addProperty(
-                "default_value",
-                attribute.getDefaultValue()
-            );
-            attributeJson.addProperty(
-                "translation_key",
-                attribute.getDescriptionId()
-            );
-            attributeJson.addProperty(
-                "tracked",
-                attribute.isClientSyncable()
-            );
+                    "name", BuiltInRegistries.ATTRIBUTE.getKey(attribute).getPath());
+            attributeJson.addProperty("default_value", attribute.getDefaultValue());
+            attributeJson.addProperty("translation_key", attribute.getDescriptionId());
+            attributeJson.addProperty("tracked", attribute.isClientSyncable());
 
             if (attribute instanceof RangedAttribute a) {
                 attributeJson.addProperty("min_value", a.getMinValue());
@@ -50,9 +36,7 @@ public class Attributes implements Main.Extractor {
             }
 
             attributesJson.add(
-                BuiltInRegistries.ATTRIBUTE.getKey(attribute).getPath(),
-                attributeJson
-            );
+                    BuiltInRegistries.ATTRIBUTE.getKey(attribute).getPath(), attributeJson);
         }
 
         return attributesJson;

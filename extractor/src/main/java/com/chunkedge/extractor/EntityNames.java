@@ -13,8 +13,6 @@ public final class EntityNames {
 
     /** Remove accessor bookkeeping, retaining the official semantic name. */
     public static String fieldName(String name) {
-        return name
-            .replaceFirst("^(data_)?(id_)?", "")
-            .replaceFirst("_id$", "");
+        return name.replaceFirst("^(data_)?(id_)?", "").replaceFirst("_id$", "");
     }
 }

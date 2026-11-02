@@ -3,9 +3,7 @@ package com.chunkedge.extractor;
 import java.io.Serializable;
 import java.util.Comparator;
 
-/**
- * Compare Class objects by their fully qualified names lexicographically.
- */
+/** Compare Class objects by their fully qualified names lexicographically. */
 public class ClassComparator implements Comparator<Class<?>>, Serializable {
 
     public ClassComparator() {}

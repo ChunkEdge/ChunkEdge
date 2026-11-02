@@ -26,10 +26,7 @@ public class TranslationKeys implements Main.Extractor {
 
             var translationJson = new JsonObject();
             translationJson.addProperty("key", translationKey);
-            translationJson.addProperty(
-                "english_translation",
-                translationValue
-            );
+            translationJson.addProperty("english_translation", translationValue);
 
             translationsJson.add(translationJson);
         }
@@ -44,7 +41,8 @@ public class TranslationKeys implements Main.Extractor {
         } catch (java.io.IOException e) {
             throw new RuntimeException("Failed to read vanilla translations", e);
         }
-        net.minecraft.locale.DeprecatedTranslationsInfo.loadFromDefaultResource().applyToMap(translations);
+        net.minecraft.locale.DeprecatedTranslationsInfo.loadFromDefaultResource()
+                .applyToMap(translations);
         return translations;
     }
 }

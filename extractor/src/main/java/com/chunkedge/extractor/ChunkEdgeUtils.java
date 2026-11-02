@@ -1,14 +1,10 @@
 package com.chunkedge.extractor;
 
-/**
- * Utility class for various methods.
- */
+/** Utility class for various methods. */
 public class ChunkEdgeUtils {
 
     private ChunkEdgeUtils() {
-        throw new UnsupportedOperationException(
-            "This class cannot be instantiated"
-        );
+        throw new UnsupportedOperationException("This class cannot be instantiated");
     }
 
     /**

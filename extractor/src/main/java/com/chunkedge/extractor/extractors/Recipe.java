@@ -26,56 +26,49 @@ public class Recipe implements Main.Extractor {
 
     @Override
     public JsonElement extract() throws Exception {
-        var ops = RegistryOps.create(
-            JsonOps.INSTANCE,
-            server.registryAccess()
-        );
+        var ops = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
         JsonObject json = new JsonObject();
 
         JsonObject recipesJson = new JsonObject();
         recipeManager
-            .getRecipes()
-            .forEach(holder -> {
-                recipesJson.add(
-                    holder.id().identifier().getPath(),
-                    net.minecraft.world.item.crafting.Recipe.DIRECT_CODEC.encodeStart(ops, holder.value()).getOrThrow()
-                );
-            });
+                .getRecipes()
+                .forEach(
+                        holder -> {
+                            recipesJson.add(
+                                    holder.id().identifier().getPath(),
+                                    net.minecraft.world.item.crafting.Recipe.DIRECT_CODEC
+                                            .encodeStart(ops, holder.value())
+                                            .getOrThrow());
+                        });
 
         JsonObject displaysJson = new JsonObject();
-        var displays = server
-            .registryAccess()
-            .lookupOrThrow(Registries.RECIPE_DISPLAY);
-        displays
-            .stream()
-            .forEach(display -> {
-                displaysJson.addProperty(
-                    displays
-                        .byNameCodec()
-                        .encodeStart(ops, display)
-                        .getOrThrow()
-                        .getAsString(),
-                    displays.getId(display)
-                );
-            });
+        var displays = server.registryAccess().lookupOrThrow(Registries.RECIPE_DISPLAY);
+        displays.stream()
+                .forEach(
+                        display -> {
+                            displaysJson.addProperty(
+                                    displays.byNameCodec()
+                                            .encodeStart(ops, display)
+                                            .getOrThrow()
+                                            .getAsString(),
+                                    displays.getId(display));
+                        });
 
         JsonObject bookCategoryJson = new JsonObject();
-        var bookCategory = server
-            .registryAccess()
-            .lookupOrThrow(Registries.RECIPE_BOOK_CATEGORY);
+        var bookCategory = server.registryAccess().lookupOrThrow(Registries.RECIPE_BOOK_CATEGORY);
 
         bookCategory
-            .listElements()
-            .forEach(entry -> {
-                bookCategoryJson.addProperty(
-                    bookCategory
-                        .byNameCodec()
-                        .encodeStart(ops, entry.value())
-                        .getOrThrow()
-                        .getAsString(),
-                    bookCategory.getId(entry.value())
-                );
-            });
+                .listElements()
+                .forEach(
+                        entry -> {
+                            bookCategoryJson.addProperty(
+                                    bookCategory
+                                            .byNameCodec()
+                                            .encodeStart(ops, entry.value())
+                                            .getOrThrow()
+                                            .getAsString(),
+                                    bookCategory.getId(entry.value()));
+                        });
 
         json.add("recipes", recipesJson);
         json.add("displays", displaysJson);

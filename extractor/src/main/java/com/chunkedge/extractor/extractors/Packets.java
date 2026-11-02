@@ -1,9 +1,9 @@
 package com.chunkedge.extractor.extractors;
 
+import com.chunkedge.extractor.Main;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.chunkedge.extractor.Main;
 import java.io.IOException;
 import net.minecraft.network.ProtocolInfo;
 import net.minecraft.network.protocol.configuration.ConfigurationProtocols;
@@ -39,18 +39,16 @@ public class Packets implements Main.Extractor {
         return packetsJson;
     }
 
-    private static void serialize(
-        ProtocolInfo.DetailsProvider protocol,
-        JsonArray json
-    ) {
+    private static void serialize(ProtocolInfo.DetailsProvider protocol, JsonArray json) {
         var details = protocol.details();
-        details.listPackets((type, i) -> {
-            var packetJson = new JsonObject();
-            packetJson.addProperty("name", type.id().getPath());
-            packetJson.addProperty("phase", details.id().id());
-            packetJson.addProperty("side", details.flow().id());
-            packetJson.addProperty("id", i);
-            json.add(packetJson);
-        });
+        details.listPackets(
+                (type, i) -> {
+                    var packetJson = new JsonObject();
+                    packetJson.addProperty("name", type.id().getPath());
+                    packetJson.addProperty("phase", details.id().id());
+                    packetJson.addProperty("side", details.flow().id());
+                    packetJson.addProperty("id", i);
+                    json.add(packetJson);
+                });
     }
 }

@@ -37,20 +37,26 @@ cargo watch -c -x "run -p playground" # run the playground and watch for changes
 
 When you submit a pull request, your code will automatically run through clippy, rustfmt, etc. to check for any errors or mistakes. If an error does occur, it must be fixed before the pull request can be merged.
 
-## Formatting
+### Running Checks Locally
 
-In a `nix develop` shell, run these commands from anywhere inside the repository to apply formatting:
+You can run the same checks locally through the provided Nix flake. If you have Nix installed, run `nix develop` from the repository root to enter a shell with all the required tools. Then run `ci-full` to run all checks, or run any of the individual commands listed below.
 
 ```sh
-fmt-rust # Format the Rust workspace with the pinned Rust toolchain
-fmt-java # Format the extractor's Java sources with Spotless/google-java-format
+fmt-java # Format the extractor's Java sources
+fmt-rust # Format the Rust sources
+lint-java-pmd # Run the PMD linter on the extractor's Java sources
+lint-java-error-prone # Run the Error Prone linter on the extractor's Java sources
+lint-java-all # Run both Java linters
+ci-java-basic # Check formatting, PMD, and Error Prone
+ci-java-full # Check formatting, PMD, and Error Prone, and build the extractor
+lint-rust-clippy # Run clippy on the Rust sources
+test-rust-basic # Run only the workspace tests with all features and targets
+test-rust-full # Also run doctests, NBT feature-variant tests, and Miri
+ci-rust-full # Run all Rust-related CI checks
+check-typos # Check spelling across the repository
+generate-depgraph # Regenerate assets/depgraph.svg
+ci-full # Run all checks that the CI also runs
 ```
-
-Without Nix, use `cargo fmt --all` from the repository root and `./gradlew spotlessApply` from `extractor/`. CI automatically checks formatting.
-
-## Java Linting
-
-In `nix develop`, run `lint-java-all` to run both linters, or use `lint-java-pmd` and `lint-java-error-prone` individually. Without Nix, run `./gradlew lintPmd` and `./gradlew lintErrorProne` from `extractor/`. CI automatically runs these checks.
 
 ## Code Conventions
 

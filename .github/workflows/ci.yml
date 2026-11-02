@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check for spelling errors
-        uses: crate-ci/typos@v1.16.5
+        uses: crate-ci/typos@v1.50.2
 
   chunkedge-clippy:
     name: Clippy

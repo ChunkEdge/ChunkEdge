@@ -72,7 +72,7 @@ public class Tags implements Main.Extractor {
     }
 
     private static <T> Map<String, JsonArray> serializeTags(Registry<T> registry) {
-        TreeMap<String, JsonArray> map = new TreeMap<>();
+        Map<String, JsonArray> map = new TreeMap<>();
         registry.getTags()
                 .forEach(
                         tag -> {

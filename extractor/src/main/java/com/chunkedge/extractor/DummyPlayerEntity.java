@@ -7,9 +7,14 @@ import net.minecraft.world.level.GameType;
 
 public class DummyPlayerEntity extends Player {
 
-    public DummyPlayerEntity(ServerLevel world, GameProfile gameProfile) {
+    private DummyPlayerEntity(ServerLevel world, GameProfile gameProfile) {
         super(world, gameProfile);
-        this.setPos(0, 70, 0);
+    }
+
+    public static DummyPlayerEntity create(ServerLevel world, GameProfile gameProfile) {
+        var player = new DummyPlayerEntity(world, gameProfile);
+        player.setPos(0, 70, 0);
+        return player;
     }
 
     @Override

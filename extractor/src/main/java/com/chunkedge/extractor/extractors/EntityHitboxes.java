@@ -2,6 +2,7 @@ package com.chunkedge.extractor.extractors;
 
 import com.chunkedge.extractor.DummyPlayerEntity;
 import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.MinecraftReflection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,7 +44,7 @@ public final class EntityHitboxes implements Main.Extractor {
         for (var type : BuiltInRegistries.ENTITY_TYPE) {
             Entity entity =
                     type.equals(EntityTypes.PLAYER)
-                            ? new DummyPlayerEntity(
+                            ? DummyPlayerEntity.create(
                                     world, new GameProfile(new UUID(0L, 0L), "hitbox"))
                             : type.create(world, EntitySpawnReason.COMMAND);
             if (entity == null) {
@@ -112,8 +113,8 @@ public final class EntityHitboxes implements Main.Extractor {
     private static <T> void setData(Entity entity, Class<?> owner, String name, T value)
             throws ReflectiveOperationException {
         var field = owner.getDeclaredField(name);
-        field.setAccessible(true);
-        entity.getEntityData().set((EntityDataAccessor<T>) field.get(null), value);
+        entity.getEntityData()
+                .set((EntityDataAccessor<T>) MinecraftReflection.readField(field, null), value);
     }
 
     private static JsonObject poses(Entity entity) {

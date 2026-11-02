@@ -1,6 +1,7 @@
 package com.chunkedge.extractor;
 
 import com.chunkedge.extractor.extractors.*;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -73,15 +74,7 @@ public class Main implements ModInitializer {
                         .create();
 
         for (var ext : extractors) {
-            try {
-                var out = outputDirectory.resolve(ext.fileName());
-                try (var writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
-                    gson.toJson(sortObjectKeys(ext.extract()), writer);
-                }
-                LOGGER.info("Wrote " + out.toAbsolutePath());
-            } catch (Exception e) {
-                LOGGER.error("Extractor for \"" + ext.fileName() + "\" failed.", e);
-            }
+            writeExtractor(ext, outputDirectory, gson);
         }
 
         ServerLifecycleEvents.SERVER_STARTED.register(
@@ -90,20 +83,7 @@ public class Main implements ModInitializer {
                     // TODO: make `Codec` implement `Extractor`
                     // TODO: the way to get Codex has changed, this is not working anymore
                     var packetRegistryExtractor = new PacketRegistries(server);
-                    try {
-                        var out = outputDirectory.resolve(packetRegistryExtractor.fileName());
-                        try (var writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
-                            gson.toJson(sortObjectKeys(packetRegistryExtractor.extract()), writer);
-                        }
-
-                        LOGGER.info("Wrote " + out.toAbsolutePath());
-                    } catch (Exception e) {
-                        LOGGER.error(
-                                "Extractor for \""
-                                        + packetRegistryExtractor.fileName()
-                                        + "\" failed.",
-                                e);
-                    }
+                    writeExtractor(packetRegistryExtractor, outputDirectory, gson);
 
                     var startupExtractors =
                             new Extractor[] {
@@ -119,21 +99,30 @@ public class Main implements ModInitializer {
                             };
 
                     for (var ext : startupExtractors) {
-                        try {
-                            var out = outputDirectory.resolve(ext.fileName());
-                            try (var writer =
-                                    Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
-                                gson.toJson(sortObjectKeys(ext.extract()), writer);
-                            }
-                            LOGGER.info("Wrote " + out.toAbsolutePath());
-                        } catch (Exception e) {
-                            LOGGER.error("Extractor for \"" + ext.fileName() + "\" failed.", e);
-                        }
+                        writeExtractor(ext, outputDirectory, gson);
                     }
 
                     LOGGER.info("Done.");
                     server.halt(false);
                 });
+    }
+
+    // Extractors can throw checked or runtime exceptions. Isolate each failure so the
+    // remaining extractors still run and the server reaches its normal shutdown.
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    private static void writeExtractor(Extractor extractor, Path outputDirectory, Gson gson) {
+        try {
+            var out = outputDirectory.resolve(extractor.fileName());
+            try (var writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
+                gson.toJson(sortObjectKeys(extractor.extract()), writer);
+            }
+            LOGGER.atInfo().addArgument(out::toAbsolutePath).log("Wrote {}");
+        } catch (Exception e) {
+            LOGGER.atError()
+                    .setCause(e)
+                    .addArgument(extractor::fileName)
+                    .log("Extractor for \"{}\" failed.");
+        }
     }
 
     public interface Extractor {

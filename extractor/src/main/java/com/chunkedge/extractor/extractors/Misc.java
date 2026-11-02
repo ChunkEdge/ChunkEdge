@@ -1,6 +1,7 @@
 package com.chunkedge.extractor.extractors;
 
 import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.MinecraftReflection;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Modifier;
@@ -62,8 +63,7 @@ public class Misc implements Main.Extractor {
         miscJson.add("entity_status", entityStatusJson);
 
         var entityAnimationJson = new JsonObject();
-        for (var field : ClientboundAnimatePacket.class.getDeclaredFields()) {
-            field.setAccessible(true);
+        for (var field : ClientboundAnimatePacket.class.getFields()) {
             if (Modifier.isStatic(field.getModifiers())
                     && field.canAccess(null)
                     && field.get(null) instanceof Integer i) {
@@ -154,8 +154,7 @@ public class Misc implements Main.Extractor {
         miscJson.add("humanoid_arm", enumIdsFromField(HumanoidArm.values(), "id"));
 
         var trackedDataHandlerJson = new JsonObject();
-        for (var field : EntityDataSerializers.class.getDeclaredFields()) {
-            field.setAccessible(true);
+        for (var field : EntityDataSerializers.class.getFields()) {
             if (Modifier.isStatic(field.getModifiers())
                     && field.get(null) instanceof EntityDataSerializer<?> handler) {
                 var name = field.getName().toLowerCase(Locale.ROOT);
@@ -183,9 +182,10 @@ public class Misc implements Main.Extractor {
             throws ReflectiveOperationException {
         var json = new JsonObject();
         var field = values[0].getDeclaringClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
         for (var value : values) {
-            json.addProperty(value.name().toLowerCase(Locale.ROOT), field.getInt(value));
+            json.addProperty(
+                    value.name().toLowerCase(Locale.ROOT),
+                    (int) MinecraftReflection.readField(field, value));
         }
         return json;
     }

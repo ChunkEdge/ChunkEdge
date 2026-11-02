@@ -4,6 +4,7 @@ import com.chunkedge.extractor.ClassComparator;
 import com.chunkedge.extractor.DummyPlayerEntity;
 import com.chunkedge.extractor.EntityNames;
 import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.MinecraftReflection;
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import java.lang.reflect.ParameterizedType;
@@ -23,8 +24,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
@@ -304,7 +303,7 @@ public class Entities implements Main.Extractor {
         // EntityType#create.
         final var entityInstance =
                 entityType.equals(EntityTypes.PLAYER)
-                        ? new DummyPlayerEntity(
+                        ? DummyPlayerEntity.create(
                                 world, new GameProfile(new UUID(0L, 0L), "cooldude"))
                         : entityType.create(world, EntitySpawnReason.COMMAND);
 
@@ -354,9 +353,6 @@ public class Entities implements Main.Extractor {
             entityClassTypeMap.putIfAbsent(entry.left(), entry.right());
         }
 
-        final var dataTrackerField = Entity.class.getDeclaredField("entityData");
-        dataTrackerField.setAccessible(true);
-
         var entitiesMap = new TreeMap<Class<? extends Entity>, JsonElement>(new ClassComparator());
 
         for (var entry : entityList) {
@@ -366,15 +362,14 @@ public class Entities implements Main.Extractor {
 
             final var entityInstance = createInstance(entityType);
 
-            final var dataTracker = (SynchedEntityData) dataTrackerField.get(entityInstance);
+            final var dataTracker = entityInstance.getEntityData();
 
             while (null == entitiesMap.get(entityClass)) {
                 var defaultsType = DEFAULTS_FROM_TYPE.get(entityClass);
                 var classDataTracker =
                         null == defaultsType
                                 ? dataTracker
-                                : (SynchedEntityData)
-                                        dataTrackerField.get(createInstance(defaultsType));
+                                : createInstance(defaultsType).getEntityData();
 
                 var entityJson = new JsonObject();
 
@@ -399,9 +394,9 @@ public class Entities implements Main.Extractor {
                 Arrays.sort(declaredFields, Comparator.comparing(field -> field.getName()));
                 for (var entityField : declaredFields) {
                     if (entityField.getType().equals(EntityDataAccessor.class)) {
-                        entityField.setAccessible(true);
-
-                        var trackedData = (EntityDataAccessor<?>) entityField.get(null);
+                        var trackedData =
+                                (EntityDataAccessor<?>)
+                                        MinecraftReflection.readField(entityField, null);
 
                         var fieldJson = new JsonObject();
                         var officialFieldName = entityField.getName().toLowerCase(Locale.ROOT);
@@ -433,15 +428,11 @@ public class Entities implements Main.Extractor {
                     var defaultAttributes = DefaultAttributes.getSupplier(type);
                     var attributesJson = new JsonArray();
                     if (null != defaultAttributes) {
-                        var instancesField =
-                                defaultAttributes.getClass().getDeclaredField("instances");
-                        instancesField.setAccessible(true);
-                        var instances =
-                                (Map<Holder<Attribute>, AttributeInstance>)
-                                        instancesField.get(defaultAttributes);
-
-                        for (var instance : instances.values()) {
-                            var attribute = instance.getAttribute().value();
+                        for (var holder : BuiltInRegistries.ATTRIBUTE.listElements().toList()) {
+                            if (!defaultAttributes.hasAttribute(holder)) {
+                                continue;
+                            }
+                            var attribute = holder.value();
 
                             var attributeJson = new JsonObject();
 
@@ -450,7 +441,8 @@ public class Entities implements Main.Extractor {
                             attributeJson.addProperty(
                                     "name",
                                     BuiltInRegistries.ATTRIBUTE.getKey(attribute).getPath());
-                            attributeJson.addProperty("base_value", instance.getBaseValue());
+                            attributeJson.addProperty(
+                                    "base_value", defaultAttributes.getBaseValue(holder));
 
                             attributesJson.add(attributeJson);
                         }

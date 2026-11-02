@@ -64,7 +64,7 @@ spotless {
 	enforceCheck = false
 	java {
 		target 'src/**/*.java'
-		googleJavaFormat('1.30.0')
+		googleJavaFormat('1.30.0').aosp()
 	}
 }
 

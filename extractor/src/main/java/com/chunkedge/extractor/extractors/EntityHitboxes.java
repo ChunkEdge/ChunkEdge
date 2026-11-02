@@ -32,15 +32,17 @@ public final class EntityHitboxes implements Main.Extractor {
         world = server.overworld();
     }
 
+    @Override
     public String fileName() {
         return "entity_hitboxes.json";
     }
 
+    @Override
     public JsonElement extract() throws Exception {
         var result = new JsonObject();
         for (var type : BuiltInRegistries.ENTITY_TYPE) {
             Entity entity =
-                    type == EntityTypes.PLAYER
+                    type.equals(EntityTypes.PLAYER)
                             ? new DummyPlayerEntity(
                                     world, new GameProfile(new UUID(0L, 0L), "hitbox"))
                             : type.create(world, EntitySpawnReason.COMMAND);

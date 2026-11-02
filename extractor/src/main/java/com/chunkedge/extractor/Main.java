@@ -15,7 +15,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.ReflectionFactory;
 
 public class Main implements ModInitializer {
 
@@ -41,19 +40,6 @@ public class Main implements ModInitializer {
             return sorted;
         }
         return element;
-    }
-
-    /** Magically creates an instance of a <i>concrete</i> class without calling its constructor. */
-    public static <T> T magicallyInstantiate(Class<T> clazz) {
-        var rf = ReflectionFactory.getReflectionFactory();
-        try {
-            var objCon = Object.class.getDeclaredConstructor();
-            var con = rf.newConstructorForSerialization(clazz, objCon);
-            return clazz.cast(con.newInstance());
-        } catch (Throwable e) {
-            throw new IllegalArgumentException(
-                    "Failed to magically instantiate " + clazz.getName(), e);
-        }
     }
 
     @Override

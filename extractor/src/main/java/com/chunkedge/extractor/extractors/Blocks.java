@@ -41,7 +41,7 @@ public class Blocks implements Main.Extractor {
             blockJson.addProperty("item_id", BuiltInRegistries.ITEM.getId(block.asItem()));
 
             if (block.asItem() instanceof StandingAndWallBlockItem wsbItem) {
-                if (wsbItem.getBlock() == block) {
+                if (wsbItem.getBlock().equals(block)) {
                     var wallBlock = ((ExposeWallBlock) wsbItem).getWallBlock();
                     blockJson.addProperty(
                             "wall_variant_id", BuiltInRegistries.BLOCK.getId(wallBlock));

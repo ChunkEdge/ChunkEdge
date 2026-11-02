@@ -54,7 +54,7 @@ public class Items implements Main.Extractor {
                                             x.types()
                                                     .unwrap()
                                                     .left()
-                                                    .map(t -> t == DamageTypeTags.IS_FIRE)
+                                                    .map(DamageTypeTags.IS_FIRE::equals)
                                                     .orElse(false))
                             .orElse(false));
 

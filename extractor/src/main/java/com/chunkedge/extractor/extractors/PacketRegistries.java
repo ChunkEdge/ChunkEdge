@@ -16,6 +16,7 @@ public class PacketRegistries implements Main.Extractor {
         this.server = server;
     }
 
+    @Override
     public String fileName() {
         return "registry_codec.json";
     }
@@ -42,6 +43,7 @@ public class PacketRegistries implements Main.Extractor {
         return json;
     }
 
+    @Override
     public JsonElement extract() {
         JsonObject json = new JsonObject();
         for (var entry : RegistryDataLoader.SYNCHRONIZED_REGISTRIES) {

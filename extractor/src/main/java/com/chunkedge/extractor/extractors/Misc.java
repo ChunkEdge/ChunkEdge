@@ -140,26 +140,16 @@ public class Misc implements Main.Extractor {
 
         var snifferStateJson = new JsonObject();
         for (var state : Sniffer.State.values()) {
-            snifferStateJson.addProperty(state.name().toLowerCase(Locale.ROOT), state.ordinal());
+            snifferStateJson.addProperty(state.name().toLowerCase(Locale.ROOT), state.id());
         }
         miscJson.add("sniffer_state", snifferStateJson);
 
-        var armadilloStateJson = new JsonObject();
-        for (var state : Armadillo.ArmadilloState.values()) {
-            armadilloStateJson.addProperty(state.name().toLowerCase(Locale.ROOT), state.ordinal());
-        }
-        miscJson.add("armadillo_state", armadilloStateJson);
+        miscJson.add("armadillo_state", enumIdsFromField(Armadillo.ArmadilloState.values(), "id"));
 
         // Both stream codecs map through their private id fields.
         miscJson.add("copper_golem_state", enumIdsFromField(CopperGolemState.values(), "id"));
 
-        // WeatherState's stream codec maps through Enum.ordinal().
-        var weatheringCopperStateJson = new JsonObject();
-        for (var state : WeatheringCopper.WeatherState.values()) {
-            weatheringCopperStateJson.addProperty(
-                    state.name().toLowerCase(Locale.ROOT), state.ordinal());
-        }
-        miscJson.add("weathering_copper_state", weatheringCopperStateJson);
+        miscJson.add("weathering_copper_state", weatheringCopperStateIds());
 
         miscJson.add("humanoid_arm", enumIdsFromField(HumanoidArm.values(), "id"));
 
@@ -179,10 +169,20 @@ public class Misc implements Main.Extractor {
         return miscJson;
     }
 
+    // WeatherState's stream codec explicitly uses Enum.ordinal() as the protocol ID.
+    @SuppressWarnings("EnumOrdinal")
+    private static JsonObject weatheringCopperStateIds() {
+        var json = new JsonObject();
+        for (var state : WeatheringCopper.WeatherState.values()) {
+            json.addProperty(state.name().toLowerCase(Locale.ROOT), state.ordinal());
+        }
+        return json;
+    }
+
     private static JsonObject enumIdsFromField(Enum<?>[] values, String fieldName)
             throws ReflectiveOperationException {
         var json = new JsonObject();
-        var field = values[0].getClass().getDeclaredField(fieldName);
+        var field = values[0].getDeclaringClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         for (var value : values) {
             json.addProperty(value.name().toLowerCase(Locale.ROOT), field.getInt(value));

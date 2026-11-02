@@ -66,44 +66,44 @@ public class Entities implements Main.Extractor {
         final var handler = data.serializer();
         final var val = tracker.get(data);
 
-        if (handler == EntityDataSerializers.BYTE) {
+        if (handler.equals(EntityDataSerializers.BYTE)) {
             return new Main.Pair<>("byte", new JsonPrimitive((Byte) val));
-        } else if (handler == EntityDataSerializers.INT) {
+        } else if (handler.equals(EntityDataSerializers.INT)) {
             return new Main.Pair<>("int", new JsonPrimitive((Integer) val));
-        } else if (handler == EntityDataSerializers.LONG) {
+        } else if (handler.equals(EntityDataSerializers.LONG)) {
             return new Main.Pair<>("long", new JsonPrimitive((Long) val));
-        } else if (handler == EntityDataSerializers.FLOAT) {
+        } else if (handler.equals(EntityDataSerializers.FLOAT)) {
             return new Main.Pair<>("float", new JsonPrimitive((Float) val));
-        } else if (handler == EntityDataSerializers.STRING) {
+        } else if (handler.equals(EntityDataSerializers.STRING)) {
             return new Main.Pair<>("string", new JsonPrimitive((String) val));
-        } else if (handler == EntityDataSerializers.COMPONENT) {
+        } else if (handler.equals(EntityDataSerializers.COMPONENT)) {
             // TODO: return text as json element.
             return new Main.Pair<>("component", new JsonPrimitive(((Component) val).getString()));
-        } else if (handler == EntityDataSerializers.OPTIONAL_COMPONENT) {
+        } else if (handler.equals(EntityDataSerializers.OPTIONAL_COMPONENT)) {
             var res =
                     ((Optional<?>) val)
                             .map(o -> (JsonElement) new JsonPrimitive(((Component) o).getString()))
                             .orElse(JsonNull.INSTANCE);
             return new Main.Pair<>("optional_component", res);
-        } else if (handler == EntityDataSerializers.ITEM_STACK) {
+        } else if (handler.equals(EntityDataSerializers.ITEM_STACK)) {
             return new Main.Pair<>("item_stack", new JsonPrimitive(((ItemStack) val).toString()));
-        } else if (handler == EntityDataSerializers.BOOLEAN) {
+        } else if (handler.equals(EntityDataSerializers.BOOLEAN)) {
             return new Main.Pair<>("boolean", new JsonPrimitive((Boolean) val));
-        } else if (handler == EntityDataSerializers.ROTATIONS) {
+        } else if (handler.equals(EntityDataSerializers.ROTATIONS)) {
             var json = new JsonObject();
             var ea = (Rotations) val;
             json.addProperty("pitch", ea.x());
             json.addProperty("yaw", ea.y());
             json.addProperty("roll", ea.z());
             return new Main.Pair<>("rotations", json);
-        } else if (handler == EntityDataSerializers.BLOCK_POS) {
+        } else if (handler.equals(EntityDataSerializers.BLOCK_POS)) {
             var bp = (BlockPos) val;
             var json = new JsonObject();
             json.addProperty("x", bp.getX());
             json.addProperty("y", bp.getY());
             json.addProperty("z", bp.getZ());
             return new Main.Pair<>("block_pos", json);
-        } else if (handler == EntityDataSerializers.OPTIONAL_BLOCK_POS) {
+        } else if (handler.equals(EntityDataSerializers.OPTIONAL_BLOCK_POS)) {
             return new Main.Pair<>(
                     "optional_block_pos",
                     ((Optional<?>) val)
@@ -117,23 +117,23 @@ public class Entities implements Main.Extractor {
                                         return (JsonElement) json;
                                     })
                             .orElse(JsonNull.INSTANCE));
-        } else if (handler == EntityDataSerializers.DIRECTION) {
+        } else if (handler.equals(EntityDataSerializers.DIRECTION)) {
             return new Main.Pair<>("direction", new JsonPrimitive(val.toString()));
-        } else if (handler == EntityDataSerializers.BLOCK_STATE) {
+        } else if (handler.equals(EntityDataSerializers.BLOCK_STATE)) {
             // TODO: get raw block state ID.
             var state = (BlockState) val;
             return new Main.Pair<>("block_state", new JsonPrimitive(state.toString()));
-        } else if (handler == EntityDataSerializers.OPTIONAL_BLOCK_STATE) {
+        } else if (handler.equals(EntityDataSerializers.OPTIONAL_BLOCK_STATE)) {
             // TODO: get raw block state ID.
             var res =
                     ((Optional<?>) val)
                             .map(o -> (JsonElement) new JsonPrimitive(o.toString()))
                             .orElse(JsonNull.INSTANCE);
             return new Main.Pair<>("optional_block_state", res);
-        } else if (handler == EntityDataSerializers.PARTICLE) {
+        } else if (handler.equals(EntityDataSerializers.PARTICLE)) {
             var id = BuiltInRegistries.PARTICLE_TYPE.getKey(((ParticleOptions) val).getType());
             return new Main.Pair<>("particle", new JsonPrimitive(id.getPath()));
-        } else if (handler == EntityDataSerializers.PARTICLES) {
+        } else if (handler.equals(EntityDataSerializers.PARTICLES)) {
             @SuppressWarnings("unchecked")
             List<ParticleOptions> particleList = (List<ParticleOptions>) val;
             JsonArray json = new JsonArray();
@@ -142,7 +142,7 @@ public class Entities implements Main.Extractor {
                 json.add(new JsonPrimitive(id.getPath()));
             }
             return new Main.Pair<>("particles", json);
-        } else if (handler == EntityDataSerializers.VILLAGER_DATA) {
+        } else if (handler.equals(EntityDataSerializers.VILLAGER_DATA)) {
             var vd = (VillagerData) val;
             var json = new JsonObject();
             var type = BuiltInRegistries.VILLAGER_TYPE.getKey(vd.type().value()).getPath();
@@ -151,29 +151,29 @@ public class Entities implements Main.Extractor {
             json.addProperty("profession", profession);
             json.addProperty("level", vd.level());
             return new Main.Pair<>("villager_data", json);
-        } else if (handler == EntityDataSerializers.OPTIONAL_UNSIGNED_INT) {
+        } else if (handler.equals(EntityDataSerializers.OPTIONAL_UNSIGNED_INT)) {
             var opt = (OptionalInt) val;
             return new Main.Pair<>(
                     "optional_unsigned_int",
                     opt.isPresent() ? new JsonPrimitive(opt.getAsInt()) : JsonNull.INSTANCE);
-        } else if (handler == EntityDataSerializers.POSE) {
+        } else if (handler.equals(EntityDataSerializers.POSE)) {
             return new Main.Pair<>(
                     "pose", new JsonPrimitive(((Pose) val).name().toLowerCase(Locale.ROOT)));
-        } else if (handler == EntityDataSerializers.CAT_VARIANT
-                || handler == EntityDataSerializers.CAT_SOUND_VARIANT
-                || handler == EntityDataSerializers.WOLF_SOUND_VARIANT
-                || handler == EntityDataSerializers.WOLF_VARIANT
-                || handler == EntityDataSerializers.FROG_VARIANT
-                || handler == EntityDataSerializers.COW_VARIANT
-                || handler == EntityDataSerializers.COW_SOUND_VARIANT
-                || handler == EntityDataSerializers.CHICKEN_VARIANT
-                || handler == EntityDataSerializers.CHICKEN_SOUND_VARIANT
-                || handler == EntityDataSerializers.PIG_VARIANT
-                || handler == EntityDataSerializers.PIG_SOUND_VARIANT
-                || handler == EntityDataSerializers.ZOMBIE_NAUTILUS_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.CAT_VARIANT)
+                || handler.equals(EntityDataSerializers.CAT_SOUND_VARIANT)
+                || handler.equals(EntityDataSerializers.WOLF_SOUND_VARIANT)
+                || handler.equals(EntityDataSerializers.WOLF_VARIANT)
+                || handler.equals(EntityDataSerializers.FROG_VARIANT)
+                || handler.equals(EntityDataSerializers.COW_VARIANT)
+                || handler.equals(EntityDataSerializers.COW_SOUND_VARIANT)
+                || handler.equals(EntityDataSerializers.CHICKEN_VARIANT)
+                || handler.equals(EntityDataSerializers.CHICKEN_SOUND_VARIANT)
+                || handler.equals(EntityDataSerializers.PIG_VARIANT)
+                || handler.equals(EntityDataSerializers.PIG_SOUND_VARIANT)
+                || handler.equals(EntityDataSerializers.ZOMBIE_NAUTILUS_VARIANT)) {
             return new Main.Pair<>(
                     variantJsonKey(handler), new JsonPrimitive(holderIdString((Holder<?>) val)));
-        } else if (handler == EntityDataSerializers.OPTIONAL_GLOBAL_POS) {
+        } else if (handler.equals(EntityDataSerializers.OPTIONAL_GLOBAL_POS)) {
             return new Main.Pair<>(
                     "optional_global_pos",
                     ((Optional<?>) val)
@@ -194,38 +194,38 @@ public class Entities implements Main.Extractor {
                                         return (JsonElement) json;
                                     })
                             .orElse(JsonNull.INSTANCE));
-        } else if (handler == EntityDataSerializers.PAINTING_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.PAINTING_VARIANT)) {
             var variant =
                     ((Holder<?>) val).unwrapKey().map(k -> k.identifier().getPath()).orElse("");
             return new Main.Pair<>("painting_variant", new JsonPrimitive(variant));
-        } else if (handler == EntityDataSerializers.SNIFFER_STATE) {
+        } else if (handler.equals(EntityDataSerializers.SNIFFER_STATE)) {
             return new Main.Pair<>(
                     "sniffer_state",
                     new JsonPrimitive(((Sniffer.State) val).name().toLowerCase(Locale.ROOT)));
-        } else if (handler == EntityDataSerializers.ARMADILLO_STATE) {
+        } else if (handler.equals(EntityDataSerializers.ARMADILLO_STATE)) {
             return new Main.Pair<>(
                     "armadillo_state",
                     new JsonPrimitive(
                             ((Armadillo.ArmadilloState) val).name().toLowerCase(Locale.ROOT)));
-        } else if (handler == EntityDataSerializers.WEATHERING_COPPER_STATE) {
+        } else if (handler.equals(EntityDataSerializers.WEATHERING_COPPER_STATE)) {
             return new Main.Pair<>(
                     "weathering_copper_state",
                     new JsonPrimitive(((Enum<?>) val).name().toLowerCase(Locale.ROOT)));
-        } else if (handler == EntityDataSerializers.COPPER_GOLEM_STATE) {
+        } else if (handler.equals(EntityDataSerializers.COPPER_GOLEM_STATE)) {
             return new Main.Pair<>(
                     "copper_golem_state",
                     new JsonPrimitive(((Enum<?>) val).name().toLowerCase(Locale.ROOT)));
-        } else if (handler == EntityDataSerializers.HUMANOID_ARM) {
+        } else if (handler.equals(EntityDataSerializers.HUMANOID_ARM)) {
             return new Main.Pair<>(
                     "humanoid_arm",
                     new JsonPrimitive(((Enum<?>) val).name().toLowerCase(Locale.ROOT)));
-        } else if (handler == EntityDataSerializers.DYE_COLOR) {
+        } else if (handler.equals(EntityDataSerializers.DYE_COLOR)) {
             return new Main.Pair<>(
                     "dye_color",
                     new JsonPrimitive(((net.minecraft.world.item.DyeColor) val).getId()));
-        } else if (handler == EntityDataSerializers.RESOLVABLE_PROFILE) {
+        } else if (handler.equals(EntityDataSerializers.RESOLVABLE_PROFILE)) {
             return new Main.Pair<>("resolvable_profile", new JsonPrimitive(val.toString()));
-        } else if (handler == EntityDataSerializers.VECTOR3) {
+        } else if (handler.equals(EntityDataSerializers.VECTOR3)) {
             final Vector3f vec;
             if (val instanceof Vector3f v) {
                 vec = v;
@@ -238,7 +238,7 @@ public class Entities implements Main.Extractor {
             json.addProperty("y", vec.y);
             json.addProperty("z", vec.z);
             return new Main.Pair<>("vector3", json);
-        } else if (handler == EntityDataSerializers.QUATERNION) {
+        } else if (handler.equals(EntityDataSerializers.QUATERNION)) {
             final Quaternionf quat;
             if (val instanceof Quaternionf q) {
                 quat = q;
@@ -252,7 +252,7 @@ public class Entities implements Main.Extractor {
             json.addProperty("z", quat.z);
             json.addProperty("w", quat.w);
             return new Main.Pair<>("quaternion", json);
-        } else if (handler == EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE) {
+        } else if (handler.equals(EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)) {
             return new Main.Pair<>(
                     "optional_living_entity_reference",
                     ((Optional<?>) val)
@@ -267,27 +267,27 @@ public class Entities implements Main.Extractor {
     }
 
     private static String variantJsonKey(Object handler) {
-        if (handler == EntityDataSerializers.CAT_VARIANT) {
+        if (handler.equals(EntityDataSerializers.CAT_VARIANT)) {
             return "cat_variant";
-        } else if (handler == EntityDataSerializers.CAT_SOUND_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.CAT_SOUND_VARIANT)) {
             return "cat_sound_variant";
-        } else if (handler == EntityDataSerializers.WOLF_SOUND_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.WOLF_SOUND_VARIANT)) {
             return "wolf_sound_variant";
-        } else if (handler == EntityDataSerializers.WOLF_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.WOLF_VARIANT)) {
             return "wolf_variant";
-        } else if (handler == EntityDataSerializers.FROG_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.FROG_VARIANT)) {
             return "frog_variant";
-        } else if (handler == EntityDataSerializers.COW_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.COW_VARIANT)) {
             return "cow_variant";
-        } else if (handler == EntityDataSerializers.COW_SOUND_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.COW_SOUND_VARIANT)) {
             return "cow_sound_variant";
-        } else if (handler == EntityDataSerializers.CHICKEN_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.CHICKEN_VARIANT)) {
             return "chicken_variant";
-        } else if (handler == EntityDataSerializers.CHICKEN_SOUND_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.CHICKEN_SOUND_VARIANT)) {
             return "chicken_sound_variant";
-        } else if (handler == EntityDataSerializers.PIG_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.PIG_VARIANT)) {
             return "pig_variant";
-        } else if (handler == EntityDataSerializers.PIG_SOUND_VARIANT) {
+        } else if (handler.equals(EntityDataSerializers.PIG_SOUND_VARIANT)) {
             return "pig_sound_variant";
         } else {
             return "zombie_nautilus_variant";

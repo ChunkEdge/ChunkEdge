@@ -21,7 +21,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
 
     for packet in packets {
         let id = packet.id;
-        let sufix = match packet.side.as_str() {
+        let suffix = match packet.side.as_str() {
             "serverbound" => "C2S",
             "clientbound" => "S2C",
             _ => unreachable!(),
@@ -31,7 +31,7 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             "{}_{}_{}",
             packet.phase.to_shouty_snake_case(),
             packet.name.to_shouty_snake_case(),
-            sufix
+            suffix
         );
 
         let doc = format!("Side: {}\n\nState: {}", packet.side, packet.phase);

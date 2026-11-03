@@ -9,6 +9,7 @@ pub struct ExplodeS2c {
     pub pos: DVec3,
     pub radius: f32,
     pub block_count: i32,
+    /// Velocity delta in blocks per tick.
     pub player_motion: Option<DVec3>,
     pub particle: Particle,
     pub sound: SoundId,

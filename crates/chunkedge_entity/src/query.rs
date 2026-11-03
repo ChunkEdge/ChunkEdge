@@ -53,7 +53,7 @@ impl EntityInitQueryItem<'_, '_> {
                     .facing
                     .map_or(self.object_data.0, |facing| facing.0 as i32)
                     .into(),
-                velocity: self.velocity.to_packet_units(),
+                velocity: self.velocity.0,
             }),
         }
 
@@ -140,7 +140,7 @@ impl UpdateEntityQueryItem<'_, '_> {
         if self.velocity.is_changed() {
             writer.write_packet(&SetEntityMotionS2c {
                 entity_id,
-                velocity: self.velocity.to_packet_units(),
+                velocity: self.velocity.0,
             });
         }
 

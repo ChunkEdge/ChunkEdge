@@ -2,7 +2,18 @@ use std::io::Write;
 
 use anyhow::{Context, ensure};
 use chunkedge_binary::{Decode, Encode, VarInt};
+use chunkedge_math::DVec3;
 use derive_more::{From, Into};
+
+/// Encodes a vector using vanilla's low-precision format
+pub fn encode<W: Write>(vector: &DVec3, w: W) -> anyhow::Result<()> {
+    LpVec3(vector.to_array()).encode(w)
+}
+
+/// Decodes a low-precision vector
+pub fn decode(r: &mut &[u8]) -> anyhow::Result<DVec3> {
+    Ok(DVec3::from_array(LpVec3::decode(r)?.0))
+}
 
 /// Vanilla's low-precision vector, in blocks (or blocks per tick for motion).
 #[derive(Copy, Clone, Default, Debug, PartialEq, From, Into)]
@@ -24,8 +35,8 @@ fn unpack(value: u64) -> f64 {
         - 1.0
 }
 
-/// Matches vanilla `net.minecraft.network.LpVec3`: each component, in blocks
-/// per tick, is quantized to 15 bits relative to a shared scale factor.
+/// Matches vanilla `net.minecraft.network.LpVec3`: each component is quantized
+/// to 15 bits relative to a shared scale factor.
 impl Encode for LpVec3 {
     fn encode(&self, mut w: impl Write) -> anyhow::Result<()> {
         let [x, y, z] = self.0.map(|v| {

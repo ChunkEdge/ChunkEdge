@@ -19,7 +19,7 @@ use chunkedge_entity::player::{Food, PlayerEntity, Saturation};
 use chunkedge_entity::tracked_data::TrackedData;
 use chunkedge_entity::{
     ClearEntityChangesSet, EntityId, EntityLayerId, EntityManager, EntityStatus, OldPosition,
-    Position, Velocity,
+    Position,
 };
 use chunkedge_entity::{HumanoidArm, query::EntityInitQuery};
 use chunkedge_math::{DVec3, Vec3};
@@ -410,11 +410,11 @@ impl Client {
         });
     }
 
-    /// `velocity` is in m/s.
+    /// Sets the client's velocity in blocks per tick.
     pub fn set_velocity<V: Into<DVec3>>(&mut self, velocity: V) {
         self.write_packet(&SetEntityMotionS2c {
             entity_id: VarInt(self.entity_id.get()),
-            velocity: Velocity(velocity.into()).to_packet_units(),
+            velocity: velocity.into(),
         });
     }
 

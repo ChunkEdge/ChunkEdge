@@ -18,6 +18,7 @@ copy run\chunkedge_extractor_output\effects.json ..\crates\chunkedge_generated\e
 copy run\chunkedge_extractor_output\items.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\packets.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\sounds.json ..\crates\chunkedge_generated\extracted\
+copy run\chunkedge_extractor_output\block_physics.json ..\crates\chunkedge_generated\extracted\
 copy run\chunkedge_extractor_output\translation_keys.json ..\crates\chunkedge_lang\extracted\
 copy run\chunkedge_extractor_output\registry_codec.json ..\crates\chunkedge_registry\extracted\
 copy run\chunkedge_extractor_output\tags.json ..\crates\chunkedge_registry\extracted\

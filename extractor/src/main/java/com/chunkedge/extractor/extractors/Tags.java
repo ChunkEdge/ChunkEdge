@@ -31,39 +31,32 @@ public class Tags implements Main.Extractor {
         var registryTags = new TreeMap<String, Map<String, JsonArray>>();
         // Dynamic (worldgen) registries that are networked, mirroring the
         // first half of vanilla's RegistrySynchronization.networkSafeRegistries.
-        server
-            .registryAccess()
-            .registries()
-            .filter(entry ->
-                RegistrySynchronization.isNetworkable(entry.key())
-            )
-            .forEach(entry -> {
-                var serialized = serializeTags(entry.value());
-                if (!serialized.isEmpty()) {
-                    registryTags.put(
-                        entry.key().identifier().toString(),
-                        serialized
-                    );
-                }
-            });
+        server.registryAccess()
+                .registries()
+                .filter(entry -> RegistrySynchronization.isNetworkable(entry.key()))
+                .forEach(
+                        entry -> {
+                            var serialized = serializeTags(entry.value());
+                            if (!serialized.isEmpty()) {
+                                registryTags.put(entry.key().identifier().toString(), serialized);
+                            }
+                        });
         // Static registries (blocks, items, entity types, ...) are always
         // synced wholesale, mirroring the second half of
         // networkSafeRegistries. Without these, clients fail to resolve
         // tag references (e.g. #minecraft:enchantable/*) inside synced
         // registry entries and disconnect during configuration.
-        server
-            .registries()
-            .getLayer(RegistryLayer.STATIC)
-            .registries()
-            .forEach(entry -> {
-                var serialized = serializeTags(entry.value());
-                if (!serialized.isEmpty()) {
-                    registryTags.putIfAbsent(
-                        entry.key().identifier().toString(),
-                        serialized
-                    );
-                }
-            });
+        server.registries()
+                .getLayer(RegistryLayer.STATIC)
+                .registries()
+                .forEach(
+                        entry -> {
+                            var serialized = serializeTags(entry.value());
+                            if (!serialized.isEmpty()) {
+                                registryTags.putIfAbsent(
+                                        entry.key().identifier().toString(), serialized);
+                            }
+                        });
 
         for (var registry : registryTags.entrySet()) {
             var tagGroupTagsJson = new JsonObject();
@@ -78,25 +71,22 @@ public class Tags implements Main.Extractor {
         return tagsJson;
     }
 
-    private static <T> Map<String, JsonArray> serializeTags(
-        Registry<T> registry
-    ) {
-        TreeMap<String, JsonArray> map = new TreeMap<>();
-        registry
-            .getTags()
-            .forEach(tag -> {
-                var holders = tag.stream().toList();
-                JsonArray intList = new JsonArray(holders.size());
-                for (var holder : holders) {
-                    if (!holder.isBound()) {
-                        throw new IllegalStateException(
-                            "Can't serialize unregistered value " + holder
-                        );
-                    }
-                    intList.add(registry.getId(holder.value()));
-                }
-                map.put(tag.key().location().toString(), intList);
-            });
+    private static <T> Map<String, JsonArray> serializeTags(Registry<T> registry) {
+        Map<String, JsonArray> map = new TreeMap<>();
+        registry.getTags()
+                .forEach(
+                        tag -> {
+                            var holders = tag.stream().toList();
+                            JsonArray intList = new JsonArray(holders.size());
+                            for (var holder : holders) {
+                                if (!holder.isBound()) {
+                                    throw new IllegalStateException(
+                                            "Can't serialize unregistered value " + holder);
+                                }
+                                intList.add(registry.getId(holder.value()));
+                            }
+                            map.put(tag.key().location().toString(), intList);
+                        });
         return map;
     }
 }

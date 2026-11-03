@@ -1,24 +1,20 @@
 package com.chunkedge.extractor;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 
 public class DummyPlayerEntity extends Player {
 
-    public static final DummyPlayerEntity INSTANCE;
-
-    static {
-        INSTANCE = Main.magicallyInstantiate(DummyPlayerEntity.class);
-
-        INSTANCE.defineSynchedData(new SynchedEntityData.Builder(INSTANCE));
+    private DummyPlayerEntity(ServerLevel world, GameProfile gameProfile) {
+        super(world, gameProfile);
     }
 
-    public DummyPlayerEntity(ServerLevel world, GameProfile gameProfile) {
-        super(world, gameProfile);
-        this.setPos(0, 70, 0);
+    public static DummyPlayerEntity create(ServerLevel world, GameProfile gameProfile) {
+        var player = new DummyPlayerEntity(world, gameProfile);
+        player.setPos(0, 70, 0);
+        return player;
     }
 
     @Override

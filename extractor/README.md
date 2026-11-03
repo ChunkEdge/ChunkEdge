@@ -2,6 +2,25 @@
 
 This is a Fabric mod for Minecraft that extracts data about different things in Minecraft, like blocks, packets, etc. The extracted data is stored within the Rust packages that need them.
 
+## Linting
+
+Run these commands from this directory:
+
+```sh
+./gradlew lintPmd
+./gradlew lintErrorProne
+```
+
+These are also exposed through the Nix shell as:
+
+```sh
+lint-java-pmd
+lint-java-error-prone
+lint-java-all # Run both linters
+ci-java-basic # Check formatting and run both linters
+ci-java-full  # Run formatting, both linters, and build the extractor
+```
+
 ## How to use
 
 Here's how to regenerate the contents of `extracted`.
@@ -23,6 +42,7 @@ Next, run `copy_extractor_output.sh`. This copies the files to the appropriate l
 ## How to update ChunkEdge to a new version of Minecraft
 
 The general process should go something like this:
+
 1. Update `gradle.properties` to the new version of Minecraft using https://fabricmc.net/develop
 2. Update `src/main/resources/fabric.mod.json` to reference new version of Minecraft
 3. Update `PROTOCOL_VERSION` and `MINECRAFT_VERSION` constants in `chunkedge_protocol/src/lib.rs`
@@ -31,13 +51,14 @@ The general process should go something like this:
 6. In `*.toml`s, replace all strings of the old mc version with the new mc version
 7. Try all the examples. If they work, you're probably done.
 
-
 If you need to update gradle, running this will automatically update the wrapper to the specified version, and update `gradle/gradle-wrapper.properties`.
+
 ```sh
 ./gradlew wrapper --gradle-version VERSION
 ```
 
 You may also need to update the fabric mappings in the mod.
+
 ```sh
 ./gradlew migrateMappings --mappings "VERSION"
 ```

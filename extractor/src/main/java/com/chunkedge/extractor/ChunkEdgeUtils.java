@@ -1,14 +1,10 @@
 package com.chunkedge.extractor;
 
-/**
- * Utility class for various methods.
- */
+/** Utility class for various methods. */
 public class ChunkEdgeUtils {
 
     private ChunkEdgeUtils() {
-        throw new UnsupportedOperationException(
-            "This class cannot be instantiated"
-        );
+        throw new UnsupportedOperationException("This class cannot be instantiated");
     }
 
     /**
@@ -21,7 +17,8 @@ public class ChunkEdgeUtils {
         StringBuilder result = new StringBuilder();
         boolean capitalizeNext = true;
 
-        for (char c : str.toCharArray()) {
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
             if (Character.isWhitespace(c) || '_' == c) {
                 capitalizeNext = true;
             } else if (capitalizeNext) {

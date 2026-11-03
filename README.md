@@ -60,7 +60,7 @@ Here are some noteworthy achievements:
 
 To create your own server project using ChunkEdge, please see the [Getting Started guide](https://docs.chunkedge.com/chunkedge/docs/guides/getting_started/).
 
-Other usefull resources from the documentation include:
+Other useful resources from the documentation include:
 
 - [Full API Documentation (rustdoc)](https://docs.chunkedge.com/chunkedge/)
 - [General docs page with links to guides and the FAQ](https://docs.chunkedge.com/chunkedge/docs/)

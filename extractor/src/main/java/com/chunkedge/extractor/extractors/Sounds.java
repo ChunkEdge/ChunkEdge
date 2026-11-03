@@ -21,14 +21,8 @@ public class Sounds implements Main.Extractor {
 
         for (var sound : BuiltInRegistries.SOUND_EVENT) {
             var itemJson = new JsonObject();
-            itemJson.addProperty(
-                "id",
-                BuiltInRegistries.SOUND_EVENT.getId(sound)
-            );
-            itemJson.addProperty(
-                "name",
-                BuiltInRegistries.SOUND_EVENT.getKey(sound).getPath()
-            );
+            itemJson.addProperty("id", BuiltInRegistries.SOUND_EVENT.getId(sound));
+            itemJson.addProperty("name", BuiltInRegistries.SOUND_EVENT.getKey(sound).getPath());
             itemsJson.add(itemJson);
         }
 

@@ -1,6 +1,7 @@
 package com.chunkedge.extractor.extractors;
 
 import com.chunkedge.extractor.Main;
+import com.chunkedge.extractor.MinecraftReflection;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Modifier;
@@ -35,9 +36,7 @@ public class Misc implements Main.Extractor {
         return "misc.json";
     }
 
-    private <T> Registry<T> dynamicRegistry(
-        ResourceKey<Registry<T>> key
-    ) {
+    private <T> Registry<T> dynamicRegistry(ResourceKey<Registry<T>> key) {
         return server.registryAccess().lookupOrThrow(key);
     }
 
@@ -48,39 +47,27 @@ public class Misc implements Main.Extractor {
         var entityTypeJson = new JsonObject();
         for (var type : BuiltInRegistries.ENTITY_TYPE) {
             entityTypeJson.addProperty(
-                BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath(),
-                BuiltInRegistries.ENTITY_TYPE.getId(type)
-            );
+                    BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath(),
+                    BuiltInRegistries.ENTITY_TYPE.getId(type));
         }
         miscJson.add("entity_type", entityTypeJson);
 
         var entityStatusJson = new JsonObject();
         for (var field : EntityEvent.class.getDeclaredFields()) {
-            if (
-                Modifier.isStatic(field.getModifiers()) &&
-                field.canAccess(null) &&
-                field.get(null) instanceof Byte code
-            ) {
-                entityStatusJson.addProperty(
-                    field.getName().toLowerCase(Locale.ROOT),
-                    code
-                );
+            if (Modifier.isStatic(field.getModifiers())
+                    && field.canAccess(null)
+                    && field.get(null) instanceof Byte code) {
+                entityStatusJson.addProperty(field.getName().toLowerCase(Locale.ROOT), code);
             }
         }
         miscJson.add("entity_status", entityStatusJson);
 
         var entityAnimationJson = new JsonObject();
-        for (var field : ClientboundAnimatePacket.class.getDeclaredFields()) {
-            field.setAccessible(true);
-            if (
-                Modifier.isStatic(field.getModifiers()) &&
-                field.canAccess(null) &&
-                field.get(null) instanceof Integer i
-            ) {
-                entityAnimationJson.addProperty(
-                    field.getName().toLowerCase(Locale.ROOT),
-                    i
-                );
+        for (var field : ClientboundAnimatePacket.class.getFields()) {
+            if (Modifier.isStatic(field.getModifiers())
+                    && field.canAccess(null)
+                    && field.get(null) instanceof Integer i) {
+                entityAnimationJson.addProperty(field.getName().toLowerCase(Locale.ROOT), i);
             }
         }
         miscJson.add("entity_animation", entityAnimationJson);
@@ -88,83 +75,47 @@ public class Misc implements Main.Extractor {
         var villagerTypeJson = new JsonObject();
         for (var type : BuiltInRegistries.VILLAGER_TYPE) {
             villagerTypeJson.addProperty(
-                BuiltInRegistries.VILLAGER_TYPE.getKey(type).getPath(),
-                BuiltInRegistries.VILLAGER_TYPE.getId(type)
-            );
+                    BuiltInRegistries.VILLAGER_TYPE.getKey(type).getPath(),
+                    BuiltInRegistries.VILLAGER_TYPE.getId(type));
         }
         miscJson.add("villager_type", villagerTypeJson);
 
         var villagerProfessionJson = new JsonObject();
-        var professionRegistry = dynamicRegistry(
-            Registries.VILLAGER_PROFESSION
-        );
+        var professionRegistry = dynamicRegistry(Registries.VILLAGER_PROFESSION);
         for (var profession : professionRegistry) {
             villagerProfessionJson.addProperty(
-                professionRegistry
-                    .getKey(profession)
-                    .toString()
-                    .toLowerCase(Locale.ROOT),
-                professionRegistry.getId(profession)
-            );
+                    professionRegistry.getKey(profession).toString().toLowerCase(Locale.ROOT),
+                    professionRegistry.getId(profession));
         }
         miscJson.add("villager_profession", villagerProfessionJson);
 
+        miscJson.add("cat_variant", dynamicVariants(dynamicRegistry(Registries.CAT_VARIANT)));
+        miscJson.add("frog_variant", dynamicVariants(dynamicRegistry(Registries.FROG_VARIANT)));
+        miscJson.add("wolf_variant", dynamicVariants(dynamicRegistry(Registries.WOLF_VARIANT)));
+        miscJson.add("pig_variant", dynamicVariants(dynamicRegistry(Registries.PIG_VARIANT)));
+        miscJson.add("cow_variant", dynamicVariants(dynamicRegistry(Registries.COW_VARIANT)));
         miscJson.add(
-            "cat_variant",
-            dynamicVariants(dynamicRegistry(Registries.CAT_VARIANT))
-        );
+                "chicken_variant", dynamicVariants(dynamicRegistry(Registries.CHICKEN_VARIANT)));
         miscJson.add(
-            "frog_variant",
-            dynamicVariants(dynamicRegistry(Registries.FROG_VARIANT))
-        );
+                "painting_variant", dynamicVariants(dynamicRegistry(Registries.PAINTING_VARIANT)));
         miscJson.add(
-            "wolf_variant",
-            dynamicVariants(dynamicRegistry(Registries.WOLF_VARIANT))
-        );
+                "wolf_sound_variant",
+                dynamicVariants(dynamicRegistry(Registries.WOLF_SOUND_VARIANT)));
         miscJson.add(
-            "pig_variant",
-            dynamicVariants(dynamicRegistry(Registries.PIG_VARIANT))
-        );
+                "cat_sound_variant",
+                dynamicVariants(dynamicRegistry(Registries.CAT_SOUND_VARIANT)));
         miscJson.add(
-            "cow_variant",
-            dynamicVariants(dynamicRegistry(Registries.COW_VARIANT))
-        );
+                "chicken_sound_variant",
+                dynamicVariants(dynamicRegistry(Registries.CHICKEN_SOUND_VARIANT)));
         miscJson.add(
-            "chicken_variant",
-            dynamicVariants(dynamicRegistry(Registries.CHICKEN_VARIANT))
-        );
+                "cow_sound_variant",
+                dynamicVariants(dynamicRegistry(Registries.COW_SOUND_VARIANT)));
         miscJson.add(
-            "painting_variant",
-            dynamicVariants(dynamicRegistry(Registries.PAINTING_VARIANT))
-        );
+                "pig_sound_variant",
+                dynamicVariants(dynamicRegistry(Registries.PIG_SOUND_VARIANT)));
         miscJson.add(
-            "wolf_sound_variant",
-            dynamicVariants(dynamicRegistry(Registries.WOLF_SOUND_VARIANT))
-        );
-        miscJson.add(
-            "cat_sound_variant",
-            dynamicVariants(dynamicRegistry(Registries.CAT_SOUND_VARIANT))
-        );
-        miscJson.add(
-            "chicken_sound_variant",
-            dynamicVariants(
-                dynamicRegistry(Registries.CHICKEN_SOUND_VARIANT)
-            )
-        );
-        miscJson.add(
-            "cow_sound_variant",
-            dynamicVariants(dynamicRegistry(Registries.COW_SOUND_VARIANT))
-        );
-        miscJson.add(
-            "pig_sound_variant",
-            dynamicVariants(dynamicRegistry(Registries.PIG_SOUND_VARIANT))
-        );
-        miscJson.add(
-            "zombie_nautilus_variant",
-            dynamicVariants(
-                dynamicRegistry(Registries.ZOMBIE_NAUTILUS_VARIANT)
-            )
-        );
+                "zombie_nautilus_variant",
+                dynamicVariants(dynamicRegistry(Registries.ZOMBIE_NAUTILUS_VARIANT)));
 
         var directionJson = new JsonObject();
         for (var dir : Direction.values()) {
@@ -175,70 +126,37 @@ public class Misc implements Main.Extractor {
         var entityPoseJson = new JsonObject();
         var poses = Pose.values();
         for (int i = 0; i < poses.length; i++) {
-            entityPoseJson.addProperty(
-                poses[i].name().toLowerCase(Locale.ROOT),
-                i
-            );
+            entityPoseJson.addProperty(poses[i].name().toLowerCase(Locale.ROOT), i);
         }
         miscJson.add("pose", entityPoseJson);
 
         var particleTypesJson = new JsonObject();
         for (var type : BuiltInRegistries.PARTICLE_TYPE) {
             particleTypesJson.addProperty(
-                BuiltInRegistries.PARTICLE_TYPE.getKey(type).getPath(),
-                BuiltInRegistries.PARTICLE_TYPE.getId(type)
-            );
+                    BuiltInRegistries.PARTICLE_TYPE.getKey(type).getPath(),
+                    BuiltInRegistries.PARTICLE_TYPE.getId(type));
         }
         miscJson.add("particle_type", particleTypesJson);
 
         var snifferStateJson = new JsonObject();
         for (var state : Sniffer.State.values()) {
-            snifferStateJson.addProperty(
-                state.name().toLowerCase(Locale.ROOT),
-                state.ordinal()
-            );
+            snifferStateJson.addProperty(state.name().toLowerCase(Locale.ROOT), state.id());
         }
         miscJson.add("sniffer_state", snifferStateJson);
 
-        var armadilloStateJson = new JsonObject();
-        for (var state : Armadillo.ArmadilloState.values()) {
-            armadilloStateJson.addProperty(
-                state.name().toLowerCase(Locale.ROOT),
-                state.ordinal()
-            );
-        }
-        miscJson.add("armadillo_state", armadilloStateJson);
+        miscJson.add("armadillo_state", enumIdsFromField(Armadillo.ArmadilloState.values(), "id"));
 
         // Both stream codecs map through their private id fields.
-        miscJson.add(
-            "copper_golem_state",
-            enumIdsFromField(CopperGolemState.values(), "id")
-        );
+        miscJson.add("copper_golem_state", enumIdsFromField(CopperGolemState.values(), "id"));
 
-        // WeatherState's stream codec maps through Enum.ordinal().
-        var weatheringCopperStateJson = new JsonObject();
-        for (var state : WeatheringCopper.WeatherState.values()) {
-            weatheringCopperStateJson.addProperty(
-                state.name().toLowerCase(Locale.ROOT),
-                state.ordinal()
-            );
-        }
-        miscJson.add("weathering_copper_state", weatheringCopperStateJson);
+        miscJson.add("weathering_copper_state", weatheringCopperStateIds());
 
-        miscJson.add(
-            "humanoid_arm",
-            enumIdsFromField(HumanoidArm.values(), "id")
-        );
+        miscJson.add("humanoid_arm", enumIdsFromField(HumanoidArm.values(), "id"));
 
         var trackedDataHandlerJson = new JsonObject();
-        for (
-            var field : EntityDataSerializers.class.getDeclaredFields()
-        ) {
-            field.setAccessible(true);
-            if (
-                Modifier.isStatic(field.getModifiers()) &&
-                field.get(null) instanceof EntityDataSerializer<?> handler
-            ) {
+        for (var field : EntityDataSerializers.class.getFields()) {
+            if (Modifier.isStatic(field.getModifiers())
+                    && field.get(null) instanceof EntityDataSerializer<?> handler) {
                 var name = field.getName().toLowerCase(Locale.ROOT);
                 var id = EntityDataSerializers.getSerializedId(handler);
 
@@ -250,18 +168,24 @@ public class Misc implements Main.Extractor {
         return miscJson;
     }
 
-    private static JsonObject enumIdsFromField(
-        Enum<?>[] values,
-        String fieldName
-    ) throws ReflectiveOperationException {
+    // WeatherState's stream codec explicitly uses Enum.ordinal() as the protocol ID.
+    @SuppressWarnings("EnumOrdinal")
+    private static JsonObject weatheringCopperStateIds() {
         var json = new JsonObject();
-        var field = values[0].getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
+        for (var state : WeatheringCopper.WeatherState.values()) {
+            json.addProperty(state.name().toLowerCase(Locale.ROOT), state.ordinal());
+        }
+        return json;
+    }
+
+    private static JsonObject enumIdsFromField(Enum<?>[] values, String fieldName)
+            throws ReflectiveOperationException {
+        var json = new JsonObject();
+        var field = values[0].getDeclaringClass().getDeclaredField(fieldName);
         for (var value : values) {
             json.addProperty(
-                value.name().toLowerCase(Locale.ROOT),
-                field.getInt(value)
-            );
+                    value.name().toLowerCase(Locale.ROOT),
+                    (int) MinecraftReflection.readField(field, value));
         }
         return json;
     }
@@ -269,10 +193,7 @@ public class Misc implements Main.Extractor {
     private static <T> JsonObject dynamicVariants(Registry<T> registry) {
         var json = new JsonObject();
         for (var variant : registry) {
-            json.addProperty(
-                registry.getKey(variant).getPath(),
-                registry.getId(variant)
-            );
+            json.addProperty(registry.getKey(variant).getPath(), registry.getId(variant));
         }
         return json;
     }

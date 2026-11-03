@@ -234,9 +234,9 @@ fn parse_incoming_commands(
 ) {
     for command_message in message_reader.read() {
         let executor = command_message.executor;
-        // these are the leafs of the graph that are executable under this command
+        // these are the leaves of the graph that are executable under this command
         // group
-        let executable_leafs = command_registry
+        let executable_leaves = command_registry
             .executables
             .iter()
             .collect::<Vec<&NodeIndex>>();
@@ -256,7 +256,7 @@ fn parse_incoming_commands(
             &mut modifiers_to_be_executed,
             input,
             graph,
-            &executable_leafs,
+            &executable_leaves,
             command_registry.as_ref(),
             &mut to_be_executed,
             root,
@@ -295,7 +295,7 @@ fn parse_command_args(
     modifiers_to_be_executed: &mut Vec<(NodeIndex, String)>,
     mut input: ParseInput,
     graph: &Graph<CommandNode, CommandEdgeType>,
-    executable_leafs: &[&NodeIndex],
+    executable_leaves: &[&NodeIndex],
     command_registry: &CommandRegistry,
     to_be_executed: &mut Vec<NodeIndex>,
     current_node: NodeIndex,
@@ -388,7 +388,7 @@ fn parse_command_args(
     }
 
     input.skip_whitespace();
-    if input.is_done() && executable_leafs.contains(&&current_node) {
+    if input.is_done() && executable_leaves.contains(&&current_node) {
         to_be_executed.push(current_node);
         return true;
     }
@@ -403,7 +403,7 @@ fn parse_command_args(
             &mut modifiers,
             input.clone(),
             graph,
-            executable_leafs,
+            executable_leaves,
             command_registry,
             to_be_executed,
             neighbor,

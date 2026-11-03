@@ -160,7 +160,7 @@ pub(super) fn initial_join(
             do_limited_crafting: false, // TODO
             dimension_type: VarInt(dimension_type.get_value().into()),
             online_mode,
-            enforeces_secure_chat: true,
+            enforces_secure_chat: true,
             // FIXME: add missing sea_level
             sea_level: VarInt(0),
         });

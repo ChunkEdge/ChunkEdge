@@ -14,7 +14,7 @@ Use of AI and LLM tools is generally allowed when contributing. However, it is t
 
 ## What version of Rust should I use?
 
-It is generally best to use the same stable version of Rust that is currently being used in the CI of the project. You can find out this version by examining the `.github/workflows/ci.yml` file. Some features (such as `miri`) may require the nightly toolchain.
+It is generally best to use the same stable version of Rust that is currently being used in the CI of the project. The stable version is pinned in the `rust-toolchain` file. Some features (such as `miri`) may require the nightly toolchain.
 
 ## Playgrounds
 
@@ -36,6 +36,30 @@ cargo watch -c -x "run -p playground" # run the playground and watch for changes
 ## Automatic Checks
 
 When you submit a pull request, your code will automatically run through clippy, rustfmt, etc. to check for any errors or mistakes. If an error does occur, it must be fixed before the pull request can be merged.
+
+### Running Checks Locally
+
+You can run the same checks locally through the provided Nix flake. If you have Nix installed, run `nix develop` from the repository root to enter a shell with all the required tools. Then run `ci-full` to run all checks, or run any of the individual commands listed below.
+
+```sh
+check-fmt-java # Check Java formatting without modifying sources
+fmt-java # Format the extractor's Java sources
+build-java # Build the extractor
+lint-java-pmd # Run the PMD linter on the extractor's Java sources
+lint-java-error-prone # Run the Error Prone linter on the extractor's Java sources
+lint-java-all # Run both Java linters
+ci-java-basic # Check formatting, PMD, and Error Prone
+ci-java-full # Check formatting, PMD, and Error Prone, and build the extractor
+check-fmt-rust # Check Rust formatting without modifying sources
+fmt-rust # Format the Rust sources
+lint-rust-clippy # Run clippy on the Rust sources
+test-rust-basic # Run only the workspace tests with all features and targets
+test-rust-full # Also run doctests, NBT feature-variant tests, and Miri
+ci-rust-full # Run all Rust-related CI checks
+check-typos # Check spelling across the repository
+generate-depgraph # Regenerate assets/depgraph.svg
+ci-full # Run all checks that the CI also runs
+```
 
 ## Code Conventions
 

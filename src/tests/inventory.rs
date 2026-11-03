@@ -299,7 +299,7 @@ fn test_should_allow_non_modifying_inventory_clicks() {
     // Make assertions
     let sent_packets = helper.collect_received();
 
-    // The user intereacted with the inventory themselves, and should not get a
+    // The user interacted with the inventory themselves, and should not get a
     // resync
     sent_packets.assert_count::<ContainerSetContentS2c>(0);
 }

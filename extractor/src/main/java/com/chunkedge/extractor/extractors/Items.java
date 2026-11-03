@@ -6,9 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import java.util.Optional;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.DamageTypeTags;
@@ -35,61 +35,36 @@ public class Items implements Main.Extractor {
         for (var item : BuiltInRegistries.ITEM) {
             var itemJson = new JsonObject();
 
-            itemJson.addProperty(
-                "id",
-                BuiltInRegistries.ITEM.getId(item)
-            );
-            itemJson.addProperty(
-                "name",
-                BuiltInRegistries.ITEM.getKey(item).getPath()
-            );
+            itemJson.addProperty("id", BuiltInRegistries.ITEM.getId(item));
+            itemJson.addProperty("name", BuiltInRegistries.ITEM.getKey(item).getPath());
             Item realItem = item;
+            itemJson.addProperty("translation_key", realItem.getDescriptionId());
+            itemJson.addProperty("max_stack", realItem.getDefaultMaxStackSize());
+            itemJson.addProperty("max_durability", realItem.getDefaultInstance().getMaxDamage());
             itemJson.addProperty(
-                "translation_key",
-                realItem.getDescriptionId()
-            );
+                    "enchantability",
+                    Optional.ofNullable(realItem.components().get(DataComponents.ENCHANTABLE))
+                            .map(Enchantable::value)
+                            .orElse(0));
             itemJson.addProperty(
-                "max_stack",
-                realItem.getDefaultMaxStackSize()
-            );
-            itemJson.addProperty(
-                "max_durability",
-                realItem.getDefaultInstance().getMaxDamage()
-            );
-            itemJson.addProperty(
-                "enchantability",
-                Optional.ofNullable(
-                    realItem.components().get(DataComponents.ENCHANTABLE)
-                )
-                    .map(Enchantable::value)
-                    .orElse(0)
-            );
-            itemJson.addProperty(
-                "fireproof",
-                Optional.ofNullable(
-                    realItem.components().get(DataComponents.DAMAGE_RESISTANT)
-                )
-                    .map(x ->
-                        x
-                            .types()
-                            .unwrap()
-                            .left()
-                            .map(t -> t == DamageTypeTags.IS_FIRE)
-                            .orElse(false)
-                    )
-                    .orElse(false)
-            );
+                    "fireproof",
+                    Optional.ofNullable(realItem.components().get(DataComponents.DAMAGE_RESISTANT))
+                            .map(
+                                    x ->
+                                            x.types()
+                                                    .unwrap()
+                                                    .left()
+                                                    .map(DamageTypeTags.IS_FIRE::equals)
+                                                    .orElse(false))
+                            .orElse(false));
 
             itemJson.add(
-                "components",
-                DataComponentMap.CODEC.encodeStart(
-                    RegistryOps.create(
-                        JsonOps.INSTANCE,
-                        server.registryAccess()
-                    ),
-                    realItem.components()
-                ).getOrThrow()
-            );
+                    "components",
+                    DataComponentMap.CODEC
+                            .encodeStart(
+                                    RegistryOps.create(JsonOps.INSTANCE, server.registryAccess()),
+                                    realItem.components())
+                            .getOrThrow());
 
             itemsJson.add(itemJson);
         }

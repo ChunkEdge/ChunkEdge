@@ -4,6 +4,7 @@
   "package": "com.chunkedge.extractor.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ExposeVoxelShape",
     "ExposeWallBlock"
   ]
 }

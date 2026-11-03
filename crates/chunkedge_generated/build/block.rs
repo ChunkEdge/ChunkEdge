@@ -10,6 +10,7 @@ use serde::Deserialize;
 struct TopLevel {
     blocks: Vec<Block>,
     shapes: Vec<Shape>,
+    voxel_shapes: Vec<VoxelShape>,
     block_entity_types: Vec<BlockEntityKind>,
 }
 
@@ -58,6 +59,7 @@ struct State {
     blocks_motion: bool,
     blocks_motion_no_leaves: bool,
     collision_shapes: Vec<u16>,
+    collision_voxel_shape: u16,
     block_entity_type: Option<u32>,
 }
 
@@ -71,12 +73,24 @@ struct Shape {
     max_z: f64,
 }
 
+/// Vanilla's grid representation of a collision shape: the coordinates of each
+/// axis and the full cells as a little-endian bitset in hex, indexed by
+/// `(x * size_y + y) * size_z + z`.
+#[derive(Deserialize, Clone, Debug)]
+struct VoxelShape {
+    x: Vec<f64>,
+    y: Vec<f64>,
+    z: Vec<f64>,
+    full: String,
+}
+
 pub(crate) fn build() -> anyhow::Result<TokenStream> {
     rerun_if_changed(["extracted/blocks.json"]);
 
     let TopLevel {
         blocks,
         shapes,
+        voxel_shapes,
         block_entity_types,
     } = serde_json::from_str(include_str!("../extracted/blocks.json"))?;
 
@@ -203,6 +217,33 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
     });
 
     let shape_count = shapes.len();
+
+    let voxel_shapes = voxel_shapes
+        .iter()
+        .map(|s| {
+            let full = (0..s.full.len())
+                .step_by(2)
+                .map(|i| u8::from_str_radix(&s.full[i..i + 2], 16))
+                .collect::<Result<Vec<u8>, _>>()?;
+            let (x, y, z) = (&s.x, &s.y, &s.z);
+            Ok(quote! {
+                VoxelShape {
+                    x: &[#(#x),*],
+                    y: &[#(#y),*],
+                    z: &[#(#z),*],
+                    full: &[#(#full),*],
+                }
+            })
+        })
+        .collect::<anyhow::Result<Vec<_>>>()?;
+
+    let voxel_shape_count = voxel_shapes.len();
+
+    let mut state_to_voxel_shape = vec![0_u16; usize::from(max_state_id) + 1];
+    for state in blocks.iter().flat_map(|block| &block.states) {
+        state_to_voxel_shape[usize::from(state.id)] = state.collision_voxel_shape;
+    }
+    let state_count = state_to_voxel_shape.len();
 
     let state_to_collision_shapes_arms = blocks
         .iter()
@@ -615,6 +656,14 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
             #(#shapes,)*
         ];
 
+        static VOXEL_SHAPES: &[VoxelShape; #voxel_shape_count] = &[
+            #(#voxel_shapes,)*
+        ];
+
+        static STATE_TO_VOXEL_SHAPE: &[u16; #state_count] = &[
+            #(#state_to_voxel_shape,)*
+        ];
+
         impl BlockState {
             #[doc = "Returns the default block state for a given block type."]
             pub const fn from_kind(kind: BlockKind) -> Self {
@@ -742,6 +791,16 @@ pub(crate) fn build() -> anyhow::Result<TokenStream> {
                 };
 
                 shape_idxs.into_iter().map(|idx| SHAPES[*idx as usize])
+            }
+
+            #[doc = "Returns the collision shape of this block state as vanilla's voxel grid, which"]
+            #[doc = "is what its collision code scans. Unlike [`Self::collision_shapes`], this keeps"]
+            #[doc = "the internal grid lines that change collision results."]
+            #[doc = ""]
+            #[doc = "Like [`Self::collision_shapes`], this is the shape without any entity context"]
+            #[doc = "at block position zero."]
+            pub fn collision_voxel_shape(self) -> &'static VoxelShape {
+                &VOXEL_SHAPES[usize::from(STATE_TO_VOXEL_SHAPE[usize::from(self.0)])]
             }
 
             pub const fn luminance(self) -> u8 {

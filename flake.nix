@@ -107,10 +107,21 @@
       check-rust-unused-deps = mkRepoCommand "check-rust-unused-deps" [ rust pkgs.cargo-machete ] ''
         exec cargo machete --with-metadata "$@"
       '';
+      # SVG geometry depends on font metrics so to keep the output
+      # consistent between Linux and macOS, we specify fonts explicitly.
+      depgraphFonts = pkgs.makeFontsConf {
+        fontDirectories = [ pkgs.dejavu_fonts.minimal ];
+        impureFontDirectories = [];
+        includes = [];
+      };
       mkDepgraphCommand = name: action: mkRepoCommand name [ rust pkgs.cargo-depgraph pkgs.graphviz pkgs.diffutils ] ''
+        export FONTCONFIG_FILE="${depgraphFonts}"
+        export PANGOCAIRO_BACKEND=fc
+        export LC_ALL=C
         generated="$(mktemp)"
         trap 'rm -f "$generated"' EXIT
-        cargo depgraph --workspace-only "$@" | tred | dot -Tsvg > "$generated"
+        cargo depgraph --workspace-only "$@" | tred | dot -Tsvg \
+          -Gfontname="DejaVu Sans" -Nfontname="DejaVu Sans" -Efontname="DejaVu Sans" > "$generated"
         ${action}
       '';
       check-rust-depgraph = mkDepgraphCommand "check-rust-depgraph" ''

@@ -1,0 +1,52 @@
+name: Set up CI environment
+description: Prepare a Nix development shell and optional Rust and Gradle caches.
+inputs:
+  profile:
+    description: Flake development shell to use
+    required: true
+  rust-cache:
+    description: Cache Cargo downloads and compiled dependencies
+    default: "false"
+  gradle-cache:
+    description: Cache Gradle distributions, dependencies, and build state
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - uses: cachix/install-nix-action@v31
+      with:
+        github_access_token: ${{ github.token }}
+
+    - uses: nix-community/cache-nix-action@v7
+      with:
+        primary-key: nix-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('flake.lock', 'flake.nix', 'rust-toolchain') }}
+        restore-prefixes-first-match: nix-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-
+        # Discard old, unreferenced closures restored from an earlier flake.
+        gc-max-store-size: 4G
+
+    - name: Prepare Nix shell
+      shell: bash
+      env:
+        NIX_PROFILE: ${{ inputs.profile }}
+      run: |
+        # Keep this closure rooted through the cache action's post-job GC.
+        nix develop ".#$NIX_PROFILE" --profile "$RUNNER_TEMP/nix-$NIX_PROFILE" --command bash -c '
+          if [ -n "${JAVA_HOME:-}" ]; then
+            echo "JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+            echo "$JAVA_HOME/bin" >> "$GITHUB_PATH"
+          fi
+        '
+
+    - uses: Swatinem/rust-cache@v2
+      if: inputs.rust-cache == 'true'
+      with:
+        # Probe the actual Nix compiler rather than the runner's preinstalled Rust.
+        cmd-format: nix develop .#${{ inputs.profile }} --command {0}
+        key: nix-${{ inputs.profile }}-${{ hashFiles('flake.lock', 'flake.nix', 'rust-toolchain') }}
+
+    - name: Cache Gradle dependencies and build state
+      uses: gradle/actions/setup-gradle@v4
+      if: inputs.gradle-cache == 'true'
+      with:
+        # The repository's Gradle wrapper controls the Gradle version.
+        cache-read-only: ${{ github.ref != 'refs/heads/main' }}

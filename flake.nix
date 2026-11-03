@@ -21,9 +21,8 @@
         inherit system overlays;
       };
 
-      # Pinned to the same toolchain CI uses (see .github/workflows).
-      # Should be kept in sync with those workflows.
-      rust = pkgs.rust-bin.stable."1.97.1".default.override {
+      rustVersion = pkgs.lib.strings.trim (builtins.readFile ./rust-toolchain);
+      rust = pkgs.rust-bin.stable.${rustVersion}.default.override {
         extensions = [ "rust-src" "rust-analyzer" "rustfmt" "clippy" ];
       };
 
@@ -77,6 +76,8 @@
         '';
       };
 
+      check-fmt-java = mkExtractorCommand "check-fmt-java" [ "spotlessCheck" ];
+      build-java = mkExtractorCommand "build-java" [ "build" ];
       fmt-java = mkExtractorCommand "fmt-java" [ "spotlessApply" ];
       lint-java-pmd = mkExtractorCommand "lint-java-pmd" [ "lintPmd" ];
       lint-java-error-prone = mkExtractorCommand "lint-java-error-prone" [ "lintErrorProne" ];
@@ -128,50 +129,59 @@
 
       ci-full = mkCheckCommand "ci-full" [ ci-rust-full ci-java-full check-typos ];
 
-      appNativeBuildInputs = with pkgs; [
-          # required for the packet inspector on nix
-          pkg-config
-
-          # Custom commands for the repo
-          fmt-java
-          fmt-rust
-          lint-java-pmd
-          lint-java-error-prone
-          lint-java-all
-          ci-java-basic
-          ci-java-full
-          lint-rust-clippy
-          test-rust-basic
-          test-rust-full
-          ci-rust-full
-          check-typos
-          generate-depgraph
-          ci-full
-      ];
-      appBuildInputs = with pkgs; [
-          rust
-          openssl
-          # Java: required for the extractor
-          jdk25 jdt-language-server
-      ] ++ lib.optionals stdenv.hostPlatform.isLinux [
-          # Native dependencies for the packet inspector on Linux
+      # We keep closures grouped roughly by CI jobs so that each
+      # CI job only installs the dependencies it needs. For example,
+      # Java tooling does not need the Rust GUI dependencies, etc.
+      # Finally, we expose a full shell that includes all dependencies
+      # to be used for local development. This is the default shell.
+      rustLibraries = with pkgs; [ openssl ]
+        ++ lib.optionals stdenv.hostPlatform.isLinux [
           udev alsa-lib vulkan-loader wayland
-          libX11 libXcursor libXi libXrandr
-          libxkbcommon
-      ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-          libiconv
+          libX11 libXcursor libXi libXrandr libxkbcommon
+        ]
+        ++ lib.optionals stdenv.hostPlatform.isDarwin [ libiconv ];
+      rustCommands = [
+        fmt-rust check-fmt-rust lint-rust-clippy
+        test-rust-basic test-rust-docs test-rust-nbt check-rust-docs
       ];
+      javaCommands = [
+        fmt-java check-fmt-java build-java lint-java-pmd lint-java-error-prone
+        lint-java-all ci-java-basic ci-java-full
+      ];
+      toolingCommands = [
+        check-typos check-rust-unused-deps check-rust-depgraph generate-depgraph
+      ];
+
+      # Share native dependency configuration between stable Rust and Miri.
+      mkRustShell = packages: pkgs.mkShell {
+        inherit packages;
+        nativeBuildInputs = [ pkgs.pkg-config ];
+        buildInputs = rustLibraries;
+        shellHook = pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
+          export LD_LIBRARY_PATH="''${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${pkgs.lib.makeLibraryPath rustLibraries}"
+        '';
+      };
+      shells = {
+        rust = mkRustShell ([ rust ] ++ rustCommands);
+        miri = mkRustShell [ rust-miri test-rust-miri ];
+        java = pkgs.mkShell {
+          packages = [ pkgs.jdk25 ] ++ javaCommands;
+          JAVA_HOME = "${pkgs.jdk25}";
+        };
+        tooling = pkgs.mkShell {
+          packages = [ rust ] ++ toolingCommands;
+        };
+        full = pkgs.mkShell {
+          inputsFrom = [ shells.rust shells.java shells.tooling ];
+          # Nightly stays in its own shell so it cannot shadow stable Rust.
+          packages = [
+            pkgs.jdt-language-server test-rust-miri test-rust-full ci-rust-full ci-full
+          ];
+          JAVA_HOME = "${pkgs.jdk25}";
+        };
+      };
     in
     {
-        devShells.default = pkgs.mkShell {
-            nativeBuildInputs = appNativeBuildInputs;
-            buildInputs = appBuildInputs;
-            shellHook = ''
-                ${pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
-                  export LD_LIBRARY_PATH="''${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${pkgs.lib.makeLibraryPath appBuildInputs}"
-                ''}
-                export JAVA_HOME="${pkgs.jdk25}"
-            '';
-        };
+      devShells = shells // { default = shells.full; };
     });
 }

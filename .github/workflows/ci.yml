@@ -3,118 +3,130 @@ name: CI
 on:
   pull_request:
   merge_group:
-  push: # Run CI on the main branch after every merge. This is important to fill the GitHub Actions cache in a way that pull requests can see it
+  push:
     branches:
       - main
 
+permissions:
+  contents: read
+
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
 
 jobs:
   chunkedge-fmt:
     name: Rust Formatting
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
+      - uses: ./.github/actions/setup-ci
         with:
-          toolchain: "1.97.1"
-          components: "rustfmt"
+          profile: rust
 
-      - name: Copy playground
-        run: cp tools/playground/src/playground.template.rs tools/playground/src/playground.rs
-
-      - name: cargo fmt
-        run: cargo fmt --all -- --check
+      - name: Rust Formatting
+        run: nix develop .#rust --command check-fmt-rust
 
   chunkedge-docs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
+      - uses: ./.github/actions/setup-ci
         with:
-          toolchain: "1.97.1"
+          profile: rust
+          rust-cache: "true"
 
-      - name: Copy playground
-        run: cp tools/playground/src/playground.template.rs tools/playground/src/playground.rs
-
-      - name: Install dependencies (Linux)
-        run: sudo apt-get update && sudo apt-get install -y libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev libclang-dev libgtk-3-dev
-
-      - name: Validate documentation
-        run: RUSTDOCFLAGS="-D warnings" cargo doc --workspace --no-deps --all-features --document-private-items
+      - name: Documentation
+        run: nix develop .#rust --command check-rust-docs
 
   typos:
     name: Typos
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Check for spelling errors
-        uses: crate-ci/typos@v1.50.2
+      - uses: ./.github/actions/setup-ci
+        with:
+          profile: tooling
+
+      - name: Typos
+        run: nix develop .#tooling --command check-typos
 
   chunkedge-clippy:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
+      - uses: ./.github/actions/setup-ci
         with:
-          toolchain: "1.97.1"
-          components: "clippy, rustfmt"
-
-      - name: Copy playground
-        run: cp tools/playground/src/playground.template.rs tools/playground/src/playground.rs
-
-      - name: Install dependencies (Linux)
-        run: sudo apt-get update && sudo apt-get install -y libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev libclang-dev libgtk-3-dev
+          profile: rust
+          rust-cache: "true"
 
       - name: Clippy
-        run: cargo clippy --workspace --no-deps --all-features --all-targets -- -D warnings
+        run: nix develop .#rust --command lint-rust-clippy
 
   chunkedge-tests:
     strategy:
       fail-fast: true
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-latest]
-        style: [default]
-        include:
-          - style: default
-            flags: ""
+        platform: [macos-latest, ubuntu-latest]
     name: Tests (${{ matrix.platform }})
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-ci
+        with:
+          profile: rust
+          rust-cache: "true"
+
+      - name: Run tests
+        run: nix develop .#rust --command test-rust-basic
+
+      - name: Run doctests
+        run: nix develop .#rust --command test-rust-docs
+
+      - name: Run chunkedge_nbt tests without preserve_order feature
+        run: nix develop .#rust --command test-rust-nbt
+
+  chunkedge-tests-windows:
+    name: Tests (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Nix cannot run natively on Windows.
+      # We share its version through the rust-toolchain file.
+      - name: Read Rust version
+        id: rust-version
+        shell: pwsh
+        run: |
+          $version = (Get-Content -Raw rust-toolchain).Trim()
+          "version=$version" >> $env:GITHUB_OUTPUT
 
       - name: Setup Rust toolchain and cache
         uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
         with:
-          toolchain: "1.97.1"
+          toolchain: ${{ steps.rust-version.outputs.version }}
 
       - name: Copy playground
         run: cp tools/playground/src/playground.template.rs tools/playground/src/playground.rs
 
-      - name: Install dependencies (Linux)
-        run: sudo apt-get update && sudo apt-get install -y libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev libclang-dev libgtk-3-dev
-        if: matrix.platform == 'ubuntu-latest'
-
       - name: Run tests
-        run: cargo test --workspace ${{ matrix.flags }} --all-features --all-targets
+        run: cargo test --workspace --all-features --all-targets
 
       - name: Run doctests
-        run: cargo test --workspace ${{ matrix.flags }} --all-features --doc
+        run: cargo test --workspace --all-features --doc
 
       - name: Run chunkedge_nbt tests without preserve_order feature
         run: cargo test -p chunkedge_nbt --all-targets
@@ -123,94 +135,75 @@ jobs:
     name: Miri Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
+      - uses: ./.github/actions/setup-ci
         with:
-          toolchain: "nightly-2026-06-26"
-          components: "miri"
+          profile: miri
+          rust-cache: "true"
 
-      - name: Run tests
-        run: cargo miri test --workspace --all-features --doc
-
-      - name: Run doctests
-        run: cargo miri test --workspace --all-features --doc
+      - name: Miri Tests
+        run: nix develop .#miri --command test-rust-miri
 
   extractor-fmt:
     name: Java Formatting (Extractor)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: ./.github/actions/setup-ci
         with:
-          distribution: "zulu"
-          java-version: "25"
+          profile: java
+          gradle-cache: "true"
 
-      - name: Check Java formatting
-        run: ./gradlew spotlessCheck
-        working-directory: extractor
+      - name: Java Formatting (Extractor)
+        run: nix develop .#java --command check-fmt-java --build-cache
 
   extractor-lint:
     name: Java Lint (Extractor)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: ./.github/actions/setup-ci
         with:
-          distribution: "zulu"
-          java-version: "25"
+          profile: java
+          gradle-cache: "true"
 
-      - name: PMD
-        run: ./gradlew lintPmd
-        working-directory: extractor
-
-      - name: Error Prone
-        if: ${{ !cancelled() }}
-        run: ./gradlew lintErrorProne
-        working-directory: extractor
+      - name: Java Lint (Extractor)
+        run: nix develop .#java --command lint-java-all --build-cache
 
   extractor-build:
     name: Build Extractor
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v2
+      - uses: ./.github/actions/setup-ci
         with:
-          distribution: "zulu"
-          java-version: "25"
+          profile: java
+          gradle-cache: "true"
 
-      - name: Test Build
-        run: ./gradlew build
-        working-directory: extractor
+      - name: Build Extractor
+        run: nix develop .#java --command build-java --build-cache
 
   check-depgraph:
     name: Dependency Graph (assets/depgraph.svg)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install cargo-depgraph
-        uses: baptiste0928/cargo-install@v2.1.0
+      - uses: ./.github/actions/setup-ci
         with:
-          crate: cargo-depgraph
-
-      - name: Install graphviz
-        run: sudo apt update && sudo apt install -y graphviz
+          profile: tooling
 
       - name: Generate new depgraph
-        run: cargo depgraph --workspace-only | tred | dot -Tsvg -o assets/depgraph.svg
+        run: nix develop .#tooling --command generate-depgraph
 
       - name: Check depgraph diff
         run: git diff --exit-code assets/depgraph.svg > assets/depgraph.patch
@@ -248,22 +241,18 @@ jobs:
         with:
           name: bad-depgraph
           path: bad-depgraph/
+
   udeps:
     name: Unused Dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
+      - uses: ./.github/actions/setup-ci
         with:
-          toolchain: "1.97.1"
+          profile: tooling
+          rust-cache: "true"
 
-      - name: Install cargo-machete
-        uses: baptiste0928/cargo-install@v2.1.0
-        with:
-          crate: cargo-machete
-
-      - name: Check for unused dependencies
-        run: cargo machete --with-metadata
+      - name: Unused Dependencies
+        run: nix develop .#tooling --command check-rust-unused-deps

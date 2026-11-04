@@ -24,16 +24,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: ./.github/actions/setup-ci
         with:
-          toolchain: "1.97.1"
+          profile: rust
+          rust-cache: "true"
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build website
         run: |
-          RUSTDOCFLAGS='--cfg unstable_doc --html-in-header docs/rustdoc-header.html' cargo doc --no-deps --workspace --all-features
+          nix develop .#rust --command build-rust-docs
 
           cat > target/doc/index.html <<'EOF'
           <!doctype html>
@@ -54,7 +54,7 @@ jobs:
           EOF
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./target/doc
 
@@ -68,4 +68,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

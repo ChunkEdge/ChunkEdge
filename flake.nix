@@ -99,6 +99,11 @@
         test-rust-basic test-rust-docs test-rust-nbt test-rust-miri
       ];
 
+      build-rust-docs = mkRepoCommand "build-rust-docs" [ rust ] ''
+        ${preparePlayground}
+        export RUSTDOCFLAGS="--cfg unstable_doc --html-in-header docs/rustdoc-header.html"
+        exec ${rust}/bin/cargo doc --workspace --no-deps --all-features "$@"
+      '';
       check-rust-docs = mkRepoCommand "check-rust-docs" [ rust ] ''
         ${preparePlayground}
         export RUSTDOCFLAGS="-D warnings"
@@ -153,7 +158,7 @@
         ++ lib.optionals stdenv.hostPlatform.isDarwin [ libiconv ];
       rustCommands = [
         fmt-rust check-fmt-rust lint-rust-clippy
-        test-rust-basic test-rust-docs test-rust-nbt check-rust-docs
+        test-rust-basic test-rust-docs test-rust-nbt build-rust-docs check-rust-docs
       ];
       javaCommands = [
         fmt-java check-fmt-java build-java lint-java-pmd lint-java-error-prone

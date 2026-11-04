@@ -45,8 +45,10 @@ runs:
         key: nix-${{ inputs.profile }}-${{ hashFiles('flake.lock', 'flake.nix', 'rust-toolchain') }}
 
     - name: Cache Gradle dependencies and build state
-      uses: gradle/actions/setup-gradle@v4
+      uses: gradle/actions/setup-gradle@v6
       if: inputs.gradle-cache == 'true'
       with:
+        # Keep caching on the open-source provider rather than v6's proprietary default.
+        cache-provider: basic
         # The repository's Gradle wrapper controls the Gradle version.
         cache-read-only: ${{ github.ref != 'refs/heads/main' }}

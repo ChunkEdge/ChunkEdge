@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -82,7 +82,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -103,7 +103,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Nix cannot run natively on Windows.
       # We share its version through the rust-toolchain file.
@@ -115,7 +115,7 @@ jobs:
           "version=$version" >> $env:GITHUB_OUTPUT
 
       - name: Setup Rust toolchain and cache
-        uses: actions-rust-lang/setup-rust-toolchain@v1.9.0
+        uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           toolchain: ${{ steps.rust-version.outputs.version }}
 
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -151,7 +151,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -166,7 +166,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -181,7 +181,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -196,7 +196,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:
@@ -236,18 +236,20 @@ jobs:
           </details>" > ./bad-depgraph/pr-comment.txt
 
       - name: Upload comment artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ failure() && github.event_name == 'pull_request' }}
         with:
           name: bad-depgraph
           path: bad-depgraph/
+          # ci-pr-comments.yml downloads and extracts this as a ZIP archive.
+          archive: true
 
   udeps:
     name: Unused Dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-ci
         with:

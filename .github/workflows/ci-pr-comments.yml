@@ -21,11 +21,11 @@ jobs:
       github.event.workflow_run.conclusion == 'failure'
     steps:
       - name: Checkout Actions Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Download artifact
         id: find-artifact
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           result-encoding: string
           script: |
@@ -57,7 +57,7 @@ jobs:
           echo "event_number=$(cat event-number)" >> "$GITHUB_OUTPUT"
 
       - name: Create pull request comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         if: ${{ steps.find-artifact.outputs.result == 'true' }}
         with:
           recreate: true

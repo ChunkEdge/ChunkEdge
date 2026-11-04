@@ -23,7 +23,7 @@ pub mod entity_movement;
 pub mod game_mode;
 mod global_pos;
 mod hand;
-mod lp_vec3;
+pub mod lp_vec3;
 pub mod movement_flags;
 pub mod packets;
 pub mod profile;

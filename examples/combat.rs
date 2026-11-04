@@ -158,15 +158,16 @@ fn handle_combat_messages(
 
         let dir = (victim_pos - attacker_pos).normalize();
 
+        // Knockback velocity in blocks per tick.
         let knockback_xz = if attacker.state.has_bonus_knockback {
-            18.0
+            0.9
         } else {
-            8.0
+            0.4
         };
         let knockback_y = if attacker.state.has_bonus_knockback {
-            8.432
+            0.4216
         } else {
-            6.432
+            0.3216
         };
 
         victim

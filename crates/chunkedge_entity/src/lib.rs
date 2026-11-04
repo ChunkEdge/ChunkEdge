@@ -336,15 +336,9 @@ impl Default for EntityId {
 #[derive(Component, Copy, Clone, PartialEq, Default, Debug, Deref, DerefMut)]
 pub struct HeadYaw(pub f32);
 
-/// Entity velocity in m/s.
+/// Entity velocity in blocks per tick
 #[derive(Component, Copy, Clone, Default, Debug, Deref, DerefMut)]
 pub struct Velocity(pub DVec3);
-
-impl Velocity {
-    pub fn to_packet_units(self) -> chunkedge_protocol::LpVec3 {
-        chunkedge_protocol::LpVec3((self.0 / 20.0).to_array())
-    }
-}
 
 // TODO: don't make statuses and animations components.
 

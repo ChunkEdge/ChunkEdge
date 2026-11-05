@@ -4,6 +4,7 @@ mod byte_channel;
 mod connect;
 mod legacy_ping;
 mod packet_io;
+mod simulated_latency;
 
 use std::borrow::Cow;
 use std::collections::BTreeMap;

@@ -204,12 +204,14 @@ pub(crate) enum RecvError {
 impl Drop for ByteSender {
     fn drop(&mut self) {
         self.shared.mtx.lock().unwrap().disconnected = true;
+        self.shared.notify.notify_waiters();
     }
 }
 
 impl Drop for ByteReceiver {
     fn drop(&mut self) {
         self.shared.mtx.lock().unwrap().disconnected = true;
+        self.shared.notify.notify_waiters();
     }
 }
 
@@ -250,5 +252,34 @@ mod tests {
         t.await.unwrap();
 
         assert!(sender.is_disconnected());
+    }
+
+    #[tokio::test]
+    async fn dropping_either_end_wakes_a_waiting_peer() {
+        let (sender, mut receiver) = byte_channel(1);
+        let receive = receiver.recv_async();
+        let close = async move {
+            tokio::task::yield_now().await;
+            drop(sender);
+        };
+        let (result, ()) = tokio::time::timeout(std::time::Duration::from_secs(1), async {
+            tokio::join!(receive, close)
+        })
+        .await
+        .expect("receiver did not wake after sender closed");
+        assert_eq!(result, Err(RecvError::Disconnected));
+
+        let (mut sender, receiver) = byte_channel(1);
+        let send = sender.send_async(BytesMut::from(&b"ab"[..]));
+        let close = async move {
+            tokio::task::yield_now().await;
+            drop(receiver);
+        };
+        let (result, ()) = tokio::time::timeout(std::time::Duration::from_secs(1), async {
+            tokio::join!(send, close)
+        })
+        .await
+        .expect("sender did not wake after receiver closed");
+        assert_eq!(result, Err(SendError(BytesMut::from(&b"b"[..]))));
     }
 }

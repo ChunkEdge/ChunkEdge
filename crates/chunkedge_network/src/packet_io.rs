@@ -193,7 +193,20 @@ impl PacketIo {
 
         let (outgoing_sender, mut outgoing_receiver) = byte_channel(outgoing_byte_limit);
 
+        // Opt-in jitter for experiments, applied after encoding/encryption and before
+        // socket writes. Keep one writer so the TCP byte stream stays ordered.
+        let simulate_latency = crate::simulated_latency::Level::from_env();
+
         let writer_task = tokio::spawn(async move {
+            if let Some(level) = simulate_latency {
+                if let Err(e) =
+                    crate::simulated_latency::write(&mut writer, &mut outgoing_receiver, level)
+                        .await
+                {
+                    debug!("error writing simulated stream: {e}");
+                }
+                return;
+            }
             loop {
                 let bytes = match outgoing_receiver.recv_async().await {
                     Ok(bytes) => bytes,
@@ -205,6 +218,9 @@ impl PacketIo {
 
                 if let Err(e) = writer.write_all(&bytes).await {
                     debug!("error writing data to stream: {e}");
+                    // A failed write may have sent a prefix. Continuing with subsequent
+                    // batches would leave a hole in the encoded/encrypted stream.
+                    break;
                 }
             }
         });
